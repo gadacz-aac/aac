@@ -1,5 +1,8 @@
+import 'package:aac/text_to_speech.dart';
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+
+import 'model/note.dart';
 
 void main() {
   runApp(const MainApp());
@@ -11,6 +14,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
+      // home: Board(),
       home: Board(),
     );
   }
@@ -26,29 +30,41 @@ class Board extends StatefulWidget {
 }
 
 class _BoardState extends State<Board> {
-  final List<String> words = ["stringi", "bokserki", "majtki z koronką"];
+  final List<Note> notes = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const TtsScreen()));
+              },
+              icon: const Icon(Icons.set_meal))
+        ],
       ),
       body: GridView.count(
         crossAxisCount: 2,
-        children: words.map((e) {
+        children: notes.map((e) {
           return MyCard(
-            text: e,
+            note: e,
           );
         }).toList(),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
           setState(() {
             final String wordPair = WordPair.random().asLowerCase;
-
-            words.add(wordPair);
+            Note note = Note(text: wordPair, image: wordPair);
+            notes.add(note);
           });
+          // final image =
+          //     await ImagePicker().pickImage(source: ImageSource.gallery);
+          // if (image == null) return;
+          // debugPrint(image.path);
         },
         child: const Icon(Icons.add),
       ),
@@ -57,9 +73,9 @@ class _BoardState extends State<Board> {
 }
 
 class MyCard extends StatelessWidget {
-  const MyCard({super.key, required this.text});
+  const MyCard({super.key, required this.note});
 
-  final String text;
+  final Note note;
 
   @override
   Widget build(BuildContext context) {
@@ -69,13 +85,13 @@ class MyCard extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) => Board(
-                      title: text,
+                      title: note.text,
                     )),
           );
         },
         child: GridTile(
           footer: GridTileBar(
-            title: Text(text),
+            title: Text(note.text),
             backgroundColor: Colors.black45,
           ),
           child: Image.network(
