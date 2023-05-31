@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:aac/text_to_speech.dart';
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'model/note.dart';
 
@@ -56,15 +59,19 @@ class _BoardState extends State<Board> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          final imageFile =
+              await ImagePicker().pickImage(source: ImageSource.gallery);
+
+          String defaultImage =
+              'https://cdn.discordapp.com/attachments/1108422948970319886/1113420050058203256/image.png';
+
+          String image = imageFile != null ? imageFile.path : defaultImage;
+          debugPrint(image);
           setState(() {
             final String wordPair = WordPair.random().asLowerCase;
-            Note note = Note(text: wordPair, image: wordPair);
+            Note note = Note(text: wordPair, image: image);
             notes.add(note);
           });
-          // final image =
-          //     await ImagePicker().pickImage(source: ImageSource.gallery);
-          // if (image == null) return;
-          // debugPrint(image.path);
         },
         child: const Icon(Icons.add),
       ),
@@ -94,8 +101,7 @@ class MyCard extends StatelessWidget {
             title: Text(note.text),
             backgroundColor: Colors.black45,
           ),
-          child: Image.network(
-              'https://cdn.discordapp.com/attachments/1108422948970319886/1113419609387843655/anti_kinder.png'),
+          child: Image.file(File(note.image)),
         ));
     // child: Center(child: Text(text)));
   }
