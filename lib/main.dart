@@ -17,7 +17,6 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      // home: Board(),
       home: Board(),
     );
   }
@@ -96,13 +95,18 @@ class MyCard extends StatelessWidget {
                     )),
           );
         },
-        child: GridTile(
-          footer: GridTileBar(
-            title: Text(note.text),
-            backgroundColor: Colors.black45,
-          ),
-          child: Image.file(File(note.image)),
+        child: Column(
+          children: [
+            Expanded(
+              child: Image.file(
+                File(note.image),
+              ),
+            ),
+            Text(
+              note.text,
+              style: const TextStyle(fontSize: 20.0),
+            )
+          ],
         ));
-    // child: Center(child: Text(text)));
   }
 }
