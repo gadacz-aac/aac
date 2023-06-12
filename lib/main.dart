@@ -5,6 +5,7 @@ import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:isar/isar.dart';
 
 import 'model/communication_symbol.dart';
 
@@ -18,75 +19,22 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: Board(),
+      home: Board(
+        boardId: 1,
+      ),
     );
   }
 }
 
-// class Board extends StatefulWidget {
-//   const Board({super.key, this.title = 'dupa'});
-
-//   final String title;
-
-//   @override
-//   State<Board> createState() => _BoardState();
-// }
-
-// class _BoardState extends State<Board> {
-//   final List<Note> notes = [];
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text(widget.title),
-//         actions: [
-//           IconButton(
-//               onPressed: () {
-//                 Navigator.push(context,
-//                     MaterialPageRoute(builder: (context) => const TtsScreen()));
-//               },
-//               icon: const Icon(Icons.set_meal))
-//         ],
-//       ),
-//       body: GridView.count(
-//         crossAxisCount: 2,
-//         children: notes.map((e) {
-//           return SymbolCard(
-//             note: e,
-//           );
-//         }).toList(),
-//       ),
-//       floatingActionButton: FloatingActionButton(
-//         onPressed: () async {
-//           final imageFile =
-//               await ImagePicker().pickImage(source: ImageSource.gallery);
-
-//           String defaultImage =
-//               'https://cdn.discordapp.com/attachments/1108422948970319886/1113420050058203256/image.png';
-
-//           String image = imageFile != null ? imageFile.path : defaultImage;
-//           debugPrint(image);
-//           setState(() {
-//             final String wordPair = WordPair.random().asLowerCase;
-//             Note note = Note(text: wordPair, image: image);
-//             notes.add(note);
-//           });
-//         },
-//         child: const Icon(Icons.add),
-//       ),
-//     );
-//   }
-// }
-
 class Board extends ConsumerWidget {
-  const Board({super.key, this.title = 'dupa'});
+  const Board({super.key, this.title = 'dupa', required this.boardId});
 
   final String title;
+  final Id boardId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final symbols = ref.watch(symbolsProvider);
+    final symbols = ref.watch(symbolsProvider(boardId));
 
     return Scaffold(
       appBar: AppBar(
@@ -109,7 +57,7 @@ class Board extends ConsumerWidget {
 
           String imagePath = imageFile != null ? imageFile.path : defaultImage;
           final manager = await ref.read(symbolManagerProvider.future);
-          manager.saveSymbol(WordPair.random().asLowerCase, imagePath);
+          manager.saveSymbol(boardId, WordPair.random().asLowerCase, imagePath);
         },
         child: const Icon(Icons.add),
       ),
@@ -126,10 +74,16 @@ class SymbolCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Board(title: symbol.label)),
-          );
+          if (symbol.childBoard.value != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Board(
+                        title: symbol.label,
+                        boardId: symbol.childBoard.value!.id,
+                      )),
+            );
+          }
         },
         child: Column(
           children: [

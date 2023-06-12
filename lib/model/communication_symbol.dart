@@ -1,5 +1,7 @@
 import 'package:isar/isar.dart';
 
+import 'board.dart';
+
 part 'communication_symbol.g.dart';
 
 @collection
@@ -10,4 +12,6 @@ class CommunicationSymbol {
   Id id = Isar.autoIncrement;
   String label;
   String imagePath;
+  final parentBoard = IsarLinks<Board>();
+  final childBoard = IsarLink<Board>();
 }
