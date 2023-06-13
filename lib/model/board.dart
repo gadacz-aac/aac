@@ -6,5 +6,4 @@ part 'board.g.dart';
 @collection
 class Board {
   Id id = Isar.autoIncrement;
-  final symbols = IsarLinks<CommunicationSymbol>();
 }
