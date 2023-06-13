@@ -27,20 +27,20 @@ class SymbolManager {
 
       if (board == null) return;
 
-      symbol.parentBoard.add(board);
-      symbol.parentBoard.save();
+      board.symbols.add(symbol);
+      board.symbols.save();
     });
   }
 
   Future<void> pinSymbolToBoard(CommunicationSymbol symbol, Board board) async {
-    symbol.parentBoard.add(board);
-    await isar.writeTxn(() => symbol.parentBoard.save());
+    board.symbols.add(symbol);
+    await isar.writeTxn(() => board.symbols.save());
   }
 
   Stream<List<CommunicationSymbol>> watchSymbols(Id boardId) async* {
     yield* isar.communicationSymbols
         .filter()
-        .parentBoard((board) => board.idEqualTo(boardId))
+        .parentBoard((boards) => boards.idEqualTo(boardId))
         .watch(fireImmediately: true);
   }
 

@@ -12,6 +12,8 @@ class CommunicationSymbol {
   Id id = Isar.autoIncrement;
   String label;
   String imagePath;
-  final parentBoard = IsarLinks<Board>();
+
+  @Backlink(to: 'symbols')
+  final parentBoard = IsarLink<Board>();
   final childBoard = IsarLink<Board>();
 }
