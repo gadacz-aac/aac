@@ -47,20 +47,25 @@ class Board extends ConsumerWidget {
               ),
           error: (error, stack) => const Text('Oops..'),
           loading: () => const CircularProgressIndicator()),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final imageFile =
-              await ImagePicker().pickImage(source: ImageSource.gallery);
+      // Button for adding new symbols (aka notes)
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const AddSymbolMenu()));
+      }
 
-          String defaultImage =
-              'https://cdn.discordapp.com/attachments/1108422948970319886/1113420050058203256/image.png';
+          // () async {
+          //   final imageFile =
+          //       await ImagePicker().pickImage(source: ImageSource.gallery);
 
-          String imagePath = imageFile != null ? imageFile.path : defaultImage;
-          final manager = await ref.read(symbolManagerProvider.future);
-          manager.saveSymbol(boardId, WordPair.random().asLowerCase, imagePath);
-        },
-        child: const Icon(Icons.add),
-      ),
+          //   String defaultImage =
+          //       'https://cdn.discordapp.com/attachments/1108422948970319886/1113420050058203256/image.png';
+
+          //   String imagePath = imageFile != null ? imageFile.path : defaultImage;
+          //   final manager = await ref.read(symbolManagerProvider.future);
+          //   manager.saveSymbol(boardId, WordPair.random().asLowerCase, imagePath);
+          // },
+          // child: const Icon(Icons.add),
+          ),
     );
   }
 }
@@ -100,5 +105,26 @@ class SymbolCard extends StatelessWidget {
     return Uri.parse(path).isAbsolute
         ? Image.network(path)
         : Image.file(File(path));
+  }
+}
+
+class AddSymbolMenu extends StatelessWidget {
+  const AddSymbolMenu({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Add a new symbol'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('Cancel'),
+        ),
+      ),
+    );
   }
 }
