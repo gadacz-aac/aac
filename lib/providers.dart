@@ -31,3 +31,23 @@ final symbolsProvider = StreamProvider.family<List<CommunicationSymbol>, Id>(
   final manager = await ref.watch(symbolManagerProvider.future);
   yield* manager.watchSymbols(parentBoardId);
 });
+
+class SentenceNotifier extends Notifier<List<String>> {
+  @override
+  List<String> build() {
+    return [];
+  }
+
+  void addWord(String word) {
+    state = [...state, word];
+  }
+
+  void clear() {
+    state = [];
+  }
+}
+
+final sentenceNotifierProvider =
+    NotifierProvider<SentenceNotifier, List<String>>(() {
+  return SentenceNotifier();
+});

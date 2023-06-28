@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:aac/providers.dart';
+import 'package:aac/tts_manager.dart';
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -39,6 +40,19 @@ class Board extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
+        actions: [
+          IconButton(
+              onPressed: () async {
+                final ttsManager = TtsManager();
+                ttsManager.speak(ref.read(sentenceNotifierProvider));
+              },
+              icon: const Icon(Icons.speaker)),
+          IconButton(
+              onPressed: () {
+                ref.read(sentenceNotifierProvider).clear();
+              },
+              icon: const Icon(Icons.clear))
+        ],
       ),
       body: symbols.when(
           data: (data) => GridView.count(
@@ -65,15 +79,19 @@ class Board extends ConsumerWidget {
   }
 }
 
-class SymbolCard extends StatelessWidget {
+class SymbolCard extends ConsumerWidget {
   const SymbolCard({super.key, required this.symbol});
 
   final CommunicationSymbol symbol;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
         onTap: () {
+          final tts = TtsManager();
+          tts.speak([symbol.label]);
+          ref.read(sentenceNotifierProvider.notifier).addWord(symbol.label);
+
           if (symbol.childBoard.value != null) {
             Navigator.push(
               context,
