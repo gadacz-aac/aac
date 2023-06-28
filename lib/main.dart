@@ -114,6 +114,8 @@ class AddSymbolMenu extends StatelessWidget {
           ),
           // Powinno się cofnąć za pomocą: Navigator.pop(context); a potem wykonać coś w podobie do tego:
           // A i część dodawania już do screena nowego note'a powinna być zrealizowana po naciśnięciu apply
+          // https://docs.flutter.dev/data-and-backend/state-mgmt/simple
+          // https://docs.flutter.dev/cookbook/navigation/returning-data
           // ElevatedButton(
           //   onPressed: () async {
           //     final imageFile =
