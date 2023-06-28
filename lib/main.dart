@@ -112,6 +112,24 @@ class AddSymbolMenu extends StatelessWidget {
               hintText: "Enter Symbol's name",
             ),
           ),
+          ElevatedButton(
+            onPressed: () async {
+              final imageFile =
+                  await ImagePicker().pickImage(source: ImageSource.gallery);
+
+              String defaultImage =
+                  'https://cdn.discordapp.com/attachments/1108422948970319886/1113420050058203256/image.png';
+
+              String imagePath =
+                  imageFile != null ? imageFile.path : defaultImage;
+              Navigator.pop(
+                context,
+                await imageFile,
+              ); // Fuck my life
+            },
+            child: const Text('Select image'),
+          ),
+
           // Powinno się cofnąć za pomocą: Navigator.pop(context); a potem wykonać coś w podobie do tego:
           // A i część dodawania już do screena nowego note'a powinna być zrealizowana po naciśnięciu apply
           // https://docs.flutter.dev/data-and-backend/state-mgmt/simple
