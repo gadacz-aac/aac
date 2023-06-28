@@ -51,21 +51,7 @@ class Board extends ConsumerWidget {
       floatingActionButton: FloatingActionButton(onPressed: () {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const AddSymbolMenu()));
-      }
-
-          // () async {
-          //   final imageFile =
-          //       await ImagePicker().pickImage(source: ImageSource.gallery);
-
-          //   String defaultImage =
-          //       'https://cdn.discordapp.com/attachments/1108422948970319886/1113420050058203256/image.png';
-
-          //   String imagePath = imageFile != null ? imageFile.path : defaultImage;
-          //   final manager = await ref.read(symbolManagerProvider.future);
-          //   manager.saveSymbol(boardId, WordPair.random().asLowerCase, imagePath);
-          // },
-          // child: const Icon(Icons.add),
-          ),
+      }),
     );
   }
 }
@@ -118,13 +104,32 @@ class AddSymbolMenu extends StatelessWidget {
         title: const Text('Add a new symbol'),
       ),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('Cancel'),
-        ),
-      ),
+          child: Column(
+        children: [
+          const TextField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: "Enter Symbol's name",
+            ),
+          ),
+          Row(
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  // Code for adding new symbol
+                },
+                child: const Text('Apply'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('Cancel'),
+              ),
+            ],
+          )
+        ],
+      )),
     );
   }
 }
