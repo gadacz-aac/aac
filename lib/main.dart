@@ -26,9 +26,10 @@ class MainApp extends StatelessWidget {
   }
 }
 
-Future<void> openMenu(BuildContext context) async {
+Future<List<String>> openMenu(BuildContext context) async {
   final result = await Navigator.push(
       context, MaterialPageRoute(builder: (context) => const AddSymbolMenu()));
+  return result;
 }
 
 class Board extends ConsumerWidget {
@@ -53,8 +54,8 @@ class Board extends ConsumerWidget {
           error: (error, stack) => const Text('Oops..'),
           loading: () => const CircularProgressIndicator()),
       // Button for adding new symbols (aka notes)
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        openMenu(context);
+      floatingActionButton: FloatingActionButton(onPressed: () async {
+        var result = await openMenu(context);
       }),
     );
   }
