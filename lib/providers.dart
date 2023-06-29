@@ -1,6 +1,8 @@
 import 'package:aac/model/board.dart';
 import 'package:aac/model/communication_symbol.dart';
 import 'package:aac/symbol_manager.dart';
+import 'package:aac/tts_manager.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
@@ -32,14 +34,29 @@ final symbolsProvider = StreamProvider.family<List<CommunicationSymbol>, Id>(
   yield* manager.watchSymbols(parentBoardId);
 });
 
-class SentenceNotifier extends Notifier<List<String>> {
+final ttsManagerProvider = Provider<TtsManager>((ref) => TtsManager());
+
+@immutable
+class CommunicationSymbolDto {
+  const CommunicationSymbolDto({required this.label, required this.imagePath});
+
+  final String label;
+  final String imagePath;
+}
+
+class SentenceNotifier extends Notifier<List<CommunicationSymbolDto>> {
   @override
-  List<String> build() {
+  List<CommunicationSymbolDto> build() {
     return [];
   }
 
-  void addWord(String word) {
+  void addWord(CommunicationSymbolDto word) {
     state = [...state, word];
+  }
+
+  void removeLastWord() {
+    if (state.isEmpty) return;
+    state = state.sublist(0, state.length - 1);
   }
 
   void clear() {
@@ -48,6 +65,6 @@ class SentenceNotifier extends Notifier<List<String>> {
 }
 
 final sentenceNotifierProvider =
-    NotifierProvider<SentenceNotifier, List<String>>(() {
+    NotifierProvider<SentenceNotifier, List<CommunicationSymbolDto>>(() {
   return SentenceNotifier();
 });
