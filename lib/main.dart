@@ -26,9 +26,11 @@ class MainApp extends StatelessWidget {
   }
 }
 
-Future<List<String>> openMenu(BuildContext context) async {
+Future<List<String>?> openMenu(BuildContext context) async {
   final result = await Navigator.push(
-      context, MaterialPageRoute(builder: (context) => const AddSymbolMenu()));
+      context,
+      MaterialPageRoute<List<String>>(
+          builder: (context) => const AddSymbolMenu()));
   return result;
 }
 
@@ -56,6 +58,9 @@ class Board extends ConsumerWidget {
       // Button for adding new symbols (aka notes)
       floatingActionButton: FloatingActionButton(onPressed: () async {
         var result = await openMenu(context);
+        if (result == null) return;
+        final manager = await ref.read(symbolManagerProvider.future);
+        manager.saveSymbol(boardId, result[1], result[0]);
       }),
     );
   }
@@ -167,18 +172,13 @@ class _AddSymbolMenuState extends State<AddSymbolMenu> {
 
           //     String imagePath =
           //         imageFile != null ? imageFile.path : defaultImage;
-          //     final manager = await ref.read(symbolManagerProvider.future);
-          //     manager.saveSymbol(
-          //         boardId, WordPair.random().asLowerCase, imagePath);
-          //   },
-          //   child: const Text('Select image'),
-          // ),
+
           Row(
             children: [
               ElevatedButton(
                 onPressed: () {
                   // Code for adding new symbol
-                  var result = [];
+                  List<String> result = [];
                   result.add(_imagePath);
                   result.add(_controller.text);
                   Navigator.pop(context,
