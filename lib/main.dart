@@ -94,8 +94,29 @@ class SymbolCard extends StatelessWidget {
   }
 }
 
-class AddSymbolMenu extends StatelessWidget {
+class AddSymbolMenu extends StatefulWidget {
   const AddSymbolMenu({super.key});
+
+  @override
+  State<AddSymbolMenu> createState() => _AddSymbolMenuState();
+}
+
+class _AddSymbolMenuState extends State<AddSymbolMenu> {
+  String _imagePath = "";
+
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,12 +127,14 @@ class AddSymbolMenu extends StatelessWidget {
       body: Center(
           child: Column(
         children: [
-          const TextField(
-            decoration: InputDecoration(
+          TextField(
+            controller: _controller,
+            decoration: const InputDecoration(
               border: OutlineInputBorder(),
-              hintText: "Enter Symbol's name",
+              hintText: "Enter Symbol's name", // Pass it in Navigator.pop
             ),
           ),
+          //https://stackoverflow.com/questions/61721809/flutter-call-navigator-pop-inside-async-function
           ElevatedButton(
             onPressed: () async {
               final imageFile =
@@ -120,14 +143,9 @@ class AddSymbolMenu extends StatelessWidget {
               String defaultImage =
                   'https://cdn.discordapp.com/attachments/1108422948970319886/1113420050058203256/image.png';
 
-              String imagePath =
-                  imageFile != null ? imageFile.path : defaultImage;
-              Navigator.pop(
-                context,
-                await imageFile,
-              ); // Fuck my life
+              _imagePath = imageFile != null ? imageFile.path : defaultImage;
             },
-            child: const Text('Select image'),
+            child: const Text('Select image'), // Pass it in Navigator.pop
           ),
 
           // Powinno się cofnąć za pomocą: Navigator.pop(context); a potem wykonać coś w podobie do tego:
@@ -155,13 +173,17 @@ class AddSymbolMenu extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   // Code for adding new symbol
-                  Navigator.pop(context);
+                  var result = [];
+                  result.add(_imagePath);
+                  result.add(_controller.text);
+                  Navigator.pop(context,
+                      result); // Return data used for creating new Symbol
                 },
                 child: const Text('Apply'),
               ),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.pop(context); // Return nothing
                 },
                 child: const Text('Cancel'),
               ),
