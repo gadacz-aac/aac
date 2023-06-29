@@ -3,7 +3,6 @@ import 'package:flutter_tts/flutter_tts.dart';
 
 class TtsManager {
   late final FlutterTts tts;
-  List<String> queue = [];
 
   TtsManager() {
     tts = FlutterTts();
@@ -15,6 +14,7 @@ class TtsManager {
     await tts.setSpeechRate(0.5);
     await tts.setPitch(1);
     await tts.setLanguage('pl-PL');
+    await tts.setQueueMode(1);
   }
 
   Future<void> sayWord(String word) async {
