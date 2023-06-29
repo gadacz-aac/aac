@@ -26,6 +26,14 @@ class MainApp extends StatelessWidget {
   }
 }
 
+Future<List<String>?> openMenu(BuildContext context) async {
+  final result = await Navigator.push(
+      context,
+      MaterialPageRoute<List<String>>(
+          builder: (context) => const AddSymbolMenu()));
+  return result;
+}
+
 class Board extends ConsumerWidget {
   const Board({super.key, this.title = 'dupa', required this.boardId});
 
@@ -47,20 +55,13 @@ class Board extends ConsumerWidget {
               ),
           error: (error, stack) => const Text('Oops..'),
           loading: () => const CircularProgressIndicator()),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final imageFile =
-              await ImagePicker().pickImage(source: ImageSource.gallery);
-
-          String defaultImage =
-              'https://cdn.discordapp.com/attachments/1108422948970319886/1113420050058203256/image.png';
-
-          String imagePath = imageFile != null ? imageFile.path : defaultImage;
-          final manager = await ref.read(symbolManagerProvider.future);
-          manager.saveSymbol(boardId, WordPair.random().asLowerCase, imagePath);
-        },
-        child: const Icon(Icons.add),
-      ),
+      // Button for adding new symbols (aka notes)
+      floatingActionButton: FloatingActionButton(onPressed: () async {
+        var result = await openMenu(context);
+        if (result == null) return;
+        final manager = await ref.read(symbolManagerProvider.future);
+        manager.saveSymbol(boardId, result[1], result[0]);
+      }),
     );
   }
 }
@@ -100,5 +101,101 @@ class SymbolCard extends StatelessWidget {
     return Uri.parse(path).isAbsolute
         ? Image.network(path)
         : Image.file(File(path));
+  }
+}
+
+class AddSymbolMenu extends StatefulWidget {
+  const AddSymbolMenu({super.key});
+
+  @override
+  State<AddSymbolMenu> createState() => _AddSymbolMenuState();
+}
+
+class _AddSymbolMenuState extends State<AddSymbolMenu> {
+  String _imagePath = "";
+
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Add a new symbol'),
+      ),
+      body: Center(
+          child: Column(
+        children: [
+          TextField(
+            controller: _controller,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: "Enter Symbol's name", // Pass it in Navigator.pop
+            ),
+          ),
+          //https://stackoverflow.com/questions/61721809/flutter-call-navigator-pop-inside-async-function
+          ElevatedButton(
+            onPressed: () async {
+              final imageFile =
+                  await ImagePicker().pickImage(source: ImageSource.gallery);
+
+              String defaultImage =
+                  'https://cdn.discordapp.com/attachments/1108422948970319886/1113420050058203256/image.png';
+
+              _imagePath = imageFile != null ? imageFile.path : defaultImage;
+            },
+            child: const Text('Select image'), // Pass it in Navigator.pop
+          ),
+
+          // Powinno się cofnąć za pomocą: Navigator.pop(context); a potem wykonać coś w podobie do tego:
+          // A i część dodawania już do screena nowego note'a powinna być zrealizowana po naciśnięciu apply
+          // https://docs.flutter.dev/data-and-backend/state-mgmt/simple
+          // https://docs.flutter.dev/cookbook/navigation/returning-data
+          // ElevatedButton(
+          //   onPressed: () async {
+          //     final imageFile =
+          //         await ImagePicker().pickImage(source: ImageSource.gallery);
+
+          //     String defaultImage =
+          //         'https://cdn.discordapp.com/attachments/1108422948970319886/1113420050058203256/image.png';
+
+          //     String imagePath =
+          //         imageFile != null ? imageFile.path : defaultImage;
+
+          Row(
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  // Code for adding new symbol
+                  List<String> result = [];
+                  result.add(_imagePath);
+                  result.add(_controller.text);
+                  Navigator.pop(context,
+                      result); // Return data used for creating new Symbol
+                },
+                child: const Text('Apply'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context); // Return nothing
+                },
+                child: const Text('Cancel'),
+              ),
+            ],
+          )
+        ],
+      )),
+    );
   }
 }
