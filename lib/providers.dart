@@ -34,7 +34,9 @@ final symbolsProvider = StreamProvider.family<List<CommunicationSymbol>, Id>(
   yield* manager.watchSymbols(parentBoardId);
 });
 
-final ttsManagerProvider = Provider<TtsManager>((ref) => TtsManager());
+final ttsManagerProvider = Provider<TtsManager>((ref) {
+  return TtsManager();
+});
 
 @immutable
 class CommunicationSymbolDto {

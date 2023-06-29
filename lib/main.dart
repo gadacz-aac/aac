@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:aac/providers.dart';
+import 'package:aac/tts_manager.dart';
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,10 +20,32 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: Board(
-        boardId: 1,
-      ),
-    );
+        home: Board(
+      boardId: 1,
+    ));
+    // home: TtsScreen());
+  }
+}
+
+class BoardExperimental extends ConsumerStatefulWidget {
+  const BoardExperimental({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _BoardExperimentalState();
+}
+
+class _BoardExperimentalState extends ConsumerState<BoardExperimental> {
+  @override
+  void initState() {
+    super.initState();
+
+    ref.read(ttsManagerProvider).sayWord("word");
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
 
@@ -98,9 +121,10 @@ class SentenceBar extends ConsumerWidget {
         children: [
           IconButton(
               onPressed: () {
-                ref
-                    .read(ttsManagerProvider)
-                    .saySentence(ref.read(sentenceNotifierProvider));
+                TtsManager().saySentence(ref.read(sentenceNotifierProvider));
+                // ref
+                //     .read(ttsManagerProvider)
+                //     .saySentence(ref.read(sentenceNotifierProvider));
               },
               icon: const Icon(Icons.play_arrow)),
           Expanded(
