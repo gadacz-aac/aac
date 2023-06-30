@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:aac/providers.dart';
-import 'package:aac/screens/create_symbol_screen.dart';
+import 'package:aac/src/shared/providers.dart';
+import 'package:aac/src/features/boards/board_screen.dart';
+import 'package:aac/src/features/symbols/create_symbol_screen.dart';
+import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
-
-import 'model/communication_symbol.dart';
 
 void main() {
   runApp(const ProviderScope(child: MainApp()));
@@ -18,7 +18,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-        home: Board(
+        home: BoardScreen(
       boardId: 1,
     ));
   }
@@ -30,36 +30,6 @@ Future<List<String>?> openMenu(BuildContext context) async {
       MaterialPageRoute<List<String>>(
           builder: (context) => const AddSymbolMenu()));
   return result;
-}
-
-class Board extends ConsumerWidget {
-  const Board({super.key, this.title = 'dupa', required this.boardId});
-
-  final String title;
-  final Id boardId;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
-      body: Column(
-        children: [
-          const SentenceBar(),
-          SymbolsGrid(
-            boardId: boardId,
-          )
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(onPressed: () async {
-        var result = await openMenu(context);
-        if (result == null) return;
-        final manager = await ref.read(symbolManagerProvider.future);
-        manager.saveSymbol(boardId, result[1], result[0]);
-      }),
-    );
-  }
 }
 
 class SymbolsGrid extends ConsumerWidget {
@@ -177,7 +147,7 @@ class SymbolCard extends ConsumerWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => Board(
+                  builder: (context) => BoardScreen(
                         title: symbol.label,
                         boardId: symbol.childBoard.value!.id,
                       )),

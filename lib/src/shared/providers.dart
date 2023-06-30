@@ -1,7 +1,7 @@
-import 'package:aac/model/board.dart';
-import 'package:aac/model/communication_symbol.dart';
+import 'package:aac/src/features/boards/model/board.dart';
+import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/symbol_manager.dart';
-import 'package:aac/tts_manager.dart';
+import 'package:aac/src/features/text_to_speech/tts_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
