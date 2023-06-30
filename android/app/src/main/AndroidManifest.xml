@@ -1,4 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <queries>
+        <intent>
+            <action android:name="TextToSpeech.Engine.INTENT_ACTION_TTS_SERVICE"/>
+        </intent>
+    </queries>
+
     <application
         android:label="aac"
         android:name="${applicationName}"
