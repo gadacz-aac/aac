@@ -27,12 +27,15 @@ class BoardScreen extends ConsumerWidget {
           )
         ],
       ),
-      floatingActionButton: FloatingActionButton(onPressed: () async {
-        var result = await openMenu(context);
-        if (result == null) return;
-        final manager = await ref.read(symbolManagerProvider.future);
-        manager.saveSymbol(boardId, result[1], result[0]);
-      }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          var result = await openMenu(context);
+          if (result == null) return;
+          final manager = await ref.read(symbolManagerProvider.future);
+          manager.saveSymbol(boardId, result[1], result[0]);
+        },
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
@@ -49,7 +52,7 @@ class SymbolsGrid extends ConsumerWidget {
     return symbols.when(
         data: (data) => Flexible(
               child: GridView.count(
-                crossAxisCount: 1,
+                crossAxisCount: 2,
                 children: data.map((e) => SymbolCard(symbol: e)).toList(),
               ),
             ),

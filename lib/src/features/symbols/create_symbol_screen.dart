@@ -41,7 +41,6 @@ class _AddSymbolMenuState extends State<AddSymbolMenu> {
               hintText: "Enter Symbol's name", // Pass it in Navigator.pop
             ),
           ),
-          //https://stackoverflow.com/questions/61721809/flutter-call-navigator-pop-inside-async-function
           ElevatedButton(
             onPressed: () async {
               final imageFile =
@@ -54,7 +53,6 @@ class _AddSymbolMenuState extends State<AddSymbolMenu> {
             },
             child: const Text('Select image'), // Pass it in Navigator.pop
           ),
-
           Row(
             children: [
               ElevatedButton(

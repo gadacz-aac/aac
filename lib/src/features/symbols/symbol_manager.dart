@@ -41,14 +41,4 @@ class SymbolManager {
         .parentBoard((boards) => boards.idEqualTo(boardId))
         .watch(fireImmediately: true);
   }
-
-  // Stream<Board> watchBoard() async* {
-  //   final board = isar.boards.watchObject(1, fireImmediately: true);
-  //   await for (final board in board) {
-  //     print(board);
-  //     if (board != null) {
-  //       yield board;
-  //     }
-  //   }
-  // }
 }

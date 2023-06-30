@@ -9,7 +9,6 @@ final isarPod = FutureProvider<Isar>((ref) async {
   final isar = await Isar.open([CommunicationSymbolSchema, BoardSchema],
       directory: dir.path);
 
-  // isar.collection<Board>().export
   isar.writeTxn(() async {
     final board = await isar.boards.get(1);
     if (board == null) {
