@@ -27,28 +27,6 @@ class MainApp extends StatelessWidget {
   }
 }
 
-class BoardExperimental extends ConsumerStatefulWidget {
-  const BoardExperimental({super.key});
-
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _BoardExperimentalState();
-}
-
-class _BoardExperimentalState extends ConsumerState<BoardExperimental> {
-  @override
-  void initState() {
-    super.initState();
-
-    ref.read(ttsManagerProvider).sayWord("word");
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
-
 class Board extends ConsumerWidget {
   const Board({super.key, this.title = 'dupa', required this.boardId});
 
