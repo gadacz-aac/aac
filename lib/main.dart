@@ -173,9 +173,7 @@ class SymbolCard extends ConsumerWidget {
     return InkWell(
         onTap: () {
           ref.read(ttsManagerProvider).sayWord(symbol.label);
-          ref.read(sentenceNotifierProvider.notifier).addWord(
-              CommunicationSymbolDto(
-                  imagePath: symbol.imagePath, label: symbol.label));
+          ref.read(sentenceNotifierProvider.notifier).addWord(symbol);
 
           if (symbol.childBoard.value != null) {
             Navigator.push(

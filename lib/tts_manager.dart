@@ -2,12 +2,8 @@ import 'package:aac/providers.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 class TtsManager {
-  late final FlutterTts tts;
+  final tts = FlutterTts();
   bool isFirstTime = true;
-
-  TtsManager() {
-    tts = FlutterTts();
-  }
 
   Future<void> setDefaultOptions() async {
     await tts.setVolume(1);
@@ -19,6 +15,8 @@ class TtsManager {
   }
 
   Future<void> _speak(String word) async {
+    // becuase of setup there might be a little
+    // delay before first utterance is played
     if (isFirstTime) {
       isFirstTime = false;
       await setDefaultOptions();

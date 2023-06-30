@@ -52,8 +52,10 @@ class SentenceNotifier extends Notifier<List<CommunicationSymbolDto>> {
     return [];
   }
 
-  void addWord(CommunicationSymbolDto word) {
-    state = [...state, word];
+  void addWord(CommunicationSymbol word) {
+    final dto =
+        CommunicationSymbolDto(label: word.label, imagePath: word.imagePath);
+    state = [...state, dto];
   }
 
   void removeLastWord() {
