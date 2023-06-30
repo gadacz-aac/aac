@@ -1,4 +1,4 @@
-import 'package:aac/src/shared/providers.dart';
+import 'package:aac/src/features/text_to_speech/provider.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 class TtsManager {
