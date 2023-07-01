@@ -59,7 +59,9 @@ class _AddSymbolMenuState extends State<AddSymbolMenu> {
                 onPressed: () {
                   // Code for adding new symbol
                   List<String> result = [];
-                  result.add(_imagePath);
+                  result.add(_imagePath == ""
+                      ? "https://cdn.discordapp.com/attachments/1108422948970319886/1113420050058203256/image.png"
+                      : _imagePath);
                   result.add(_controller.text);
                   Navigator.pop(context,
                       result); // Return data used for creating new Symbol
