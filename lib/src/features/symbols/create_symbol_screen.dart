@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddSymbolMenu extends StatefulWidget {
@@ -12,11 +13,13 @@ class _AddSymbolMenuState extends State<AddSymbolMenu> {
   String _imagePath = "";
 
   late TextEditingController _controller;
+  late TextEditingController _crossAxisCountController;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController();
+    _crossAxisCountController = TextEditingController(text: "2");
   }
 
   @override
@@ -53,6 +56,11 @@ class _AddSymbolMenuState extends State<AddSymbolMenu> {
             },
             child: const Text('Select image'), // Pass it in Navigator.pop
           ),
+          TextField(
+            controller: _crossAxisCountController,
+            keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          ),
           Row(
             children: [
               ElevatedButton(
@@ -63,6 +71,7 @@ class _AddSymbolMenuState extends State<AddSymbolMenu> {
                       ? "https://cdn.discordapp.com/attachments/1108422948970319886/1113420050058203256/image.png"
                       : _imagePath);
                   result.add(_controller.text);
+                  result.add(_crossAxisCountController.text);
                   Navigator.pop(context,
                       result); // Return data used for creating new Symbol
                 },

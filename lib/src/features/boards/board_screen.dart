@@ -1,4 +1,5 @@
 import 'package:aac/main.dart';
+import 'package:aac/src/features/boards/provider.dart';
 import 'package:aac/src/features/symbols/provider.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:aac/src/features/symbols/ui/symbol_image.dart';
@@ -32,7 +33,10 @@ class BoardScreen extends ConsumerWidget {
           var result = await openMenu(context);
           if (result == null) return;
           final manager = await ref.read(symbolManagerProvider.future);
-          manager.saveSymbol(boardId, result[1], result[0]);
+          manager.saveSymbol(boardId,
+              label: result[1],
+              imagePath: result[0],
+              crossAxisCount: result[2]);
         },
         child: const Icon(Icons.add),
       ),
@@ -48,11 +52,13 @@ class SymbolsGrid extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final symbols = ref.watch(symbolsProvider(boardId));
+    final crossAxisCount =
+        ref.watch(boardCrossAxisCountProvider(boardId)).valueOrNull;
 
     return symbols.when(
         data: (data) => Flexible(
               child: GridView.count(
-                crossAxisCount: 2,
+                crossAxisCount: crossAxisCount ?? 2,
                 children: data.map((e) => SymbolCard(symbol: e)).toList(),
               ),
             ),
