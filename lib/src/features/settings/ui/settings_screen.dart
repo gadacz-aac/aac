@@ -1,16 +1,18 @@
+import 'package:aac/src/features/settings/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum OrientationOption { portrait, landscape, auto }
 
-class SettingsScreen extends StatefulWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   OrientationOption _orientationOption = OrientationOption.portrait;
 
   @override
@@ -29,13 +31,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             DropdownButton<OrientationOption>(
               value: _orientationOption,
-              onChanged: (newValue) {
+              onChanged: (newValue) async {
                 setState(() {
                   _orientationOption = newValue!;
                 });
 
-                List<DeviceOrientation> preferredOrientations = [];
+                final settingsManager =
+                    await ref.watch(settingsManagerProvider.future);
+                settingsManager.putString(
+                    "orientation", _orientationOption.name);
 
+                List<DeviceOrientation> preferredOrientations = [];
                 if (_orientationOption == OrientationOption.portrait) {
                   preferredOrientations = [
                     DeviceOrientation.portraitUp,
@@ -55,9 +61,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ];
                 }
 
+                print(preferredOrientations);
                 SystemChrome.setPreferredOrientations(preferredOrientations);
-
-                //widget.onOptionChanged(newValue!);
               },
               items: const [
                 DropdownMenuItem(
