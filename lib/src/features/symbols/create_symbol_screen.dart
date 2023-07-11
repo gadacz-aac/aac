@@ -88,7 +88,17 @@ class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
                 },
                 child: const Text('Select image'), // Pass it in Navigator.pop
               ),
-              TextField(
+              TextFormField(
+                validator: (value) {
+                  if (value == null) {
+                    return 'Please enter a number';
+                  }
+                  if (int.tryParse(value)! <= 0) {
+                    // TODO: Można dodać obsługę tekstu, albo coś jeszcze
+                    return 'The width must be higher than 0';
+                  }
+                  return null;
+                },
                 controller: _crossAxisCountController,
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
