@@ -19,6 +19,7 @@ class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
 
   late TextEditingController _controller;
   late TextEditingController _crossAxisCountController;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -35,68 +36,79 @@ class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
   }
 
   Future<void> _submit() async {
-    _imagePath == ""
-        ? "https://cdn.discordapp.com/attachments/1108422948970319886/1113420050058203256/image.png"
-        : _imagePath;
-    final manager = await ref.read(symbolManagerProvider.future);
-    manager.saveSymbol(widget.boardId,
-        label: _controller.text,
-        imagePath: _imagePath,
-        crossAxisCount: _crossAxisCountController.text);
-    if (context.mounted) {
-      Navigator.pop(context); // Return nothing
+    if (_formKey.currentState!.validate()) {
+      _imagePath == ""
+          ? "https://cdn.discordapp.com/attachments/1108422948970319886/1113420050058203256/image.png"
+          : _imagePath;
+      final manager = await ref.read(symbolManagerProvider.future);
+      manager.saveSymbol(widget.boardId,
+          label: _controller.text,
+          imagePath: _imagePath,
+          crossAxisCount: _crossAxisCountController.text);
+      if (context.mounted) {
+        Navigator.pop(context); // Return nothing
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Add a new symbol'),
-      ),
-      body: Center(
-          child: Column(
-        children: [
-          TextField(
-            controller: _controller,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              hintText: "Enter Symbol's name", // Pass it in Navigator.pop
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              final imageFile =
-                  await ImagePicker().pickImage(source: ImageSource.gallery);
-
-              String defaultImage =
-                  'https://cdn.discordapp.com/attachments/1108422948970319886/1113420050058203256/image.png';
-
-              _imagePath = imageFile != null ? imageFile.path : defaultImage;
-            },
-            child: const Text('Select image'), // Pass it in Navigator.pop
-          ),
-          TextField(
-            controller: _crossAxisCountController,
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          ),
-          Row(
+        appBar: AppBar(
+          title: const Text('Add a new symbol'),
+        ),
+        body: Form(
+          key: _formKey,
+          child: Center(
+              child: Column(
             children: [
-              ElevatedButton(
-                onPressed: _submit,
-                child: const Text('Apply'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context); // Return nothing
+              TextFormField(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
                 },
-                child: const Text('Cancel'),
+                controller: _controller,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: "Enter Symbol's name", // Pass it in Navigator.pop
+                ),
               ),
+              ElevatedButton(
+                onPressed: () async {
+                  final imageFile = await ImagePicker()
+                      .pickImage(source: ImageSource.gallery);
+
+                  String defaultImage =
+                      'https://cdn.discordapp.com/attachments/1108422948970319886/1113420050058203256/image.png';
+
+                  _imagePath =
+                      imageFile != null ? imageFile.path : defaultImage;
+                },
+                child: const Text('Select image'), // Pass it in Navigator.pop
+              ),
+              TextField(
+                controller: _crossAxisCountController,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              ),
+              Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: _submit,
+                    child: const Text('Apply'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context); // Return nothing
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                ],
+              )
             ],
-          )
-        ],
-      )),
-    );
+          )),
+        ));
   }
 }
