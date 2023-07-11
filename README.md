@@ -1,4 +1,4 @@
-## Why there're so many errors? I've just cloned this repo
+## Why there're so many errors? I've just cloned this repo!!
 
 Before you can start coding you have to run these two commands. They'll download all of the packages you need and generate files used by [isar](https://isar.dev/tutorials/quickstart.html#_3-run-code-generator).
 
@@ -29,7 +29,7 @@ rm -rf **/*.g.dart
 ```
 
 
-## The errors won't go away
+## The errors won't go away! What do i do?
 
 If the above steps didn't help you it's propably something you did that upset Dash. Why don't yeh 'ave some watah and go faw a walk, mate? Remember that you can always ask for help on discord.
 
