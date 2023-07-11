@@ -1,7 +1,8 @@
 import 'package:aac/src/features/settings/ui/settings_screen.dart';
 import 'package:flutter/services.dart';
 
-void changeOrientation(String orientation) {
+void changeOrientation(String? orientation) {
+  if (orientation == null) return;
   List<DeviceOrientation> preferredOrientations = [];
   if (orientation == OrientationOption.portrait.name) {
     preferredOrientations = [

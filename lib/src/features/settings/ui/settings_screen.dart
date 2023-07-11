@@ -1,6 +1,6 @@
+import 'package:aac/src/features/settings/change_orientation.dart';
 import 'package:aac/src/features/settings/providers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum OrientationOption { portrait, landscape, auto }
@@ -31,38 +31,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ),
             DropdownButton<OrientationOption>(
               value: _orientationOption,
-              onChanged: (newValue) async {
+              onChanged: (newValue) {
                 setState(() {
                   _orientationOption = newValue!;
                 });
 
-                final settingsManager =
-                    await ref.watch(settingsManagerProvider.future);
+                final settingsManager = ref.watch(settingsManagerProvider);
                 settingsManager.putString(
                     "orientation", _orientationOption.name);
 
-                List<DeviceOrientation> preferredOrientations = [];
-                if (_orientationOption == OrientationOption.portrait) {
-                  preferredOrientations = [
-                    DeviceOrientation.portraitUp,
-                    DeviceOrientation.portraitDown,
-                  ];
-                } else if (_orientationOption == OrientationOption.landscape) {
-                  preferredOrientations = [
-                    DeviceOrientation.landscapeLeft,
-                    DeviceOrientation.landscapeRight,
-                  ];
-                } else if (_orientationOption == OrientationOption.auto) {
-                  preferredOrientations = [
-                    DeviceOrientation.portraitUp,
-                    DeviceOrientation.portraitDown,
-                    DeviceOrientation.landscapeLeft,
-                    DeviceOrientation.landscapeRight,
-                  ];
-                }
-
-                print(preferredOrientations);
-                SystemChrome.setPreferredOrientations(preferredOrientations);
+                changeOrientation(_orientationOption.name);
               },
               items: const [
                 DropdownMenuItem(
