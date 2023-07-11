@@ -1,5 +1,4 @@
 import 'package:aac/src/features/main_menu/ui/main_menu_screen.dart';
-import 'package:aac/src/features/symbols/create_symbol_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -16,12 +15,4 @@ class MainApp extends StatelessWidget {
       home: MainMenuScreen(), // Set MainMenuScreen as the home screen
     );
   }
-}
-
-Future<List<String>?> openMenu(BuildContext context) async {
-  final result = await Navigator.push(
-      context,
-      MaterialPageRoute<List<String>>(
-          builder: (context) => const AddSymbolMenu()));
-  return result;
 }
