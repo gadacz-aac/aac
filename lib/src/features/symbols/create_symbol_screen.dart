@@ -35,10 +35,10 @@ class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
   }
 
   Future<void> _submit() async {
-    _imagePath == ""
+    _imagePath = _imagePath == ""
         ? "https://cdn.discordapp.com/attachments/1108422948970319886/1113420050058203256/image.png"
         : _imagePath;
-    final manager = await ref.read(symbolManagerProvider.future);
+    final manager = ref.read(symbolManagerProvider);
     manager.saveSymbol(widget.boardId,
         label: _controller.text,
         imagePath: _imagePath,
