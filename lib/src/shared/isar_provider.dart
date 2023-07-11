@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
-final isarPod = FutureProvider<Isar>((ref) async {
+Future<Isar> initIsar() async {
   final dir = await getApplicationDocumentsDirectory();
   final isar = await Isar.open([CommunicationSymbolSchema, BoardSchema],
       directory: dir.path);
@@ -17,4 +17,10 @@ final isarPod = FutureProvider<Isar>((ref) async {
   });
 
   return isar;
-});
+}
+
+// we're going to override this provider in main(). alternativly we could use
+// FutureProvider but this will give us some additional benifits
+// - https://github.com/piotrek813/aac/issues/26
+// - https://docs-v2.riverpod.dev/docs/concepts/scopes#initialization-of-synchronous-provider-for-async-apis
+final isarPod = Provider<Isar>((ref) => throw UnimplementedError());
