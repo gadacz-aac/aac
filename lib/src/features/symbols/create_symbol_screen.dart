@@ -25,6 +25,7 @@ class _AddSymbolMenuState extends State<AddSymbolMenu> {
   @override
   void dispose() {
     _controller.dispose();
+    _crossAxisCountController.dispose();
     super.dispose();
   }
 
