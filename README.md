@@ -9,7 +9,7 @@ dart run build_runner build
 
 ## Something isn't working
 
-If you just merged from another branch, or if you're haunted by many a strange errors. It be could idea to open your terminal and run these commands in project's main directory. It's not a silver bullet but who knows - it might just save you from hours of painful debuging.
+If you just merged from another branch, or if you're haunted by many a strange errors. It be could a good idea to open your terminal and run these commands in project's main directory. It's not a silver bullet but who knows - it might just save you from hours of painful debuging.
 
 ```bash
 flutter clean
