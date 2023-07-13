@@ -13,52 +13,90 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
-  OrientationOption _orientationOption = OrientationOption.portrait;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings2'),
+        title: const Text('Settings'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Orientation:',
-              style: TextStyle(fontSize: 20),
-            ),
-            DropdownButton<OrientationOption>(
-              value: _orientationOption,
-              onChanged: (newValue) {
-                setState(() {
-                  _orientationOption = newValue!;
-                });
+      body: Column(
+        children: [
+          PersistentDropdownButton("orientation",
+              defaultValue: OrientationOption.portrait.name,
+              onChanged: changeOrientation,
+              items: [
+                DropdownMenuItem(
+                  value: OrientationOption.portrait.name,
+                  child: const Text('Portrait'),
+                ),
+                DropdownMenuItem(
+                  value: OrientationOption.landscape.name,
+                  child: const Text('Landscape'),
+                ),
+                DropdownMenuItem(
+                  value: OrientationOption.auto.name,
+                  child: const Text('Auto'),
+                ),
+              ])
+        ],
+      ),
+    );
+  }
+}
 
-                final settingsManager = ref.watch(settingsManagerProvider);
-                settingsManager.putString(
-                    "orientation", _orientationOption.name);
+class PersistentDropdownButton<T> extends ConsumerStatefulWidget {
+  const PersistentDropdownButton(
+    this.settingsEntryKey, {
+    super.key,
+    required this.defaultValue,
+    required this.items,
+    this.onChanged,
+  });
 
-                changeOrientation(_orientationOption.name);
-              },
-              items: const [
-                DropdownMenuItem(
-                  value: OrientationOption.portrait,
-                  child: Text('Portrait'),
-                ),
-                DropdownMenuItem(
-                  value: OrientationOption.landscape,
-                  child: Text('Landscape'),
-                ),
-                DropdownMenuItem(
-                  value: OrientationOption.auto,
-                  child: Text('Auto'),
-                ),
-              ],
-            ),
-          ],
-        ),
+  final T defaultValue;
+  final List<DropdownMenuItem<T>> items;
+  final ValueChanged<T?>? onChanged;
+  final String settingsEntryKey;
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _PersistentDropdownState<T>();
+}
+
+class _PersistentDropdownState<T>
+    extends ConsumerState<PersistentDropdownButton<T>> {
+  late T _value;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final settingsManager = ref.read(settingsManagerProvider);
+    _value = settingsManager.getValueSync(widget.settingsEntryKey) ??
+        widget.defaultValue;
+  }
+
+  void _onChanged(T? newValue) {
+    setState(() {
+      if (newValue != null) _value = newValue;
+    });
+
+    final settingsManager = ref.read(settingsManagerProvider);
+    settingsManager.putValueSync(widget.settingsEntryKey, _value);
+
+    if (widget.onChanged != null) widget.onChanged!(newValue);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(widget.settingsEntryKey),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          DropdownButton(
+              value: _value, items: widget.items, onChanged: _onChanged)
+        ],
       ),
     );
   }

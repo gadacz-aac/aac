@@ -8,10 +8,23 @@ class SettingsManager {
 
   final Isar isar;
 
-  Future<void> putString(String key, String value) async {
-    final entry = SettingsEntry(key: key, stringValue: value);
-    await isar.writeTxn(() async {
-      await isar.settingsEntrys.putByKey(entry);
-    });
+  Future<dynamic> getValue(String key) async {
+    final entry = await isar.settingsEntrys.getByKey(key);
+    return entry?.value;
+  }
+
+  dynamic getValueSync(String key) {
+    final entry = isar.settingsEntrys.getByKeySync(key);
+    return entry?.value;
+  }
+
+  Future<void> putValue(String key, dynamic value) async {
+    final entry = SettingsEntry(key: key, value: value);
+    await isar.writeTxn(() => isar.settingsEntrys.put(entry));
+  }
+
+  void putValueSync(String key, dynamic value) {
+    final entry = SettingsEntry(key: key, value: value);
+    isar.writeTxnSync(() => isar.settingsEntrys.putSync(entry));
   }
 }
