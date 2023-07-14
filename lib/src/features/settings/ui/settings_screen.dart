@@ -1,7 +1,9 @@
 import 'package:aac/src/features/settings/change_orientation.dart';
-import 'package:aac/src/features/settings/providers.dart';
+import 'package:aac/src/features/settings/ui/switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'dropdown.dart';
 
 enum OrientationOption { portrait, landscape, auto }
 
@@ -13,6 +15,7 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  final bool _value = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,83 +24,33 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       ),
       body: Column(
         children: [
-          PersistentDropdownButton("orientation",
-              title: "Orientacja",
-              defaultValue: OrientationOption.portrait.name,
-              onChanged: changeOrientation,
-              items: [
-                DropdownMenuItem(
-                  value: OrientationOption.portrait.name,
-                  child: const Text('Portrait'),
-                ),
-                DropdownMenuItem(
-                  value: OrientationOption.landscape.name,
-                  child: const Text('Landscape'),
-                ),
-                DropdownMenuItem(
-                  value: OrientationOption.auto.name,
-                  child: const Text('Auto'),
-                ),
-              ])
+          PersistentDropdownButton(
+            "orientation",
+            title: "Orientacja",
+            defaultValue: OrientationOption.portrait.name,
+            onChanged: changeOrientation,
+            items: [
+              DropdownMenuItem(
+                value: OrientationOption.portrait.name,
+                child: const Text('Portrait'),
+              ),
+              DropdownMenuItem(
+                value: OrientationOption.landscape.name,
+                child: const Text('Landscape'),
+              ),
+              DropdownMenuItem(
+                value: OrientationOption.auto.name,
+                child: const Text('Auto'),
+              ),
+            ],
+          ),
+          const PersistentSwitch(
+            "kiosk",
+            title: "Protective mode",
+            subtitle: "Prevent your child from closing the app",
+          )
         ],
       ),
     );
-  }
-}
-
-class PersistentDropdownButton<T> extends ConsumerStatefulWidget {
-  const PersistentDropdownButton(
-    this.settingsEntryKey, {
-    super.key,
-    required this.defaultValue,
-    required this.items,
-    this.title,
-    this.subtitle,
-    this.onChanged,
-  });
-
-  final T defaultValue;
-  final List<DropdownMenuItem<T>> items;
-  final ValueChanged<T?>? onChanged;
-  final String settingsEntryKey;
-  final String? subtitle;
-  final String? title;
-
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _PersistentDropdownState<T>();
-}
-
-class _PersistentDropdownState<T>
-    extends ConsumerState<PersistentDropdownButton<T>> {
-  late T _value;
-
-  @override
-  void initState() {
-    super.initState();
-
-    final settingsManager = ref.read(settingsManagerProvider);
-    _value = settingsManager.getValueSync(widget.settingsEntryKey) ??
-        widget.defaultValue;
-  }
-
-  void _onChanged(T? newValue) {
-    setState(() {
-      if (newValue != null) _value = newValue;
-    });
-
-    final settingsManager = ref.read(settingsManagerProvider);
-    settingsManager.putValueSync(widget.settingsEntryKey, _value);
-
-    if (widget.onChanged != null) widget.onChanged!(newValue);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-        title: widget.title != null ? Text(widget.title!) : null,
-        subtitle: widget.subtitle != null ? Text(widget.subtitle!) : null,
-        trailing: DropdownButton(
-            value: _value, items: widget.items, onChanged: _onChanged));
   }
 }
