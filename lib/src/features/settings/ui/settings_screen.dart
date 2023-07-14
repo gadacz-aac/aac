@@ -22,6 +22,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       body: Column(
         children: [
           PersistentDropdownButton("orientation",
+              title: "Orientacja",
               defaultValue: OrientationOption.portrait.name,
               onChanged: changeOrientation,
               items: [
@@ -50,6 +51,8 @@ class PersistentDropdownButton<T> extends ConsumerStatefulWidget {
     super.key,
     required this.defaultValue,
     required this.items,
+    this.title,
+    this.subtitle,
     this.onChanged,
   });
 
@@ -57,6 +60,8 @@ class PersistentDropdownButton<T> extends ConsumerStatefulWidget {
   final List<DropdownMenuItem<T>> items;
   final ValueChanged<T?>? onChanged;
   final String settingsEntryKey;
+  final String? subtitle;
+  final String? title;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -90,14 +95,9 @@ class _PersistentDropdownState<T>
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(widget.settingsEntryKey),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          DropdownButton(
-              value: _value, items: widget.items, onChanged: _onChanged)
-        ],
-      ),
-    );
+        title: widget.title != null ? Text(widget.title!) : null,
+        subtitle: widget.subtitle != null ? Text(widget.subtitle!) : null,
+        trailing: DropdownButton(
+            value: _value, items: widget.items, onChanged: _onChanged));
   }
 }
