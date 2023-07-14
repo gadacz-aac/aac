@@ -10,7 +10,7 @@ class AddSymbolMenu extends StatefulWidget {
 
 class _AddSymbolMenuState extends State<AddSymbolMenu> {
   String _imagePath = "";
-
+  bool _isLinked = false;
   late TextEditingController _controller;
 
   @override
@@ -52,6 +52,14 @@ class _AddSymbolMenuState extends State<AddSymbolMenu> {
               _imagePath = imageFile != null ? imageFile.path : defaultImage;
             },
             child: const Text('Select image'), // Pass it in Navigator.pop
+          ),
+          Checkbox(
+            value: _isLinked,
+            onChanged: (bool? value) {
+              setState(() {
+                _isLinked = value ?? false;
+              });
+            },
           ),
           Row(
             children: [
