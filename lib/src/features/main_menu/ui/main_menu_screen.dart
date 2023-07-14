@@ -1,10 +1,6 @@
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/settings/ui/settings_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-final mainMenuProvider =
-    Provider<MainMenuScreen>((ref) => const MainMenuScreen());
 
 class MainMenuScreen extends StatelessWidget {
   const MainMenuScreen({super.key});
