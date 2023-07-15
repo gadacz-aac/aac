@@ -9,7 +9,10 @@ class SymbolManager {
 
   final Isar isar;
 
-  Future<void> saveSymbol(Id boardId, String label, String imagePath) async {
+  Future<void> saveSymbol(Id boardId,
+      {required String label,
+      required String imagePath,
+      required String crossAxisCount}) async {
     await isar.writeTxn(() async {
       final CommunicationSymbol symbol =
           CommunicationSymbol(label: label, imagePath: imagePath);
@@ -17,6 +20,7 @@ class SymbolManager {
       await isar.communicationSymbols.put(symbol);
 
       final childBoard = Board();
+      childBoard.crossAxisCount = int.tryParse(crossAxisCount) ?? 2;
       await isar.boards.put(childBoard);
       symbol.childBoard.value = childBoard;
       await symbol.childBoard.save();

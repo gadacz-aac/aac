@@ -4,13 +4,13 @@ import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 
-final symbolManagerProvider = FutureProvider<SymbolManager>((ref) async {
-  final isar = await ref.watch(isarPod.future);
+final symbolManagerProvider = Provider<SymbolManager>((ref) {
+  final isar = ref.watch(isarPod);
   return SymbolManager(isar: isar);
 });
 
 final symbolsProvider = StreamProvider.family<List<CommunicationSymbol>, Id>(
     (ref, parentBoardId) async* {
-  final manager = await ref.watch(symbolManagerProvider.future);
+  final manager = ref.watch(symbolManagerProvider);
   yield* manager.watchSymbols(parentBoardId);
 });

@@ -1,10 +1,18 @@
 import 'package:aac/src/features/main_menu/ui/main_menu_screen.dart';
-import 'package:aac/src/features/symbols/create_symbol_screen.dart';
+import 'package:aac/src/features/settings/change_orientation.dart';
+import 'package:aac/src/features/settings/model/settings_entry.dart';
+import 'package:aac/src/shared/isar_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-void main() {
-  runApp(const ProviderScope(child: MainApp()));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final isar = await initIsar();
+  final orientation = await isar.settingsEntrys.getByKey('orientation');
+
+  changeOrientation(orientation?.value);
+  runApp(ProviderScope(
+      overrides: [isarPod.overrideWithValue(isar)], child: const MainApp()));
 }
 
 class MainApp extends StatelessWidget {
@@ -16,12 +24,4 @@ class MainApp extends StatelessWidget {
       home: MainMenuScreen(), // Set MainMenuScreen as the home screen
     );
   }
-}
-
-Future<List<String>?> openMenu(BuildContext context) async {
-  final result = await Navigator.push(
-      context,
-      MaterialPageRoute<List<String>>(
-          builder: (context) => const AddSymbolMenu()));
-  return result;
 }
