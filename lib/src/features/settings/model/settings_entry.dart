@@ -15,20 +15,28 @@ class SettingsEntry {
   String? stringValue;
   int? intValue;
   bool? boolValue;
+  double? doubleValue;
 
   @ignore
-  dynamic get value => stringValue ?? boolValue ?? intValue;
+  dynamic get value => stringValue ?? boolValue ?? doubleValue ?? intValue;
 
   set value(dynamic value) {
-    if (value == null) return;
-    if (value is String) {
-      stringValue = value;
-    } else if (value is int) {
-      intValue = value;
-    } else if (value is bool) {
-      boolValue = value;
-    } else if (value is Enum) {
-      stringValue = value.name;
+    switch (value) {
+      case String _:
+        stringValue = value;
+        break;
+      case int _:
+        intValue = value;
+        break;
+      case bool _:
+        boolValue = value;
+        break;
+      case double _:
+        doubleValue = value;
+        break;
+      case Enum _:
+        stringValue = value.name;
+        break;
     }
   }
 }

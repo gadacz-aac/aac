@@ -1,7 +1,9 @@
-import 'package:aac/src/features/settings/change_orientation.dart';
-import 'package:aac/src/features/settings/ui/switch.dart';
+import 'package:aac/src/features/settings/ui/slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:aac/src/features/settings/change_orientation.dart';
+import 'package:aac/src/features/settings/ui/switch.dart';
 
 import 'dropdown.dart';
 
@@ -15,7 +17,6 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
-  final bool _value = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,6 +49,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             "kiosk",
             title: "Protective mode",
             subtitle: "Prevent your child from closing the app",
+          ),
+          const PersistentSlider(
+            "speechRate",
+            defaultValue: 0.8,
+            title: "Speed",
           )
         ],
       ),
