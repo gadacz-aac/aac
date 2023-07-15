@@ -16,7 +16,7 @@ class AddSymbolMenu extends ConsumerStatefulWidget {
 
 class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
   String _imagePath = "";
-  bool _isLinked = false;
+  bool _isLink = false;
   late TextEditingController _controller;
   late TextEditingController _crossAxisCountController;
   final _formKey = GlobalKey<FormState>();
@@ -44,7 +44,8 @@ class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
       manager.saveSymbol(widget.boardId,
           label: _controller.text,
           imagePath: _imagePath,
-          crossAxisCount: _crossAxisCountController.text);
+          crossAxisCount: _crossAxisCountController.text,
+          createChild: _isLink);
       if (context.mounted) {
         Navigator.pop(context); // Return nothing
       }
@@ -103,11 +104,12 @@ class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
-              Checkbox(
-                value: _isLinked,
-                onChanged: (bool? value) {
+              SwitchListTile(
+                title: const Text('Link to a child board'),
+                value: _isLink,
+                onChanged: (bool value) {
                   setState(() {
-                    _isLinked = value ?? false;
+                    _isLink = value;
                   });
                 },
               ),
