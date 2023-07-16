@@ -21,6 +21,8 @@ class SettingsEntry {
   dynamic get value => stringValue ?? boolValue ?? doubleValue ?? intValue;
 
   set value(dynamic value) {
+    if (value == null) return;
+
     switch (value) {
       case String _:
         stringValue = value;
@@ -37,6 +39,9 @@ class SettingsEntry {
       case Enum _:
         stringValue = value.name;
         break;
+      default:
+        throw UnsupportedError(
+            "setting entry can't be of type ${value.runtimeType}");
     }
   }
 }
