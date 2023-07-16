@@ -44,10 +44,14 @@ class _PersistentDropdownState<T>
       if (newValue != null) _value = newValue;
     });
 
-    final settingsManager = ref.read(settingsManagerProvider);
-    settingsManager.putValueSync(widget.settingsEntryKey, _value);
+    _putValue(newValue);
 
     if (widget.onChanged != null) widget.onChanged!(newValue);
+  }
+
+  void _putValue(T? newValue) {
+    final settingsManager = ref.read(settingsManagerProvider);
+    settingsManager.putValue(widget.settingsEntryKey, _value);
   }
 
   @override
