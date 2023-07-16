@@ -9,8 +9,7 @@ class SettingsEntry {
   }
 
   Id id = Isar.autoIncrement;
-  @Index(
-      unique: true, replace: true, caseSensitive: false, type: IndexType.hash)
+  @Index(unique: true, caseSensitive: false, type: IndexType.hash)
   final String key;
   String? stringValue;
   int? intValue;
