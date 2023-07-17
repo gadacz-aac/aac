@@ -34,15 +34,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               defaultValue: OrientationOption.portrait.name,
               onChanged: changeOrientation,
               items: [
-                DropdownMenuItem(
+                PersistentDropdownItem(
                   value: OrientationOption.portrait.name,
                   child: const Text('Portrait'),
                 ),
-                DropdownMenuItem(
+                PersistentDropdownItem(
                   value: OrientationOption.landscape.name,
                   child: const Text('Landscape'),
                 ),
-                DropdownMenuItem(
+                PersistentDropdownItem(
                   value: OrientationOption.auto.name,
                   child: const Text('Auto'),
                 ),
@@ -70,7 +70,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 defaultValue: "Friends of misery",
                 title: Text("Dzwonek"),
                 items: [
-                  DropdownMenuItem(
+                  PersistentDropdownItem(
                       value: "Friends of misery",
                       child: Text("Friends of misery"))
                 ]),
@@ -78,7 +78,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               "vibration",
               title: Text("Wibracje"),
             ),
-          ])
+          ]),
         ],
       ),
     );

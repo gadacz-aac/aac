@@ -15,7 +15,7 @@ class PersistentDropdownButton<T> extends ConsumerStatefulWidget {
   });
 
   final T defaultValue;
-  final List<DropdownMenuItem<T>> items;
+  final List<PersistentDropdownItem<T>> items;
   final ValueChanged<T?>? onChanged;
   final String settingsEntryKey;
   final Widget? subtitle;
@@ -54,12 +54,37 @@ class _PersistentDropdownState<T>
     settingsManager.putValue(widget.settingsEntryKey, _value);
   }
 
+  Future<T?> _buildDialog(BuildContext context) {
+    return showDialog<T>(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+            title: widget.title,
+            children: widget.items
+                .map((e) => RadioListTile(
+                      groupValue: _value,
+                      title: e.child,
+                      value: e.value,
+                      onChanged: (value) => Navigator.pop(context, e.value),
+                    ))
+                .toList());
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final subtitle = widget.items.firstWhere((e) => e.value == _value).child;
     return ListTile(
         title: widget.title,
-        subtitle: widget.subtitle,
-        trailing: DropdownButton(
-            value: _value, items: widget.items, onChanged: _onChanged));
+        subtitle: subtitle,
+        onTap: () => _buildDialog(context).then(_onChanged));
   }
+}
+
+class PersistentDropdownItem<T> {
+  final T value;
+  final Widget child;
+
+  const PersistentDropdownItem({required this.value, required this.child});
 }
