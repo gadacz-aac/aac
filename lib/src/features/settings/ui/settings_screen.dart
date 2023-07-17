@@ -1,3 +1,4 @@
+import 'package:aac/src/features/settings/ui/group.dart';
 import 'package:aac/src/features/settings/ui/slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,37 +25,60 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         title: const Text('Settings'),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          PersistentDropdownButton(
-            "orientation",
-            title: "Orientacja",
-            defaultValue: OrientationOption.portrait.name,
-            onChanged: changeOrientation,
-            items: [
-              DropdownMenuItem(
-                value: OrientationOption.portrait.name,
-                child: const Text('Portrait'),
-              ),
-              DropdownMenuItem(
-                value: OrientationOption.landscape.name,
-                child: const Text('Landscape'),
-              ),
-              DropdownMenuItem(
-                value: OrientationOption.auto.name,
-                child: const Text('Auto'),
-              ),
-            ],
-          ),
-          const PersistentSwitch(
-            "kiosk",
-            title: "Protective mode",
-            subtitle: "Prevent your child from closing the app",
-          ),
-          const PersistentSlider(
-            "speechRate",
-            defaultValue: 0.8,
-            title: "Speed",
-          )
+          PersistentGroup(isFirst: true, children: [
+            PersistentDropdownButton(
+              "orientation",
+              title: "Orientacja",
+              defaultValue: OrientationOption.portrait.name,
+              onChanged: changeOrientation,
+              items: [
+                DropdownMenuItem(
+                  value: OrientationOption.portrait.name,
+                  child: const Text('Portrait'),
+                ),
+                DropdownMenuItem(
+                  value: OrientationOption.landscape.name,
+                  child: const Text('Landscape'),
+                ),
+                DropdownMenuItem(
+                  value: OrientationOption.auto.name,
+                  child: const Text('Auto'),
+                ),
+              ],
+            ),
+            const PersistentSwitch(
+              "kiosk",
+              title: "Protective mode",
+              subtitle: "Prevent your child from closing the app",
+            ),
+          ]),
+          const PersistentGroup(children: [
+            PersistentSlider(
+              "speechRate",
+              defaultValue: 0.8,
+              title: "Speed",
+            ),
+          ]),
+          const PersistentGroup(title: Text("Połączenia"), children: [
+            PersistentSwitch(
+              "notifications",
+              title: "Powiadomienia",
+            ),
+            PersistentDropdownButton("sound",
+                defaultValue: "Friends of misery",
+                title: "Dzwonek",
+                items: [
+                  DropdownMenuItem(
+                      value: "Friends of misery",
+                      child: Text("Friends of misery"))
+                ]),
+            PersistentSwitch(
+              "vibration",
+              title: "Wibracje",
+            ),
+          ])
         ],
       ),
     );
