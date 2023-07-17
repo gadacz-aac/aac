@@ -24,7 +24,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       appBar: AppBar(
         title: const Text('Settings'),
       ),
-      body: Column(
+      body: ListView(
         children: [
           PersistentGroup(isFirst: true, children: [
             PersistentDropdownButton(
