@@ -51,7 +51,7 @@ class _PersistentDropdownState<T>
 
   void _putValue(T? newValue) {
     final settingsManager = ref.read(settingsManagerProvider);
-    settingsManager.putValue(widget.settingsEntryKey, _value);
+    settingsManager.putValue(widget.settingsEntryKey, newValue);
   }
 
   Future<T?> _buildDialog(BuildContext context) {

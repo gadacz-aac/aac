@@ -58,7 +58,7 @@ class _PersistentSliderState extends ConsumerState<PersistentSlider> {
 
   void _putValue(double newValue) {
     final settingsManager = ref.read(settingsManagerProvider);
-    settingsManager.putValue(widget.settingsEntryKey, _value);
+    settingsManager.putValue(widget.settingsEntryKey, newValue);
   }
 
   @override

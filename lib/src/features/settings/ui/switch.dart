@@ -47,7 +47,7 @@ class _PersistentSwitch<T> extends ConsumerState<PersistentSwitch> {
 
   void _putValue(bool newValue) {
     final settingsManager = ref.read(settingsManagerProvider);
-    settingsManager.putValue(widget.settingsEntryKey, _value);
+    settingsManager.putValue(widget.settingsEntryKey, newValue);
   }
 
   @override
