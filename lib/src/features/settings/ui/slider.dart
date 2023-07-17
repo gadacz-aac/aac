@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers.dart';
 
 class PersistentSlider extends ConsumerStatefulWidget {
-  final IconData? icon;
+  final Icon? icon;
 
-  final String? title;
+  final Widget? title;
 
   final double min;
   final double max;
@@ -65,8 +65,8 @@ class _PersistentSliderState extends ConsumerState<PersistentSlider> {
   Widget build(BuildContext context) {
     return ListTile(
       titleAlignment: ListTileTitleAlignment.top,
-      leading: widget.icon != null ? Icon(widget.icon) : null,
-      title: widget.title != null ? Text(widget.title!) : null,
+      leading: widget.icon,
+      title: widget.title,
       subtitle: Slider(
         min: widget.min,
         max: widget.max,

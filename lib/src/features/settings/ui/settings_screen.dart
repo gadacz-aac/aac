@@ -25,12 +25,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         title: const Text('Settings'),
       ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           PersistentGroup(isFirst: true, children: [
             PersistentDropdownButton(
               "orientation",
-              title: "Orientacja",
+              title: const Text("Orientacja"),
+              subtitle: const Text("change orientation for board screen"),
               defaultValue: OrientationOption.portrait.name,
               onChanged: changeOrientation,
               items: [
@@ -50,25 +50,25 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ),
             const PersistentSwitch(
               "kiosk",
-              title: "Protective mode",
-              subtitle: "Prevent your child from closing the app",
+              title: Text("Protective mode"),
+              subtitle: Text("Prevent your child from closing the app"),
             ),
           ]),
           const PersistentGroup(children: [
             PersistentSlider(
               "speechRate",
               defaultValue: 0.8,
-              title: "Speed",
+              title: Text("Speed"),
             ),
           ]),
           const PersistentGroup(title: Text("Połączenia"), children: [
             PersistentSwitch(
               "notifications",
-              title: "Powiadomienia",
+              title: Text("Powiadomienia"),
             ),
             PersistentDropdownButton("sound",
                 defaultValue: "Friends of misery",
-                title: "Dzwonek",
+                title: Text("Dzwonek"),
                 items: [
                   DropdownMenuItem(
                       value: "Friends of misery",
@@ -76,7 +76,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 ]),
             PersistentSwitch(
               "vibration",
-              title: "Wibracje",
+              title: Text("Wibracje"),
             ),
           ])
         ],

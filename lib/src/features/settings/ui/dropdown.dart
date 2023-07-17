@@ -18,8 +18,8 @@ class PersistentDropdownButton<T> extends ConsumerStatefulWidget {
   final List<DropdownMenuItem<T>> items;
   final ValueChanged<T?>? onChanged;
   final String settingsEntryKey;
-  final String? subtitle;
-  final String? title;
+  final Widget? subtitle;
+  final Widget? title;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -57,8 +57,8 @@ class _PersistentDropdownState<T>
   @override
   Widget build(BuildContext context) {
     return ListTile(
-        title: widget.title != null ? Text(widget.title!) : null,
-        subtitle: widget.subtitle != null ? Text(widget.subtitle!) : null,
+        title: widget.title,
+        subtitle: widget.subtitle,
         trailing: DropdownButton(
             value: _value, items: widget.items, onChanged: _onChanged));
   }

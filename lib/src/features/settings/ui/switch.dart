@@ -16,8 +16,8 @@ class PersistentSwitch extends ConsumerStatefulWidget {
   final bool? defaultValue;
   final ValueChanged<bool>? onChanged;
   final String settingsEntryKey;
-  final String? subtitle;
-  final String? title;
+  final Widget? subtitle;
+  final Widget? title;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PersistentSwitch();
@@ -53,8 +53,8 @@ class _PersistentSwitch<T> extends ConsumerState<PersistentSwitch> {
   @override
   Widget build(BuildContext context) {
     return SwitchListTile(
-      title: widget.title != null ? Text(widget.title!) : null,
-      subtitle: widget.subtitle != null ? Text(widget.subtitle!) : null,
+      title: widget.title,
+      subtitle: widget.subtitle,
       value: _value,
       onChanged: (newValue) {
         setState(() {
