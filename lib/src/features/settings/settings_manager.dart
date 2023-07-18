@@ -19,12 +19,22 @@ class SettingsManager {
   }
 
   Future<void> putValue(String key, dynamic value) async {
-    final entry = SettingsEntry(key: key, value: value);
-    await isar.writeTxn(() => isar.settingsEntrys.put(entry));
+    await isar.writeTxn(() async {
+      final entry = await isar.settingsEntrys.getByKey(key);
+      if (entry != null) {
+        return await isar.settingsEntrys.put(entry..value = value);
+      }
+      await isar.settingsEntrys.put(SettingsEntry(key: key, value: value));
+    });
   }
 
   void putValueSync(String key, dynamic value) {
-    final entry = SettingsEntry(key: key, value: value);
-    isar.writeTxnSync(() => isar.settingsEntrys.putSync(entry));
+    isar.writeTxnSync(() {
+      final entry = isar.settingsEntrys.getByKeySync(key);
+      if (entry != null) {
+        return isar.settingsEntrys.putSync(entry..value = value);
+      }
+      isar.settingsEntrys.putSync(SettingsEntry(key: key, value: value));
+    });
   }
 }

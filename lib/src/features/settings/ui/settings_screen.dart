@@ -1,7 +1,12 @@
-import 'package:aac/src/features/settings/change_orientation.dart';
-import 'package:aac/src/features/settings/providers.dart';
+import 'package:aac/src/features/settings/ui/group.dart';
+import 'package:aac/src/features/settings/ui/slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:aac/src/features/settings/change_orientation.dart';
+import 'package:aac/src/features/settings/ui/switch.dart';
+
+import 'dropdown.dart';
 
 enum OrientationOption { portrait, landscape, auto }
 
@@ -19,83 +24,61 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       appBar: AppBar(
         title: const Text('Settings'),
       ),
-      body: Column(
+      body: ListView(
         children: [
-          PersistentDropdownButton("orientation",
+          PersistentGroup(isFirst: true, children: [
+            PersistentDropdownButton(
+              "orientation",
+              title: const Text("Orientacja"),
+              subtitle: const Text("change orientation for board screen"),
               defaultValue: OrientationOption.portrait.name,
               onChanged: changeOrientation,
               items: [
-                DropdownMenuItem(
+                PersistentDropdownItem(
                   value: OrientationOption.portrait.name,
                   child: const Text('Portrait'),
                 ),
-                DropdownMenuItem(
+                PersistentDropdownItem(
                   value: OrientationOption.landscape.name,
                   child: const Text('Landscape'),
                 ),
-                DropdownMenuItem(
+                PersistentDropdownItem(
                   value: OrientationOption.auto.name,
                   child: const Text('Auto'),
                 ),
-              ])
-        ],
-      ),
-    );
-  }
-}
-
-class PersistentDropdownButton<T> extends ConsumerStatefulWidget {
-  const PersistentDropdownButton(
-    this.settingsEntryKey, {
-    super.key,
-    required this.defaultValue,
-    required this.items,
-    this.onChanged,
-  });
-
-  final T defaultValue;
-  final List<DropdownMenuItem<T>> items;
-  final ValueChanged<T?>? onChanged;
-  final String settingsEntryKey;
-
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _PersistentDropdownState<T>();
-}
-
-class _PersistentDropdownState<T>
-    extends ConsumerState<PersistentDropdownButton<T>> {
-  late T _value;
-
-  @override
-  void initState() {
-    super.initState();
-
-    final settingsManager = ref.read(settingsManagerProvider);
-    _value = settingsManager.getValueSync(widget.settingsEntryKey) ??
-        widget.defaultValue;
-  }
-
-  void _onChanged(T? newValue) {
-    setState(() {
-      if (newValue != null) _value = newValue;
-    });
-
-    final settingsManager = ref.read(settingsManagerProvider);
-    settingsManager.putValueSync(widget.settingsEntryKey, _value);
-
-    if (widget.onChanged != null) widget.onChanged!(newValue);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(widget.settingsEntryKey),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          DropdownButton(
-              value: _value, items: widget.items, onChanged: _onChanged)
+              ],
+            ),
+            const PersistentSwitch(
+              "kiosk",
+              title: Text("Protective mode"),
+              subtitle: Text("Prevent your child from closing the app"),
+            ),
+          ]),
+          const PersistentGroup(children: [
+            PersistentSlider(
+              "speechRate",
+              defaultValue: 0.8,
+              title: Text("Speed"),
+            ),
+          ]),
+          const PersistentGroup(title: Text("Połączenia"), children: [
+            PersistentSwitch(
+              "notifications",
+              title: Text("Powiadomienia"),
+            ),
+            PersistentDropdownButton("sound",
+                defaultValue: "Friends of misery",
+                title: Text("Dzwonek"),
+                items: [
+                  PersistentDropdownItem(
+                      value: "Friends of misery",
+                      child: Text("Friends of misery"))
+                ]),
+            PersistentSwitch(
+              "vibration",
+              title: Text("Wibracje"),
+            ),
+          ]),
         ],
       ),
     );
