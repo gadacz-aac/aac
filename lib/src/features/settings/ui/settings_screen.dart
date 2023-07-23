@@ -3,12 +3,12 @@ import 'package:aac/src/features/settings/ui/slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:aac/src/features/settings/change_orientation.dart';
 import 'package:aac/src/features/settings/ui/switch.dart';
 
+import '../../text_to_speech/tts_manager.dart';
+import '../utils/orientation.dart';
+import '../utils/tts.dart';
 import 'dropdown.dart';
-
-enum OrientationOption { portrait, landscape, auto }
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -24,6 +24,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       appBar: AppBar(
         title: const Text('Settings'),
       ),
+      floatingActionButton:
+          FloatingActionButton(onPressed: () => setState(() {})),
       body: ListView(
         children: [
           PersistentGroup(isFirst: true, children: [
@@ -78,9 +80,48 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               "vibration",
               title: Text("Wibracje"),
             ),
+            // PersistentDropdownButton("test", defaultValue: "nail", items: [
+            //   PersistentDropdownItem(value: "nail", child: Text("Nail")),
+            //   PersistentDropdownItem(value: "mace", child: Text("Mace")),
+            //   PersistentDropdownItem(
+            //       value: "iron maiden", child: Text("Iron Maiden")),
+            // ])
+            VoiceDropdown(),
           ]),
         ],
       ),
     );
+  }
+}
+
+class VoiceDropdown extends ConsumerWidget {
+  const VoiceDropdown({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return FutureBuilder(
+        future: getVoicesNames(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+            final data = snapshot.data!;
+            return PersistentDropdownButton('voice',
+                title: const Text("Voice"),
+                defaultValue: data.first, onChanged: (value) {
+              if (value != null) {
+                ref.read(ttsManagerProvider).setVoice(value);
+              }
+            },
+                items: data
+                    .map(
+                        (e) => PersistentDropdownItem(value: e, child: Text(e)))
+                    .toList());
+          }
+          return const ListTile(
+              title: Text('Voice'),
+              subtitle: Text('not available'),
+              enabled: false);
+        });
   }
 }

@@ -1,11 +1,7 @@
-import 'package:aac/src/features/symbols/model/communication_symbol.dart';
-import 'package:aac/src/features/text_to_speech/tts_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final ttsManagerProvider = Provider<TtsManager>((ref) {
-  return TtsManager();
-});
+import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 
 @immutable
 class CommunicationSymbolDto {

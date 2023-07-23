@@ -1,5 +1,13 @@
 import 'package:aac/src/features/settings/model/settings_entry.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
+
+import '../../shared/isar_provider.dart';
+
+final settingsManagerProvider = Provider<SettingsManager>((ref) {
+  final isar = ref.watch(isarPod);
+  return SettingsManager(isar: isar);
+});
 
 class SettingsManager {
   SettingsManager({

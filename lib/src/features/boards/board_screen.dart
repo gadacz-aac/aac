@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 
 import '../symbols/create_symbol_screen.dart';
+import '../text_to_speech/tts_manager.dart';
 
 class BoardScreen extends ConsumerWidget {
   const BoardScreen({super.key, this.title = 'dupa', required this.boardId});
