@@ -5,6 +5,8 @@ import 'package:aac/src/features/text_to_speech/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../text_to_speech/tts_manager.dart';
+
 class SymbolCard extends ConsumerWidget {
   const SymbolCard({super.key, required this.symbol});
 
