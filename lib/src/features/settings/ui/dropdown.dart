@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -35,8 +36,14 @@ class _PersistentDropdownState<T>
     super.initState();
 
     final settingsManager = ref.read(settingsManagerProvider);
-    _value = settingsManager.getValueSync(widget.settingsEntryKey) ??
-        widget.defaultValue;
+    final settingsValue = settingsManager.getValueSync(widget.settingsEntryKey);
+
+    if (settingsValue != null &&
+        widget.items.any((e) => e.value == settingsValue)) {
+      _value = settingsValue;
+    } else {
+      _value = widget.defaultValue;
+    }
   }
 
   void _onChanged(T? newValue) {
@@ -70,6 +77,14 @@ class _PersistentDropdownState<T>
                 .toList());
       },
     );
+  }
+
+  @override
+  void didUpdateWidget(covariant PersistentDropdownButton<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (listEquals(oldWidget.items, widget.items)) return;
+    if (widget.items.any((e) => e.value == _value)) return;
+    _value = widget.defaultValue;
   }
 
   @override
