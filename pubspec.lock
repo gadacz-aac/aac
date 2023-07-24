@@ -528,6 +528,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.8.1"
+  kiosk_mode:
+    dependency: "direct main"
+    description:
+      name: kiosk_mode
+      sha256: b764be19859fd67ce505821b4c8d36b2e26fd198b7ac5c6ffc8a79861c8bd772
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.0"
   lints:
     dependency: transitive
     description:

@@ -1,5 +1,4 @@
 import 'package:aac/src/features/settings/ui/group.dart';
-import 'package:aac/src/features/settings/ui/slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -24,8 +23,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       appBar: AppBar(
         title: const Text('Settings'),
       ),
-      floatingActionButton:
-          FloatingActionButton(onPressed: () => setState(() {})),
       body: ListView(
         children: [
           PersistentGroup(isFirst: true, children: [
@@ -56,38 +53,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               subtitle: Text("Prevent your child from closing the app"),
             ),
           ]),
-          const PersistentGroup(children: [
-            PersistentSlider(
-              "speechRate",
-              defaultValue: 0.8,
-              title: Text("Speed"),
-            ),
-          ]),
-          const PersistentGroup(title: Text("Połączenia"), children: [
-            PersistentSwitch(
-              "notifications",
-              title: Text("Powiadomienia"),
-            ),
-            PersistentDropdownButton("sound",
-                defaultValue: "Friends of misery",
-                title: Text("Dzwonek"),
-                items: [
-                  PersistentDropdownItem(
-                      value: "Friends of misery",
-                      child: Text("Friends of misery"))
-                ]),
-            PersistentSwitch(
-              "vibration",
-              title: Text("Wibracje"),
-            ),
-            // PersistentDropdownButton("test", defaultValue: "nail", items: [
-            //   PersistentDropdownItem(value: "nail", child: Text("Nail")),
-            //   PersistentDropdownItem(value: "mace", child: Text("Mace")),
-            //   PersistentDropdownItem(
-            //       value: "iron maiden", child: Text("Iron Maiden")),
-            // ])
-            VoiceDropdown(),
-          ]),
+          const VoiceDropdown(),
         ],
       ),
     );
