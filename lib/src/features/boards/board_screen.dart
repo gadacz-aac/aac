@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:aac/src/features/boards/provider.dart';
+import 'package:aac/src/features/settings/utils/protective_mode.dart';
 import 'package:aac/src/features/symbols/provider.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:aac/src/features/symbols/ui/symbol_image.dart';
@@ -11,16 +14,21 @@ import '../symbols/create_symbol_screen.dart';
 import '../text_to_speech/tts_manager.dart';
 
 class BoardScreen extends ConsumerWidget {
-  const BoardScreen({super.key, this.title = 'dupa', required this.boardId});
+  BoardScreen({super.key, this.title = 'dupa', required this.boardId}) {
+    _isMainBoard = boardId != 1;
+  }
 
   final String title;
   final Id boardId;
+  late final bool _isMainBoard;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
+        automaticallyImplyLeading: _isMainBoard,
+        actions: const [LockButton()],
       ),
       body: Column(
         children: [
@@ -40,6 +48,45 @@ class BoardScreen extends ConsumerWidget {
         child: const Icon(Icons.add),
       ),
     );
+  }
+}
+
+class LockButton extends StatefulWidget {
+  const LockButton({
+    super.key,
+  });
+
+  @override
+  State<LockButton> createState() => _LockButtonState();
+}
+
+class _LockButtonState extends State<LockButton> {
+  int _tapLeft = 3;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+        onPressed: () {
+          if (_tapLeft == 3) {
+            Timer(const Duration(seconds: 3), () {
+              _tapLeft = 3;
+            });
+          }
+          _tapLeft -= 1;
+
+          if (_tapLeft == 0) {
+            stopProtectiveMode();
+            Navigator.popUntil(
+                context, (Route<dynamic> predicate) => predicate.isFirst);
+
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          } else {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text("Tap $_tapLeft times to leave protective mode")));
+          }
+        },
+        icon: const Icon(Icons.lock));
   }
 }
 

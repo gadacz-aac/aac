@@ -1,5 +1,6 @@
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/settings/ui/settings_screen.dart';
+import 'package:aac/src/features/settings/utils/protective_mode.dart';
 import 'package:flutter/material.dart';
 
 class MainMenuScreen extends StatelessWidget {
@@ -15,10 +16,11 @@ class MainMenuScreen extends StatelessWidget {
           children: <Widget>[
             ElevatedButton(
               onPressed: () {
+                startProtectiveMode();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const BoardScreen(boardId: 1),
+                    builder: (context) => BoardScreen(boardId: 1),
                   ),
                 );
               },
