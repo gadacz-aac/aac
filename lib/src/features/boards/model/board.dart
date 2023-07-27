@@ -9,8 +9,8 @@ class Board {
   Id id;
   int crossAxisCount;
   Board({
-    int? crossAxisCount,
+    int? crossAxisCountOrNull,
   })  : id = Isar.autoIncrement,
-        crossAxisCount = crossAxisCount ?? 2;
+        crossAxisCount = crossAxisCountOrNull ?? 2;
   final symbols = IsarLinks<CommunicationSymbol>();
 }

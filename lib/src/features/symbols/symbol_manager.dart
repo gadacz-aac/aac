@@ -23,7 +23,7 @@ class SymbolManager {
 
       await isar.communicationSymbols.put(symbol);
       if (createChild) {
-        final childBoard = Board(crossAxisCount: crossAxisCount);
+        final childBoard = Board(crossAxisCountOrNull: crossAxisCount);
         await isar.boards.put(childBoard);
         _linkSymbolToBoard(symbol, childBoard);
       }
