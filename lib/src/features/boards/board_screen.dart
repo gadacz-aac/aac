@@ -11,6 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 
 import '../symbols/create_symbol_screen.dart';
+import '../symbols/ui/pin_symbol_screen.dart';
 import '../text_to_speech/tts_manager.dart';
 
 class BoardScreen extends ConsumerWidget {
@@ -28,7 +29,7 @@ class BoardScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(title),
         automaticallyImplyLeading: _isMainBoard,
-        actions: const [LockButton()],
+        actions: const [PinSymbolButton(), LockButton()],
       ),
       body: Column(
         children: [
@@ -48,6 +49,22 @@ class BoardScreen extends ConsumerWidget {
         child: const Icon(Icons.add),
       ),
     );
+  }
+}
+
+class PinSymbolButton extends StatelessWidget {
+  const PinSymbolButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: ((context) => const PinSymbolScreen())));
+        },
+        icon: const Icon(Icons.push_pin));
   }
 }
 
