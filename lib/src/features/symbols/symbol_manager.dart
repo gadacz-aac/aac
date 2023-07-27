@@ -58,6 +58,13 @@ class SymbolManager {
       await isar.boards.put(board);
     });
   }
+
+  Future<void> deleteSymbol(CommunicationSymbol symbol, Board board) async {
+    await isar.writeTxn(() async {
+      await isar.communicationSymbols.delete(symbol.id);
+      await isar.boards.put(board);
+    });
+  }
 }
 
 final symbolManagerProvider = Provider<SymbolManager>((ref) {

@@ -37,7 +37,31 @@ class SymbolCard extends ConsumerWidget {
           ListTile(
               leading: const Icon(Icons.delete_forever),
               title: const Text("Usuń na zawsze"),
-              onTap: () {}),
+              onTap: () {
+                Navigator.pop(context);
+                showDialog<bool>(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: const Text("Usuń na zawsze"),
+                    content: Text(
+                        "Symbol zostanie usunięty z ${symbol.parentBoard.length} tablic"),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  ),
+                ).then((isApproved) {
+                  if (isApproved == true) {
+                    ref.read(symbolManagerProvider).deleteSymbol(symbol, board);
+                  }
+                });
+              }),
         ]);
       },
     );

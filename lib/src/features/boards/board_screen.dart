@@ -49,7 +49,7 @@ class BoardScreen extends ConsumerWidget {
               ],
             ),
             floatingActionButton: FloatingActionButton(
-              onPressed: () {
+              onPressed: () async {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
