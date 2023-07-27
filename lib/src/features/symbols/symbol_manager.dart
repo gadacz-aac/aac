@@ -33,6 +33,7 @@ class SymbolManager {
 
       board.symbols.add(symbol);
       board.symbols.save();
+      isar.boards.put(board);
     });
   }
 
