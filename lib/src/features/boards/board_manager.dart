@@ -1,7 +1,8 @@
 import 'package:aac/src/features/boards/model/board.dart';
-import 'package:aac/src/features/boards/provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
+
+import '../../shared/isar_provider.dart';
 
 class BoardManager {
   BoardManager({
@@ -19,4 +20,9 @@ final boardProvider =
     StreamProvider.autoDispose.family<Board?, Id>((ref, id) async* {
   final manager = ref.watch(boardManagerProvider);
   yield* manager.watchBoardById(id);
+});
+
+final boardManagerProvider = Provider((ref) {
+  final isar = ref.watch(isarPod);
+  return BoardManager(isar: isar);
 });
