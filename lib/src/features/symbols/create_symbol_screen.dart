@@ -1,4 +1,4 @@
-import 'package:aac/src/features/symbols/provider.dart';
+import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -44,7 +44,7 @@ class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
       manager.saveSymbol(widget.boardId,
           label: _controller.text,
           imagePath: _imagePath,
-          crossAxisCount: _crossAxisCountController.text,
+          crossAxisCount: int.tryParse(_crossAxisCountController.text),
           createChild: _isLink);
       if (context.mounted) {
         Navigator.pop(context); // Return nothing

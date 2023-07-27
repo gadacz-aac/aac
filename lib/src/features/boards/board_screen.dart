@@ -1,17 +1,18 @@
 import 'dart:async';
 
-import 'package:aac/src/features/boards/provider.dart';
-import 'package:aac/src/features/settings/utils/protective_mode.dart';
-import 'package:aac/src/features/symbols/provider.dart';
+import 'package:aac/src/features/boards/board_manager.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
-import 'package:aac/src/features/symbols/ui/symbol_image.dart';
-import 'package:aac/src/features/text_to_speech/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 
+import 'package:aac/src/features/settings/utils/protective_mode.dart';
+import 'package:aac/src/features/symbols/ui/symbol_image.dart';
+import 'package:aac/src/features/text_to_speech/provider.dart';
+
 import '../symbols/create_symbol_screen.dart';
 import '../text_to_speech/tts_manager.dart';
+import 'model/board.dart';
 
 class BoardScreen extends ConsumerWidget {
   BoardScreen({super.key, this.title = 'dupa', required this.boardId}) {
@@ -24,28 +25,74 @@ class BoardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final board = ref.watch(boardProvider(boardId));
+    return board.when(
+        error: (error, _) => ErrorScreen(error: error.toString()),
+        loading: () => Container(
+              color: Colors.white,
+              child: const Center(child: CircularProgressIndicator()),
+            ),
+        data: (data) {
+          if (data == null) {
+            return ErrorScreen(
+              error: "Board with id $boardId wasn't found",
+            );
+          }
+
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(title),
+              automaticallyImplyLeading: _isMainBoard,
+              actions: const [LockButton()],
+            ),
+            body: Column(
+              children: [
+                const SentenceBar(),
+                SymbolsGrid(
+                  board: data,
+                )
+              ],
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AddSymbolMenu(boardId: boardId)));
+              },
+              child: const Icon(Icons.add),
+            ),
+          );
+        });
+  }
+}
+
+class ErrorScreen extends StatelessWidget {
+  const ErrorScreen({
+    Key? key,
+    required this.error,
+  }) : super(key: key);
+
+  final String error;
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        automaticallyImplyLeading: _isMainBoard,
-        actions: const [LockButton()],
-      ),
-      body: Column(
-        children: [
-          const SentenceBar(),
-          SymbolsGrid(
-            boardId: boardId,
+      appBar: AppBar(title: const Text('Oops..')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Image.asset(
+            'assets/oops-steve-carell.gif',
+          ),
+          const SizedBox(
+            height: 10.0,
+          ),
+          Text(
+            error,
+            style: Theme.of(context).textTheme.headlineSmall,
           )
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => AddSymbolMenu(boardId: boardId)));
-        },
-        child: const Icon(Icons.add),
+        ]),
       ),
     );
   }
@@ -90,26 +137,18 @@ class _LockButtonState extends State<LockButton> {
   }
 }
 
-class SymbolsGrid extends ConsumerWidget {
-  const SymbolsGrid({super.key, required this.boardId});
+class SymbolsGrid extends StatelessWidget {
+  const SymbolsGrid({super.key, required this.board});
 
-  final Id boardId;
+  final Board board;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final symbols = ref.watch(symbolsProvider(boardId));
-    final crossAxisCount =
-        ref.watch(boardCrossAxisCountProvider(boardId)).valueOrNull;
-
-    return symbols.when(
-        data: (data) => Flexible(
-              child: GridView.count(
-                crossAxisCount: crossAxisCount ?? 2,
-                children: data.map((e) => SymbolCard(symbol: e)).toList(),
-              ),
-            ),
-        error: (error, stack) => const Text('Oops..'),
-        loading: () => const CircularProgressIndicator());
+  Widget build(BuildContext context) {
+    return Flexible(
+      child: GridView.count(
+          crossAxisCount: board.crossAxisCount,
+          children: board.symbols.map((e) => SymbolCard(symbol: e)).toList()),
+    );
   }
 }
 
