@@ -16,67 +16,21 @@ class SymbolCard extends ConsumerWidget {
   final CommunicationSymbol symbol;
   final Board board;
 
-  Future<void> _buildDialog(BuildContext context, WidgetRef ref) {
+  Future<void> _buildDialog(BuildContext context) {
     return showDialog(
       context: context,
       builder: (context) {
         return SimpleDialog(children: [
-          ListTile(
-              leading: const Icon(Icons.push_pin_outlined),
-              title: const Text("Odepnij"),
-              onTap: () {
-                ref
-                    .read(symbolManagerProvider)
-                    .unpinSymbolFromBoard(symbol, board);
-                Navigator.pop(context);
-              }),
-          ListTile(
-            leading: const Icon(Icons.edit),
-            title: const Text("Edytuj"),
-            onTap: () {
-              Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              EditSymbolScreen(symbol: symbol, board: board)))
-                  .then((value) => Navigator.pop(context));
-            },
-          ),
-          ListTile(
-              leading: const Icon(Icons.delete_forever),
-              title: const Text("Usuń na zawsze"),
-              onTap: () {
-                Navigator.pop(context);
-                showDialog<bool>(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                    title: const Text("Usuń na zawsze"),
-                    content: Text(
-                        "Symbol zostanie usunięty z ${symbol.parentBoard.length} tablic"),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, false),
-                        child: const Text('Cancel'),
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, true),
-                        child: const Text('OK'),
-                      ),
-                    ],
-                  ),
-                ).then((isApproved) {
-                  if (isApproved == true) {
-                    ref.read(symbolManagerProvider).deleteSymbol(symbol, board);
-                  }
-                });
-              }),
+          UnpinSymbolDialogOption(symbol: symbol, board: board),
+          EditSymbolDialogOption(symbol: symbol, board: board),
+          DeleteForeverDialogOption(symbol: symbol, board: board),
         ]);
       },
     );
   }
 
-  void _onLongPress(BuildContext context, WidgetRef ref) {
-    _buildDialog(context, ref);
+  void _onLongPress(BuildContext context) {
+    _buildDialog(context);
   }
 
   void _onTap(BuildContext context, WidgetRef ref) {
@@ -98,7 +52,7 @@ class SymbolCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
-        onLongPress: () => _onLongPress(context, ref),
+        onLongPress: () => _onLongPress(context),
         onTap: () => _onTap(context, ref),
         child: Column(
           children: [
@@ -109,5 +63,97 @@ class SymbolCard extends ConsumerWidget {
             )
           ],
         ));
+  }
+}
+
+class DeleteForeverDialogOption extends ConsumerWidget {
+  const DeleteForeverDialogOption({
+    super.key,
+    required this.symbol,
+    required this.board,
+  });
+
+  final CommunicationSymbol symbol;
+  final Board board;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ListTile(
+        leading: const Icon(Icons.delete_forever),
+        title: const Text("Usuń na zawsze"),
+        onTap: () {
+          Navigator.pop(context);
+          showDialog<bool>(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+              title: const Text("Usuń na zawsze"),
+              content: Text(
+                  "Symbol zostanie usunięty z ${symbol.parentBoard.length} tablic"),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context, true),
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          ).then((isApproved) {
+            if (isApproved == true) {
+              ref.read(symbolManagerProvider).deleteSymbol(symbol, board);
+            }
+          });
+        });
+  }
+}
+
+class EditSymbolDialogOption extends StatelessWidget {
+  const EditSymbolDialogOption({
+    super.key,
+    required this.symbol,
+    required this.board,
+  });
+
+  final CommunicationSymbol symbol;
+  final Board board;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: const Icon(Icons.edit),
+      title: const Text("Edytuj"),
+      onTap: () {
+        Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        EditSymbolScreen(symbol: symbol, board: board)))
+            .then((value) => Navigator.pop(context));
+      },
+    );
+  }
+}
+
+class UnpinSymbolDialogOption extends ConsumerWidget {
+  const UnpinSymbolDialogOption({
+    super.key,
+    required this.symbol,
+    required this.board,
+  });
+
+  final CommunicationSymbol symbol;
+  final Board board;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ListTile(
+        leading: const Icon(Icons.push_pin_outlined),
+        title: const Text("Odepnij"),
+        onTap: () {
+          ref.read(symbolManagerProvider).unpinSymbolFromBoard(symbol, board);
+          Navigator.pop(context);
+        });
   }
 }
