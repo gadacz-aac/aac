@@ -125,12 +125,12 @@ class EditSymbolDialogOption extends StatelessWidget {
       leading: const Icon(Icons.edit),
       title: const Text("Edytuj"),
       onTap: () {
+        Navigator.pop(context);
         Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        EditSymbolScreen(symbol: symbol, board: board)))
-            .then((value) => Navigator.pop(context));
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    EditSymbolScreen(symbol: symbol, board: board)));
       },
     );
   }
