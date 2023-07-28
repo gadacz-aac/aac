@@ -29,7 +29,8 @@ class SymbolCard extends ConsumerWidget {
     );
   }
 
-  void _onLongPress(BuildContext context) {
+  void _onLongPress(BuildContext context, WidgetRef ref) {
+    if (!ref.read(isParentModeProvider)) return;
     _buildDialog(context);
   }
 
@@ -52,7 +53,7 @@ class SymbolCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
-        onLongPress: () => _onLongPress(context),
+        onLongPress: () => _onLongPress(context, ref),
         onTap: () => _onTap(context, ref),
         child: Column(
           children: [

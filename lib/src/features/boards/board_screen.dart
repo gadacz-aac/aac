@@ -9,6 +9,8 @@ import 'package:isar/isar.dart';
 import '../symbols/create_symbol_screen.dart';
 import 'model/board.dart';
 
+final isParentModeProvider = StateProvider<bool>((_) => false);
+
 class BoardScreen extends ConsumerWidget {
   BoardScreen({super.key, this.title = 'dupa', required this.boardId}) {
     _isMainBoard = boardId != 1;
@@ -21,6 +23,7 @@ class BoardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final board = ref.watch(boardProvider(boardId));
+    final isParentMode = ref.watch(isParentModeProvider);
     return board.when(
         error: (error, _) => ErrorScreen(error: error.toString()),
         loading: () => Container(
@@ -34,11 +37,19 @@ class BoardScreen extends ConsumerWidget {
             );
           }
 
+          List<Widget> actions = [];
+          Widget? floatingActionButton;
+          if (isParentMode) {
+            floatingActionButton = CreateSymbolFloatingButton(boardId: boardId);
+          } else {
+            actions.add(const LockButton());
+          }
+
           return Scaffold(
             appBar: AppBar(
               title: Text(title),
-              automaticallyImplyLeading: _isMainBoard,
-              actions: const [LockButton()],
+              automaticallyImplyLeading: isParentMode || _isMainBoard,
+              actions: actions,
             ),
             body: Column(
               children: [
@@ -48,17 +59,31 @@ class BoardScreen extends ConsumerWidget {
                 )
               ],
             ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () async {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => AddSymbolMenu(boardId: boardId)));
-              },
-              child: const Icon(Icons.add),
-            ),
+            floatingActionButton: floatingActionButton,
           );
         });
+  }
+}
+
+class CreateSymbolFloatingButton extends StatelessWidget {
+  const CreateSymbolFloatingButton({
+    super.key,
+    required this.boardId,
+  });
+
+  final Id boardId;
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () async {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => AddSymbolMenu(boardId: boardId)));
+      },
+      child: const Icon(Icons.add),
+    );
   }
 }
 

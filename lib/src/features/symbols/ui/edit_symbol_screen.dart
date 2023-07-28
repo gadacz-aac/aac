@@ -93,13 +93,11 @@ class _EditSymbolScreenState extends ConsumerState<EditSymbolScreen> {
                     final imageFile = await ImagePicker()
                         .pickImage(source: ImageSource.gallery);
 
-                    String defaultImage =
-                        'https://cdn.discordapp.com/attachments/1108422948970319886/1113420050058203256/image.png';
-
-                    setState(() {
-                      _imagePath =
-                          imageFile != null ? imageFile.path : defaultImage;
-                    });
+                    if (imageFile != null) {
+                      setState(() {
+                        _imagePath = imageFile.path;
+                      });
+                    }
                   },
                   child: const Text('Select image'), // Pass it in Navigator.pop
                 ),
