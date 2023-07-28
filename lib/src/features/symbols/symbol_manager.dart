@@ -38,6 +38,26 @@ class SymbolManager {
     });
   }
 
+  Future<void> updateSymbol(
+      {required CommunicationSymbol symbol,
+      required Board parentBoard,
+      int? crossAxisCount,
+      required bool createChild}) async {
+    await isar.writeTxn(() async {
+      await isar.communicationSymbols.put(symbol);
+      if (createChild) {
+        final childBoard = Board(crossAxisCountOrNull: crossAxisCount);
+        await isar.boards.put(childBoard);
+        _linkSymbolToBoard(symbol, childBoard);
+      } else {
+        symbol.childBoard.reset();
+        symbol.childBoard.save();
+      }
+
+      isar.boards.put(parentBoard);
+    });
+  }
+
   Future<void> _linkSymbolToBoard(
       CommunicationSymbol symbol, Board board) async {
     symbol.childBoard.value = board;
