@@ -12,7 +12,6 @@ Future<void> startProtectiveModeIfEnabled(ref) async {
   if (!Platform.isAndroid) return;
   if (isEnabled == null || !isEnabled) return;
 
-  print("helo");
   await startKioskMode();
 }
 
