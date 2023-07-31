@@ -32,7 +32,8 @@ class MainMenuScreen extends ConsumerWidget {
                 ref
                     .read(isParentModeProvider.notifier)
                     .update((state) => false);
-                startProtectiveMode();
+
+                startProtectiveModeIfEnabled(ref);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
