@@ -6,7 +6,6 @@ import 'package:kiosk_mode/kiosk_mode.dart';
 
 Future<void> startProtectiveModeIfEnabled(ref) async {
   final isEnabled = await ref.watch(settingsManagerProvider).getValue("kiosk");
-  print(isEnabled);
 
   if (kIsWeb) return;
   if (!Platform.isAndroid) return;
