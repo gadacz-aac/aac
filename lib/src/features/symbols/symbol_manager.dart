@@ -32,9 +32,29 @@ class SymbolManager {
 
       if (board == null) return;
 
-      _pinSymbolToBoard(symbol, board);
+      await _pinSymbolToBoard(symbol, board);
       // is needed to refersh ui
       isar.boards.put(board);
+    });
+  }
+
+  Future<void> updateSymbol(
+      {required CommunicationSymbol symbol,
+      required Board parentBoard,
+      int? crossAxisCount,
+      required bool createChild}) async {
+    await isar.writeTxn(() async {
+      await isar.communicationSymbols.put(symbol);
+      if (createChild) {
+        final childBoard = Board(crossAxisCountOrNull: crossAxisCount);
+        await isar.boards.put(childBoard);
+        _linkSymbolToBoard(symbol, childBoard);
+      } else {
+        symbol.childBoard.reset();
+        symbol.childBoard.save();
+      }
+
+      isar.boards.put(parentBoard);
     });
   }
 
@@ -48,6 +68,22 @@ class SymbolManager {
       CommunicationSymbol symbol, Board board) async {
     board.symbols.add(symbol);
     board.symbols.save();
+  }
+
+  Future<void> unpinSymbolFromBoard(
+      CommunicationSymbol symbol, Board board) async {
+    board.symbols.remove(symbol);
+    await isar.writeTxn(() async {
+      await board.symbols.save();
+      await isar.boards.put(board);
+    });
+  }
+
+  Future<void> deleteSymbol(CommunicationSymbol symbol, Board board) async {
+    await isar.writeTxn(() async {
+      await isar.communicationSymbols.delete(symbol.id);
+      await isar.boards.put(board);
+    });
   }
 }
 

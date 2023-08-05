@@ -12,5 +12,6 @@ class Board {
     int? crossAxisCountOrNull,
   })  : id = Isar.autoIncrement,
         crossAxisCount = crossAxisCountOrNull ?? 2;
+
   final symbols = IsarLinks<CommunicationSymbol>();
 }
