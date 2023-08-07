@@ -52,6 +52,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               title: Text("Protective mode"),
               subtitle: Text("Prevent your child from closing the app"),
             ),
+            const PersistentSwitch(
+              "wakelock",
+              title: Text("Do you want to have your eyes burned?"),
+              subtitle: Text("Prevent your battery from lasting too long"),
+            )
           ]),
           const VoiceDropdown(),
         ],
