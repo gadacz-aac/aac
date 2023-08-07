@@ -13,6 +13,6 @@ class CommunicationSymbol {
   String imagePath;
 
   @Backlink(to: 'symbols')
-  final parentBoard = IsarLink<Board>();
+  final parentBoard = IsarLinks<Board>();
   final childBoard = IsarLink<Board>();
 }
