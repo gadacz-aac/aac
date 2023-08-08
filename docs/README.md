@@ -38,7 +38,7 @@ Todo provide quick describtion of each catalog, or throw out this section
 ## Working with user settings
 So you want to add a new option to settings? What do we have today? We have it all: switches, sliders, or perhaps you fancy a dropdown? Whatever you've said I've got you covered. And if you're looking for something else, then I idk, but I bet you'll figure it out. I believe in you. Cheers!
 
-Now after this overaly long introduction and that those ungreatful bastards have left I'll show you how to add a new option in settings.
+Now after this overly long introduction and that those ungrateful bastards have left, I'll show you how to add a new option in settings.
 
 ```dart
   const PersistentSwitch(
@@ -54,7 +54,7 @@ Go ahead paste that in `SettingsScreen`. Save the file, hot reload, and look you
 
 But how can I retrieve a value stored in isar. For that you'll have to use SettingsManager. When in doubt [obtain a ref](https://docs-v2.riverpod.dev/docs/concepts/reading#obtaining-a-ref-object) you can use it get an instance of settings manager. You might be wondering why can't you create a new instance of settings manager yourself like that:
 
-```
+```dart
   final settingsManager = SettingsManager();
 ```
 
