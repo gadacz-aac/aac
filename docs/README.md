@@ -25,10 +25,10 @@ Todo provide quick describtion of each catalog, or throw out this section
     ├─ docs/
     |- ios/
     ├─ lib/
-    |   |- features/    asdasdasdasdasdassassasassasasaasdasdada
-    |   |- shared       asdasdasds
-    │   ├─ main.dart    asdasdasd
-    └─ linux/           asdasd
+    |   |- features/    Every feature is stored here
+    |   |- shared       Code that is used by mulitple features is stored here
+    │   ├─ main.dart    The mein kampf is stored here
+    └─ linux/
     |- macos/
     |- web/
     |- windows/
