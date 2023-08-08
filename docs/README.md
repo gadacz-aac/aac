@@ -82,7 +82,7 @@ I can understand where you're coming from, but you've got to stop yelling. I kno
 ## Working with Isar
 That guy, heh? It's best to leave him alone, his a real piece of work but he's the best we've got.
 
-You're probaly thiniking right now: "I just want to make a simple query, stop with those theatrics already." Alright no need to be so rude about this, jeez. Let's start with [obtaining a ref](https://docs-v2.riverpod.dev/docs/concepts/reading#obtaining-a-ref-object). What's ref you ask? Idk, but you can use it to get isar to show to work, that deadbeat.
+You're probaly thiniking right now: "I just want to make a simple query, stop with those theatrics already." Alright no need to be so rude about this, jeez. Let's start with [obtaining a ref](https://docs-v2.riverpod.dev/docs/concepts/reading#obtaining-a-ref-object). What's ref you ask? Idk, but you can use it to get isar to show up to work, that deadbeat.
 
 Okay now that you've grabbed your ref. You can get [Isar object](https://pub.dev/documentation/isar/latest/isar/Isar-class.html) like this.
 
