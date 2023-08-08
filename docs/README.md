@@ -36,7 +36,7 @@ Todo provide quick describtion of each catalog, or throw out this section
 
 
 ## Working with user settings
-So you want to add a new option to settings? What do we have today? We have it all: switches, sliders, or perhaps you fancy a dropdown? Whatever you've said I've got you covered. And if you're looking for something else, then I idk, but you'll figure it out. I believe in you. Cheers!
+So you want to add a new option to settings? What do we have today? We have it all: switches, sliders, or perhaps you fancy a dropdown? Whatever you've said I've got you covered. And if you're looking for something else, then I idk, but I bet you'll figure it out. I believe in you. Cheers!
 
 Now after this overaly long introduction and that those ungreatful bastards have left I'll show you how to add a new option in settings.
 
