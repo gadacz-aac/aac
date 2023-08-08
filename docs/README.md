@@ -49,10 +49,9 @@ Now after this overly long introduction and that those ungrateful bastards have 
   ),
 ```
 
-Go ahead paste that in `SettingsScreen`. Save the file, hot reload, and look you you did it. Now, when the user interacts with this widget, it's automagially saved to isar, so you don't have to worry about that part, neat, right?
+Go ahead and paste that in the `SettingsScreen`. Save the file, hot reload, and look at you, you did it. Now, when the user interacts with this widget, its current state will get automagially saved to isar, so you don't have to worry about that part, neat, right?
 
-
-But how can I retrieve a value stored in isar. For that you'll have to use SettingsManager. When in doubt [obtain a ref](https://docs-v2.riverpod.dev/docs/concepts/reading#obtaining-a-ref-object) you can use it get an instance of settings manager. You might be wondering why can't you create a new instance of settings manager yourself like that:
+But how can I retrieve a value stored in isar? For, that you'll have to use SettingsManager. When in doubt obtain a [obtain a ref](https://docs-v2.riverpod.dev/docs/concepts/reading#obtaining-a-ref-object) you can use it to get an instance of `SettingsManager`. You might be wondering why can't you create a new instance of `SettingsManager` yourself like that:
 
 ```dart
   final settingsManager = SettingsManager();
@@ -72,9 +71,9 @@ And I'm a fucking idiot, so you'll do it my way or a highway.
   }
 ```
 
-Why do I have to check if `didSomeoneBreakIntoMyBasement` is null? Shouldn't it be either true or false? Didn't I set the defaultValue to true? You said it'll be saved automagically? So where is it, you filthy liar?
+Why do I have to check if `didSomeoneBreakIntoMyBasement` is null? Shouldn't it be either true or false? Didn't I set the defaultValue to true? You said it'll get saved automagically? So where is it, you filthy liar?
 
-I can understand where you're coming from, but you've got to stop yelling. I know what I said and it's true that when a user interacts with this widget it's current state we'll be saved to isar ..but a user has to interact with it first. If that doesn't happen than no value will be present in isar, and you'll have to handle scenerio when `didSomeoneBreakIntoMyBasement` is null. I know it quite nerve wracking but it is what it is, sorry. When a value is null you have to treat it as if it was equal to `defaultValue` that you passed to widget.
+I can understand where you're coming from, but you've got to stop yelling. I know what I said, and it's true that when a user interacts with this widget, its current state is going to get saved to isar ..but a user has to interact with it first. If that doesn't happen, then no value will be present in isar, and you'll have to handle scenario when `didSomeoneBreakIntoMyBasement` is null. I know it is quite nerve-wracking, but it is what it is, sorry. When a value is null you have to treat it as if it was equal to `defaultValue` that you passed to the widget.
 
 ## Database
 
