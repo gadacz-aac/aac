@@ -40,7 +40,7 @@ Creating a branch
 1. Open an issue, add a correct tag and assign yourself
 2. Add a task to [figma](https://www.figma.com/file/HiTWiE7qnbIbEZ8gVs2iPj/aac?type=whiteboard&node-id=0-1&t=jDN6wUoxTkiEhMYI-0) and assign yourself
 3. Create a branch on github and link it to your issue
-4. Get the branch
+4. Download the branch
 
 
 ```bash
