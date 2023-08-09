@@ -1,3 +1,6 @@
+# AAC project's documentation
+
+
 ## Contents
 
 - [Contents](#contents)
@@ -15,11 +18,10 @@
 To start working on this project you need to [install flutter](https://docs.flutter.dev/get-started/install), after that you need an editor, presumably [VS Code](https://code.visualstudio.com/download). All the installations take some time, so grab yourself some drink of your preference (probably beer). After that, you need [git](https://git-scm.com/downloads)
 
 ### Getting the project
-><br>TODO: ADD LINKS <br><br>
 
-The project is hosted on github, so at first you need to get everything set up.
+The project is hosted on [github](https://github.com/piotrek813/aac), so at first you need to get everything set up.
 
-The first time you use git, you need to configure it
+The first time you use git, you need to configure it.
 
 ```bash
 git config --global user.name "John Doe"
@@ -27,8 +29,9 @@ git config --global user.email johndoe@example.com
 ```
 
 If this is your first task on this project, you need to configure it.
-1. Create a new folder and enter it
-2. Clone the repo
+
+Clone the repo
+
 ```bash
 git clone https://github.com/piotrek813/aac.git
 ```
@@ -36,7 +39,7 @@ git clone https://github.com/piotrek813/aac.git
 Creating a branch
 
 1. Open an issue, add a correct label and assign yourself
-2. Add a task to [figma](https://www.figma.com/file/HiTWiE7qnbIbEZ8gVs2iPj/aac?type=whiteboard&node-id=0-1&t=jDN6wUoxTkiEhMYI-0) and assign yourself
+2. Add a task to [figma](https://www.figma.com/file/HiTWiE7qnbIbEZ8gVs2iPj/aac?type=whiteboard&node-id=0-1&t=jDN6wUoxTkiEhMYI-0) and assign yourself (add your photo)
 3. Create a branch on github and link it to your issue (there is a button in the issue menu to do it automagically)
 4. Download the branch
 
