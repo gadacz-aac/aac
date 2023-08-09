@@ -145,6 +145,10 @@ I can understand where you're coming from, but you've got to stop yelling. I kno
 
 ### Database structure
 
+><br><br>TODO: Add the db structure schematic<br><br>
+
+Even satan doesn't know how this hellish creation works. The only person who does is Piotrek.
+
 ## Working with Isar
 That guy, heh? It's best to leave him alone, his a real piece of work but he's the best we've got.
 
