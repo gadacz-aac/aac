@@ -11,7 +11,53 @@
 
 ## Getting started
 
+### Installation
+To start working on this project you need to [get flutter installed](https://docs.flutter.dev/get-started/install), after that you need an editor, presumably [VS Code](https://code.visualstudio.com/download). All the installations take some time, so grab yourself some drink of your preference (probably beer). After that, you need [git](https://git-scm.com/downloads)
 
+### Getting the project
+><br>TODO: ADD LINKS <br><br>
+
+The project is hosted on github, so at first you need to get everything set up.
+
+The first time you use git, you need to configure it
+
+```bash
+git config --global user.name "John Doe"
+git config --global user.email johndoe@example.com
+```
+
+If this is your first task on this project, you need to configure it.
+1. Create a new folder and enter it
+2. Clone the repo
+```bash
+mkdir AAC                                 <-- the directory where you'll store the project
+cd AAC                                    <-- the directory where you'll store the project
+git clone https://github.com/piotrek813/aac.git
+```
+
+Creating a branch
+
+1. Open an issue, add a correct tag and assign yourself
+2. Add a task to [figma](https://www.figma.com/file/HiTWiE7qnbIbEZ8gVs2iPj/aac?type=whiteboard&node-id=0-1&t=jDN6wUoxTkiEhMYI-0) and assign yourself
+3. Create a branch on github and link it to your issue
+4. Get the branch
+
+
+```bash
+cd AAC                                    <-- the directory where you'll store the project
+git fetch origin
+git checkout 48-write-a-documentation     <-- your branch's name
+```
+
+After you've wrote some code you need to put it to github. Note: a single commit is for a single thing added (but in context of feature) eg. added a button or created a screen. Bad practices involve descriptions such as: ~~created a variavle~~ or ~~imported a library~~ unless they mean something serious (solve a bug) or they're the last commit on this branch.
+
+```bash
+git add --all
+git commit -m "Added a special button for launching e-garnitur.pl"  <-- describe what you did
+git push
+```
+
+After you've finished working on the feture
 
 ## General
 
