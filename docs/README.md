@@ -1,4 +1,4 @@
-# AAC project's documentation
+# aac project's documentation
 
 
 ## Contents
@@ -58,7 +58,7 @@ After you've wrote some code you need to put it to github. Note: a single commit
 >git commit -m "Added text field
 >
 >Co-authored-by: WiktorGorecki <WiktorGorecki@users.noreply.github.com>
->Co-authored-by: malgos208 <malgos208@users.noreply.github.com>
+>Co-authored-by: malgos208 <malgos208@users.noreply.github.com>"
 >```
 
 <br>
