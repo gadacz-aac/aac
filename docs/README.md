@@ -30,8 +30,6 @@ If this is your first task on this project, you need to configure it.
 1. Create a new folder and enter it
 2. Clone the repo
 ```bash
-mkdir AAC                                 <-- the directory where you'll store the project
-cd AAC                                    <-- the directory where you'll store the project
 git clone https://github.com/piotrek813/aac.git
 ```
 
@@ -39,7 +37,7 @@ Creating a branch
 
 1. Open an issue, add a correct label and assign yourself
 2. Add a task to [figma](https://www.figma.com/file/HiTWiE7qnbIbEZ8gVs2iPj/aac?type=whiteboard&node-id=0-1&t=jDN6wUoxTkiEhMYI-0) and assign yourself
-3. Create a branch on github and link it to your issue
+3. Create a branch on github and link it to your issue (there is a button in the issue menu to do it automagically)
 4. Download the branch
 
 
@@ -54,7 +52,7 @@ After you've wrote some code you need to put it to github. Note: a single commit
 > Another good practise is to specify co-authors of the commit
 > 
 >```bash
->git commit "Added text field
+>git commit -m "Added text field
 >
 >Co-authored-by: WiktorGorecki <WiktorGorecki@users.noreply.github.com>
 >Co-authored-by: malgos208 <malgos208@users.noreply.github.com>
@@ -73,9 +71,10 @@ After you've finished working on the feture and commited your entire work you ne
 1. Go to [project pull request](https://github.com/piotrek813/aac/pulls)
 2. Create a new pull request
 3. Compare with your branch (change from main)
-![Alt text](image.png)
+![Image: Github merge](img/merge.png)
 4. Request a review
 5. Delete the branch after everything has merged
+![Image: Github delete branch after merge](./img/delete_after_merge.png)
 
 ## General
 
