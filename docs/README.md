@@ -12,7 +12,7 @@
 ## Getting started
 
 ### Installation
-To start working on this project you need to [get flutter installed](https://docs.flutter.dev/get-started/install), after that you need an editor, presumably [VS Code](https://code.visualstudio.com/download). All the installations take some time, so grab yourself some drink of your preference (probably beer). After that, you need [git](https://git-scm.com/downloads)
+To start working on this project you need to [install flutter](https://docs.flutter.dev/get-started/install), after that you need an editor, presumably [VS Code](https://code.visualstudio.com/download). All the installations take some time, so grab yourself some drink of your preference (probably beer). After that, you need [git](https://git-scm.com/downloads)
 
 ### Getting the project
 ><br>TODO: ADD LINKS <br><br>
@@ -37,7 +37,7 @@ git clone https://github.com/piotrek813/aac.git
 
 Creating a branch
 
-1. Open an issue, add a correct tag and assign yourself
+1. Open an issue, add a correct label and assign yourself
 2. Add a task to [figma](https://www.figma.com/file/HiTWiE7qnbIbEZ8gVs2iPj/aac?type=whiteboard&node-id=0-1&t=jDN6wUoxTkiEhMYI-0) and assign yourself
 3. Create a branch on github and link it to your issue
 4. Download the branch
@@ -51,13 +51,31 @@ git checkout 48-write-a-documentation     <-- your branch's name
 
 After you've wrote some code you need to put it to github. Note: a single commit is for a single thing added (but in context of feature) eg. added a button or created a screen. Bad practices involve descriptions such as: ~~created a variavle~~ or ~~imported a library~~ unless they mean something serious (solve a bug) or they're the last commit on this branch.
 
+> Another good practise is to specify co-authors of the commit
+> 
+>```bash
+>git commit "Added text field
+>
+>Co-authored-by: WiktorGorecki <WiktorGorecki@users.noreply.github.com>
+>Co-authored-by: malgos208 <malgos208@users.noreply.github.com>
+>```
+
+<br>
+
 ```bash
 git add --all
 git commit -m "Added a special button for launching e-garnitur.pl"  <-- describe what you did
 git push
 ```
 
-After you've finished working on the feture
+After you've finished working on the feture and commited your entire work you need to merge and close your branch.
+
+1. Go to [project pull request](https://github.com/piotrek813/aac/pulls)
+2. Create a new pull request
+3. Compare with your branch (change from main)
+![Alt text](image.png)
+4. Request a review
+5. Delete the branch after everything has merged
 
 ## General
 
