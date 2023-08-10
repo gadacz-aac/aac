@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:aac/src/features/symbols/provider.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,7 +12,7 @@ import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-//@TODO: Słowa o tym samym zapisie i innym znaczeniu
+//@TODO: !!! nazwy plikow sa generowane od podpisu i moga wystapic slowa o tym samym zapisie i innym znaczeniu np. zamek (moze dodac numeracje?)
 
 class AddSymbolMenu extends ConsumerStatefulWidget {
   const AddSymbolMenu({super.key, required this.boardId});
@@ -31,7 +32,7 @@ class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
   late TextEditingController _controller;
   late TextEditingController _crossAxisCountController;
   final _formKey = GlobalKey<FormState>();
-  // String defaultImagePath = '/assets/default_image_file.png'; //nie dziala bo ma problem z manager.saveSymbol i kloci sie z imageproviderem
+  // String defaultImagePath = 'assets/default_image_file.png'; //nie dziala bo ma problem z manager.saveSymbol i kloci sie z imageproviderem
   String defaultImagePath = "https://cdn.discordapp.com/attachments/1108422948970319886/1113420050058203256/image.png";
 
 
@@ -61,15 +62,31 @@ Future<File> getFileFromAsset(String assetPath) async {
   return tempFile;
 }
 
-  _imgFromGallery() async {
-    await picker.pickImage(
-        source: ImageSource.gallery, imageQuality: 50
-    ).then((value){
-      if(value != null){
+_imgFromGallery() async {
+  bool hasPermission = await _requestPermissions();
+  if (hasPermission) {
+    await picker.pickImage(source: ImageSource.gallery, imageQuality: 50).then((value) {
+      if (value != null) {
         _cropImage(File(value.path));
       }
     });
+  } else {
+    log('no permission provided');
   }
+}
+
+Future<bool> _requestPermissions() async {
+  final androidInfo = await DeviceInfoPlugin().androidInfo;
+  late final Map<Permission, PermissionStatus> statuses;
+
+  if (androidInfo.version.sdkInt <= 32) {
+    statuses = await [Permission.storage].request();
+  } else {
+    statuses = await [Permission.photos, Permission.notification].request();
+  }
+
+  return statuses.values.every((status) => status == PermissionStatus.granted);
+}
 
   _cropImage(File imgFile) async {
     final croppedFile = await ImageCropper().cropImage(
@@ -110,7 +127,6 @@ Future<File> getFileFromAsset(String assetPath) async {
                       // imageFile = await getFileFromAsset(defaultImagePath); //nie dziala
                       // _imagePath = imageFile!.path;
                       _imagePath = defaultImagePath;
-                      // _imagePath = defaultImagePath;
                       // imageFile = File(_imagePath); //nie jest potrzebne bo warunki
 
                       Navigator.of(context).pop();  //close the dialog
@@ -158,7 +174,7 @@ Future<File> getFileFromAsset(String assetPath) async {
       final appDir = await getApplicationDocumentsDirectory();
       final fileName = transformToFileName(_controller.text);
       final savedImage = await imageFile.copy('${appDir.path}/$fileName');
-      log('sciezka do zapisanego obrazu na urzadzeniu: $savedImage $fileName');    // savedImage zawiera ścieżkę do zapisanego obrazu na urządzeniu
+      log('sciezka do zapisanego obrazu na urzadzeniu: $savedImage $fileName');
     }
   }
 
@@ -184,7 +200,6 @@ Future<File> getFileFromAsset(String assetPath) async {
 
 
   @override
-  
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -194,7 +209,6 @@ Future<File> getFileFromAsset(String assetPath) async {
         key: _formKey,
         child: ListView(
           children: [
-            // Image.asset("assets/default_image_file.png"), //wyswietlanie pliku z assets
             TextFormField(
               validator: (value) {
                 final trimmedValue = value?.trim();
@@ -219,20 +233,11 @@ Future<File> getFileFromAsset(String assetPath) async {
             ),
             const SizedBox(height: 20.0,),
             ElevatedButton(
-              onPressed: () async {
-                Map<Permission, PermissionStatus> statuses = await [
-                  Permission.storage,
-                ].request();
-                if(statuses[Permission.storage]!.isGranted){
-                  _imgFromGallery();
-                } else {
-                  log('no permission provided');
-                }
-              },
+              onPressed: _imgFromGallery,
               child: const Text('Select Image'),
             ),
             TextFormField(
-              validator: (value) {//@TODO: może  zabronić używania spacji na końcu nazwy?
+              validator: (value) {
                 if (value == null) {
                   return 'Please enter a number';
                 }

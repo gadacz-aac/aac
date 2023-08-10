@@ -22,6 +22,7 @@ dependencies:
   dotted_border: ^2.0.0+3
   permission_handler: ^10.4.3
   path: ^1.8.3
+  device_info_plus: ^9.0.3
   # downloads_path_provider_28: ^0.1.2
 
 dev_dependencies:
