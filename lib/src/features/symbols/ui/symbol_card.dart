@@ -79,6 +79,7 @@ class DeleteForeverDialogOption extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final symbolManager = ref.watch(symbolManagerProvider);
     return ListTile(
         leading: const Icon(Icons.delete_forever),
         title: const Text("Usuń na zawsze"),
@@ -96,16 +97,15 @@ class DeleteForeverDialogOption extends ConsumerWidget {
                   child: const Text('Cancel'),
                 ),
                 TextButton(
-                  onPressed: () => Navigator.pop(context, true),
+                  onPressed: () {
+                    symbolManager.deleteSymbol(symbol, board);
+                    Navigator.pop(context, true);
+                  },
                   child: const Text('OK'),
                 ),
               ],
             ),
-          ).then((isApproved) {
-            if (isApproved == true) {
-              ref.read(symbolManagerProvider).deleteSymbol(symbol, board);
-            }
-          });
+          );
         });
   }
 }
