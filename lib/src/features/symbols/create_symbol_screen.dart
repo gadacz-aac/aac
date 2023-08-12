@@ -24,7 +24,6 @@ class AddSymbolMenu extends ConsumerStatefulWidget {
 }
 
 class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
-  
   final picker = ImagePicker();
   String _imagePath = '';
   File? imageFile;
@@ -33,8 +32,8 @@ class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
   late TextEditingController _crossAxisCountController;
   final _formKey = GlobalKey<FormState>();
   // String defaultImagePath = 'assets/default_image_file.png'; //nie dziala bo ma problem z manager.saveSymbol i kloci sie z imageproviderem
-  String defaultImagePath = "https://cdn.discordapp.com/attachments/1108422948970319886/1113420050058203256/image.png";
-
+  String defaultImagePath =
+      "https://cdn.discordapp.com/attachments/1108422948970319886/1113420050058203256/image.png";
 
   @override
   void initState() {
@@ -50,59 +49,62 @@ class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
     super.dispose();
   }
 
-
 //moze przyda sie w przyszlosci
-Future<File> getFileFromAsset(String assetPath) async {
-  final byteData = await rootBundle.load(assetPath);
-  final buffer = byteData.buffer.asUint8List();
-  final tempDir = Directory.systemTemp;
-  final tempFilePath = '${tempDir.path}/$assetPath';
-  final tempFile = File(tempFilePath);
-  tempFile.writeAsBytesSync(buffer);
-  return tempFile;
-}
+// Future<File> getFileFromAsset(String assetPath) async {
+//   final byteData = await rootBundle.load(assetPath);
+//   final buffer = byteData.buffer.asUint8List();
+//   final tempDir = Directory.systemTemp;
+//   final tempFilePath = '${tempDir.path}/$assetPath';
+//   final tempFile = File(tempFilePath);
+//   tempFile.writeAsBytesSync(buffer);
+//   return tempFile;
+// }
 
-_imgFromGallery() async {
-  bool hasPermission = await _requestPermissions();
-  if (hasPermission) {
-    await picker.pickImage(source: ImageSource.gallery, imageQuality: 50).then((value) {
-      if (value != null) {
-        _cropImage(File(value.path));
-      }
-    });
-  } else {
-    log('no permission provided');
-  }
-}
-
-Future<bool> _requestPermissions() async {
-  final androidInfo = await DeviceInfoPlugin().androidInfo;
-  late final Map<Permission, PermissionStatus> statuses;
-
-  if (androidInfo.version.sdkInt <= 32) {
-    statuses = await [Permission.storage].request();
-  } else {
-    statuses = await [Permission.photos, Permission.notification].request();
+  _imgFromGallery() async {
+    bool hasPermission = await _requestPermissions();
+    if (hasPermission) {
+      await picker
+          .pickImage(source: ImageSource.gallery, imageQuality: 50)
+          .then((value) {
+        if (value != null) {
+          _cropImage(File(value.path));
+        }
+      });
+    } else {
+      log('no permission provided');
+    }
   }
 
-  return statuses.values.every((status) => status == PermissionStatus.granted);
-}
+  Future<bool> _requestPermissions() async {
+    final androidInfo = await DeviceInfoPlugin().androidInfo;
+    late final Map<Permission, PermissionStatus> statuses;
+
+    if (androidInfo.version.sdkInt <= 32) {
+      statuses = await [Permission.storage].request();
+    } else {
+      statuses = await [Permission.photos].request();
+    }
+
+    return statuses.values
+        .every((status) => status == PermissionStatus.granted);
+  }
 
   _cropImage(File imgFile) async {
-    final croppedFile = await ImageCropper().cropImage(
-        sourcePath: imgFile.path,
-        aspectRatioPresets: [CropAspectRatioPreset.square],
-        uiSettings: [AndroidUiSettings(
-            toolbarTitle: "Image Cropper",
-            toolbarColor: const Color.fromARGB(255, 140, 9, 180), //TODO: change fixed color
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.square,
-            lockAspectRatio: true
-            ),
-          IOSUiSettings(
-            title: "Image Cropper", //TODO: lockAspectRatio for IOS also!!!
-          )
-        ]);
+    final croppedFile = await ImageCropper()
+        .cropImage(sourcePath: imgFile.path, aspectRatioPresets: [
+      CropAspectRatioPreset.square
+    ], uiSettings: [
+      AndroidUiSettings(
+          toolbarTitle: "Image Cropper",
+          toolbarColor:
+              const Color.fromARGB(255, 140, 9, 180), //TODO: change fixed color
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.square,
+          lockAspectRatio: true),
+      IOSUiSettings(
+        title: "Image Cropper", //TODO: lockAspectRatio for IOS also!!!
+      )
+    ]);
     if (croppedFile != null) {
       imageCache.clear();
       setState(() {
@@ -116,32 +118,32 @@ Future<bool> _requestPermissions() async {
       // Use croppedFile.path as the imagePath
       if (imageFile?.path == null) {
         showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Please Confirm'),
-              content: const Text("You didn't choose a symbol. Would you like to use the default symbol?"),
-              actions: [
-                TextButton(
-                    onPressed: () {
-                      // imageFile = await getFileFromAsset(defaultImagePath); //nie dziala
-                      // _imagePath = imageFile!.path;
-                      _imagePath = defaultImagePath;
-                      // imageFile = File(_imagePath); //nie jest potrzebne bo warunki
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Please Confirm'),
+                content: const Text(
+                    "You didn't choose a symbol. Would you like to use the default symbol?"),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        // imageFile = await getFileFromAsset(defaultImagePath); //nie dziala
+                        // _imagePath = imageFile!.path;
+                        _imagePath = defaultImagePath;
+                        // imageFile = File(_imagePath); //nie jest potrzebne bo warunki
 
-                      Navigator.of(context).pop();  //close the dialog
-                      _addSymbol();
-                    },
-                    child: const Text('Yes')),
-                TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();  //close the dialog
-                    },
-                    child: const Text('No'))
-              ],
-            );
-          }
-        );
+                        Navigator.of(context).pop(); //close the dialog
+                        _addSymbol();
+                      },
+                      child: const Text('Yes')),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(); //close the dialog
+                      },
+                      child: const Text('No'))
+                ],
+              );
+            });
       } else {
         _imagePath = imageFile!.path;
         _addSymbol();
@@ -149,7 +151,7 @@ Future<bool> _requestPermissions() async {
     }
   }
 
-  void _addSymbol(){
+  void _addSymbol() {
     final manager = ref.read(symbolManagerProvider);
 
     manager.saveSymbol(
@@ -159,12 +161,12 @@ Future<bool> _requestPermissions() async {
       crossAxisCount: _crossAxisCountController.text,
       createChild: _isLink,
     );
-    
-    if (_imagePath != defaultImagePath){
+
+    if (_imagePath != defaultImagePath) {
       _saveCroppedImage(imageFile!);
     }
-    
-    if (context.mounted){
+
+    if (context.mounted) {
       Navigator.pop(context);
     }
   }
@@ -178,7 +180,8 @@ Future<bool> _requestPermissions() async {
     }
   }
 
-  String transformToFileName(String input) {//@TODO: maybe add other letters, like é, ñ etc.
+  String transformToFileName(String input) {
+    //@TODO: maybe add other letters, like é, ñ etc.
     String newFileName = input
         .trim()
         .toLowerCase()
@@ -198,86 +201,87 @@ Future<bool> _requestPermissions() async {
     return newFileName; //@TODO czy powinno dodawać się jeszcze rozszerzenie .png?
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Add a new symbol'),
-      ),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          children: [
-            TextFormField(
-              validator: (value) {
-                final trimmedValue = value?.trim();
-                if (trimmedValue == null || trimmedValue.isEmpty) {
-                  return 'Please enter some text';
-                }
-                return null;
-              },
-              controller: _controller,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: "Enter Symbol's name", // Pass it in Navigator.pop
-              ),
-            ),
-            
-            const SizedBox(height: 20.0,),
-            if (imageFile != null) // Show the cropped image
-            Image.file(//@TODO: SymbolImage()
-              imageFile!,
-              height: 300.0,
-              width: 300.0,
-            ),
-            const SizedBox(height: 20.0,),
-            ElevatedButton(
-              onPressed: _imgFromGallery,
-              child: const Text('Select Image'),
-            ),
-            TextFormField(
-              validator: (value) {
-                if (value == null) {
-                  return 'Please enter a number';
-                }
-                if (int.tryParse(value)! <= 0) {
-                  // TODO: Można dodać obsługę tekstu, albo coś jeszcze
-                  return 'The width must be higher than 0';
-                }
-                return null;
-              },
-              controller: _crossAxisCountController,
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            ),
-            SwitchListTile(
-              title: const Text('Link to a child board'),
-              value: _isLink,
-              onChanged: (bool value) {
-                setState(() {
-                  _isLink = value;
-                });
-              },
-            ),
-            Row(
-              children: [
-                ElevatedButton(
-                  onPressed: _submit,
-                  child: const Text('Apply'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('Cancel'),
-                ),
-              ],
-            )
-
-          ],
+        appBar: AppBar(
+          title: const Text('Add a new symbol'),
         ),
-      )
-    );
+        body: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              TextFormField(
+                validator: (value) {
+                  final trimmedValue = value?.trim();
+                  if (trimmedValue == null || trimmedValue.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
+                controller: _controller,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: "Enter Symbol's name", // Pass it in Navigator.pop
+                ),
+              ),
+              const SizedBox(
+                height: 20.0,
+              ),
+              if (imageFile != null) // Show the cropped image
+                Image.file(
+                  //@TODO: SymbolImage()
+                  imageFile!,
+                  height: 300.0,
+                  width: 300.0,
+                ),
+              const SizedBox(
+                height: 20.0,
+              ),
+              ElevatedButton(
+                onPressed: _imgFromGallery,
+                child: const Text('Select Image'),
+              ),
+              TextFormField(
+                validator: (value) {
+                  if (value == null) {
+                    return 'Please enter a number';
+                  }
+                  if (int.tryParse(value)! <= 0) {
+                    // TODO: Można dodać obsługę tekstu, albo coś jeszcze
+                    return 'The width must be higher than 0';
+                  }
+                  return null;
+                },
+                controller: _crossAxisCountController,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              ),
+              SwitchListTile(
+                title: const Text('Link to a child board'),
+                value: _isLink,
+                onChanged: (bool value) {
+                  setState(() {
+                    _isLink = value;
+                  });
+                },
+              ),
+              Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: _submit,
+                    child: const Text('Apply'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ));
   }
 }
