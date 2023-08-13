@@ -32,8 +32,7 @@ class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
   late TextEditingController _controller;
   late TextEditingController _crossAxisCountController;
   final _formKey = GlobalKey<FormState>();
-  String defaultImagePath =
-      'assets/default_image_file.png'; //nie dziala bo ma problem z manager.saveSymbol i kloci sie z imageproviderem
+  String defaultImagePath = 'assets/default_image_file.png';
 
   @override
   void initState() {
@@ -51,17 +50,18 @@ class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
 
   _imgFromGallery() async {
     bool hasPermission = await _requestPermissions();
+
     if (hasPermission) {
-      await picker
+      return await picker
           .pickImage(source: ImageSource.gallery, imageQuality: 50)
           .then((value) {
         if (value != null) {
           _cropImage(value.path);
         }
       });
-    } else {
-      log('no permission provided');
     }
+
+    log('no permission provided');
   }
 
   Future<bool> _requestPermissions() async {
