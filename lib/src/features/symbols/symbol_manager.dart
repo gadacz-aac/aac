@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,6 +19,7 @@ class SymbolManager {
       required String imagePath,
       int? crossAxisCount,
       bool createChild = false}) async {
+
     await isar.writeTxn(() async {
       final CommunicationSymbol symbol =
           CommunicationSymbol(label: label, imagePath: imagePath);
