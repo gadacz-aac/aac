@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 
 import 'package:flutter/material.dart';
@@ -12,7 +13,6 @@ import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'package:aac/src/features/symbols/provider.dart';
 import 'package:aac/src/features/symbols/ui/symbol_image.dart';
 
 //@TODO: !!! nazwy plikow sa generowane od podpisu i moga wystapic0 slowa o tym samym zapisie i innym znaczeniu np. zamek (moze dodac numeracje?)
