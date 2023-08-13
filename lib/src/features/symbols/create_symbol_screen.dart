@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:aac/src/features/symbols/provider.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,7 +11,10 @@ import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-//@TODO: !!! nazwy plikow sa generowane od podpisu i moga wystapic slowa o tym samym zapisie i innym znaczeniu np. zamek (moze dodac numeracje?)
+import 'package:aac/src/features/symbols/provider.dart';
+import 'package:aac/src/features/symbols/ui/symbol_image.dart';
+
+//@TODO: !!! nazwy plikow sa generowane od podpisu i moga wystapic0 slowa o tym samym zapisie i innym znaczeniu np. zamek (moze dodac numeracje?)
 
 class AddSymbolMenu extends ConsumerStatefulWidget {
   const AddSymbolMenu({super.key, required this.boardId});
@@ -26,14 +28,12 @@ class AddSymbolMenu extends ConsumerStatefulWidget {
 class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
   final picker = ImagePicker();
   String _imagePath = '';
-  File? imageFile;
   bool _isLink = false;
   late TextEditingController _controller;
   late TextEditingController _crossAxisCountController;
   final _formKey = GlobalKey<FormState>();
-  // String defaultImagePath = 'assets/default_image_file.png'; //nie dziala bo ma problem z manager.saveSymbol i kloci sie z imageproviderem
   String defaultImagePath =
-      "https://cdn.discordapp.com/attachments/1108422948970319886/1113420050058203256/image.png";
+      'assets/default_image_file.png'; //nie dziala bo ma problem z manager.saveSymbol i kloci sie z imageproviderem
 
   @override
   void initState() {
@@ -49,17 +49,6 @@ class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
     super.dispose();
   }
 
-//moze przyda sie w przyszlosci
-// Future<File> getFileFromAsset(String assetPath) async {
-//   final byteData = await rootBundle.load(assetPath);
-//   final buffer = byteData.buffer.asUint8List();
-//   final tempDir = Directory.systemTemp;
-//   final tempFilePath = '${tempDir.path}/$assetPath';
-//   final tempFile = File(tempFilePath);
-//   tempFile.writeAsBytesSync(buffer);
-//   return tempFile;
-// }
-
   _imgFromGallery() async {
     bool hasPermission = await _requestPermissions();
     if (hasPermission) {
@@ -67,7 +56,7 @@ class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
           .pickImage(source: ImageSource.gallery, imageQuality: 50)
           .then((value) {
         if (value != null) {
-          _cropImage(File(value.path));
+          _cropImage(value.path);
         }
       });
     } else {
@@ -89,9 +78,9 @@ class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
         .every((status) => status == PermissionStatus.granted);
   }
 
-  _cropImage(File imgFile) async {
+  _cropImage(String imagePath) async {
     final croppedFile = await ImageCropper()
-        .cropImage(sourcePath: imgFile.path, aspectRatioPresets: [
+        .cropImage(sourcePath: imagePath, aspectRatioPresets: [
       CropAspectRatioPreset.square
     ], uiSettings: [
       AndroidUiSettings(
@@ -108,76 +97,66 @@ class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
     if (croppedFile != null) {
       imageCache.clear();
       setState(() {
-        imageFile = File(croppedFile.path);
+        _imagePath = croppedFile.path;
       });
     }
   }
 
   Future<void> _submit() async {
-    if (_formKey.currentState!.validate()) {
-      // Use croppedFile.path as the imagePath
-      if (imageFile?.path == null) {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text('Please Confirm'),
-                content: const Text(
-                    "You didn't choose a symbol. Would you like to use the default symbol?"),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        // imageFile = await getFileFromAsset(defaultImagePath); //nie dziala
-                        // _imagePath = imageFile!.path;
-                        _imagePath = defaultImagePath;
-                        // imageFile = File(_imagePath); //nie jest potrzebne bo warunki
+    if (!_formKey.currentState!.validate()) return;
+    if (_imagePath.isNotEmpty) return _addSymbol();
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Please Confirm'),
+            content: const Text(
+                "You didn't choose a symbol. Would you like to use the default symbol?"),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    _imagePath = defaultImagePath;
 
-                        Navigator.of(context).pop(); //close the dialog
-                        _addSymbol();
-                      },
-                      child: const Text('Yes')),
-                  TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(); //close the dialog
-                      },
-                      child: const Text('No'))
-                ],
-              );
-            });
-      } else {
-        _imagePath = imageFile!.path;
-        _addSymbol();
-      }
-    }
+                    Navigator.of(context).pop();
+                    _addSymbol();
+                  },
+                  child: const Text('Yes')),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('No'))
+            ],
+          );
+        });
   }
 
-  void _addSymbol() {
+  void _addSymbol() async {
     final manager = ref.read(symbolManagerProvider);
 
     manager.saveSymbol(
       widget.boardId,
       label: _controller.text.trim(),
-      imagePath: _imagePath,
+      imagePath: await _saveCroppedImage(_imagePath),
       crossAxisCount: _crossAxisCountController.text,
       createChild: _isLink,
     );
-
-    if (_imagePath != defaultImagePath) {
-      _saveCroppedImage(imageFile!);
-    }
 
     if (context.mounted) {
       Navigator.pop(context);
     }
   }
 
-  Future<void> _saveCroppedImage(File imageFile) async {
-    if (imageFile.path != defaultImagePath) {
-      final appDir = await getApplicationDocumentsDirectory();
-      final fileName = transformToFileName(_controller.text);
-      final savedImage = await imageFile.copy('${appDir.path}/$fileName');
-      log('sciezka do zapisanego obrazu na urzadzeniu: $savedImage $fileName');
-    }
+  Future<String> _saveCroppedImage(String imagePath) async {
+    if (imagePath == defaultImagePath) return imagePath;
+
+    final imageFile = File(imagePath);
+
+    final appDir = await getApplicationDocumentsDirectory();
+    final fileName = transformToFileName(_controller.text);
+    final savedImage = await imageFile.copy('${appDir.path}/$fileName');
+    log('sciezka do zapisanego obrazu na urzadzeniu: $savedImage $fileName');
+    return savedImage.path;
   }
 
   String transformToFileName(String input) {
@@ -222,16 +201,15 @@ class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
                 controller: _controller,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: "Enter Symbol's name", // Pass it in Navigator.pop
+                  hintText: "Enter Symbol's name",
                 ),
               ),
               const SizedBox(
                 height: 20.0,
               ),
-              if (imageFile != null) // Show the cropped image
-                Image.file(
-                  //@TODO: SymbolImage()
-                  imageFile!,
+              if (_imagePath.isNotEmpty)
+                SymbolImage(
+                  _imagePath,
                   height: 300.0,
                   width: 300.0,
                 ),

@@ -18,18 +18,27 @@ class SymbolImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Uri.parse(path).isAbsolute
-        ? Image.network(
-            path,
-            width: width,
-            height: height,
-            fit: fit,
-          )
-        : Image.file(
-            File(path),
-            width: width,
-            height: height,
-            fit: fit,
-          );
+    if (path.startsWith("assets")) {
+      return Image.asset(
+        path,
+        width: width,
+        height: height,
+        fit: fit,
+      );
+    }
+    if (Uri.parse(path).isAbsolute) {
+      return Image.network(
+        path,
+        width: width,
+        height: height,
+        fit: fit,
+      );
+    }
+    return Image.file(
+      File(path),
+      width: width,
+      height: height,
+      fit: fit,
+    );
   }
 }
