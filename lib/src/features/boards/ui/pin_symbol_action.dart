@@ -39,7 +39,7 @@ class PinSymbolSearchDelegate extends SearchDelegate {
   @override
   set query(String value) {
     debounceQuery(value);
-    print("object");
+    log("object");
     super.query = value;
   }
 

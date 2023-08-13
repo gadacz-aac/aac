@@ -20,12 +20,13 @@ class TtsManager {
   Future<void> setDefaultOptions() async {
     await Future.wait([
       tts.setVolume(1),
-      tts.setSpeechRate(0.5),
+      tts.setSpeechRate(1),
       tts.setPitch(1),
       tts.setLanguage(locale),
       tts.setQueueMode(1),
       tts.awaitSpeakCompletion(true),
-      setPreferredVoice()
+      setPreferredVoice(),
+      setPreferredSpeechRate()
     ]);
   }
 
@@ -56,5 +57,15 @@ class TtsManager {
   Future<void> saySentence(List<CommunicationSymbolDto> sentence) async {
     final words = sentence.map((e) => e.label);
     await _speak(words.join(' '));
+  }
+
+  Future<void> setPreferredSpeechRate() async {
+    final double? savedRate = await settingsManager.getValue('speechRate');
+    if (savedRate == null) return;
+    await tts.setSpeechRate(savedRate);
+  }
+
+  Future<void> setSpeechRate(double rate) async {
+  await tts.setSpeechRate(rate);
   }
 }

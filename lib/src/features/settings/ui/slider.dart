@@ -6,7 +6,7 @@ import '../settings_manager.dart';
 class PersistentSlider extends ConsumerStatefulWidget {
   final Icon? icon;
 
-  final Widget? title;
+  final String titlePrefix;
 
   final double min;
   final double max;
@@ -23,7 +23,7 @@ class PersistentSlider extends ConsumerStatefulWidget {
     this.settingsEntryKey, {
     Key? key,
     this.icon,
-    this.title,
+    required this.titlePrefix,
     this.min = 0.0,
     this.max = 1.0,
     this.onChanged,
@@ -67,7 +67,7 @@ class _PersistentSliderState extends ConsumerState<PersistentSlider> {
     return ListTile(
       titleAlignment: ListTileTitleAlignment.top,
       leading: widget.icon,
-      title: widget.title,
+      title: Text("${widget.titlePrefix}: ${_value.toStringAsFixed(2)}"),
       subtitle: Slider(
         min: widget.min,
         max: widget.max,
