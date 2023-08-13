@@ -23,7 +23,7 @@ dependencies:
   permission_handler: ^10.4.3
   path: ^1.8.3
   device_info_plus: ^9.0.3
-  # downloads_path_provider_28: ^0.1.2
+  wakelock: ^0.6.2
 
 dev_dependencies:
   flutter_test:
@@ -38,3 +38,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/default_image_file.png
+    - assets/oops-steve-carell.gif

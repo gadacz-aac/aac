@@ -1,5 +1,8 @@
 import 'package:aac/src/features/boards/model/board.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
+
+import '../../shared/isar_provider.dart';
 
 class BoardManager {
   BoardManager({
@@ -8,8 +11,18 @@ class BoardManager {
 
   final Isar isar;
 
-  Future<int> getCrossAxisCount(Id boardId) async {
-    final board = await isar.boards.get(boardId);
-    return board?.crossAxisCount ?? 2;
+  Stream<Board?> watchBoardById(Id id) async* {
+    yield* isar.boards.watchObject(id, fireImmediately: true);
   }
 }
+
+final boardProvider =
+    StreamProvider.autoDispose.family<Board?, Id>((ref, id) async* {
+  final manager = ref.watch(boardManagerProvider);
+  yield* manager.watchBoardById(id);
+});
+
+final boardManagerProvider = Provider((ref) {
+  final isar = ref.watch(isarPod);
+  return BoardManager(isar: isar);
+});

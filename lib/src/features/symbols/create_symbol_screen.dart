@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -138,7 +139,7 @@ class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
       widget.boardId,
       label: _controller.text.trim(),
       imagePath: await _saveCroppedImage(_imagePath),
-      crossAxisCount: _crossAxisCountController.text,
+      crossAxisCount: int.tryParse(_crossAxisCountController.text),
       createChild: _isLink,
     );
 

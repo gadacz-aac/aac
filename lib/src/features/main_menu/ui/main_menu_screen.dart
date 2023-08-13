@@ -1,12 +1,15 @@
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/settings/ui/settings_screen.dart';
+import 'package:aac/src/features/settings/utils/protective_mode.dart';
+import 'package:aac/src/features/settings/utils/wakelock.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MainMenuScreen extends StatelessWidget {
+class MainMenuScreen extends ConsumerWidget {
   const MainMenuScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(title: const Text('Main Menu')),
       body: Center(
@@ -15,14 +18,31 @@ class MainMenuScreen extends StatelessWidget {
           children: <Widget>[
             ElevatedButton(
               onPressed: () {
+                ref.read(isParentModeProvider.notifier).update((state) => true);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const BoardScreen(boardId: 1),
+                    builder: (context) => BoardScreen(boardId: 1),
                   ),
                 );
               },
-              child: const Text('AAC Board'),
+              child: const Text('AAC Board - parent mode'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                ref
+                    .read(isParentModeProvider.notifier)
+                    .update((state) => false);
+                startWakelock(ref);
+                startProtectiveModeIfEnabled(ref);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BoardScreen(boardId: 1),
+                  ),
+                ).then((_) => stopWakelock());
+              },
+              child: const Text('AAC Board - child mode'),
             ),
             ElevatedButton(
               onPressed: () {
