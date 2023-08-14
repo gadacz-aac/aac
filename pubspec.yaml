@@ -24,6 +24,7 @@ dependencies:
   path: ^1.8.3
   device_info_plus: ^9.0.3
   wakelock_plus: ^1.1.1
+  word_generator: ^0.4.3
 
 dev_dependencies:
   flutter_test:
