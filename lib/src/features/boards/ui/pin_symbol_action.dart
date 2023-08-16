@@ -1,7 +1,11 @@
+import 'dart:async';
+
+import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
-import 'package:aac/src/features/symbols/ui/symbol_image.dart';
+import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:aac/src/shared/isar_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 
@@ -9,6 +13,8 @@ final searchedSymbolProvider =
     FutureProvider<List<CommunicationSymbol>>((ref) async {
   final isar = ref.watch(isarPod);
   final query = ref.watch(queryProvider);
+
+  if (query.trim().isEmpty) return [];
 
   return isar.communicationSymbols
       .where()
@@ -18,32 +24,79 @@ final searchedSymbolProvider =
 
 final queryProvider = StateProvider((ref) => "");
 
-class PinSymbolAction extends StatelessWidget {
-  const PinSymbolAction({super.key});
+class Debouncer {
+  Timer? _timer;
+  final Duration _duration;
+
+  Debouncer(this._duration);
+
+  void call(void Function() callback) {
+    _timer?.cancel();
+    _timer = Timer(_duration, () => callback());
+  }
+
+  void dispose() {
+    _timer?.cancel();
+  }
+}
+
+class PinSymbolAction extends ConsumerWidget {
+  const PinSymbolAction({super.key, required this.board});
+
+  final Board board;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return IconButton(
         onPressed: () async {
-          Navigator.push(
+          final symbols = await Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => const SymbolSearchScreen()));
           // showSearch(context: context, delegate: SymbolSearchDelegate());
+          ref.read(symbolManagerProvider).pinSymbolsToBoard(symbols, board);
         },
         icon: const Icon(Icons.push_pin));
   }
 }
 
-class SymbolSearchScreen extends ConsumerWidget {
+class SymbolSearchScreen extends ConsumerStatefulWidget {
   const SymbolSearchScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SymbolSearchScreen> createState() => _SymbolSearchScreenState();
+}
+
+class _SymbolSearchScreenState extends ConsumerState<SymbolSearchScreen> {
+  final _debounce = Debouncer(const Duration(milliseconds: 300));
+  final focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    focusNode.requestFocus();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _debounce.dispose();
+    focusNode.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final results = ref.watch(searchedSymbolProvider).valueOrNull;
+
     final theme = Theme.of(context);
     final appBarTheme = theme.copyWith(
       appBarTheme: AppBarTheme(
+        systemOverlayStyle: theme.colorScheme.brightness == Brightness.dark
+            ? SystemUiOverlayStyle.light
+            : SystemUiOverlayStyle.dark,
+        backgroundColor: theme.colorScheme.brightness == Brightness.dark
+            ? Colors.grey[900]
+            : Colors.white,
         iconTheme: theme.primaryIconTheme.copyWith(color: Colors.grey),
         titleTextStyle: theme.textTheme.titleLarge,
         toolbarTextStyle: theme.textTheme.bodyMedium,
@@ -63,12 +116,14 @@ class SymbolSearchScreen extends ConsumerWidget {
                 icon: const Icon(Icons.arrow_back),
               ),
               title: TextField(
-                // controller: widget.delegate._queryTextController,
-                // focusNode: focusNode,
+                focusNode: focusNode,
                 style: theme.textTheme.titleLarge,
-                onChanged: (value) =>
-                    ref.read(queryProvider.notifier).update((_) => value),
-                // textInputAction: widget.delegate.textInputAction,
+                onChanged: (value) {
+                  _debounce(() => ref
+                      .read(queryProvider.notifier)
+                      .update((state) => value));
+                },
+                textInputAction: TextInputAction.search,
                 decoration: const InputDecoration(hintText: "Szukaj"),
               ),
               actions: null,
@@ -78,46 +133,13 @@ class SymbolSearchScreen extends ConsumerWidget {
                 : ListView.builder(
                     itemCount: results.length,
                     itemBuilder: (context, index) {
-                      final item = results[index];
+                      final symbol = results[index];
                       return ListTile(
-                        leading: SymbolImage(item.imagePath),
-                        title: Text(item.label),
+                        leading: Image.asset("assets/oops-steve-carell.gif"),
+                        title: Text(symbol.label),
+                        onTap: () => Navigator.pop(context, [symbol]),
                       );
                     },
                   )));
-  }
-}
-
-class SymbolSearchDelegate extends SearchDelegate {
-  @override
-  List<Widget>? buildActions(BuildContext context) {
-    return null;
-  }
-
-  @override
-  Widget? buildLeading(BuildContext context) {
-    return null;
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    return ListView(
-      children: List.filled(8, 0)
-          .map((e) => const ListTile(
-                title: Text("results"),
-              ))
-          .toList(),
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    return ListView(
-      children: List.filled(8, 0)
-          .map((e) => const ListTile(
-                title: Text("suggestion"),
-              ))
-          .toList(),
-    );
   }
 }

@@ -70,6 +70,15 @@ class SymbolManager {
     board.symbols.save();
   }
 
+  Future<void> pinSymbolsToBoard(
+      List<CommunicationSymbol> symbols, Board board) async {
+    board.symbols.addAll(symbols);
+    await isar.writeTxn(() async {
+      await board.symbols.save();
+      await isar.boards.put(board);
+    });
+  }
+
   Future<void> unpinSymbolFromBoard(
       CommunicationSymbol symbol, Board board) async {
     board.symbols.remove(symbol);
