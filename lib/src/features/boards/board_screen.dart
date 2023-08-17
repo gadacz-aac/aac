@@ -91,6 +91,7 @@ class CreateSymbolFloatingButton extends StatelessWidget {
             MaterialPageRoute(
                 builder: (context) => AddSymbolMenu(boardId: boardId)));
       },
+      heroTag: null,
       child: const Icon(Icons.add),
     );
   }
@@ -110,6 +111,7 @@ class RandomiseSymbolFloatingButton extends ConsumerWidget {
       onPressed: () async {
         randomiseSymbol(ref, boardId);
       },
+      heroTag: null,
       child: const Icon(Icons.shuffle),
     );
   }
