@@ -1,12 +1,18 @@
+import 'dart:developer';
+
 import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:aac/src/features/symbols/ui/symbol_image.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
+//TODO: add an option to delete the image
 class EditSymbolScreen extends ConsumerStatefulWidget {
   const EditSymbolScreen(
       {super.key, required this.symbol, required this.board});
@@ -19,6 +25,7 @@ class EditSymbolScreen extends ConsumerStatefulWidget {
 }
 
 class _EditSymbolScreenState extends ConsumerState<EditSymbolScreen> {
+  final picker = ImagePicker();
   late String _imagePath;
   late bool _isLink;
   late TextEditingController _controller;
@@ -42,7 +49,62 @@ class _EditSymbolScreenState extends ConsumerState<EditSymbolScreen> {
     super.dispose();
   }
 
+  _imgFromGallery() async {
+    bool hasPermission = await _requestPermissions();
+
+    if (hasPermission) {
+      return await picker
+          .pickImage(source: ImageSource.gallery, imageQuality: 50)
+          .then((value) {
+        if (value != null) {
+          _cropImage(value.path);
+        }
+      });
+    }
+
+    log('no permission provided');
+  }
+
+  Future<bool> _requestPermissions() async {
+    final androidInfo = await DeviceInfoPlugin().androidInfo;
+    late final Map<Permission, PermissionStatus> statuses;
+
+    if (androidInfo.version.sdkInt <= 32) {
+      statuses = await [Permission.storage].request();
+    } else {
+      statuses = await [Permission.photos].request();
+    }
+
+    return statuses.values
+        .every((status) => status == PermissionStatus.granted);
+  }
+
+  _cropImage(String imagePath) async {
+    final croppedFile = await ImageCropper()
+        .cropImage(sourcePath: imagePath, aspectRatioPresets: [
+      CropAspectRatioPreset.square
+    ], uiSettings: [
+      AndroidUiSettings(
+          toolbarTitle: "Image Cropper",
+          toolbarColor:
+              const Color.fromARGB(255, 140, 9, 180), //TODO: change fixed color
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.square,
+          lockAspectRatio: true),
+      IOSUiSettings(
+        title: "Image Cropper", //TODO: lockAspectRatio for IOS also!!!
+      )
+    ]);
+    if (croppedFile != null) {
+      imageCache.clear();
+      setState(() {
+        _imagePath = croppedFile.path;
+      });
+    }
+  }
+
   void _submit() {
+    //TODO: add question when user didn't choose a symbol
     if (_formKey.currentState!.validate()) {
       _imagePath = _imagePath == ""
           ? "https://cdn.discordapp.com/attachments/1108422948970319886/1113420050058203256/image.png"
@@ -89,16 +151,17 @@ class _EditSymbolScreenState extends ConsumerState<EditSymbolScreen> {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () async {
-                    final imageFile = await ImagePicker()
-                        .pickImage(source: ImageSource.gallery);
+                  onPressed: _imgFromGallery,
+                  //  () async {
+                  //   final imageFile = await ImagePicker()
+                  //       .pickImage(source: ImageSource.gallery);
 
-                    if (imageFile != null) {
-                      setState(() {
-                        _imagePath = imageFile.path;
-                      });
-                    }
-                  },
+                  //   if (imageFile != null) {
+                  //     setState(() {
+                  //       _imagePath = imageFile.path;
+                  //     });
+                  //   }
+                  // }
                   child: const Text('Select image'), // Pass it in Navigator.pop
                 ),
                 SwitchListTile(

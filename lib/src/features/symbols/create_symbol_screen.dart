@@ -15,7 +15,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'package:aac/src/features/symbols/ui/symbol_image.dart';
 
-//@TODO: !!! nazwy plikow sa generowane od podpisu i moga wystapic0 slowa o tym samym zapisie i innym znaczeniu np. zamek (moze dodac numeracje?)
+//TODO: !!! nazwy plikow sa generowane od podpisu i moga wystapic slowa o tym samym zapisie i innym znaczeniu np. zamek (moze dodac numeracje?)
 
 class AddSymbolMenu extends ConsumerStatefulWidget {
   const AddSymbolMenu({super.key, required this.boardId});
@@ -178,7 +178,7 @@ class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
         .replaceAll(RegExp(r'[^a-z0-9_ ]'), '')
         .trim();
 
-    return newFileName; //@TODO czy powinno dodawać się jeszcze rozszerzenie .png?
+    return newFileName; //? czy powinno dodawać się jeszcze rozszerzenie .png?
   }
 
   @override

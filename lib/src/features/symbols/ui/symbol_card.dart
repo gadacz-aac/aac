@@ -1,7 +1,7 @@
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
-import 'package:aac/src/features/symbols/ui/edit_symbol_screen.dart';
+import 'package:aac/src/features/symbols/edit_symbol_screen.dart';
 import 'package:aac/src/features/symbols/ui/symbol_image.dart';
 import 'package:aac/src/features/text_to_speech/provider.dart';
 import 'package:flutter/material.dart';
