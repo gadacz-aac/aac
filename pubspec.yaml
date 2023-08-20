@@ -31,4 +31,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - assets/default_image_file.png
     - assets/oops-steve-carell.gif

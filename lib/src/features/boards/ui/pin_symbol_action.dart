@@ -53,7 +53,7 @@ class PinSymbolAction extends ConsumerWidget {
               context,
               MaterialPageRoute(
                   builder: (context) => const SymbolSearchScreen()));
-          // showSearch(context: context, delegate: SymbolSearchDelegate());
+
           ref.read(symbolManagerProvider).pinSymbolsToBoard(symbols, board);
         },
         icon: const Icon(Icons.push_pin));
