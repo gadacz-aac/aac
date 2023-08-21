@@ -42,7 +42,7 @@ class BoardScreen extends ConsumerWidget {
           Widget? floatingActionButton;
           if (isParentMode) {
             floatingActionButton = CreateSymbolFloatingButton(boardId: boardId);
-            actions.add(PinSymbolAction(board: data));
+            actions.add(PinSymbolsAction(board: data));
           } else {
             actions.add(const LockButton());
           }

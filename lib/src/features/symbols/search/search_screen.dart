@@ -1,0 +1,206 @@
+import 'package:aac/src/features/symbols/model/communication_symbol.dart';
+import 'package:aac/src/features/symbols/ui/symbol_image.dart';
+import 'package:aac/src/shared/isar_provider.dart';
+import 'package:aac/src/shared/utils/debounce.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:isar/isar.dart';
+
+import 'app_bar_actions.dart';
+
+final searchedSymbolProvider =
+    FutureProvider<List<CommunicationSymbol>>((ref) async {
+  final isar = ref.watch(isarPod);
+  final query = ref.watch(queryProvider);
+
+  if (query.trim().isEmpty) return [];
+
+  return isar.communicationSymbols
+      .where()
+      .wordsElementStartsWith(query)
+      .findAll();
+});
+
+final queryProvider = StateProvider<String>((ref) => "");
+
+class SelectedSymbolNotifier extends ChangeNotifier {
+  final state = <CommunicationSymbol>[];
+
+  void toggle(CommunicationSymbol symbol) {
+    final index = state.indexWhere((e) => e.id == symbol.id);
+    if (index == -1) {
+      state.add(symbol);
+    } else {
+      state.removeWhere((element) => element.id == symbol.id);
+    }
+    notifyListeners();
+  }
+
+  void clear() {
+    state.clear();
+    notifyListeners();
+  }
+}
+
+final selectedSymbolsProvider =
+    ChangeNotifierProvider<SelectedSymbolNotifier>((ref) {
+  return SelectedSymbolNotifier();
+});
+
+final areSelectedProvider = Provider<bool>((ref) {
+  final selected = ref.watch(selectedSymbolsProvider);
+  return selected.state.isNotEmpty;
+});
+
+class SymbolSearchScreen extends ConsumerWidget {
+  const SymbolSearchScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final results = ref.watch(searchedSymbolProvider).valueOrNull;
+
+    final theme = Theme.of(context);
+    final appBarTheme = theme.copyWith(
+      appBarTheme: AppBarTheme(
+        systemOverlayStyle: theme.colorScheme.brightness == Brightness.dark
+            ? SystemUiOverlayStyle.light
+            : SystemUiOverlayStyle.dark,
+        backgroundColor: theme.colorScheme.brightness == Brightness.dark
+            ? Colors.grey[900]
+            : Colors.white,
+        iconTheme: theme.primaryIconTheme.copyWith(color: Colors.grey),
+        titleTextStyle: theme.textTheme.titleLarge,
+        toolbarTextStyle: theme.textTheme.bodyMedium,
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        hintStyle: theme.inputDecorationTheme.hintStyle,
+        border: InputBorder.none,
+      ),
+    );
+
+    return Theme(
+        data: appBarTheme,
+        child: Scaffold(
+            appBar: const SearchAppBar(),
+            body: results == null || results.isEmpty
+                ? const Center(child: Text("Jak pusto"))
+                : ListView.separated(
+                    itemCount: results.length,
+                    separatorBuilder: (context, index) => const SizedBox(
+                      height: 10,
+                    ),
+                    itemBuilder: (context, index) {
+                      final symbol = results[index];
+                      return SearchItem(symbol: symbol);
+                    },
+                  )));
+  }
+}
+
+class SearchItem extends ConsumerWidget {
+  const SearchItem({
+    super.key,
+    required this.symbol,
+  });
+
+  final CommunicationSymbol symbol;
+  final isSelected = false;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isSelected = ref
+        .watch(selectedSymbolsProvider)
+        .state
+        .any((element) => element.id == symbol.id);
+
+    final shape = isSelected
+        ? RoundedRectangleBorder(
+            side: const BorderSide(width: 2, color: Colors.amberAccent),
+            borderRadius: BorderRadius.circular(10),
+          )
+        : null;
+
+    return ListTile(
+        shape: shape,
+        contentPadding: const EdgeInsets.all(8.0),
+        leading: SymbolImage(symbol.imagePath),
+        title: Text(symbol.label),
+        onTap: () {
+          final areSelected = ref.read(areSelectedProvider);
+          if (!areSelected) {
+            Navigator.pop(context, [symbol]);
+            return;
+          }
+
+          ref.read(selectedSymbolsProvider.notifier).toggle(symbol);
+        },
+        onLongPress: () {
+          ref.read(selectedSymbolsProvider.notifier).toggle(symbol);
+        });
+  }
+}
+
+class SearchAppBar extends ConsumerStatefulWidget
+    implements PreferredSizeWidget {
+  const SearchAppBar({
+    super.key,
+  });
+
+  @override
+  ConsumerState<SearchAppBar> createState() => _SearchAppBarState();
+
+  @override
+  final Size preferredSize = const Size.fromHeight(kToolbarHeight);
+}
+
+class _SearchAppBarState extends ConsumerState<SearchAppBar> {
+  final _debounce = Debouncer(const Duration(milliseconds: 300));
+  final focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    focusNode.requestFocus();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _debounce.dispose();
+    focusNode.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final areSelected = ref.watch(areSelectedProvider);
+
+    Widget? leading;
+    List<Widget>? actions;
+    Widget? title;
+
+    if (areSelected) {
+      leading = const CancelAction();
+      actions = [const PinSelectedSymbolAction()];
+    } else {
+      leading = const BackAction();
+      title = TextField(
+        focusNode: focusNode,
+        style: theme.textTheme.titleLarge,
+        onChanged: (value) {
+          _debounce(
+              () => ref.read(queryProvider.notifier).update((state) => value));
+        },
+        textInputAction: TextInputAction.search,
+        decoration: const InputDecoration(hintText: "Szukaj"),
+      );
+    }
+
+    return AppBar(
+      leading: leading,
+      title: title,
+      actions: actions,
+    );
+  }
+}
