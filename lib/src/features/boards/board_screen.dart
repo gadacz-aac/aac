@@ -49,8 +49,9 @@ class BoardScreen extends ConsumerWidget {
                 RandomiseSymbolFloatingButton(boardId: boardId)
               ],
             );
-            actions.add(const PinSymbolAction());
-
+            actions.add(PinSymbolsAction(
+              board: data,
+            ));
           } else {
             actions.add(const LockButton());
           }
