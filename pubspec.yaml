@@ -12,13 +12,19 @@ dependencies:
 
   flutter_tts: ^3.7.0
   english_words: ^4.0.0
-  image_picker: ^0.8.7+5
+  image_picker: ^1.0.1
   isar: ^3.1.0+1
   isar_flutter_libs: ^3.1.0+1
   path_provider: ^2.0.15
   flutter_riverpod: ^2.3.6
   kiosk_mode: ^0.5.0
-  wakelock: ^0.6.2
+  image_cropper: ^5.0.0
+  dotted_border: ^2.0.0+3
+  permission_handler: ^10.4.3
+  path: ^1.8.3
+  device_info_plus: ^9.0.3
+  wakelock_plus: ^1.1.1
+  word_generator: ^0.4.3
 
 dev_dependencies:
   flutter_test:
@@ -32,4 +38,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - assets/default_image_file.png
     - assets/oops-steve-carell.gif
