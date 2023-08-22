@@ -16,7 +16,7 @@ class CommunicationSymbol {
   final parentBoard = IsarLinks<Board>();
   final childBoard = IsarLink<Board>();
 
-  // full text search
+  // full-text search
   @Index(type: IndexType.value, caseSensitive: false)
   List<String> get words => Isar.splitWords(label);
 }

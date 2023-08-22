@@ -1,8 +1,8 @@
 import 'package:aac/src/features/settings/ui/group.dart';
+import 'package:aac/src/features/settings/ui/slider.dart';
+import 'package:aac/src/features/settings/ui/switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'package:aac/src/features/settings/ui/switch.dart';
 
 import '../../text_to_speech/tts_manager.dart';
 import '../utils/orientation.dart';
@@ -51,6 +51,22 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               "kiosk",
               title: Text("Protective mode"),
               subtitle: Text("Prevent your child from closing the app"),
+            ),
+            const PersistentSwitch(
+              "wakelock",
+              title: Text("Do you want to have your eyes burned?"),
+              subtitle: Text("Prevent your battery from lasting too long"),
+            ),
+            PersistentSlider(
+              "speechRate",
+              titlePrefix: "Prędkość mowy",
+              min: 0.1,
+              max: 2.0,
+              defaultValue: 1.0,
+              writeOnChange: false,
+              onChanged: (value) {
+                ref.read(ttsManagerProvider).setSpeechRate(value);
+              },
             ),
           ]),
           const VoiceDropdown(),

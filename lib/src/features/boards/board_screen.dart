@@ -2,6 +2,7 @@ import 'package:aac/src/features/boards/board_manager.dart';
 import 'package:aac/src/features/boards/ui/lock_button.dart';
 import 'package:aac/src/features/boards/ui/pin_symbol_action.dart';
 import 'package:aac/src/features/boards/ui/sentence_grid.dart';
+import 'package:aac/src/features/symbols/randomise_symbol.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -41,8 +42,15 @@ class BoardScreen extends ConsumerWidget {
           List<Widget> actions = [];
           Widget? floatingActionButton;
           if (isParentMode) {
-            floatingActionButton = CreateSymbolFloatingButton(boardId: boardId);
-            actions.add(PinSymbolsAction(board: data));
+            floatingActionButton = Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                CreateSymbolFloatingButton(boardId: boardId),
+                RandomiseSymbolFloatingButton(boardId: boardId)
+              ],
+            );
+            actions.add(const PinSymbolAction());
+
           } else {
             actions.add(const LockButton());
           }
@@ -84,7 +92,28 @@ class CreateSymbolFloatingButton extends StatelessWidget {
             MaterialPageRoute(
                 builder: (context) => AddSymbolMenu(boardId: boardId)));
       },
+      heroTag: null,
       child: const Icon(Icons.add),
+    );
+  }
+}
+
+class RandomiseSymbolFloatingButton extends ConsumerWidget {
+  const RandomiseSymbolFloatingButton({
+    super.key,
+    required this.boardId,
+  });
+
+  final Id boardId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return FloatingActionButton(
+      onPressed: () async {
+        randomiseSymbol(ref, boardId);
+      },
+      heroTag: null,
+      child: const Icon(Icons.shuffle),
     );
   }
 }

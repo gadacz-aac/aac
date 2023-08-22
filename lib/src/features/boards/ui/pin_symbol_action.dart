@@ -18,7 +18,6 @@ class PinSymbolsAction extends ConsumerWidget {
               MaterialPageRoute(
                   builder: (context) => const SymbolSearchScreen()));
 
-          print("after $symbols");
           if (symbols == null) return;
 
           ref.read(symbolManagerProvider).pinSymbolsToBoard(symbols, board);
