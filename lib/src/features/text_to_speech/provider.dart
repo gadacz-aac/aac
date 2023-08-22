@@ -1,7 +1,6 @@
+import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 
 @immutable
 class CommunicationSymbolDto {

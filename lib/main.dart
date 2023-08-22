@@ -20,8 +20,9 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: MainMenuScreen(), // Set MainMenuScreen as the home screen
+    return MaterialApp(
+      theme: ThemeData(brightness: Brightness.dark),
+      home: const MainMenuScreen(), // Set MainMenuScreen as the home screen
     );
   }
 }
