@@ -4,7 +4,6 @@ import 'package:aac/src/features/settings/ui/switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../text_to_speech/provider.dart';
 import '../../text_to_speech/tts_manager.dart';
 import '../utils/orientation.dart';
 import '../utils/tts.dart';
@@ -18,7 +17,6 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,8 +63,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               min: 0.1,
               max: 2.0,
               defaultValue: 1.0,
+              writeOnChange: false,
               onChanged: (value) {
-                ref.read(speechRateProvider.notifier).updateRate(value);
                 ref.read(ttsManagerProvider).setSpeechRate(value);
               },
             ),
@@ -76,8 +74,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       ),
     );
   }
-
-
 }
 
 class VoiceDropdown extends ConsumerWidget {

@@ -36,14 +36,3 @@ final sentenceNotifierProvider =
     NotifierProvider<SentenceNotifier, List<CommunicationSymbolDto>>(() {
   return SentenceNotifier();
 });
-
-class SpeechRateNotifier extends StateNotifier<double> {
-  SpeechRateNotifier() : super(1.0);  // Default value is 1.0 (normal speed)
-  void updateRate(double rate) {
-    state = rate;
-  }
-}
-
-final speechRateProvider = StateNotifierProvider<SpeechRateNotifier, double>((ref) {
-  return SpeechRateNotifier();
-});
