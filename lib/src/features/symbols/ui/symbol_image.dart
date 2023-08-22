@@ -26,6 +26,7 @@ class SymbolImage extends StatelessWidget {
         fit: fit,
       );
     }
+
     if (Uri.parse(path).isAbsolute) {
       return Image.network(
         path,
@@ -34,6 +35,7 @@ class SymbolImage extends StatelessWidget {
         fit: fit,
       );
     }
+
     return Image.file(
       File(path),
       width: width,

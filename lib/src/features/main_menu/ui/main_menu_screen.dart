@@ -12,72 +12,78 @@ class MainMenuScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(title: const Text('Main Menu')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                ref.read(isParentModeProvider.notifier).update((state) => true);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BoardScreen(boardId: 1),
-                  ),
-                );
-              },
-              child: const Text('AAC Board - parent mode'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                ref
-                    .read(isParentModeProvider.notifier)
-                    .update((state) => false);
-                startWakelock(ref);
-                startProtectiveModeIfEnabled(ref);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BoardScreen(boardId: 1),
-                  ),
-                ).then((_) => stopWakelock());
-              },
-              child: const Text('AAC Board - child mode'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SettingsScreen(),
-                  ),
-                );
-              },
-              child: const Text('Settings'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LoginScreen(),
-                  ),
-                );
-              },
-              child: const Text('Login'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ShopScreen(),
-                  ),
-                );
-              },
-              child: const Text('Shop'),
-            ),
-          ],
+      body: Padding(
+        padding: const EdgeInsets.all(64.0),
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              ElevatedButton(
+                onPressed: () {
+                  ref
+                      .read(isParentModeProvider.notifier)
+                      .update((state) => true);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BoardScreen(boardId: 1),
+                    ),
+                  );
+                },
+                child: const Text('AAC Board - parent mode'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  ref
+                      .read(isParentModeProvider.notifier)
+                      .update((state) => false);
+                  startWakelock(ref);
+                  startProtectiveModeIfEnabled(ref);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BoardScreen(boardId: 1),
+                    ),
+                  ).then((_) => stopWakelock());
+                },
+                child: const Text('AAC Board - child mode'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SettingsScreen(),
+                    ),
+                  );
+                },
+                child: const Text('Settings'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginScreen(),
+                    ),
+                  );
+                },
+                child: const Text('Login'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ShopScreen(),
+                    ),
+                  );
+                },
+                child: const Text('Shop'),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -50,6 +50,7 @@ class BoardScreen extends ConsumerWidget {
               ],
             );
             actions.add(const PinSymbolAction());
+
           } else {
             actions.add(const LockButton());
           }
