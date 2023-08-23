@@ -1,11 +1,13 @@
 import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
+import 'package:aac/src/features/symbols/file_helpers.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:aac/src/features/symbols/symbol_settings.dart';
 
-//TODO: add an option to delete the image
+//TODO: make the symbol disappear(/change) from the sentence after the symbol is deleted(/edited)
+
 class EditSymbolScreen extends ConsumerStatefulWidget {
   const EditSymbolScreen(
       {super.key, required this.symbol, required this.board});
@@ -18,7 +20,7 @@ class EditSymbolScreen extends ConsumerStatefulWidget {
 }
 
 class _EditSymbolScreenState extends ConsumerState<EditSymbolScreen> {
-  void save(String path, String label, bool isFolder, int count) {
+  Future<void> save(String path, String label, bool isFolder, int count) async {
     final manager = ref.read(symbolManagerProvider);
 
     widget.symbol.label = label;
@@ -27,11 +29,13 @@ class _EditSymbolScreenState extends ConsumerState<EditSymbolScreen> {
     manager.updateSymbol(
       symbol: widget.symbol,
       parentBoard: widget.board,
+      imagePath: await saveImage(path, label),
       createChild: isFolder,
       crossAxisCount: count,
     );
-    //TODO: add transformation to file name
-    Navigator.of(context).pop();
+    if (context.mounted) {
+      Navigator.pop(context);
+    }
   }
 
   @override

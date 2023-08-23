@@ -57,7 +57,12 @@ class SymbolCard extends ConsumerWidget {
         onTap: () => _onTap(context, ref),
         child: Column(
           children: [
-            Expanded(child: SymbolImage(symbol.imagePath)),
+            Expanded(
+              child: SymbolImage(
+                symbol.imagePath,
+                fit: BoxFit.cover,
+              ),
+            ),
             Text(
               symbol.label,
               style: const TextStyle(fontSize: 20.0),

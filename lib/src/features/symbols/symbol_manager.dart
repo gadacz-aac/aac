@@ -42,7 +42,8 @@ class SymbolManager {
       {required CommunicationSymbol symbol,
       required Board parentBoard,
       int? crossAxisCount,
-      required bool createChild}) async {
+      required bool createChild,
+      required String imagePath}) async {
     await isar.writeTxn(() async {
       await isar.communicationSymbols.put(symbol);
       if (createChild) {
