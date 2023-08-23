@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:aac/src/features/symbols/symbol_settings.dart';
 
-//TODO: make the symbol disappear(/change) from the sentence after the symbol is deleted(/edited)
+//TODO: make the symbol disappear(/change) from the sentence after the symbol is deleted(/edited). Particularly important when edited!
 
 class EditSymbolScreen extends ConsumerStatefulWidget {
   const EditSymbolScreen(

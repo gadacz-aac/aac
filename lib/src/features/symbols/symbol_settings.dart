@@ -72,12 +72,6 @@ class _SymbolSettingsState extends State<SymbolSettings> {
     return Scaffold(
       appBar: AppBar(
         title: Text(isEditing ? 'Edytuj symbol' : 'Dodaj symbol'),
-        actions: [
-          IconButton(
-            onPressed: () => submit(),
-            icon: const Icon(Icons.save),
-          ),
-        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => submit(),
@@ -191,8 +185,7 @@ class _SymbolSettingsState extends State<SymbolSettings> {
   cropImage(String path) async {
     final croppedFile = await ImageCropper().cropImage(
         sourcePath: path,
-        compressQuality:
-            100, //? probably default. Shouldn't the value be lower?
+        compressQuality: 60, //? isn't it too low?
         compressFormat: ImageCompressFormat.png,
         aspectRatioPresets: [
           CropAspectRatioPreset.square
@@ -246,7 +239,7 @@ class _SymbolSettingsState extends State<SymbolSettings> {
               TextButton(
                   onPressed: () {
                     Navigator.of(context, rootNavigator: true).pop();
-                    pickImage(); //? opening the gallery again may be confusing for the user
+                    pickImage();
                     return;
                   },
                   child: const Text('No'))
