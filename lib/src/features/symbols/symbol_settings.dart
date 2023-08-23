@@ -101,6 +101,11 @@ class _SymbolSettingsState extends State<SymbolSettings> {
               child: const Text('Wybierz ikonkę'),
             ),
             const SizedBox(height: 12),
+            ElevatedButton(
+              onPressed: () => deleteImage(),
+              child: const Text('Usuń ikonkę'),
+            ),
+            const SizedBox(height: 12),
             TextFormField(
               controller: labelController,
               autocorrect: true,
@@ -186,7 +191,8 @@ class _SymbolSettingsState extends State<SymbolSettings> {
   cropImage(String path) async {
     final croppedFile = await ImageCropper().cropImage(
         sourcePath: path,
-        compressQuality: 100, //? necessary? Also shouldn't it be lower?
+        compressQuality:
+            100, //? probably default. Shouldn't the value be lower?
         compressFormat: ImageCompressFormat.png,
         aspectRatioPresets: [
           CropAspectRatioPreset.square
@@ -234,9 +240,7 @@ class _SymbolSettingsState extends State<SymbolSettings> {
                   onPressed: () {
                     widget.updateSymbolSettings(
                         defaultImagePath, symbolName, isFolder, axisCount);
-                    // pop the dialog, then the page
                     Navigator.of(context, rootNavigator: true).pop();
-                    Navigator.of(context).pop();
                   },
                   child: const Text('Yes')),
               TextButton(
@@ -251,5 +255,11 @@ class _SymbolSettingsState extends State<SymbolSettings> {
         },
       );
     }
+  }
+
+  void deleteImage() {
+    setState(() {
+      imagePath = defaultImagePath;
+    });
   }
 }
