@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "826800469394",
+    "project_id": "gadacz-2a486",
+    "storage_bucket": "gadacz-2a486.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:826800469394:android:bad39aa8e14c6f874e7d4b",
+        "android_client_info": {
+          "package_name": "com.example.aac"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLL74vu61uyw4S7HsHk_2t_sRyQsazlb8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
