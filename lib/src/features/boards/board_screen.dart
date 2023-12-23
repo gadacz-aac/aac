@@ -158,11 +158,17 @@ class SymbolsGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Flexible(
-      child: GridView.count(
-          crossAxisCount: board.crossAxisCount,
-          children: board.symbols
-              .map((e) => SymbolCard(symbol: e, board: board))
-              .toList()),
-    );
+        child: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 6,
+              crossAxisSpacing: 12.0,
+              mainAxisSpacing: 12.0,
+            ),
+            itemCount: board.symbols.length,
+            padding: const EdgeInsets.all(12.0),
+            itemBuilder: (context, index) {
+              final e = board.symbols.elementAt(index);
+              return SymbolCard(symbol: e, board: board);
+            }));
   }
 }

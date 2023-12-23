@@ -1,9 +1,9 @@
+import 'package:aac/src/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../symbols/ui/symbol_image.dart';
 import '../../text_to_speech/provider.dart';
-import '../../text_to_speech/tts_manager.dart';
 
 class SentenceBar extends ConsumerWidget {
   const SentenceBar({super.key});
@@ -12,17 +12,18 @@ class SentenceBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final symbols = ref.watch(sentenceNotifierProvider);
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 22.0, horizontal: 30.0),
+      color: AacColors.sentenceBarGrey,
       height: 64.0,
       child: Row(
         children: [
-          IconButton(
-              onPressed: () {
-                ref
-                    .read(ttsManagerProvider)
-                    .saySentence(ref.read(sentenceNotifierProvider));
-              },
-              icon: const Icon(Icons.play_arrow)),
+          // IconButton(
+          //     onPressed: () {
+          //       ref
+          //           .read(ttsManagerProvider)
+          //           .saySentence(ref.read(sentenceNotifierProvider));
+          //     },
+          //     icon: const Icon(Icons.play_arrow)),
           Expanded(
             child: ListView(
               scrollDirection: Axis.horizontal,
@@ -38,13 +39,13 @@ class SentenceBar extends ConsumerWidget {
                   .toList(),
             ),
           ),
-          IconButton(
-              onPressed:
-                  ref.read(sentenceNotifierProvider.notifier).removeLastWord,
-              icon: const Icon(Icons.backspace)),
-          IconButton(
-              onPressed: ref.read(sentenceNotifierProvider.notifier).clear,
-              icon: const Icon(Icons.delete))
+          // IconButton(
+          //     onPressed:
+          //         ref.read(sentenceNotifierProvider.notifier).removeLastWord,
+          //     icon: const Icon(Icons.backspace)),
+          // IconButton(
+          //     onPressed: ref.read(sentenceNotifierProvider.notifier).clear,
+          //     icon: const Icon(Icons.delete))
         ],
       ),
     );

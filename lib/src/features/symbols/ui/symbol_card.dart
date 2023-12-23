@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:aac/src/features/symbols/edit_symbol_screen.dart';
 import 'package:aac/src/features/symbols/ui/symbol_image.dart';
 import 'package:aac/src/features/text_to_speech/provider.dart';
+import 'package:aac/src/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -15,6 +18,7 @@ class SymbolCard extends ConsumerWidget {
 
   final CommunicationSymbol symbol;
   final Board board;
+  final bool imageHasBackground = true;
 
   Future<void> _buildDialog(BuildContext context) {
     return showDialog(
@@ -52,23 +56,58 @@ class SymbolCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final imagePadding = imageHasBackground
+        ? const EdgeInsets.all(0)
+        : const EdgeInsets.only(top: 6.0, left: 6.0, right: 6.0, bottom: 14.0);
+
     return InkWell(
         onLongPress: () => _onLongPress(context, ref),
         onTap: () => _onTap(context, ref),
-        child: Column(
-          children: [
-            Expanded(
-              child: SymbolImage(
-                symbol.imagePath,
-                fit: BoxFit.cover,
-              ),
+        child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x1a0F0F0F),
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
+                  spreadRadius: 0,
+                ),
+                BoxShadow(
+                  color: Color(0x1a0F0F0F),
+                  blurRadius: 0,
+                  offset: Offset(0, 0),
+                  spreadRadius: 1,
+                )
+              ],
+              color: Colors.white,
             ),
-            Text(
-              symbol.label,
-              style: const TextStyle(fontSize: 20.0),
-            )
-          ],
-        ));
+            clipBehavior: Clip.hardEdge,
+            child: Column(children: [
+              Expanded(
+                child: Padding(
+                  padding: imagePadding,
+                  child: SymbolImage(
+                    symbol.imagePath,
+                    fit: BoxFit.fitWidth,
+                  ),
+                ),
+              ),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 9.0, vertical: 6.0),
+                color: AacColors.nounOrange,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(symbol.label,
+                        style: const TextStyle(
+                          color: Colors.white,
+                        )),
+                  ],
+                ),
+              ),
+            ])));
   }
 }
 
