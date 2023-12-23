@@ -250,6 +250,14 @@ class _SymbolSettingsState extends State<SymbolSettings> {
     }
   }
 
+  @override
+  void dispose() {
+    labelController.dispose();
+    axisCountController.dispose();
+
+    super.dispose();
+  }
+
   void deleteImage() {
     setState(() {
       imagePath = defaultImagePath;
