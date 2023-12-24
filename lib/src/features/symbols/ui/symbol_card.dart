@@ -84,8 +84,7 @@ class SymbolCard extends ConsumerWidget {
               color: Colors.white,
             ),
             clipBehavior: Clip.hardEdge,
-            child: Flex(
-              direction: Axis.vertical,
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Padding(
