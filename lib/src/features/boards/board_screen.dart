@@ -6,6 +6,7 @@ import 'package:aac/src/features/symbols/randomise_symbol.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:isar/isar.dart';
 
 import '../symbols/create_symbol_screen.dart';
@@ -158,17 +159,16 @@ class SymbolsGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Flexible(
-        child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 6,
-              crossAxisSpacing: 12.0,
-              mainAxisSpacing: 12.0,
-            ),
-            itemCount: board.symbols.length,
-            padding: const EdgeInsets.all(12.0),
-            itemBuilder: (context, index) {
-              final e = board.symbols.elementAt(index);
-              return SymbolCard(symbol: e, board: board);
-            }));
+      child: AlignedGridView.count(
+          crossAxisCount: 2,
+          crossAxisSpacing: 12.0,
+          mainAxisSpacing: 12.0,
+          itemCount: board.symbols.length,
+          padding: const EdgeInsets.all(12.0),
+          itemBuilder: (context, index) {
+            final e = board.symbols.elementAt(index);
+            return SymbolCard(symbol: e, board: board);
+          }),
+    );
   }
 }

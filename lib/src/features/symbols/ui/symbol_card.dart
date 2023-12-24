@@ -63,7 +63,8 @@ class SymbolCard extends ConsumerWidget {
     return InkWell(
         onLongPress: () => _onLongPress(context, ref),
         onTap: () => _onTap(context, ref),
-        child: Container(
+        child: IntrinsicHeight(
+          child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4),
               boxShadow: const [
@@ -83,31 +84,40 @@ class SymbolCard extends ConsumerWidget {
               color: Colors.white,
             ),
             clipBehavior: Clip.hardEdge,
-            child: Column(children: [
-              Expanded(
-                child: Padding(
+            child: Flex(
+              direction: Axis.vertical,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
                   padding: imagePadding,
-                  child: SymbolImage(
-                    symbol.imagePath,
-                    fit: BoxFit.fitWidth,
-                  ),
+                  child: SymbolImage(symbol.imagePath,
+                      height: 156, fit: BoxFit.fitHeight),
                 ),
-              ),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 9.0, vertical: 6.0),
-                color: AacColors.nounOrange,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(symbol.label,
-                        style: const TextStyle(
-                          color: Colors.white,
-                        )),
-                  ],
-                ),
-              ),
-            ])));
+                Expanded(
+                  child: Container(
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: AacColors.labelShadow,
+                              blurRadius: 1,
+                              spreadRadius: 4,
+                              offset: const Offset(0, 4))
+                        ],
+                        color: AacColors.nounOrange,
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 18.0, vertical: 12.0),
+                      alignment: Alignment.center,
+                      child: Text(symbol.label,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.bodyMedium!.merge(
+                              const TextStyle(
+                                  fontSize: 17.0, color: Colors.white)))),
+                )
+              ],
+            ),
+          ),
+        ));
   }
 }
 

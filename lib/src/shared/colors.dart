@@ -11,5 +11,7 @@ class AacColors {
   static Color conjunctionWhite = const Color(0xfffbfbfb);
   static Color adjectiveBlue = const Color(0xff66c4fb);
 
+  static Color labelShadow = const Color(0xff393535);
+
   static Color sentenceBarGrey = const Color(0xfff7f7f5);
 }
