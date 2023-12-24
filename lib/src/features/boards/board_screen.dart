@@ -1,7 +1,7 @@
 import 'package:aac/src/features/boards/board_manager.dart';
 import 'package:aac/src/features/boards/ui/lock_button.dart';
 import 'package:aac/src/features/boards/ui/pin_symbol_action.dart';
-import 'package:aac/src/features/boards/ui/sentence_grid.dart';
+import 'package:aac/src/features/boards/ui/sentence_bar.dart';
 import 'package:aac/src/features/symbols/randomise_symbol.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:flutter/material.dart';
