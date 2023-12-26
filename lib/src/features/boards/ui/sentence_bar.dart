@@ -1,4 +1,5 @@
 import 'package:aac/src/features/symbols/ui/symbol_image.dart';
+import 'package:aac/src/features/text_to_speech/tts_manager.dart';
 import 'package:aac/src/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,35 +13,32 @@ class SentenceBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final symbols = ref.watch(sentenceNotifierProvider);
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 22.0, horizontal: 30.0),
+      height: 94,
       color: AacColors.sentenceBarGrey,
-      height: 100.0,
       child: Row(
         children: [
-          // IconButton(
-          //     onPressed: () {
-          //       ref
-          //           .read(ttsManagerProvider)
-          //           .saySentence(ref.read(sentenceNotifierProvider));
-          //     },
-          //     icon: const Icon(Icons.play_arrow)),
+          IconButton(
+              onPressed: () {
+                ref
+                    .read(ttsManagerProvider)
+                    .saySentence(ref.read(sentenceNotifierProvider));
+              },
+              icon: const Icon(Icons.play_arrow)),
           Expanded(
-            child: ListView(
+            child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              children: symbols
-                  .map((symbol) => SentenceSymbol(
-                        symbol: symbol,
-                      ))
-                  .toList(),
+              child: Row(
+                  children:
+                      symbols.map((e) => SentenceSymbol(symbol: e)).toList()),
             ),
           ),
-          // IconButton(
-          //     onPressed:
-          //         ref.read(sentenceNotifierProvider.notifier).removeLastWord,
-          //     icon: const Icon(Icons.backspace)),
-          // IconButton(
-          //     onPressed: ref.read(sentenceNotifierProvider.notifier).clear,
-          //     icon: const Icon(Icons.delete))
+          IconButton(
+              onPressed:
+                  ref.read(sentenceNotifierProvider.notifier).removeLastWord,
+              icon: const Icon(Icons.backspace)),
+          IconButton(
+              onPressed: ref.read(sentenceNotifierProvider.notifier).clear,
+              icon: const Icon(Icons.delete))
         ],
       ),
     );
@@ -54,9 +52,24 @@ class SentenceSymbol extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Flex(direction: Axis.vertical, children: [
-      Expanded(child: SymbolImage(symbol.imagePath)),
-      Text(symbol.label)
-    ]);
+    return Container(
+      width: 64.0,
+      height: 62.0,
+      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+      child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SymbolImage(symbol.imagePath, height: 48.0),
+            Flexible(
+              child: Text(
+                symbol.label,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
+            )
+          ]),
+    );
   }
 }

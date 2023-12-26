@@ -90,29 +90,38 @@ class SymbolCard extends ConsumerWidget {
                 Padding(
                   padding: imagePadding,
                   child: SymbolImage(symbol.imagePath,
-                      height: 156, fit: BoxFit.fitHeight),
+                      height: 80, fit: BoxFit.fitHeight),
                 ),
                 Expanded(
-                  child: Container(
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                              color: AacColors.labelShadow,
-                              blurRadius: 1,
-                              spreadRadius: 4,
-                              offset: const Offset(0, 4))
-                        ],
-                        color: AacColors.nounOrange,
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 18.0, vertical: 12.0),
-                      alignment: Alignment.center,
-                      child: Text(symbol.label,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyMedium!.merge(
-                              const TextStyle(
-                                  fontSize: 17.0, color: Colors.white)))),
-                )
+                    child: Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                                color: AacColors.labelShadow,
+                                blurRadius: 1,
+                                spreadRadius: 4,
+                                offset: const Offset(0, 4))
+                          ],
+                          color: AacColors.nounOrange,
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 18.0, vertical: 6.0),
+                        // alignment: Alignment.center,
+                        child: Text(symbol.label,
+                            textAlign: TextAlign.center,
+                            textHeightBehavior: const TextHeightBehavior(
+                                applyHeightToFirstAscent: true,
+                                applyHeightToLastDescent: true,
+                                leadingDistribution:
+                                    TextLeadingDistribution.even),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall!
+                                .merge(const TextStyle(
+                                  // fontSize: 17.0,
+                                  color: Colors.white,
+                                  height: 1.25,
+                                )))))
               ],
             ),
           ),
