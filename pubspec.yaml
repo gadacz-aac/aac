@@ -24,6 +24,7 @@ dependencies:
   word_generator: ^0.4.3
   firebase_core: ^2.24.2
   firebase_crashlytics: ^3.4.8
+  http: ^1.1.0
 
 dev_dependencies:
   flutter_test:
