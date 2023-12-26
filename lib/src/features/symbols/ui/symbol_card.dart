@@ -67,17 +67,17 @@ class SymbolCard extends ConsumerWidget {
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4),
-              boxShadow: const [
+              boxShadow: [
                 BoxShadow(
-                  color: Color(0x1a0F0F0F),
+                  color: AacColors.shadowPrimary,
                   blurRadius: 4,
-                  offset: Offset(0, 2),
+                  offset: const Offset(0, 2),
                   spreadRadius: 0,
                 ),
                 BoxShadow(
-                  color: Color(0x1a0F0F0F),
+                  color: AacColors.shadowPrimary,
                   blurRadius: 0,
-                  offset: Offset(0, 0),
+                  offset: const Offset(0, 0),
                   spreadRadius: 1,
                 )
               ],

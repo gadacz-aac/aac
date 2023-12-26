@@ -12,7 +12,9 @@ class AacColors {
   static Color adjectiveBlue = const Color(0xff66c4fb);
 
   static Color labelShadow = const Color(0xff393535);
+  static Color shadowPrimary = const Color(0x1a0F0F0F);
 
   static Color sentenceBarGrey = const Color(0xfffbfbfa);
   static Color iconsGrey = const Color(0xff4C4C4C);
+  static Color bottomControlsGrey = const Color(0xfffbfbfa);
 }

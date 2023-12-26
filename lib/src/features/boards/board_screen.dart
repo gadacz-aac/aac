@@ -1,4 +1,5 @@
 import 'package:aac/src/features/boards/board_manager.dart';
+import 'package:aac/src/features/boards/ui/BottomControls.dart';
 import 'package:aac/src/features/boards/ui/lock_button.dart';
 import 'package:aac/src/features/boards/ui/pin_symbol_action.dart';
 import 'package:aac/src/features/boards/ui/sentence_bar.dart';
@@ -70,11 +71,13 @@ class BoardScreen extends ConsumerWidget {
               titleTextStyle: const TextStyle(color: Colors.black),
             ),
             body: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 const SentenceBar(),
                 SymbolsGrid(
                   board: data,
-                )
+                ),
+                const BottomControls()
               ],
             ),
             floatingActionButton: floatingActionButton,
@@ -164,7 +167,7 @@ class SymbolsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(
+    return Expanded(
       child: AlignedGridView.count(
           crossAxisCount: 2,
           crossAxisSpacing: 12.0,
