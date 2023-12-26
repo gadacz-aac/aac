@@ -17,4 +17,5 @@ class AacColors {
   static Color sentenceBarGrey = const Color(0xfffbfbfa);
   static Color iconsGrey = const Color(0xff4C4C4C);
   static Color bottomControlsGrey = const Color(0xfffbfbfa);
+  static Color bottomCotrolsIcons = const Color(0xff36454F);
 }

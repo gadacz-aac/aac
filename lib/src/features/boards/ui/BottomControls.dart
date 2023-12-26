@@ -26,18 +26,26 @@ class BottomControls extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           IconButton(
+              color: AacColors.bottomCotrolsIcons,
               iconSize: 28.0,
               onPressed: ref.read(sentenceNotifierProvider.notifier).clear,
               icon: const Icon(Icons.delete)),
-          IconButton(
-              iconSize: 28.0,
+          ElevatedButton.icon(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(
+                AacColors.bottomCotrolsIcons,
+              )),
               onPressed: () {
                 ref
                     .read(ttsManagerProvider)
                     .saySentence(ref.read(sentenceNotifierProvider));
               },
-              icon: const Icon(Icons.play_arrow)),
+              icon: const Icon(
+                Icons.play_arrow,
+              ),
+              label: const Text("MÓW")),
           IconButton(
+              color: AacColors.bottomCotrolsIcons,
               iconSize: 28.0,
               onPressed:
                   ref.read(sentenceNotifierProvider.notifier).removeLastWord,
