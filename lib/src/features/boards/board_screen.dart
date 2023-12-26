@@ -4,6 +4,7 @@ import 'package:aac/src/features/boards/ui/pin_symbol_action.dart';
 import 'package:aac/src/features/boards/ui/sentence_bar.dart';
 import 'package:aac/src/features/symbols/randomise_symbol.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
+import 'package:aac/src/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -62,6 +63,11 @@ class BoardScreen extends ConsumerWidget {
               title: Text(title),
               automaticallyImplyLeading: isParentMode || _isMainBoard,
               actions: actions,
+              backgroundColor: AacColors.sentenceBarGrey,
+              elevation: 0,
+              iconTheme: IconThemeData(color: AacColors.iconsGrey),
+              centerTitle: true,
+              titleTextStyle: const TextStyle(color: Colors.black),
             ),
             body: Column(
               children: [
