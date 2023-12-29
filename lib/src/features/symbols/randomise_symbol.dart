@@ -36,7 +36,7 @@ void randomiseSymbol(WidgetRef ref, int boardId) async {
         crossAxisCount: 2,
         createChild: false,
       );
-      break;
+      return;
     }
   }
 

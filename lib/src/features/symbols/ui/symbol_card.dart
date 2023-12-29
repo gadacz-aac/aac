@@ -18,7 +18,7 @@ class SymbolCard extends ConsumerWidget {
 
   final CommunicationSymbol symbol;
   final Board board;
-  final bool imageHasBackground = true;
+  final bool imageHasBackground = false;
 
   Future<void> _buildDialog(BuildContext context) {
     return showDialog(
@@ -67,17 +67,17 @@ class SymbolCard extends ConsumerWidget {
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   color: AacColors.shadowPrimary,
                   blurRadius: 4,
-                  offset: const Offset(0, 2),
+                  offset: Offset(0, 2),
                   spreadRadius: 0,
                 ),
                 BoxShadow(
                   color: AacColors.shadowPrimary,
                   blurRadius: 0,
-                  offset: const Offset(0, 0),
+                  offset: Offset(0, 0),
                   spreadRadius: 1,
                 )
               ],
@@ -94,13 +94,13 @@ class SymbolCard extends ConsumerWidget {
                 ),
                 Expanded(
                     child: Container(
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           boxShadow: [
                             BoxShadow(
                                 color: AacColors.labelShadow,
                                 blurRadius: 1,
                                 spreadRadius: 4,
-                                offset: const Offset(0, 4))
+                                offset: Offset(0, 4))
                           ],
                           color: AacColors.nounOrange,
                         ),

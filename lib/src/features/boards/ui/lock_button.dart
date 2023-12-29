@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import '../../settings/utils/protective_mode.dart';
 
 class LockButton extends StatefulWidget {
-  const LockButton({
-    super.key,
-  });
+  const LockButton({super.key, this.isOpen = false});
+
+  final bool isOpen;
 
   @override
   State<LockButton> createState() => _LockButtonState();
@@ -39,6 +39,6 @@ class _LockButtonState extends State<LockButton> {
                 content: Text("Tap $_tapLeft times to leave protective mode")));
           }
         },
-        icon: const Icon(Icons.lock));
+        icon: Icon(widget.isOpen ? Icons.lock_open : Icons.lock_outline));
   }
 }

@@ -11,6 +11,16 @@ class SentenceBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final symbols = ref.watch(sentenceNotifierProvider);
+    final scrollController = ScrollController();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (scrollController.hasClients) {
+        scrollController.jumpTo(
+          scrollController.position.maxScrollExtent,
+        );
+      }
+    });
+
     return Container(
       color: AacColors.sentenceBarGrey,
       height: 94,
@@ -18,6 +28,7 @@ class SentenceBar extends ConsumerWidget {
       padding: const EdgeInsets.all(8.0),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
+        controller: scrollController,
         child: Row(
             children: symbols.map((e) => SentenceSymbol(symbol: e)).toList()),
       ),

@@ -1,3 +1,8 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:isar/isar.dart';
+
 import 'package:aac/src/features/boards/board_manager.dart';
 import 'package:aac/src/features/boards/ui/BottomControls.dart';
 import 'package:aac/src/features/boards/ui/lock_button.dart';
@@ -6,10 +11,6 @@ import 'package:aac/src/features/boards/ui/sentence_bar.dart';
 import 'package:aac/src/features/symbols/randomise_symbol.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:aac/src/shared/colors.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:isar/isar.dart';
 
 import '../symbols/create_symbol_screen.dart';
 import 'model/board.dart';
@@ -66,12 +67,12 @@ class BoardScreen extends ConsumerWidget {
               actions: actions,
               backgroundColor: AacColors.sentenceBarGrey,
               elevation: 0,
-              iconTheme: IconThemeData(color: AacColors.iconsGrey),
+              scrolledUnderElevation: 0,
+              iconTheme: const IconThemeData(color: AacColors.iconsGrey),
               centerTitle: true,
               titleTextStyle: const TextStyle(color: Colors.black),
             ),
             body: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 const SentenceBar(),
                 SymbolsGrid(
@@ -160,13 +161,41 @@ class ErrorScreen extends StatelessWidget {
   }
 }
 
-class SymbolsGrid extends StatelessWidget {
+enum SymbolGridScrollPosition { top, bottom }
+
+final symbolGridScrollPositionProvider =
+    StateProvider.autoDispose<SymbolGridScrollPosition?>(
+        (ref) => SymbolGridScrollPosition.top);
+
+final symbolGridScrollControllerProvider = Provider<ScrollController>((ref) {
+  final controller = ScrollController();
+  void handleScroll() {
+    if (controller.offset == controller.position.maxScrollExtent) {
+      ref.read(symbolGridScrollPositionProvider.notifier).state =
+          SymbolGridScrollPosition.bottom;
+    } else if (controller.offset == 0) {
+      ref.read(symbolGridScrollPositionProvider.notifier).state =
+          SymbolGridScrollPosition.top;
+    } else {
+      ref.read(symbolGridScrollPositionProvider.notifier).state = null;
+    }
+  }
+
+  ref.onDispose(() {
+    controller.removeListener(handleScroll);
+  });
+  controller.addListener(handleScroll);
+  return controller;
+});
+
+class SymbolsGrid extends ConsumerWidget {
   const SymbolsGrid({super.key, required this.board});
 
   final Board board;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final controller = ref.watch(symbolGridScrollControllerProvider);
     return Expanded(
       child: AlignedGridView.count(
           crossAxisCount: 2,
@@ -174,10 +203,33 @@ class SymbolsGrid extends StatelessWidget {
           mainAxisSpacing: 12.0,
           itemCount: board.symbols.length,
           padding: const EdgeInsets.all(12.0),
+          controller: controller,
           itemBuilder: (context, index) {
             final e = board.symbols.elementAt(index);
             return SymbolCard(symbol: e, board: board);
           }),
+    );
+  }
+}
+
+class SymbolGridScrollWrapper extends StatefulWidget {
+  const SymbolGridScrollWrapper({
+    Key? key,
+    required this.child,
+  }) : super(key: key);
+
+  final Widget child;
+
+  @override
+  State<SymbolGridScrollWrapper> createState() =>
+      _SymbolGridScrollWrapperState();
+}
+
+class _SymbolGridScrollWrapperState extends State<SymbolGridScrollWrapper> {
+  @override
+  Widget build(BuildContext context) {
+    return ProviderScope(
+      child: widget.child,
     );
   }
 }
