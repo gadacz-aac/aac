@@ -72,14 +72,17 @@ class BoardScreen extends ConsumerWidget {
               centerTitle: true,
               titleTextStyle: const TextStyle(color: Colors.black),
             ),
-            body: Column(
-              children: [
-                const SentenceBar(),
-                SymbolsGrid(
-                  board: data,
-                ),
-                const BottomControls()
-              ],
+            body: ProviderScope(
+              overrides: [symbolGridScrollControllerProvider],
+              child: Column(
+                children: [
+                  const SentenceBar(),
+                  SymbolsGrid(
+                    board: data,
+                  ),
+                  const BottomControls()
+                ],
+              ),
             ),
             floatingActionButton: floatingActionButton,
           );
@@ -167,7 +170,8 @@ final symbolGridScrollPositionProvider =
     StateProvider.autoDispose<SymbolGridScrollPosition?>(
         (ref) => SymbolGridScrollPosition.top);
 
-final symbolGridScrollControllerProvider = Provider<ScrollController>((ref) {
+final symbolGridScrollControllerProvider =
+    Provider.autoDispose<ScrollController>((ref) {
   final controller = ScrollController();
   void handleScroll() {
     if (controller.offset == controller.position.maxScrollExtent) {
@@ -183,6 +187,7 @@ final symbolGridScrollControllerProvider = Provider<ScrollController>((ref) {
 
   ref.onDispose(() {
     controller.removeListener(handleScroll);
+    controller.dispose();
   });
   controller.addListener(handleScroll);
   return controller;

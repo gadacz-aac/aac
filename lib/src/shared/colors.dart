@@ -22,4 +22,5 @@ abstract final class AacColors {
   static const Color controlBackground = Color(0xff2A1B3C);
   static const Color controlBackgroundDisabled = Color(0xff696271);
   static const Color controlBackgroundAttentionSucker = Color(0xffF1451F);
+  static const Color controlBackgroundPlay = Color(0xff8D2DF5);
 }

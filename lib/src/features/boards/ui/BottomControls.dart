@@ -111,16 +111,14 @@ class Control extends StatelessWidget {
       backgroundColor = this.backgroundColor!;
     }
 
-    return Expanded(
-      child: ElevatedButton(
-          onPressed: disabled ? null : onPressed,
-          style: ButtonStyle(
-              backgroundColor: MaterialStatePropertyAll(backgroundColor),
-              iconSize: const MaterialStatePropertyAll(24.0),
-              iconColor: const MaterialStatePropertyAll(Colors.white),
-              shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4.0)))),
-          child: Icon(icon)),
-    );
+    return ElevatedButton(
+        onPressed: disabled ? null : onPressed,
+        style: ButtonStyle(
+            backgroundColor: MaterialStatePropertyAll(backgroundColor),
+            iconSize: const MaterialStatePropertyAll(24.0),
+            iconColor: const MaterialStatePropertyAll(Colors.white),
+            shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0)))),
+        child: Icon(icon));
   }
 }
