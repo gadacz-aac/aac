@@ -73,7 +73,10 @@ class BoardScreen extends ConsumerWidget {
               titleTextStyle: const TextStyle(color: Colors.black),
             ),
             body: ProviderScope(
-              overrides: [symbolGridScrollControllerProvider],
+              overrides: [
+                symbolGridScrollControllerProvider,
+                symbolGridScrollPossibilityProvider
+              ],
               child: Column(
                 children: [
                   const SentenceBar(),
@@ -164,32 +167,58 @@ class ErrorScreen extends StatelessWidget {
   }
 }
 
-enum SymbolGridScrollPosition { top, bottom }
+@immutable
+class SymbolGridScrollPossibility {
+  final bool canScrollUp;
+  final bool canScrollDown;
 
-final symbolGridScrollPositionProvider =
-    StateProvider.autoDispose<SymbolGridScrollPosition?>(
-        (ref) => SymbolGridScrollPosition.top);
+  const SymbolGridScrollPossibility(this.canScrollUp, this.canScrollDown);
+  const SymbolGridScrollPossibility.none() : this(false, false);
+  const SymbolGridScrollPossibility.onlyUp() : this(true, false);
+  const SymbolGridScrollPossibility.onlyDown() : this(false, true);
+  const SymbolGridScrollPossibility.both() : this(true, true);
+}
+
+final symbolGridScrollPossibilityProvider =
+    StateProvider<SymbolGridScrollPossibility>(
+        (ref) => const SymbolGridScrollPossibility.none());
 
 final symbolGridScrollControllerProvider =
     Provider.autoDispose<ScrollController>((ref) {
-  final controller = ScrollController();
+  late final ScrollController controller;
+
   void handleScroll() {
-    if (controller.offset == controller.position.maxScrollExtent) {
-      ref.read(symbolGridScrollPositionProvider.notifier).state =
-          SymbolGridScrollPosition.bottom;
+    if (controller.position.maxScrollExtent == 0) {
+      ref.read(symbolGridScrollPossibilityProvider.notifier).state =
+          const SymbolGridScrollPossibility.none();
+    } else if (controller.offset == controller.position.maxScrollExtent) {
+      ref.read(symbolGridScrollPossibilityProvider.notifier).state =
+          const SymbolGridScrollPossibility.onlyUp();
     } else if (controller.offset == 0) {
-      ref.read(symbolGridScrollPositionProvider.notifier).state =
-          SymbolGridScrollPosition.top;
+      ref.read(symbolGridScrollPossibilityProvider.notifier).state =
+          const SymbolGridScrollPossibility.onlyDown();
     } else {
-      ref.read(symbolGridScrollPositionProvider.notifier).state = null;
+      ref.read(symbolGridScrollPossibilityProvider.notifier).state =
+          const SymbolGridScrollPossibility.both();
     }
   }
 
+  void handlePositionAttach(ScrollPosition position) {
+    WidgetsBinding.instance.addPostFrameCallback((timestamp) => handleScroll());
+    position.isScrollingNotifier.addListener(handleScroll);
+  }
+
+  void handlePositionDetach(ScrollPosition position) {
+    position.isScrollingNotifier.removeListener(handleScroll);
+  }
+
+  controller = ScrollController(
+      onAttach: handlePositionAttach, onDetach: handlePositionDetach);
+
   ref.onDispose(() {
-    controller.removeListener(handleScroll);
     controller.dispose();
   });
-  controller.addListener(handleScroll);
+  ref.onResume(handleScroll);
   return controller;
 });
 

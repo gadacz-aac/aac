@@ -79,12 +79,13 @@ class PaginationControl extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    SymbolGridScrollPosition? position =
-        ref.watch(symbolGridScrollPositionProvider);
+    SymbolGridScrollPossibility posibility =
+        ref.watch(symbolGridScrollPossibilityProvider);
+
     final bool disabled = direction == SymbolGridScrollDirection.forward &&
-            position == SymbolGridScrollPosition.bottom ||
+            !posibility.canScrollDown ||
         direction == SymbolGridScrollDirection.backward &&
-            position == SymbolGridScrollPosition.top;
+            !posibility.canScrollUp;
 
     return Control(
         disabled: disabled,
