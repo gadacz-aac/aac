@@ -23,22 +23,31 @@ class BottomControls extends ConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const PaginationControl(direction: SymbolGridScrollDirection.forward),
-          const SizedBox(width: 9.0),
-          const PaginationControl(
-            direction: SymbolGridScrollDirection.backward,
+          const Expanded(
+            child:
+                PaginationControl(direction: SymbolGridScrollDirection.forward),
           ),
           const SizedBox(width: 9.0),
-          Control(
-            icon: Icons.backspace_outlined,
-            onPressed:
-                ref.read(sentenceNotifierProvider.notifier).removeLastWord,
+          const Expanded(
+            child: PaginationControl(
+              direction: SymbolGridScrollDirection.backward,
+            ),
           ),
           const SizedBox(width: 9.0),
-          Control(
-            icon: Icons.delete_outlined,
-            backgroundColor: AacColors.controlBackgroundAttentionSucker,
-            onPressed: ref.read(sentenceNotifierProvider.notifier).clear,
+          Expanded(
+            child: Control(
+              icon: Icons.backspace_outlined,
+              onPressed:
+                  ref.read(sentenceNotifierProvider.notifier).removeLastWord,
+            ),
+          ),
+          const SizedBox(width: 9.0),
+          Expanded(
+            child: Control(
+              icon: Icons.delete_outlined,
+              backgroundColor: AacColors.controlBackgroundAttentionSucker,
+              onPressed: ref.read(sentenceNotifierProvider.notifier).clear,
+            ),
           ),
         ],
       ),

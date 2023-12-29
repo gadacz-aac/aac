@@ -27,9 +27,10 @@ class SentenceBar extends ConsumerWidget {
       color: AacColors.sentenceBarGrey,
       height: 94,
       width: double.infinity,
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
       child: Row(
-        // crossAxisAlignment: CrossAxisAlignment.baseline,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             child: SingleChildScrollView(
@@ -40,12 +41,15 @@ class SentenceBar extends ConsumerWidget {
                       symbols.map((e) => SentenceSymbol(symbol: e)).toList()),
             ),
           ),
-          Control(
-            icon: Icons.play_arrow,
-            backgroundColor: AacColors.controlBackgroundPlay,
-            onPressed: () => ref
-                .read(ttsManagerProvider)
-                .saySentence(ref.read(sentenceNotifierProvider)),
+          SizedBox(
+            height: 66.0,
+            child: Control(
+              icon: Icons.play_arrow,
+              backgroundColor: AacColors.controlBackgroundPlay,
+              onPressed: () => ref
+                  .read(ttsManagerProvider)
+                  .saySentence(ref.read(sentenceNotifierProvider)),
+            ),
           )
         ],
       ),
