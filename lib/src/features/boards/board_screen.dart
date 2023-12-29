@@ -216,25 +216,3 @@ class SymbolsGrid extends ConsumerWidget {
     );
   }
 }
-
-class SymbolGridScrollWrapper extends StatefulWidget {
-  const SymbolGridScrollWrapper({
-    Key? key,
-    required this.child,
-  }) : super(key: key);
-
-  final Widget child;
-
-  @override
-  State<SymbolGridScrollWrapper> createState() =>
-      _SymbolGridScrollWrapperState();
-}
-
-class _SymbolGridScrollWrapperState extends State<SymbolGridScrollWrapper> {
-  @override
-  Widget build(BuildContext context) {
-    return ProviderScope(
-      child: widget.child,
-    );
-  }
-}
