@@ -21,9 +21,8 @@ class BottomControls extends ConsumerWidget {
     ]);
 
     final padding = direction == Axis.horizontal
-        ? const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0)
+        ? const EdgeInsets.all(20.0)
         : const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0);
-// const EdgeInsets.all(20),
     return Container(
       padding: padding,
       decoration: direction == Axis.horizontal ? decoration : null,
