@@ -23,6 +23,7 @@ class ControlsWrapper extends ConsumerWidget {
     final padding = direction == Axis.horizontal
         ? const EdgeInsets.all(20.0)
         : const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0);
+
     return Container(
         padding: padding,
         decoration: direction == Axis.horizontal ? decoration : null,
@@ -36,7 +37,8 @@ class ControlsWrapper extends ConsumerWidget {
                       ),
                       Gap(9.0, direction)
                     ])
-                .toList()));
+                .toList()
+              ..removeLast()));
   }
 }
 
