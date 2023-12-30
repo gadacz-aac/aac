@@ -44,7 +44,6 @@ class BoardScreen extends ConsumerWidget {
           }
 
           List<Widget> actions = [];
-          Widget? floatingActionButton;
 
           final List<Widget> controls = [
             const PaginationControl(
@@ -113,7 +112,6 @@ class BoardScreen extends ConsumerWidget {
                   );
                 },
               ),
-              floatingActionButton: floatingActionButton,
             ),
           );
         });
