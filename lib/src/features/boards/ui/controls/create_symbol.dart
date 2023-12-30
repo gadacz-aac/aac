@@ -26,8 +26,8 @@ class CreateSymbol extends StatelessWidget {
   }
 }
 
-class RandomiseSymbolFloatingButton extends ConsumerWidget {
-  const RandomiseSymbolFloatingButton({
+class CreateRandomSymbol extends ConsumerWidget {
+  const CreateRandomSymbol({
     super.key,
     required this.boardId,
   });
@@ -36,12 +36,11 @@ class RandomiseSymbolFloatingButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return FloatingActionButton(
+    return Control(
       onPressed: () async {
         randomiseSymbol(ref, boardId);
       },
-      heroTag: null,
-      child: const Icon(Icons.shuffle),
+      icon: Icons.shuffle,
     );
   }
 }

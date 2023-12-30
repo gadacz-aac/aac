@@ -57,9 +57,12 @@ class BoardScreen extends ConsumerWidget {
             actions.add(PinSymbolsAction(
               board: data,
             ));
-            controls.add(CreateSymbol(
-              boardId: boardId,
-            ));
+            controls.addAll([
+              CreateRandomSymbol(boardId: boardId),
+              CreateSymbol(
+                boardId: boardId,
+              ),
+            ]);
           } else {
             actions.add(const LockButton());
             controls.addAll([
