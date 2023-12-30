@@ -1,6 +1,5 @@
-import 'package:aac/src/features/boards/ui/BottomControls.dart';
+import 'package:aac/src/features/boards/ui/controls/play.dart';
 import 'package:aac/src/features/symbols/ui/symbol_image.dart';
-import 'package:aac/src/features/text_to_speech/tts_manager.dart';
 import 'package:aac/src/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -41,15 +40,9 @@ class SentenceBar extends ConsumerWidget {
                       symbols.map((e) => SentenceSymbol(symbol: e)).toList()),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 66.0,
-            child: Control(
-              icon: Icons.play_arrow,
-              backgroundColor: AacColors.controlBackgroundPlay,
-              onPressed: () => ref
-                  .read(ttsManagerProvider)
-                  .saySentence(ref.read(sentenceNotifierProvider)),
-            ),
+            child: Play(),
           )
         ],
       ),
