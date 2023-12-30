@@ -1,4 +1,6 @@
+import 'package:aac/src/features/boards/ui/actions/delete_forever_action.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
+import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:aac/src/features/symbols/ui/symbol_image.dart';
 import 'package:aac/src/shared/colors.dart';
 import 'package:aac/src/shared/isar_provider.dart';
@@ -6,6 +8,7 @@ import 'package:aac/src/shared/utils/debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:isar/isar.dart';
 
 import 'app_bar_actions.dart';
@@ -91,19 +94,19 @@ class SymbolSearchScreen extends ConsumerWidget {
             appBar: const SearchAppBar(),
             body: results == null || results.isEmpty
                 ? const NoResultsScreen()
-                : Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListView.separated(
-                      itemCount: results.length,
-                      separatorBuilder: (context, index) => const SizedBox(
-                        height: 10,
-                      ),
-                      itemBuilder: (context, index) {
-                        final symbol = results[index];
-                        return SearchItem(symbol: symbol);
-                      },
-                    ),
-                  )));
+                : AlignedGridView.count(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 12.0,
+                    mainAxisSpacing: 12.0,
+                    itemCount: results.length,
+                    padding: const EdgeInsets.all(12.0),
+                    itemBuilder: (context, index) {
+                      final e = results[index];
+                      return SymbolCard(
+                        symbol: e,
+                        onTapActions: const [SymbolOnTapAction.select],
+                      );
+                    })));
   }
 }
 
@@ -223,7 +226,7 @@ class _SearchAppBarState extends ConsumerState<SearchAppBar> {
 
     if (areSelected) {
       leading = const CancelAction();
-      actions = [const PinSelectedSymbolAction()];
+      actions = [const PinSelectedSymbolAction(), const DeleteForeverAction()];
     } else {
       leading = const BackAction();
       title = TextField(

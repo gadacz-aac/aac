@@ -77,7 +77,7 @@ class SymbolsGrid extends ConsumerWidget {
           controller: controller,
           itemBuilder: (context, index) {
             final e = board.symbols.elementAt(index);
-            return SymbolCard(symbol: e, board: board);
+            return SymbolCard(symbol: e);
           }),
     );
   }

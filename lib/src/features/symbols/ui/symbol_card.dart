@@ -1,22 +1,27 @@
+import 'package:aac/src/features/symbols/edit_symbol_screen.dart';
+import 'package:aac/src/features/text_to_speech/provider.dart';
+import 'package:aac/src/features/text_to_speech/tts_manager.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/search/search_screen.dart';
 import 'package:aac/src/features/symbols/ui/symbol_image.dart';
-import 'package:aac/src/features/text_to_speech/provider.dart';
 import 'package:aac/src/shared/colors.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../boards/model/board.dart';
-import '../../text_to_speech/tts_manager.dart';
+enum SymbolOnTapAction { select, speak, cd }
 
 class SymbolCard extends ConsumerWidget {
-  const SymbolCard({super.key, required this.symbol, required this.board});
+  const SymbolCard({
+    super.key,
+    required this.symbol,
+    this.onTapActions = const [SymbolOnTapAction.speak, SymbolOnTapAction.cd],
+  });
 
   final CommunicationSymbol symbol;
-  final Board board;
   final bool imageHasBackground = false;
-
+  final List<SymbolOnTapAction> onTapActions;
   void _onLongPress(BuildContext context, WidgetRef ref) {
     if (!ref.read(isParentModeProvider)) return;
     ref.read(selectedSymbolsProvider).toggle(symbol);
@@ -28,10 +33,18 @@ class SymbolCard extends ConsumerWidget {
       return;
     }
 
-    ref.read(ttsManagerProvider).sayWord(symbol.label);
-    ref.read(sentenceNotifierProvider.notifier).addWord(symbol);
+    if (ref.read(isParentModeProvider) &&
+        onTapActions.contains(SymbolOnTapAction.select)) {
+      ref.read(selectedSymbolsProvider).toggle(symbol);
+    }
 
-    if (symbol.childBoard.value != null) {
+    if (onTapActions.contains(SymbolOnTapAction.speak)) {
+      ref.read(ttsManagerProvider).sayWord(symbol.label);
+      ref.read(sentenceNotifierProvider.notifier).addWord(symbol);
+    }
+
+    if (onTapActions.contains(SymbolOnTapAction.cd) &&
+        symbol.childBoard.value != null) {
       Navigator.push(
         context,
         MaterialPageRoute(
