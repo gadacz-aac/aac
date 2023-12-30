@@ -1,39 +1,47 @@
-import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/text_to_speech/provider.dart';
 import 'package:aac/src/shared/colors.dart';
 
 class BottomControls extends ConsumerWidget {
-  const BottomControls({super.key});
+  const BottomControls({super.key, required this.direction});
+  final Axis direction;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    const decoration =
+        BoxDecoration(color: AacColors.bottomControlsGrey, boxShadow: [
+      BoxShadow(
+          color: AacColors.shadowPrimary,
+          offset: Offset(0, 2),
+          blurRadius: 4,
+          spreadRadius: 0)
+    ]);
+
+    final padding = direction == Axis.horizontal
+        ? const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0)
+        : const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0);
+// const EdgeInsets.all(20),
     return Container(
-      padding: const EdgeInsets.all(20),
-      decoration:
-          const BoxDecoration(color: AacColors.bottomControlsGrey, boxShadow: [
-        BoxShadow(
-            color: AacColors.shadowPrimary,
-            offset: Offset(0, 2),
-            blurRadius: 4,
-            spreadRadius: 0)
-      ]),
-      child: Row(
+      padding: padding,
+      decoration: direction == Axis.horizontal ? decoration : null,
+      child: Flex(
+        direction: direction,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const Expanded(
             child:
                 PaginationControl(direction: SymbolGridScrollDirection.forward),
           ),
-          const SizedBox(width: 9.0),
+          Gap(9.0, direction),
           const Expanded(
             child: PaginationControl(
               direction: SymbolGridScrollDirection.backward,
             ),
           ),
-          const SizedBox(width: 9.0),
+          Gap(9.0, direction),
           Expanded(
             child: Control(
               icon: Icons.backspace_outlined,
@@ -41,7 +49,7 @@ class BottomControls extends ConsumerWidget {
                   ref.read(sentenceNotifierProvider.notifier).removeLastWord,
             ),
           ),
-          const SizedBox(width: 9.0),
+          Gap(9.0, direction),
           Expanded(
             child: Control(
               icon: Icons.delete_outlined,
@@ -51,6 +59,29 @@ class BottomControls extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class Gap extends StatelessWidget {
+  const Gap(
+    this.size,
+    this.direction, {
+    Key? key,
+  }) : super(key: key);
+
+  final double size;
+  final Axis direction;
+
+  @override
+  Widget build(BuildContext context) {
+    if (direction == Axis.horizontal) {
+      return SizedBox(
+        width: size,
+      );
+    }
+    return SizedBox(
+      height: size,
     );
   }
 }

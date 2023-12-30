@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:isar/isar.dart';
@@ -72,20 +73,38 @@ class BoardScreen extends ConsumerWidget {
               centerTitle: true,
               titleTextStyle: const TextStyle(color: Colors.black),
             ),
-            body: ProviderScope(
-              overrides: [
-                symbolGridScrollControllerProvider,
-                symbolGridScrollPossibilityProvider
-              ],
-              child: Column(
-                children: [
-                  const SentenceBar(),
-                  SymbolsGrid(
-                    board: data,
-                  ),
-                  const BottomControls()
-                ],
-              ),
+            body: OrientationBuilder(
+              builder: (context, orientation) {
+                final List<Widget> children;
+                if (orientation == Orientation.landscape) {
+                  children = children = [
+                    const SentenceBar(),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          SymbolsGrid(board: data),
+                          const BottomControls(direction: Axis.vertical)
+                        ],
+                      ),
+                    )
+                  ];
+                } else {
+                  children = [
+                    const SentenceBar(),
+                    SymbolsGrid(board: data),
+                    const BottomControls(
+                      direction: Axis.horizontal,
+                    )
+                  ];
+                }
+                return ProviderScope(
+                  overrides: [
+                    symbolGridScrollControllerProvider,
+                    symbolGridScrollPossibilityProvider
+                  ],
+                  child: Column(children: children),
+                );
+              },
             ),
             floatingActionButton: floatingActionButton,
           );
@@ -232,7 +251,7 @@ class SymbolsGrid extends ConsumerWidget {
     final controller = ref.watch(symbolGridScrollControllerProvider);
     return Expanded(
       child: AlignedGridView.count(
-          crossAxisCount: 2,
+          crossAxisCount: 3,
           crossAxisSpacing: 12.0,
           mainAxisSpacing: 12.0,
           itemCount: board.symbols.length,
