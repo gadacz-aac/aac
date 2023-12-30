@@ -1,10 +1,6 @@
-import 'dart:async';
-
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/search/search_screen.dart';
-import 'package:aac/src/features/symbols/symbol_manager.dart';
-import 'package:aac/src/features/symbols/edit_symbol_screen.dart';
 import 'package:aac/src/features/symbols/ui/symbol_image.dart';
 import 'package:aac/src/features/text_to_speech/provider.dart';
 import 'package:aac/src/shared/colors.dart';
@@ -21,26 +17,13 @@ class SymbolCard extends ConsumerWidget {
   final Board board;
   final bool imageHasBackground = false;
 
-  Future<void> _buildDialog(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return SimpleDialog(children: [
-          UnpinSymbolDialogOption(symbol: symbol, board: board),
-          EditSymbolDialogOption(symbol: symbol, board: board),
-          DeleteForeverDialogOption(symbol: symbol, board: board),
-        ]);
-      },
-    );
-  }
-
   void _onLongPress(BuildContext context, WidgetRef ref) {
     if (!ref.read(isParentModeProvider)) return;
     ref.read(selectedSymbolsProvider).toggle(symbol);
   }
 
   void _onTap(BuildContext context, WidgetRef ref) {
-    if (ref.read(areSelectedProvider)) {
+    if (ref.read(areSymbolsSelectedProvider)) {
       ref.read(selectedSymbolsProvider).toggle(symbol);
       return;
     }
@@ -145,97 +128,5 @@ class SymbolCard extends ConsumerWidget {
             ),
           ),
         ));
-  }
-}
-
-class DeleteForeverDialogOption extends ConsumerWidget {
-  const DeleteForeverDialogOption({
-    super.key,
-    required this.symbol,
-    required this.board,
-  });
-
-  final CommunicationSymbol symbol;
-  final Board board;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final symbolManager = ref.watch(symbolManagerProvider);
-    return ListTile(
-        leading: const Icon(Icons.delete_forever),
-        title: const Text("Usuń na zawsze"),
-        onTap: () {
-          Navigator.pop(context);
-          showDialog<bool>(
-            context: context,
-            builder: (BuildContext context) => AlertDialog(
-              title: const Text("Usuń na zawsze"),
-              content: Text(
-                  "Symbol zostanie usunięty z ${symbol.parentBoard.length} tablic"),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () => Navigator.pop(context, false),
-                  child: const Text('Cancel'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    symbolManager.deleteSymbol(symbol, board);
-                    Navigator.pop(context, true);
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            ),
-          );
-        });
-  }
-}
-
-class EditSymbolDialogOption extends StatelessWidget {
-  const EditSymbolDialogOption({
-    super.key,
-    required this.symbol,
-    required this.board,
-  });
-
-  final CommunicationSymbol symbol;
-  final Board board;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: const Icon(Icons.edit),
-      title: const Text("Edytuj"),
-      onTap: () {
-        Navigator.pop(context);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    EditSymbolScreen(symbol: symbol, board: board)));
-      },
-    );
-  }
-}
-
-class UnpinSymbolDialogOption extends ConsumerWidget {
-  const UnpinSymbolDialogOption({
-    super.key,
-    required this.symbol,
-    required this.board,
-  });
-
-  final CommunicationSymbol symbol;
-  final Board board;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return ListTile(
-        leading: const Icon(Icons.push_pin_outlined),
-        title: const Text("Odepnij"),
-        onTap: () {
-          ref.read(symbolManagerProvider).unpinSymbolFromBoard(symbol, board);
-          Navigator.pop(context);
-        });
   }
 }

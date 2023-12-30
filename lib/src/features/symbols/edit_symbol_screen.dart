@@ -1,19 +1,19 @@
-import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/file_helpers.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:aac/src/features/symbols/symbol_settings.dart';
+import 'package:isar/isar.dart';
 
 //TODO: make the symbol disappear(/change) from the sentence after the symbol is deleted(/edited). Particularly important when edited!
 
 class EditSymbolScreen extends ConsumerStatefulWidget {
   const EditSymbolScreen(
-      {super.key, required this.symbol, required this.board});
+      {super.key, required this.symbol, required this.boardId});
 
   final CommunicationSymbol symbol;
-  final Board board;
+  final Id boardId;
 
   @override
   ConsumerState<EditSymbolScreen> createState() => _EditSymbolScreenState();
@@ -28,7 +28,7 @@ class _EditSymbolScreenState extends ConsumerState<EditSymbolScreen> {
 
     manager.updateSymbol(
       symbol: widget.symbol,
-      parentBoard: widget.board,
+      parentBoardId: widget.boardId,
       imagePath: await saveImage(path, label),
       createChild: isFolder,
       crossAxisCount: count,

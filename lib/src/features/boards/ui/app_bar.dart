@@ -1,8 +1,12 @@
+import 'package:aac/src/features/boards/ui/actions/delete_forever_action.dart';
+import 'package:aac/src/features/boards/ui/actions/edit_symbol_action.dart';
+import 'package:aac/src/features/boards/ui/actions/unpin_symbol_action.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:aac/src/features/symbols/search/app_bar_actions.dart';
 import 'package:aac/src/features/symbols/search/search_screen.dart';
 import 'package:aac/src/shared/colors.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class BoardAppBar extends ConsumerWidget implements PreferredSizeWidget {
   const BoardAppBar({
@@ -23,11 +27,15 @@ class BoardAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final areSymbolSelected = ref.watch(areSelectedProvider);
-    final List<Widget> actionsSelected = [const CancelAction()];
+    final areSymbolSelected = ref.watch(areSymbolsSelectedProvider);
+    final List<Widget> actionsSelected = [
+      const EditSymbolAction(),
+      const UnpinSymbolAction(),
+      const DeleteForeverAction(),
+    ];
 
     return AppBar(
-      title: Text(title),
+      title: areSymbolSelected ? null : Text(title),
       automaticallyImplyLeading: isParentMode || isMainBoard,
       leading: areSymbolSelected ? const CancelAction() : null,
       actions: areSymbolSelected ? actionsSelected : actions,

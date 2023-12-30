@@ -40,11 +40,13 @@ class SymbolManager {
 
   Future<void> updateSymbol(
       {required CommunicationSymbol symbol,
-      required Board parentBoard,
+      required Id parentBoardId,
       int? crossAxisCount,
       required bool createChild,
       required String imagePath}) async {
     await isar.writeTxn(() async {
+      final parentBoard = await isar.boards.get(parentBoardId);
+      if (parentBoard == null) return;
       await isar.communicationSymbols.put(symbol);
       if (createChild) {
         final childBoard = Board(crossAxisCountOrNull: crossAxisCount);
@@ -73,25 +75,32 @@ class SymbolManager {
 
   Future<void> pinSymbolsToBoard(
       List<CommunicationSymbol> symbols, Board board) async {
-    board.symbols.addAll(symbols);
     await isar.writeTxn(() async {
+      board.symbols.addAll(symbols);
       await board.symbols.save();
       await isar.boards.put(board);
     });
   }
 
   Future<void> unpinSymbolFromBoard(
-      CommunicationSymbol symbol, Board board) async {
-    board.symbols.remove(symbol);
+      List<CommunicationSymbol> symbols, Id boardId) async {
     await isar.writeTxn(() async {
+      final board = await isar.boards.get(boardId);
+
+      if (board == null) return;
+      board.symbols.removeAll(symbols);
       await board.symbols.save();
       await isar.boards.put(board);
     });
   }
 
-  Future<void> deleteSymbol(CommunicationSymbol symbol, Board board) async {
+  Future<void> deleteSymbol(
+      List<CommunicationSymbol> symbols, Id boardId) async {
+    final symbolIds = symbols.map((e) => e.id).toList();
     await isar.writeTxn(() async {
-      await isar.communicationSymbols.delete(symbol.id);
+      final board = await isar.boards.get(boardId);
+      if (board == null) return;
+      await isar.communicationSymbols.deleteAll(symbolIds);
       await isar.boards.put(board);
     });
   }
