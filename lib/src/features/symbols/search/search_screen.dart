@@ -122,19 +122,24 @@ class NoResultsScreen extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset('assets/could-not-find-anything-symbol-arrasac.png'),
-            const SizedBox(
-              height: 12.0,
-            ),
-            Text(
-              "Hmm.. nie znaleźliśmy wyników dla \"$search\"",
-              style: textTheme.headlineSmall,
-              textAlign: TextAlign.center,
-            ),
-          ],
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/could-not-find-anything-symbol-arrasac.png',
+                width: MediaQuery.sizeOf(context).shortestSide / 2,
+              ),
+              const SizedBox(
+                height: 12.0,
+              ),
+              Text(
+                "Hmm.. nie znaleźliśmy wyników dla \"$search\"",
+                style: textTheme.headlineSmall,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
     );
