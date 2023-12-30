@@ -7,6 +7,7 @@ import 'package:aac/src/features/symbols/symbol_settings.dart';
 import 'package:isar/isar.dart';
 
 //TODO: make the symbol disappear(/change) from the sentence after the symbol is deleted(/edited). Particularly important when edited!
+// TODO since the symbol can be displayed on multiple boards at the same time we have to update all of the boards and not just one with id == boardId
 
 class EditSymbolScreen extends ConsumerStatefulWidget {
   const EditSymbolScreen(
