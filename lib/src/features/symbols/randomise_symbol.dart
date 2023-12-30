@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,8 +18,9 @@ String getArrasacImageUrl(String id) {
   return "https://api.arasaac.org/v1/pictograms/$id?backgroundColor=none&download=false";
 }
 
-void randomiseSymbol(WidgetRef ref, int boardId) async {
+void randomiseSymbol(WidgetRef ref) async {
   final manager = ref.read(symbolManagerProvider);
+  final boardId = ref.read(boardIdProvider);
   for (int i = 0; i < 30; i++) {
     final search = generateRandomString(2);
     final res = await http.get(

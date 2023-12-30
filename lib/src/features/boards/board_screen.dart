@@ -1,3 +1,6 @@
+import 'package:aac/src/features/boards/ui/actions/lock_button.dart';
+import 'package:aac/src/features/boards/ui/actions/pin_symbol_action.dart';
+import 'package:aac/src/features/boards/ui/app_bar.dart';
 import 'package:aac/src/features/boards/ui/controls/create_symbol.dart';
 import 'package:aac/src/features/boards/ui/controls/delete_all.dart';
 import 'package:aac/src/features/boards/ui/controls/pagination.dart';
@@ -8,13 +11,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 
 import 'package:aac/src/features/boards/board_manager.dart';
-import 'package:aac/src/features/boards/ui/controls_wrapper.dart';
-import 'package:aac/src/features/boards/ui/lock_button.dart';
-import 'package:aac/src/features/boards/ui/pin_symbol_action.dart';
+import 'package:aac/src/features/boards/ui/controls/controls_wrapper.dart';
 import 'package:aac/src/features/boards/ui/sentence_bar.dart';
-import 'package:aac/src/shared/colors.dart';
 
 final isParentModeProvider = StateProvider<bool>((_) => false);
+final boardIdProvider = Provider<Id>((_) => throw UnimplementedError());
 
 class BoardScreen extends ConsumerWidget {
   BoardScreen({super.key, this.title = 'dupa', required this.boardId}) {
@@ -58,10 +59,8 @@ class BoardScreen extends ConsumerWidget {
               board: data,
             ));
             controls.addAll([
-              CreateRandomSymbol(boardId: boardId),
-              CreateSymbol(
-                boardId: boardId,
-              ),
+              const CreateRandomSymbol(),
+              const CreateSymbol(),
             ]);
           } else {
             actions.add(const LockButton());
@@ -71,59 +70,59 @@ class BoardScreen extends ConsumerWidget {
             ]);
           }
 
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(title),
-              automaticallyImplyLeading: isParentMode || _isMainBoard,
-              actions: actions,
-              backgroundColor: AacColors.sentenceBarGrey,
-              elevation: 0,
-              scrolledUnderElevation: 0,
-              iconTheme: const IconThemeData(color: AacColors.iconsGrey),
-              centerTitle: true,
-              titleTextStyle: const TextStyle(color: Colors.black),
+          return ProviderScope(
+            overrides: [boardIdProvider.overrideWithValue(boardId)],
+            child: Scaffold(
+              appBar: BoardAppBar(
+                  title: title,
+                  isParentMode: isParentMode,
+                  isMainBoard: _isMainBoard,
+                  actions: actions),
+              body: OrientationBuilder(
+                builder: (context, orientation) {
+                  final List<Widget> children;
+                  if (orientation == Orientation.landscape) {
+                    children = [
+                      !isParentMode ? const SentenceBar() : const SizedBox(),
+                      Expanded(
+                        child: Row(
+                          children: [
+                            SymbolsGrid(board: data),
+                            ControlsWrapper(
+                                direction: Axis.vertical, children: controls)
+                          ],
+                        ),
+                      )
+                    ];
+                  } else {
+                    children = [
+                      !isParentMode ? const SentenceBar() : const SizedBox(),
+                      SymbolsGrid(board: data),
+                      ControlsWrapper(
+                        direction: Axis.horizontal,
+                        children: controls,
+                      )
+                    ];
+                  }
+                  return ProviderScope(
+                    overrides: [
+                      symbolGridScrollControllerProvider,
+                      symbolGridScrollPossibilityProvider
+                    ],
+                    child: Column(children: children),
+                  );
+                },
+              ),
+              floatingActionButton: floatingActionButton,
             ),
-            body: OrientationBuilder(
-              builder: (context, orientation) {
-                final List<Widget> children;
-                if (orientation == Orientation.landscape) {
-                  children = [
-                    !isParentMode ? const SentenceBar() : const SizedBox(),
-                    Expanded(
-                      child: Row(
-                        children: [
-                          SymbolsGrid(board: data),
-                          ControlsWrapper(
-                              direction: Axis.vertical, children: controls)
-                        ],
-                      ),
-                    )
-                  ];
-                } else {
-                  children = [
-                    !isParentMode ? const SentenceBar() : const SizedBox(),
-                    SymbolsGrid(board: data),
-                    ControlsWrapper(
-                      direction: Axis.horizontal,
-                      children: controls,
-                    )
-                  ];
-                }
-                return ProviderScope(
-                  overrides: [
-                    symbolGridScrollControllerProvider,
-                    symbolGridScrollPossibilityProvider
-                  ],
-                  child: Column(children: children),
-                );
-              },
-            ),
-            floatingActionButton: floatingActionButton,
           );
         });
   }
 }
 
+// UnpinSymbolDialogOption(symbol: symbol, board: board),
+// EditSymbolDialogOption(symbol: symbol, board: board),
+// DeleteForeverDialogOption(symbol: symbol, board: board),
 class ErrorScreen extends StatelessWidget {
   const ErrorScreen({
     Key? key,

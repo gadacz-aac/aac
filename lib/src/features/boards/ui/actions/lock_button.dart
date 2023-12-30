@@ -1,8 +1,7 @@
 import 'dart:async';
 
+import 'package:aac/src/features/settings/utils/protective_mode.dart';
 import 'package:flutter/material.dart';
-
-import '../../settings/utils/protective_mode.dart';
 
 class LockButton extends StatefulWidget {
   const LockButton({super.key, this.isOpen = false});

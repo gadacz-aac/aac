@@ -1,5 +1,5 @@
 import 'package:aac/src/features/boards/ui/controls/control.dart';
-import 'package:aac/src/features/boards/ui/controls_wrapper.dart';
+import 'package:aac/src/features/boards/ui/controls/controls_wrapper.dart';
 import 'package:aac/src/features/boards/ui/symbols_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
