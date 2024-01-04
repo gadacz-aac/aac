@@ -1,4 +1,3 @@
-import 'package:aac/src/features/symbols/edit_symbol_screen.dart';
 import 'package:aac/src/features/text_to_speech/provider.dart';
 import 'package:aac/src/features/text_to_speech/tts_manager.dart';
 import 'package:flutter/material.dart';
