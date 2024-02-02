@@ -1,15 +1,26 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import 'ui/symbol_card.dart';
+
 const String defaultImagePath = "assets/default_image_file.png";
 
 class SymbolSettings extends StatefulWidget {
+  final String? passedImagePath;
+
+  final String? passedSymbolName;
+  final bool passedIsFolder;
+  final int passedAxisCount;
+  final void Function(
+          String imagePath, String symbolName, bool isFolder, int axisCount)
+      updateSymbolSettings;
   const SymbolSettings(
       {super.key,
       this.passedImagePath,
@@ -17,14 +28,6 @@ class SymbolSettings extends StatefulWidget {
       this.passedIsFolder = false,
       this.passedAxisCount = 2,
       required this.updateSymbolSettings});
-
-  final String? passedImagePath;
-  final String? passedSymbolName;
-  final bool passedIsFolder;
-  final int passedAxisCount;
-  final void Function(
-          String imagePath, String symbolName, bool isFolder, int axisCount)
-      updateSymbolSettings;
 
   @override
   State<SymbolSettings> createState() => _SymbolSettingsState();
@@ -39,8 +42,167 @@ class _SymbolSettingsState extends State<SymbolSettings> {
 
   final formKey = GlobalKey<FormState>();
   final labelController = TextEditingController();
+  final vocalizationController = TextEditingController();
   final axisCountController = TextEditingController();
   final picker = ImagePicker();
+
+  @override
+  Widget build(BuildContext context) {
+    String image;
+    if (imagePath.isNotEmpty && File(imagePath).existsSync()) {
+      image = imagePath;
+    } else {
+      image = defaultImagePath;
+      log('imagePath is empty or file does not exist');
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+          automaticallyImplyLeading: false,
+          flexibleSpace: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                AppBarTextAction(
+                  child: const Text(
+                    "Anuluj",
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  onTap: () => Navigator.pop(context),
+                ),
+                AppBarTextAction(
+                  onTap: submit,
+                  child: const Text(
+                    "Zapisz",
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                )
+              ])),
+      body: Form(
+        key: formKey,
+        child: ListView(
+          padding: const EdgeInsets.all(10),
+          children: [
+            SymbolCard(
+                symbol: CommunicationSymbol(
+                    label: labelController.text, imagePath: image)),
+            const SizedBox(height: 12),
+            // ElevatedButton(
+            //   onPressed: () => pickImage(),
+            //   child: const Text('Wybierz ikonkę'),
+            // ),
+            // const SizedBox(height: 12),
+            // ElevatedButton(
+            //   onPressed: () => deleteImage(),
+            //   child: const Text('Usuń ikonkę'),
+            // ),
+            TextFormField(
+              controller: labelController,
+              autocorrect: true,
+              keyboardType: TextInputType.text,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Proszę wprowadzić nazwę symbolu';
+                }
+                return null;
+              },
+              onChanged: (_) {
+                /* TODO idk about this. it just seems far
+                from ideal but it works for now, i guess */
+                setState(() {});
+              },
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: "Podpis",
+              ),
+            ),
+            TextFormField(
+              controller: vocalizationController,
+              autocorrect: true,
+              keyboardType: TextInputType.text,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: "Wokalizacja (opcjonalnie)",
+              ),
+            ),
+            // SwitchListTile(
+            //     value: isFolder,
+            //     onChanged: (bool value) => {
+            //           setState(() {
+            //             isFolder = value;
+            //           })
+            //         },
+            //     title: const Text('Czy symbol jest folderem?')),
+            // if (isFolder)
+            //   TextFormField(
+            //     controller: axisCountController,
+            //     autocorrect: true,
+            //     keyboardType: TextInputType.number,
+            //     autovalidateMode: AutovalidateMode.onUserInteraction,
+            //     validator: (value) {
+            //       if (value == null || value.isEmpty) {
+            //         return 'Proszę wprowadzić szerokość tablicy';
+            //       }
+            //       if (int.tryParse(value)! <= 0) {
+            //         return 'Proszę wprowadzić liczbę większą od 0';
+            //       }
+            //       return null;
+            //     },
+            //     decoration: const InputDecoration(
+            //       border: OutlineInputBorder(),
+            //       hintText: "2",
+            //       labelText: "Szerokość tablicy",
+            //     ),
+            //   ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  cropImage(String path) async {
+    final croppedFile = await ImageCropper().cropImage(
+        sourcePath: path,
+        compressQuality: 60, //? isn't it too low?
+        compressFormat: ImageCompressFormat.png,
+        aspectRatioPresets: [
+          CropAspectRatioPreset.square
+        ],
+        uiSettings: [
+          AndroidUiSettings(
+              toolbarTitle: "Przycinanie zdjęcia",
+              initAspectRatio: CropAspectRatioPreset.square,
+              lockAspectRatio: true),
+          IOSUiSettings(
+            title:
+                "Przycinanie zdjęcia", //TODO: lockAspectRatio for IOS also!!!
+          )
+        ]);
+    if (croppedFile != null) {
+      imageCache.clear();
+      log('image cropped, path: ${croppedFile.path}');
+      setState(() {
+        imagePath = croppedFile.path;
+      });
+    }
+  }
+
+  void deleteImage() {
+    setState(() {
+      imagePath = defaultImagePath;
+    });
+  }
+
+  @override
+  void dispose() {
+    labelController.dispose();
+    axisCountController.dispose();
+    vocalizationController.dispose();
+
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -57,100 +219,6 @@ class _SymbolSettingsState extends State<SymbolSettings> {
     }
 
     super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    ImageProvider image;
-    if (imagePath.isNotEmpty && File(imagePath).existsSync()) {
-      image = FileImage(File(imagePath));
-    } else {
-      image = const AssetImage(defaultImagePath);
-      log('imagePath is empty or file does not exist');
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(isEditing ? 'Edytuj symbol' : 'Dodaj symbol'),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => submit(),
-        child: const Icon(Icons.save),
-      ),
-      body: Form(
-        key: formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(10),
-          children: [
-            FractionallySizedBox(
-              widthFactor: 0.75,
-              child: Image(
-                image: image,
-                fit: BoxFit.cover,
-              ),
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: () => pickImage(),
-              child: const Text('Wybierz ikonkę'),
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: () => deleteImage(),
-              child: const Text('Usuń ikonkę'),
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: labelController,
-              autocorrect: true,
-              keyboardType: TextInputType.text,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Proszę wprowadzić nazwę symbolu';
-                }
-                return null;
-              },
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: "Wpisz nazwę symbolu",
-                labelText: "Nazwa symbolu",
-              ),
-            ),
-            const SizedBox(height: 12),
-            SwitchListTile(
-                value: isFolder,
-                onChanged: (bool value) => {
-                      setState(() {
-                        isFolder = value;
-                      })
-                    },
-                title: const Text('Czy symbol jest folderem?')),
-            if (isFolder)
-              TextFormField(
-                controller: axisCountController,
-                autocorrect: true,
-                keyboardType: TextInputType.number,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Proszę wprowadzić szerokość tablicy';
-                  }
-                  if (int.tryParse(value)! <= 0) {
-                    return 'Proszę wprowadzić liczbę większą od 0';
-                  }
-                  return null;
-                },
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: "2",
-                  labelText: "Szerokość tablicy",
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
   }
 
   pickImage() async {
@@ -180,33 +248,6 @@ class _SymbolSettingsState extends State<SymbolSettings> {
 
     return statuses.values
         .every((status) => status == PermissionStatus.granted);
-  }
-
-  cropImage(String path) async {
-    final croppedFile = await ImageCropper().cropImage(
-        sourcePath: path,
-        compressQuality: 60, //? isn't it too low?
-        compressFormat: ImageCompressFormat.png,
-        aspectRatioPresets: [
-          CropAspectRatioPreset.square
-        ],
-        uiSettings: [
-          AndroidUiSettings(
-              toolbarTitle: "Przycinanie zdjęcia",
-              initAspectRatio: CropAspectRatioPreset.square,
-              lockAspectRatio: true),
-          IOSUiSettings(
-            title:
-                "Przycinanie zdjęcia", //TODO: lockAspectRatio for IOS also!!!
-          )
-        ]);
-    if (croppedFile != null) {
-      imageCache.clear();
-      log('image cropped, path: ${croppedFile.path}');
-      setState(() {
-        imagePath = croppedFile.path;
-      });
-    }
   }
 
   void submit() {
@@ -249,18 +290,23 @@ class _SymbolSettingsState extends State<SymbolSettings> {
       );
     }
   }
+}
+
+class AppBarTextAction extends StatelessWidget {
+  const AppBarTextAction({super.key, this.onTap, this.child});
+
+  final void Function()? onTap;
+  final Widget? child;
 
   @override
-  void dispose() {
-    labelController.dispose();
-    axisCountController.dispose();
-
-    super.dispose();
-  }
-
-  void deleteImage() {
-    setState(() {
-      imagePath = defaultImagePath;
-    });
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Center(child: child),
+      ),
+    );
   }
 }
