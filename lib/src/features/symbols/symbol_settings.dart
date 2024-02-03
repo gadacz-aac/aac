@@ -59,25 +59,27 @@ class _SymbolSettingsState extends State<SymbolSettings> {
     return Scaffold(
       appBar: AppBar(
           automaticallyImplyLeading: false,
-          flexibleSpace: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                AppBarTextAction(
-                  child: const Text(
-                    "Anuluj",
-                    style: TextStyle(fontWeight: FontWeight.w600),
+          flexibleSpace: SafeArea(
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  AppBarTextAction(
+                    child: const Text(
+                      "Anuluj",
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    onTap: () => Navigator.pop(context),
                   ),
-                  onTap: () => Navigator.pop(context),
-                ),
-                AppBarTextAction(
-                  onTap: submit,
-                  child: const Text(
-                    "Zapisz",
-                    style: TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                )
-              ])),
+                  AppBarTextAction(
+                    onTap: submit,
+                    child: const Text(
+                      "Zapisz",
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                  )
+                ]),
+          )),
       body: Form(
         key: formKey,
         child: ListView(
