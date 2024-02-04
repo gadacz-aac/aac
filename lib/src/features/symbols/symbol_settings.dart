@@ -1,7 +1,9 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:aac/src/features/symbols/cherry_pick_image.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
+import 'package:aac/src/shared/colors.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -85,19 +87,72 @@ class _SymbolSettingsState extends State<SymbolSettings> {
         child: ListView(
           padding: const EdgeInsets.all(10),
           children: [
-            SymbolCard(
-                symbol: CommunicationSymbol(
-                    label: labelController.text, imagePath: image)),
-            const SizedBox(height: 12),
-            // ElevatedButton(
-            //   onPressed: () => pickImage(),
-            //   child: const Text('Wybierz ikonkę'),
-            // ),
-            // const SizedBox(height: 12),
-            // ElevatedButton(
-            //   onPressed: () => deleteImage(),
-            //   child: const Text('Usuń ikonkę'),
-            // ),
+            const SizedBox(height: 28),
+            FractionallySizedBox(
+              widthFactor: 0.55,
+              child: Stack(children: [
+                SymbolCard(
+                    symbol: CommunicationSymbol(
+                        label: labelController.text, imagePath: image)),
+                Positioned(
+                    top: 6,
+                    right: 3,
+                    child: InkWell(
+                      onTap: () {
+                        showModalBottomSheet(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0, vertical: 25.0),
+                                child: Wrap(
+                                  children: [
+                                    ListTile(
+                                      onTap: () {
+                                        Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const ImageCherryPicker()))
+                                            .then((value) {
+                                          setState(() {
+                                            imagePath = value;
+                                          });
+                                          Navigator.pop(context);
+                                        });
+                                      },
+                                      leading: const Icon(Icons.edit_outlined),
+                                      title: const Text("Zamień Obraz"),
+                                    ),
+                                    const ListTile(
+                                      leading: Icon(Icons.crop_outlined),
+                                      title: Text("Przytnij Obraz"),
+                                    ),
+                                    ListTile(
+                                      onTap: deleteImage,
+                                      leading:
+                                          const Icon(Icons.delete_outlined),
+                                      title: const Text("Usuń Obraz"),
+                                    )
+                                  ],
+                                ),
+                              );
+                            });
+                      },
+                      child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          decoration: const BoxDecoration(
+                              color: Color(0xFF545454),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4))),
+                          child: const Text(
+                            "Edytuj",
+                            style: TextStyle(height: 2, color: Colors.white),
+                          )),
+                    ))
+              ]),
+            ),
+            const SizedBox(height: 28),
             TextFormField(
               controller: labelController,
               autocorrect: true,
@@ -119,16 +174,72 @@ class _SymbolSettingsState extends State<SymbolSettings> {
                 labelText: "Podpis",
               ),
             ),
+            const SizedBox(
+              height: 14,
+            ),
             TextFormField(
               controller: vocalizationController,
               autocorrect: true,
               keyboardType: TextInputType.text,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: "Wokalizacja (opcjonalnie)",
-              ),
+                  border: OutlineInputBorder(),
+                  labelText: "Wokalizacja (opcjonalnie)",
+                  helperText: "Co powiedzieć po naciśnięciu"),
             ),
+            const SizedBox(
+              height: 14.0,
+            ),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  // TODO you can't actually select any of this, this chip really should be another component
+                  ChoiceChip(
+                      avatar: const CircleAvatar(
+                        backgroundColor: AacColors.nounOrange,
+                      ),
+                      selectedColor: const Color(0xFFF7F2F9),
+                      showCheckmark: false,
+                      label: const Text("Rzeczownik"),
+                      selected: true,
+                      onSelected: (_) {}),
+                  const SizedBox(
+                    width: 11,
+                  ),
+                  ChoiceChip(
+                      avatar: const CircleAvatar(
+                          backgroundColor: AacColors.verbGreen),
+                      selectedColor: const Color(0xFFF7F2F9),
+                      showCheckmark: false,
+                      label: const Text("Czasownik"),
+                      selected: false,
+                      onSelected: (_) {}),
+                  const SizedBox(
+                    width: 11,
+                  ),
+                  ChoiceChip(
+                      avatar: const CircleAvatar(
+                          backgroundColor: AacColors.adjectiveBlue),
+                      selectedColor: const Color(0xFFF7F2F9),
+                      showCheckmark: false,
+                      label: const Text("Przymiotnik"),
+                      selected: false,
+                      onSelected: (_) {}),
+                  const SizedBox(
+                    width: 11,
+                  ),
+                  ChoiceChip(
+                      avatar: const CircleAvatar(
+                          backgroundColor: AacColors.prepositionPink),
+                      selectedColor: const Color(0xFFF7F2F9),
+                      showCheckmark: false,
+                      label: const Text("Barbie"),
+                      selected: false,
+                      onSelected: (_) {})
+                ],
+              ),
+            )
             // SwitchListTile(
             //     value: isFolder,
             //     onChanged: (bool value) => {

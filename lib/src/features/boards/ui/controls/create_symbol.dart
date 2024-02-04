@@ -1,5 +1,6 @@
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/boards/ui/controls/control.dart';
+import 'package:aac/src/features/symbols/cherry_pick_image.dart';
 import 'package:aac/src/features/symbols/create_symbol_screen.dart';
 import 'package:aac/src/features/symbols/randomise_symbol.dart';
 import 'package:aac/src/shared/colors.dart';
@@ -12,17 +13,23 @@ class CreateSymbol extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Control(
-      icon: Icons.add,
-      backgroundColor: AacColors.mainControlBackground,
-      onPressed: () async {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    AddSymbolMenu(boardId: ref.read(boardIdProvider))));
-      },
-    );
+        icon: Icons.add,
+        backgroundColor: AacColors.mainControlBackground,
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const ImageCherryPicker())).then(
+              (imagePath) => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AddSymbolMenu(
+                          imagePath: imagePath,
+                          boardId: ref.read(boardIdProvider)))));
+        });
   }
+  // onPressed: () async {
+  // },
 }
 
 class CreateRandomSymbol extends ConsumerWidget {

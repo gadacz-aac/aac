@@ -18,11 +18,27 @@ String getArrasacImageUrl(String id) {
   return "https://api.arasaac.org/v1/pictograms/$id?backgroundColor=none&download=false";
 }
 
+String getRandomSearch() {
+  Random random = Random();
+  String letters = 'abcdefghijklmnopqrstuvwxyz';
+
+  // Generate a random index for the first letter
+  int index1 = random.nextInt(letters.length);
+
+  // Generate a random index for the second letter, ensuring it is different from the first
+  int index2 = (index1 + random.nextInt(letters.length - 1)) % letters.length;
+
+  // Create the random string
+  String randomString = letters[index1] + letters[index2];
+
+  return randomString;
+}
+
 void randomiseSymbol(WidgetRef ref) async {
   final manager = ref.read(symbolManagerProvider);
   final boardId = ref.read(boardIdProvider);
   for (int i = 0; i < 30; i++) {
-    final search = generateRandomString(2);
+    final search = getRandomSearch();
     final res = await http.get(
         Uri.parse('https://api.arasaac.org/v1/pictograms/en/search/$search'));
 
@@ -50,20 +66,4 @@ void randomiseSymbol(WidgetRef ref) async {
     crossAxisCount: 2,
     createChild: false,
   );
-}
-
-String generateRandomString(int length) {
-  Random random = Random();
-  String letters = 'abcdefghijklmnopqrstuvwxyz';
-
-  // Generate a random index for the first letter
-  int index1 = random.nextInt(letters.length);
-
-  // Generate a random index for the second letter, ensuring it is different from the first
-  int index2 = (index1 + random.nextInt(letters.length - 1)) % letters.length;
-
-  // Create the random string
-  String randomString = letters[index1] + letters[index2];
-
-  return randomString;
 }

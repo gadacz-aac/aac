@@ -9,8 +9,11 @@ import 'package:aac/src/features/symbols/symbol_settings.dart';
 class AddSymbolMenu extends ConsumerStatefulWidget {
   const AddSymbolMenu({
     super.key,
+    this.imagePath,
     required this.boardId,
   });
+
+  final String? imagePath;
   final Id boardId;
 
   @override
@@ -36,6 +39,7 @@ class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return SymbolSettings(updateSymbolSettings: submit);
+    return SymbolSettings(
+        passedImagePath: widget.imagePath, updateSymbolSettings: submit);
   }
 }
