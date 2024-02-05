@@ -9,37 +9,49 @@ import 'package:aac/src/features/symbols/search/search_screen.dart';
 import 'package:aac/src/features/symbols/ui/symbol_image.dart';
 import 'package:aac/src/shared/colors.dart';
 
-enum SymbolOnTapAction { select, speak, cd }
+enum SymbolOnTapAction { select, multiselect, speak, speakAndBuildSentence, cd }
+// this ^ gets out of hand already it's bout to get more and more complex
+// someone figure a better way to handle this bs
+// - Piotrek
 
 class SymbolCard extends ConsumerWidget {
   const SymbolCard({
     super.key,
     required this.symbol,
-    this.onTapActions = const [SymbolOnTapAction.speak, SymbolOnTapAction.cd],
+    this.onTapActions = const [],
+    this.onLongPressActions = const [],
   });
 
   final CommunicationSymbol symbol;
   final bool imageHasBackground = false;
   final List<SymbolOnTapAction> onTapActions;
+  final List<SymbolOnTapAction> onLongPressActions;
   void _onLongPress(BuildContext context, WidgetRef ref) {
-    if (!ref.read(isParentModeProvider)) return;
-    ref.read(selectedSymbolsProvider).toggle(symbol);
+    if (ref.read(isParentModeProvider) &&
+        onLongPressActions.contains(SymbolOnTapAction.select)) {
+      ref.read(selectedSymbolsProvider).toggle(symbol);
+    }
   }
 
   void _onTap(BuildContext context, WidgetRef ref) {
-    if (ref.read(areSymbolsSelectedProvider)) {
+    final isParentMode = ref.read(isParentModeProvider);
+
+    if (onTapActions.contains(SymbolOnTapAction.multiselect) &&
+        ref.read(areSymbolsSelectedProvider)) {
       ref.read(selectedSymbolsProvider).toggle(symbol);
       return;
     }
 
-    if (ref.read(isParentModeProvider) &&
-        onTapActions.contains(SymbolOnTapAction.select)) {
+    if (isParentMode && onTapActions.contains(SymbolOnTapAction.select)) {
       ref.read(selectedSymbolsProvider).toggle(symbol);
     }
 
     if (onTapActions.contains(SymbolOnTapAction.speak)) {
       ref.read(ttsManagerProvider).sayWord(symbol.label);
-      ref.read(sentenceNotifierProvider.notifier).addWord(symbol);
+
+      if (isParentMode) {
+        ref.read(sentenceNotifierProvider.notifier).addWord(symbol);
+      }
     }
 
     if (onTapActions.contains(SymbolOnTapAction.cd) &&

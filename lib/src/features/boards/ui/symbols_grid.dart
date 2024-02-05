@@ -77,7 +77,15 @@ class SymbolsGrid extends ConsumerWidget {
           controller: controller,
           itemBuilder: (context, index) {
             final e = board.symbols.elementAt(index);
-            return SymbolCard(symbol: e);
+            return SymbolCard(
+              symbol: e,
+              onLongPressActions: const [SymbolOnTapAction.select],
+              onTapActions: const [
+                SymbolOnTapAction.speak,
+                SymbolOnTapAction.cd,
+                SymbolOnTapAction.multiselect
+              ],
+            );
           }),
     );
   }
