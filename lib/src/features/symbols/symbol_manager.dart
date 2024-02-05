@@ -16,10 +16,11 @@ class SymbolManager {
       {required String label,
       required String imagePath,
       int? crossAxisCount,
+      int? color,
       bool createChild = false}) async {
     await isar.writeTxn(() async {
       final CommunicationSymbol symbol =
-          CommunicationSymbol(label: label, imagePath: imagePath);
+          CommunicationSymbol(label: label, imagePath: imagePath, color: color);
 
       await isar.communicationSymbols.put(symbol);
       if (createChild) {
@@ -38,12 +39,13 @@ class SymbolManager {
     });
   }
 
-  Future<void> updateSymbol(
-      {required CommunicationSymbol symbol,
-      required Id parentBoardId,
-      int? crossAxisCount,
-      required bool createChild,
-      required String imagePath}) async {
+  Future<void> updateSymbol({
+    required CommunicationSymbol symbol,
+    required Id parentBoardId,
+    int? crossAxisCount,
+    required bool createChild,
+    required String imagePath,
+  }) async {
     await isar.writeTxn(() async {
       final parentBoard = await isar.boards.get(parentBoardId);
       if (parentBoard == null) return;

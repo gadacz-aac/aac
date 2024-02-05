@@ -21,11 +21,13 @@ class EditSymbolScreen extends ConsumerStatefulWidget {
 }
 
 class _EditSymbolScreenState extends ConsumerState<EditSymbolScreen> {
-  Future<void> save(String path, String label, bool isFolder, int count) async {
+  Future<void> save(
+      String path, String label, bool isFolder, int count, int? color) async {
     final manager = ref.read(symbolManagerProvider);
 
     widget.symbol.label = label;
     widget.symbol.imagePath = path;
+    widget.symbol.color = color;
 
     manager.updateSymbol(
       symbol: widget.symbol,

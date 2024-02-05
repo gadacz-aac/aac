@@ -57,6 +57,17 @@ class SymbolCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    Color bgColor;
+    Color textColor;
+
+    if (symbol.color == null) {
+      bgColor = AacColors.conjunctionWhite;
+      textColor = Colors.black;
+    } else {
+      bgColor = Color(symbol.color!);
+      textColor = Colors.white;
+    }
+
     final isSelected = ref
         .watch(selectedSymbolsProvider)
         .state
@@ -108,15 +119,15 @@ class SymbolCard extends ConsumerWidget {
                 ),
                 Expanded(
                     child: Container(
-                        decoration: const BoxDecoration(
-                          boxShadow: [
+                        decoration: BoxDecoration(
+                          boxShadow: const [
                             BoxShadow(
                                 color: AacColors.labelShadow,
                                 blurRadius: 1,
                                 spreadRadius: 4,
                                 offset: Offset(0, 4))
                           ],
-                          color: AacColors.nounOrange,
+                          color: bgColor,
                         ),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 18.0, vertical: 6.0),
@@ -131,9 +142,9 @@ class SymbolCard extends ConsumerWidget {
                             style: Theme.of(context)
                                 .textTheme
                                 .bodySmall!
-                                .merge(const TextStyle(
+                                .merge(TextStyle(
                                   // fontSize: 17.0,
-                                  color: Colors.white,
+                                  color: textColor,
                                   height: 1.25,
                                 )))))
               ],

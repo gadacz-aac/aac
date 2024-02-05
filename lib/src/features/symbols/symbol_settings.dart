@@ -2,10 +2,11 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:aac/src/features/symbols/cherry_pick_image.dart';
+import 'package:aac/src/features/symbols/model/communication_color.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
-import 'package:aac/src/shared/colors.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -14,15 +15,14 @@ import 'ui/symbol_card.dart';
 
 const String defaultImagePath = "assets/default_image_file.png";
 
-class SymbolSettings extends StatefulWidget {
+class SymbolSettings extends ConsumerStatefulWidget {
   final String? passedImagePath;
 
   final String? passedSymbolName;
   final bool passedIsFolder;
   final int passedAxisCount;
-  final void Function(
-          String imagePath, String symbolName, bool isFolder, int axisCount)
-      updateSymbolSettings;
+  final void Function(String imagePath, String symbolName, bool isFolder,
+      int axisCount, int? color) updateSymbolSettings;
   const SymbolSettings(
       {super.key,
       this.passedImagePath,
@@ -32,10 +32,10 @@ class SymbolSettings extends StatefulWidget {
       required this.updateSymbolSettings});
 
   @override
-  State<SymbolSettings> createState() => _SymbolSettingsState();
+  ConsumerState<SymbolSettings> createState() => _SymbolSettingsState();
 }
 
-class _SymbolSettingsState extends State<SymbolSettings> {
+class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
   late String imagePath;
   late String symbolName;
   late bool isFolder;
@@ -57,6 +57,8 @@ class _SymbolSettingsState extends State<SymbolSettings> {
       image = defaultImagePath;
       log('imagePath is empty or file does not exist');
     }
+
+    final color = ref.watch(selectedColorProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -93,7 +95,9 @@ class _SymbolSettingsState extends State<SymbolSettings> {
               child: Stack(children: [
                 SymbolCard(
                     symbol: CommunicationSymbol(
-                        label: labelController.text, imagePath: image)),
+                        label: labelController.text,
+                        imagePath: image,
+                        color: color)),
                 Positioned(
                     top: 6,
                     right: 3,
@@ -190,56 +194,7 @@ class _SymbolSettingsState extends State<SymbolSettings> {
             const SizedBox(
               height: 14.0,
             ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  // TODO you can't actually select any of this, this chip really should be another component
-                  ChoiceChip(
-                      avatar: const CircleAvatar(
-                        backgroundColor: AacColors.nounOrange,
-                      ),
-                      selectedColor: const Color(0xFFF7F2F9),
-                      showCheckmark: false,
-                      label: const Text("Rzeczownik"),
-                      selected: true,
-                      onSelected: (_) {}),
-                  const SizedBox(
-                    width: 11,
-                  ),
-                  ChoiceChip(
-                      avatar: const CircleAvatar(
-                          backgroundColor: AacColors.verbGreen),
-                      selectedColor: const Color(0xFFF7F2F9),
-                      showCheckmark: false,
-                      label: const Text("Czasownik"),
-                      selected: false,
-                      onSelected: (_) {}),
-                  const SizedBox(
-                    width: 11,
-                  ),
-                  ChoiceChip(
-                      avatar: const CircleAvatar(
-                          backgroundColor: AacColors.adjectiveBlue),
-                      selectedColor: const Color(0xFFF7F2F9),
-                      showCheckmark: false,
-                      label: const Text("Przymiotnik"),
-                      selected: false,
-                      onSelected: (_) {}),
-                  const SizedBox(
-                    width: 11,
-                  ),
-                  ChoiceChip(
-                      avatar: const CircleAvatar(
-                          backgroundColor: AacColors.prepositionPink),
-                      selectedColor: const Color(0xFFF7F2F9),
-                      showCheckmark: false,
-                      label: const Text("Barbie"),
-                      selected: false,
-                      onSelected: (_) {})
-                ],
-              ),
-            )
+            const ColorPicker()
             // SwitchListTile(
             //     value: isFolder,
             //     onChanged: (bool value) => {
@@ -370,9 +325,11 @@ class _SymbolSettingsState extends State<SymbolSettings> {
 
     symbolName = labelController.text;
     axisCount = int.parse(axisCountController.text);
+    int? color = ref.read(selectedColorProvider);
 
     if (imagePath.isNotEmpty && File(imagePath).existsSync()) {
-      widget.updateSymbolSettings(imagePath, symbolName, isFolder, axisCount);
+      widget.updateSymbolSettings(
+          imagePath, symbolName, isFolder, axisCount, color);
     } else {
       log('dialog');
       showDialog(
@@ -385,8 +342,8 @@ class _SymbolSettingsState extends State<SymbolSettings> {
             actions: [
               TextButton(
                   onPressed: () {
-                    widget.updateSymbolSettings(
-                        defaultImagePath, symbolName, isFolder, axisCount);
+                    widget.updateSymbolSettings(defaultImagePath, symbolName,
+                        isFolder, axisCount, color);
                     Navigator.of(context, rootNavigator: true).pop();
                   },
                   child: const Text('Yes')),
@@ -421,5 +378,54 @@ class AppBarTextAction extends StatelessWidget {
         child: Center(child: child),
       ),
     );
+  }
+}
+
+final colors = [
+  CommunicationColor(label: "Rzeczownik", code: 0xFFFBAF3C),
+  CommunicationColor(label: "Przymiotnik", code: 0xFF66C4FB),
+  CommunicationColor(label: "Czasownik", code: 0xFF9ADF7D),
+  CommunicationColor(label: "Barbie", code: 0xFFFB88CF),
+  CommunicationColor(label: "Lucy", code: 0xFFFB4C4C),
+];
+
+class ColorPicker extends ConsumerWidget {
+  const ColorPicker({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+            children: colors
+                .expand((e) => [
+                      ColorChip(color: e),
+                      const SizedBox(
+                        width: 11,
+                      )
+                    ])
+                .toList()));
+  }
+}
+
+final selectedColorProvider = StateProvider.autoDispose<int?>((ref) => null);
+
+class ColorChip extends ConsumerWidget {
+  const ColorChip({super.key, required this.color});
+
+  final CommunicationColor color;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isSelected = ref.watch(selectedColorProvider) == color.code;
+    return ChoiceChip(
+        avatar: CircleAvatar(backgroundColor: Color(color.code)),
+        selectedColor: const Color(0xFFF7F2F9),
+        showCheckmark: false,
+        label: Text(color.label),
+        selected: isSelected,
+        onSelected: (_) {
+          ref.read(selectedColorProvider.notifier).update((_) => color.code);
+        });
   }
 }

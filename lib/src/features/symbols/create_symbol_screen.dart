@@ -21,12 +21,14 @@ class AddSymbolMenu extends ConsumerStatefulWidget {
 }
 
 class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
-  void submit(String path, String label, bool isFolder, int count) async {
+  void submit(
+      String path, String label, bool isFolder, int count, int? color) async {
     final manager = ref.read(symbolManagerProvider);
 
     manager.saveSymbol(
       widget.boardId,
       label: label,
+      color: color,
       imagePath: await saveImage(path),
       crossAxisCount: count,
       createChild: isFolder,
