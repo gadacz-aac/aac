@@ -61,7 +61,7 @@ class SymbolCard extends ConsumerWidget {
     Color textColor;
 
     if (symbol.color == null) {
-      bgColor = AacColors.conjunctionWhite;
+      bgColor = AacColors.noColorWhite;
       textColor = Colors.black;
     } else {
       bgColor = Color(symbol.color!);

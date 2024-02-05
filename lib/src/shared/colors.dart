@@ -8,7 +8,7 @@ abstract final class AacColors {
   static const Color questionPurple = Color(0xffa579fb);
   static const Color adverbBrown = Color(0xffbe9780);
   static const Color determinerGrey = Color(0xff434343);
-  static const Color conjunctionWhite = Color(0xfffbfbfb);
+  static const Color noColorWhite = Color(0xfffbfbfb);
   static const Color adjectiveBlue = Color(0xff66c4fb);
 
   static const Color labelShadow = Color(0xff393535);
