@@ -21,12 +21,14 @@ class SymbolSettings extends ConsumerStatefulWidget {
   final String? passedSymbolName;
   final bool passedIsFolder;
   final int passedAxisCount;
+  final int? passedSymbolColor;
   final void Function(String imagePath, String symbolName, bool isFolder,
       int axisCount, int? color) updateSymbolSettings;
   const SymbolSettings(
       {super.key,
       this.passedImagePath,
       this.passedSymbolName,
+      this.passedSymbolColor,
       this.passedIsFolder = false,
       this.passedAxisCount = 2,
       required this.updateSymbolSettings});
@@ -40,13 +42,42 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
   late String symbolName;
   late bool isFolder;
   late int axisCount;
-  bool isEditing = false;
+  int? selectedColor;
 
   final formKey = GlobalKey<FormState>();
   final labelController = TextEditingController();
   final vocalizationController = TextEditingController();
   final axisCountController = TextEditingController();
   final picker = ImagePicker();
+
+  @override
+  void initState() {
+    imagePath = widget.passedImagePath ?? '';
+    symbolName = widget.passedSymbolName ?? '';
+    isFolder = widget.passedIsFolder;
+    axisCount = widget.passedAxisCount;
+    selectedColor = widget.passedSymbolColor;
+
+    labelController.text = symbolName;
+    axisCountController.text = axisCount.toString();
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    labelController.dispose();
+    axisCountController.dispose();
+    vocalizationController.dispose();
+
+    super.dispose();
+  }
+
+  void handleColorChange(int? colorCode) {
+    setState(() {
+      selectedColor = colorCode;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +88,6 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
       image = defaultImagePath;
       log('imagePath is empty or file does not exist');
     }
-
-    final color = ref.watch(selectedColorProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -97,7 +126,7 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
                     symbol: CommunicationSymbol(
                         label: labelController.text,
                         imagePath: image,
-                        color: color)),
+                        color: selectedColor)),
                 Positioned(
                     top: 6,
                     right: 3,
@@ -194,7 +223,7 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
             const SizedBox(
               height: 14.0,
             ),
-            const ColorPicker()
+            ColorPicker(value: selectedColor, onChange: handleColorChange)
             // SwitchListTile(
             //     value: isFolder,
             //     onChanged: (bool value) => {
@@ -263,32 +292,6 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
     });
   }
 
-  @override
-  void dispose() {
-    labelController.dispose();
-    axisCountController.dispose();
-    vocalizationController.dispose();
-
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    imagePath = widget.passedImagePath ?? '';
-    symbolName = widget.passedSymbolName ?? '';
-    isFolder = widget.passedIsFolder;
-    axisCount = widget.passedAxisCount;
-
-    labelController.text = symbolName;
-    axisCountController.text = axisCount.toString();
-
-    if (widget.passedImagePath != null) {
-      isEditing = true;
-    }
-
-    super.initState();
-  }
-
   pickImage() async {
     bool hasPermission = await requestPermissions();
 
@@ -325,7 +328,7 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
 
     symbolName = labelController.text;
     axisCount = int.parse(axisCountController.text);
-    int? color = ref.read(selectedColorProvider);
+    int? color = selectedColor;
 
     if (imagePath.isNotEmpty && File(imagePath).existsSync()) {
       widget.updateSymbolSettings(
@@ -390,7 +393,10 @@ final colors = [
 ];
 
 class ColorPicker extends ConsumerWidget {
-  const ColorPicker({super.key});
+  const ColorPicker({super.key, required this.value, required this.onChange});
+
+  final int? value;
+  final void Function(int?) onChange;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -399,7 +405,11 @@ class ColorPicker extends ConsumerWidget {
         child: Row(
             children: colors
                 .expand((e) => [
-                      ColorChip(color: e),
+                      ColorChip(
+                        color: e,
+                        onChange: onChange,
+                        selectedColor: value,
+                      ),
                       const SizedBox(
                         width: 11,
                       )
@@ -408,16 +418,20 @@ class ColorPicker extends ConsumerWidget {
   }
 }
 
-final selectedColorProvider = StateProvider.autoDispose<int?>((ref) => null);
-
 class ColorChip extends ConsumerWidget {
-  const ColorChip({super.key, required this.color});
+  const ColorChip(
+      {super.key,
+      required this.color,
+      required this.selectedColor,
+      required this.onChange});
 
   final CommunicationColor color;
+  final int? selectedColor;
+  final void Function(int?) onChange;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isSelected = ref.watch(selectedColorProvider) == color.code;
+    final isSelected = selectedColor == color.code;
     return ChoiceChip(
         avatar: CircleAvatar(backgroundColor: Color(color.code)),
         selectedColor: const Color(0xFFF7F2F9),
@@ -425,7 +439,7 @@ class ColorChip extends ConsumerWidget {
         label: Text(color.label),
         selected: isSelected,
         onSelected: (_) {
-          ref.read(selectedColorProvider.notifier).update((_) => color.code);
+          onChange(color.code);
         });
   }
 }
