@@ -4,12 +4,10 @@ import 'dart:io';
 import 'package:aac/src/features/symbols/cherry_pick_image.dart';
 import 'package:aac/src/features/symbols/model/communication_color.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import 'ui/symbol_card.dart';
 
@@ -157,12 +155,21 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
                                       leading: const Icon(Icons.edit_outlined),
                                       title: const Text("Zamień Obraz"),
                                     ),
-                                    const ListTile(
-                                      leading: Icon(Icons.crop_outlined),
-                                      title: Text("Przytnij Obraz"),
+                                    ListTile(
+                                      enabled: image != defaultImagePath,
+                                      onTap: () {
+                                        cropImage(imagePath);
+                                        Navigator.pop(context);
+                                      },
+                                      leading: const Icon(Icons.crop_outlined),
+                                      title: const Text("Przytnij Obraz"),
                                     ),
                                     ListTile(
-                                      onTap: deleteImage,
+                                      enabled: image != defaultImagePath,
+                                      onTap: () {
+                                        deleteImage();
+                                        Navigator.pop(context);
+                                      },
                                       leading:
                                           const Icon(Icons.delete_outlined),
                                       title: const Text("Usuń Obraz"),
@@ -292,35 +299,6 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
     });
   }
 
-  pickImage() async {
-    bool hasPermission = await requestPermissions();
-
-    if (hasPermission) {
-      return await ImagePicker()
-          .pickImage(source: ImageSource.gallery)
-          .then((value) {
-        if (value != null) {
-          cropImage(value.path);
-        }
-      });
-    }
-    log('no permission provided');
-  }
-
-  Future<bool> requestPermissions() async {
-    final androidInfo = await DeviceInfoPlugin().androidInfo;
-    late final Map<Permission, PermissionStatus> statuses;
-
-    if (androidInfo.version.sdkInt <= 32) {
-      statuses = await [Permission.storage].request();
-    } else {
-      statuses = await [Permission.photos].request();
-    }
-
-    return statuses.values
-        .every((status) => status == PermissionStatus.granted);
-  }
-
   void submit() {
     if (!formKey.currentState!.validate()) {
       return;
@@ -351,10 +329,15 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
                   },
                   child: const Text('Yes')),
               TextButton(
-                  onPressed: () {
+                  onPressed: () async {
                     Navigator.of(context, rootNavigator: true).pop();
-                    pickImage();
-                    return;
+                    final path = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ImageCherryPicker()));
+                    setState(() {
+                      imagePath = path;
+                    });
                   },
                   child: const Text('No'))
             ],

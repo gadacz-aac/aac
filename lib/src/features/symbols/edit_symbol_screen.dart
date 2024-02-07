@@ -43,7 +43,6 @@ class _EditSymbolScreenState extends ConsumerState<EditSymbolScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.symbol.color);
     return SymbolSettings(
       passedSymbolName: widget.symbol.label,
       passedImagePath: widget.symbol.imagePath,
