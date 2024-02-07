@@ -230,36 +230,28 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
             const SizedBox(
               height: 14.0,
             ),
-            ColorPicker(value: selectedColor, onChange: handleColorChange)
-            // SwitchListTile(
-            //     value: isFolder,
-            //     onChanged: (bool value) => {
-            //           setState(() {
-            //             isFolder = value;
-            //           })
-            //         },
-            //     title: const Text('Czy symbol jest folderem?')),
-            // if (isFolder)
-            //   TextFormField(
-            //     controller: axisCountController,
-            //     autocorrect: true,
-            //     keyboardType: TextInputType.number,
-            //     autovalidateMode: AutovalidateMode.onUserInteraction,
-            //     validator: (value) {
-            //       if (value == null || value.isEmpty) {
-            //         return 'Proszę wprowadzić szerokość tablicy';
-            //       }
-            //       if (int.tryParse(value)! <= 0) {
-            //         return 'Proszę wprowadzić liczbę większą od 0';
-            //       }
-            //       return null;
-            //     },
-            //     decoration: const InputDecoration(
-            //       border: OutlineInputBorder(),
-            //       hintText: "2",
-            //       labelText: "Szerokość tablicy",
-            //     ),
-            //   ),
+            ColorPicker(value: selectedColor, onChange: handleColorChange),
+            const SizedBox(
+              height: 28,
+            ),
+            Text(
+              "Podlinkuj do tablicy:",
+              style: Theme.of(context).textTheme.labelLarge,
+            ),
+            Row(
+              children: [
+                ChoiceChip(
+                  avatar: isFolder ? null : const Icon(Icons.add),
+                  selected: isFolder,
+                  onSelected: (bool value) => {
+                    setState(() {
+                      isFolder = value;
+                    })
+                  },
+                  label: const Text("Dodaj nową"),
+                ),
+              ],
+            ),
           ],
         ),
       ),
