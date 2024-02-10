@@ -1,8 +1,6 @@
 import 'package:aac/src/features/boards/ui/actions/delete_forever_action.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
-import 'package:aac/src/features/symbols/ui/symbol_image.dart';
-import 'package:aac/src/shared/colors.dart';
 import 'package:aac/src/shared/isar_provider.dart';
 import 'package:aac/src/shared/utils/debounce.dart';
 import 'package:flutter/material.dart';
@@ -143,50 +141,6 @@ class NoResultsScreen extends ConsumerWidget {
         ),
       ),
     );
-  }
-}
-
-class SearchItem extends ConsumerWidget {
-  const SearchItem({
-    super.key,
-    required this.symbol,
-  });
-
-  final CommunicationSymbol symbol;
-  final isSelected = false;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isSelected = ref
-        .watch(selectedSymbolsProvider)
-        .state
-        .any((element) => element.id == symbol.id);
-
-    final shape = isSelected
-        ? RoundedRectangleBorder(
-            side: const BorderSide(
-                width: 2, color: AacColors.mainControlBackground),
-            borderRadius: BorderRadius.circular(4),
-          )
-        : null;
-
-    return ListTile(
-        shape: shape,
-        contentPadding: const EdgeInsets.all(8.0),
-        leading: SymbolImage(symbol.imagePath),
-        title: Text(symbol.label),
-        onTap: () {
-          final areSelected = ref.read(areSymbolsSelectedProvider);
-          if (!areSelected) {
-            Navigator.pop(context, [symbol]);
-            return;
-          }
-
-          ref.read(selectedSymbolsProvider.notifier).toggle(symbol);
-        },
-        onLongPress: () {
-          ref.read(selectedSymbolsProvider.notifier).toggle(symbol);
-        });
   }
 }
 

@@ -1,5 +1,4 @@
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
-import 'package:aac/src/features/symbols/file_helpers.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,21 +20,11 @@ class EditSymbolScreen extends ConsumerStatefulWidget {
 }
 
 class _EditSymbolScreenState extends ConsumerState<EditSymbolScreen> {
-  Future<void> save(
-      String path, String label, bool isFolder, int count, int? color) async {
+  Future<void> save(SymbolEditingParams params) async {
     final manager = ref.read(symbolManagerProvider);
 
-    widget.symbol.label = label;
-    widget.symbol.imagePath = path;
-    widget.symbol.color = color;
-
     manager.updateSymbol(
-      symbol: widget.symbol,
-      parentBoardId: widget.boardId,
-      imagePath: await saveImage(path, label),
-      createChild: isFolder,
-      crossAxisCount: count,
-    );
+        symbol: widget.symbol, parentBoardId: widget.boardId, params: params);
     if (context.mounted) {
       Navigator.pop(context);
     }
@@ -44,12 +33,7 @@ class _EditSymbolScreenState extends ConsumerState<EditSymbolScreen> {
   @override
   Widget build(BuildContext context) {
     return SymbolSettings(
-      passedSymbolName: widget.symbol.label,
-      passedImagePath: widget.symbol.imagePath,
-      passedSymbolColor: widget.symbol.color,
-      passedIsFolder: widget.symbol.childBoard.value != null,
-      passedAxisCount: widget.symbol.childBoard.value?.crossAxisCount ??
-          2, //TODO: fix later; may cause issues, as the axis count is specified in a few places
+      params: SymbolEditingParams.fromSymbol(widget.symbol),
       updateSymbolSettings: save,
     );
   }

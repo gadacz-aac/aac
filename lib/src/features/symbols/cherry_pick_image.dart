@@ -53,13 +53,15 @@ class AacTextField extends StatelessWidget {
       {super.key,
       required this.placeholder,
       this.icon,
-      required this.controller,
+      this.controller,
+      this.onChanged,
       this.errorText,
       this.validator});
 
   final String placeholder;
   final Widget? icon;
-  final TextEditingController controller;
+  final TextEditingController? controller;
+  final void Function(String)? onChanged;
   final String? errorText;
   final FormFieldValidator<String>? validator;
 
@@ -69,6 +71,7 @@ class AacTextField extends StatelessWidget {
       style: const TextStyle(fontSize: 16),
       controller: controller,
       validator: validator,
+      onChanged: onChanged,
       decoration: InputDecoration(
         fillColor: const Color(0xFFF4F2F2),
         filled: true,

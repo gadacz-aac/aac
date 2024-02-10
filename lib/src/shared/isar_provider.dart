@@ -14,7 +14,7 @@ Future<Isar> initIsar() async {
   isar.writeTxn(() async {
     final board = await isar.boards.get(1);
     if (board == null) {
-      await isar.boards.put(Board());
+      await isar.boards.put(Board(name: "Główna"));
     }
   });
 

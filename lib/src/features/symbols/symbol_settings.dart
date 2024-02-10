@@ -1,35 +1,31 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/symbols/cherry_pick_image.dart';
+import 'package:aac/src/features/symbols/file_helpers.dart';
 import 'package:aac/src/features/symbols/model/communication_color.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
+import 'package:aac/src/features/symbols/search/search_screen.dart';
+import 'package:aac/src/features/symbols/symbol_manager.dart';
+import 'package:aac/src/shared/utils/debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:isar/isar.dart';
 
+import '../../shared/isar_provider.dart';
 import 'ui/symbol_card.dart';
 
 const String defaultImagePath = "assets/default_image_file.png";
 
 class SymbolSettings extends ConsumerStatefulWidget {
-  final String? passedImagePath;
-
-  final String? passedSymbolName;
-  final bool passedIsFolder;
-  final int passedAxisCount;
-  final int? passedSymbolColor;
-  final void Function(String imagePath, String symbolName, bool isFolder,
-      int axisCount, int? color) updateSymbolSettings;
+  final SymbolEditingParams? params;
+  // the params here should be at least it's own type
+  final void Function(SymbolEditingParams) updateSymbolSettings;
   const SymbolSettings(
-      {super.key,
-      this.passedImagePath,
-      this.passedSymbolName,
-      this.passedSymbolColor,
-      this.passedIsFolder = false,
-      this.passedAxisCount = 2,
-      required this.updateSymbolSettings});
+      {super.key, this.params, required this.updateSymbolSettings});
 
   @override
   ConsumerState<SymbolSettings> createState() => _SymbolSettingsState();
@@ -38,8 +34,6 @@ class SymbolSettings extends ConsumerStatefulWidget {
 class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
   late String imagePath;
   late String symbolName;
-  late bool isFolder;
-  late int axisCount;
   int? selectedColor;
 
   final formKey = GlobalKey<FormState>();
@@ -48,17 +42,16 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
   final axisCountController = TextEditingController();
   final picker = ImagePicker();
 
+  Board? childBoard;
+
   @override
   void initState() {
-    imagePath = widget.passedImagePath ?? '';
-    symbolName = widget.passedSymbolName ?? '';
-    isFolder = widget.passedIsFolder;
-    axisCount = widget.passedAxisCount;
-    selectedColor = widget.passedSymbolColor;
+    imagePath = widget.params?.imagePath ?? '';
+    symbolName = widget.params?.label ?? '';
+    selectedColor = widget.params?.color;
+    childBoard = widget.params?.childBoard;
 
     labelController.text = symbolName;
-    axisCountController.text = axisCount.toString();
-
     super.initState();
   }
 
@@ -234,23 +227,21 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
             const SizedBox(
               height: 28,
             ),
-            Text(
-              "Podlinkuj do tablicy:",
-              style: Theme.of(context).textTheme.labelLarge,
-            ),
-            Row(
-              children: [
-                ChoiceChip(
-                  avatar: isFolder ? null : const Icon(Icons.add),
-                  selected: isFolder,
-                  onSelected: (bool value) => {
-                    setState(() {
-                      isFolder = value;
-                    })
-                  },
-                  label: const Text("Dodaj nową"),
-                ),
-              ],
+            Text("Podlinkuj tablice:",
+                style: Theme.of(context).textTheme.labelLarge),
+            BoardPicker(
+              childBoard: childBoard,
+              setChildBoard: (board) {
+                if (board == null) return;
+                setState(() {
+                  childBoard = board;
+                });
+              },
+              onCancel: () {
+                setState(() {
+                  childBoard = null;
+                });
+              },
             ),
           ],
         ),
@@ -291,52 +282,53 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
     });
   }
 
-  void submit() {
+  void submit() async {
     if (!formKey.currentState!.validate()) {
       return;
     }
 
-    symbolName = labelController.text;
-    axisCount = int.parse(axisCountController.text);
-    int? color = selectedColor;
+    final params = SymbolEditingParams(
+        imagePath: await saveImage(imagePath),
+        label: labelController.text,
+        color: selectedColor);
 
     if (imagePath.isNotEmpty && File(imagePath).existsSync()) {
-      widget.updateSymbolSettings(
-          imagePath, symbolName, isFolder, axisCount, color);
-    } else {
-      log('dialog');
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Please Confirm'),
-            content: const Text(
-                "You didn't choose a symbol. Would you like to use the default symbol?"),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    widget.updateSymbolSettings(defaultImagePath, symbolName,
-                        isFolder, axisCount, color);
-                    Navigator.of(context, rootNavigator: true).pop();
-                  },
-                  child: const Text('Yes')),
-              TextButton(
-                  onPressed: () async {
-                    Navigator.of(context, rootNavigator: true).pop();
-                    final path = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ImageCherryPicker()));
-                    setState(() {
-                      imagePath = path;
-                    });
-                  },
-                  child: const Text('No'))
-            ],
-          );
-        },
-      );
+      widget.updateSymbolSettings(params);
+      return;
     }
+
+    if (!context.mounted) return;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Please Confirm'),
+          content: const Text(
+              "You didn't choose a symbol. Would you like to use the default symbol?"),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  widget.updateSymbolSettings(params);
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
+                child: const Text('Yes')),
+            TextButton(
+                onPressed: () async {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  final path = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ImageCherryPicker()));
+                  setState(() {
+                    imagePath = path;
+                  });
+                },
+                child: const Text('No'))
+          ],
+        );
+      },
+    );
   }
 }
 
@@ -416,5 +408,184 @@ class ColorChip extends ConsumerWidget {
         onSelected: (_) {
           onChange(color.code);
         });
+  }
+}
+
+class BoardPicker extends StatelessWidget {
+  const BoardPicker(
+      {super.key,
+      required this.childBoard,
+      required this.onCancel,
+      required this.setChildBoard});
+
+  final Board? childBoard;
+  final void Function(Board?) setChildBoard;
+  final void Function() onCancel;
+
+  @override
+  Widget build(BuildContext context) {
+    final List<Widget> chips;
+
+    if (childBoard == null) {
+      chips = [
+        LinkNewBoardChip(setChildBoard: setChildBoard),
+        LinkExistingBoardChip(
+            childBoard: childBoard, setChildBoard: setChildBoard)
+      ];
+    } else {
+      chips = [
+        InputChip(
+          label: Text("${childBoard?.name}"),
+          onDeleted: onCancel,
+        )
+      ];
+    }
+
+    return Row(
+      children: chips
+          .expand((element) => [
+                element,
+                const SizedBox(
+                  width: 11,
+                )
+              ])
+          .toList(),
+    );
+  }
+}
+
+final crossAxisCountProvider = StateProvider((ref) => 2.0);
+
+class LinkNewBoardChip extends StatelessWidget {
+  const LinkNewBoardChip({super.key, required this.setChildBoard});
+
+  final void Function(Board?) setChildBoard;
+
+  @override
+  Widget build(BuildContext context) {
+    return ActionChip(
+      avatar: const Icon(Icons.add),
+      onPressed: () {
+        showModalBottomSheet<Board?>(
+                context: context,
+                backgroundColor: Colors.white,
+                builder: (context) => const CreateBoardScreen())
+            .then(setChildBoard);
+      },
+      label: const Text("Dodaj nową"),
+    );
+  }
+}
+
+class CreateBoardScreen extends ConsumerWidget {
+  const CreateBoardScreen({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final crossAxisCount = ref.watch(crossAxisCountProvider);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 29.0, vertical: 27.0),
+      child: Column(children: [
+        const TextField(
+          decoration: InputDecoration(
+            border: OutlineInputBorder(),
+            labelText: "Podpis",
+          ),
+        ),
+        ListTile(
+          title: const Text("Szerokość"),
+          subtitle: Slider(
+              min: 2,
+              max: 8,
+              value: crossAxisCount,
+              onChanged: (v) {
+                ref.read(crossAxisCountProvider.notifier).update((state) => v);
+              }),
+        )
+      ]),
+    );
+  }
+}
+
+class LinkExistingBoardChip extends StatelessWidget {
+  const LinkExistingBoardChip({
+    super.key,
+    required this.setChildBoard,
+    required this.childBoard,
+  });
+
+  final Board? childBoard;
+  final void Function(Board?) setChildBoard;
+
+  @override
+  Widget build(BuildContext context) {
+    return ActionChip(
+        avatar: const Icon(Icons.search_outlined),
+        onPressed: () {
+          showModalBottomSheet<Board?>(
+              backgroundColor: Colors.white,
+              context: context,
+              isDismissible: true,
+              builder: (context) => const BoardSearch()).then(setChildBoard);
+        },
+        label: const Text("Wyszukaj istniejącą"));
+  }
+}
+
+final foundBoards = FutureProvider.autoDispose<List<Board>>((ref) async {
+  final isar = ref.watch(isarPod);
+  final query = ref.watch(queryProvider);
+
+  return isar.boards.where().wordsElementStartsWith(query).findAll();
+});
+
+class BoardSearch extends ConsumerWidget {
+  const BoardSearch({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final results = ref.watch(foundBoards).valueOrNull;
+    final query = ref.watch(queryProvider);
+    final textTheme = Theme.of(context).textTheme;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 29.0, vertical: 27.0),
+      child: Column(
+        children: [
+          AacTextField(
+            icon: const Icon(Icons.search),
+            placeholder: "Szukaj w tablicach",
+            onChanged: (value) {
+              final debounce = Debouncer(const Duration(milliseconds: 300));
+              debounce(() =>
+                  ref.read(queryProvider.notifier).update((state) => value));
+            },
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          results == null || results.isEmpty
+              ? Text(
+                  "Hmm.. nie znaleźliśmy wyników dla \"$query\"",
+                  style: textTheme.bodyLarge,
+                  textAlign: TextAlign.center,
+                )
+              : Expanded(
+                  child: ListView.builder(
+                  itemCount: results.length,
+                  itemBuilder: (context, index) {
+                    final board = results[index];
+                    return ListTile(
+                      onTap: () => Navigator.pop(context, board),
+                      title: Text(
+                        board.name,
+                      ),
+                    );
+                  },
+                ))
+        ],
+      ),
+    );
   }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 
-import 'package:aac/src/features/symbols/file_helpers.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:aac/src/features/symbols/symbol_settings.dart';
 
@@ -21,18 +20,9 @@ class AddSymbolMenu extends ConsumerStatefulWidget {
 }
 
 class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
-  void submit(
-      String path, String label, bool isFolder, int count, int? color) async {
+  void submit(SymbolEditingParams params) async {
     final manager = ref.read(symbolManagerProvider);
-
-    manager.saveSymbol(
-      widget.boardId,
-      label: label,
-      color: color,
-      imagePath: await saveImage(path),
-      crossAxisCount: count,
-      createChild: isFolder,
-    );
+    manager.saveSymbol(widget.boardId, params);
 
     if (context.mounted) {
       Navigator.pop(context);
@@ -42,6 +32,7 @@ class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
   @override
   Widget build(BuildContext context) {
     return SymbolSettings(
-        passedImagePath: widget.imagePath, updateSymbolSettings: submit);
+        params: SymbolEditingParams(imagePath: widget.imagePath),
+        updateSymbolSettings: submit);
   }
 }

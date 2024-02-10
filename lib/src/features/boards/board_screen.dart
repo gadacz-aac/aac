@@ -118,9 +118,6 @@ class BoardScreen extends ConsumerWidget {
   }
 }
 
-// UnpinSymbolDialogOption(symbol: symbol, board: board),
-// EditSymbolDialogOption(symbol: symbol, board: board),
-// DeleteForeverDialogOption(symbol: symbol, board: board),
 class ErrorScreen extends StatelessWidget {
   const ErrorScreen({
     Key? key,

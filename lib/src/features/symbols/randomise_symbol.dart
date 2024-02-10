@@ -49,10 +49,9 @@ void randomiseSymbol(WidgetRef ref) async {
 
       manager.saveSymbol(
         boardId,
-        label: "${symbol["keywords"][0]["keyword"]}",
-        imagePath: getArrasacImageUrl("${symbol["_id"]}"),
-        crossAxisCount: 2,
-        createChild: false,
+        SymbolEditingParams(
+            imagePath: getArrasacImageUrl("${symbol["_id"]}"),
+            label: "${symbol["keywords"][0]["keyword"]}"),
       );
       return;
     }
@@ -60,10 +59,8 @@ void randomiseSymbol(WidgetRef ref) async {
 
   final wordGenerator = WordGenerator();
   manager.saveSymbol(
-    boardId,
-    label: wordGenerator.randomNoun(),
-    imagePath: "assets/default_image_file.png",
-    crossAxisCount: 2,
-    createChild: false,
-  );
+      boardId,
+      SymbolEditingParams(
+          imagePath: "assets/default_image_file.png",
+          label: wordGenerator.randomNoun()));
 }
