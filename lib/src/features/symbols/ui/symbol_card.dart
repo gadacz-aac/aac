@@ -49,7 +49,7 @@ class SymbolCard extends ConsumerWidget {
     if (onTapActions.contains(SymbolOnTapAction.speak)) {
       ref.read(ttsManagerProvider).sayWord(symbol.label);
 
-      if (isParentMode) {
+      if (!isParentMode) {
         ref.read(sentenceNotifierProvider.notifier).addWord(symbol);
       }
     }
