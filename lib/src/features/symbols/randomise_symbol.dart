@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,40 +18,7 @@ String getArrasacImageUrl(String id) {
   return "https://api.arasaac.org/v1/pictograms/$id?backgroundColor=none&download=false";
 }
 
-void randomiseSymbol(WidgetRef ref, int boardId) async {
-  final manager = ref.read(symbolManagerProvider);
-  for (int i = 0; i < 30; i++) {
-    final search = generateRandomString(2);
-    final res = await http.get(
-        Uri.parse('https://api.arasaac.org/v1/pictograms/en/search/$search'));
-
-    if (res.ok && res.body.isNotEmpty) {
-      final body = jsonDecode(res.body);
-      final random = Random();
-      final symbol = body[random.nextInt(body.length)];
-
-      manager.saveSymbol(
-        boardId,
-        label: "${symbol["keywords"][0]["keyword"]}",
-        imagePath: getArrasacImageUrl("${symbol["_id"]}"),
-        crossAxisCount: 2,
-        createChild: false,
-      );
-      break;
-    }
-  }
-
-  final wordGenerator = WordGenerator();
-  manager.saveSymbol(
-    boardId,
-    label: wordGenerator.randomNoun(),
-    imagePath: "assets/default_image_file.png",
-    crossAxisCount: 2,
-    createChild: false,
-  );
-}
-
-String generateRandomString(int length) {
+String getRandomSearch() {
   Random random = Random();
   String letters = 'abcdefghijklmnopqrstuvwxyz';
 
@@ -64,4 +32,35 @@ String generateRandomString(int length) {
   String randomString = letters[index1] + letters[index2];
 
   return randomString;
+}
+
+void randomiseSymbol(WidgetRef ref) async {
+  final manager = ref.read(symbolManagerProvider);
+  final boardId = ref.read(boardIdProvider);
+  for (int i = 0; i < 30; i++) {
+    final search = getRandomSearch();
+    final res = await http.get(
+        Uri.parse('https://api.arasaac.org/v1/pictograms/en/search/$search'));
+
+    if (res.ok && res.body.isNotEmpty) {
+      final body = jsonDecode(res.body);
+      final random = Random();
+      final symbol = body[random.nextInt(body.length)];
+
+      manager.saveSymbol(
+        boardId,
+        SymbolEditingParams(
+            imagePath: getArrasacImageUrl("${symbol["_id"]}"),
+            label: "${symbol["keywords"][0]["keyword"]}"),
+      );
+      return;
+    }
+  }
+
+  final wordGenerator = WordGenerator();
+  manager.saveSymbol(
+      boardId,
+      SymbolEditingParams(
+          imagePath: "assets/default_image_file.png",
+          label: wordGenerator.randomNoun()));
 }

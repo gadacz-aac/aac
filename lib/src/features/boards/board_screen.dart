@@ -1,17 +1,21 @@
-import 'package:aac/src/features/boards/board_manager.dart';
-import 'package:aac/src/features/boards/ui/lock_button.dart';
-import 'package:aac/src/features/boards/ui/pin_symbol_action.dart';
-import 'package:aac/src/features/boards/ui/sentence_grid.dart';
-import 'package:aac/src/features/symbols/randomise_symbol.dart';
-import 'package:aac/src/features/symbols/ui/symbol_card.dart';
+import 'package:aac/src/features/boards/ui/actions/lock_button.dart';
+import 'package:aac/src/features/boards/ui/actions/pin_symbol_action.dart';
+import 'package:aac/src/features/boards/ui/app_bar.dart';
+import 'package:aac/src/features/boards/ui/controls/create_symbol.dart';
+import 'package:aac/src/features/boards/ui/controls/delete_all.dart';
+import 'package:aac/src/features/boards/ui/controls/pagination.dart';
+import 'package:aac/src/features/boards/ui/controls/remove_last_word.dart';
+import 'package:aac/src/features/boards/ui/symbols_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 
-import '../symbols/create_symbol_screen.dart';
-import 'model/board.dart';
+import 'package:aac/src/features/boards/board_manager.dart';
+import 'package:aac/src/features/boards/ui/controls/controls_wrapper.dart';
+import 'package:aac/src/features/boards/ui/sentence_bar.dart';
 
 final isParentModeProvider = StateProvider<bool>((_) => false);
+final boardIdProvider = Provider<Id>((_) => throw UnimplementedError());
 
 class BoardScreen extends ConsumerWidget {
   BoardScreen({super.key, this.title = 'dupa', required this.boardId}) {
@@ -40,82 +44,77 @@ class BoardScreen extends ConsumerWidget {
           }
 
           List<Widget> actions = [];
-          Widget? floatingActionButton;
+
+          final List<Widget> controls = [
+            const PaginationControl(
+              direction: SymbolGridScrollDirection.backward,
+            ),
+            const PaginationControl(
+                direction: SymbolGridScrollDirection.forward),
+          ];
+
           if (isParentMode) {
-            floatingActionButton = Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                CreateSymbolFloatingButton(boardId: boardId),
-                RandomiseSymbolFloatingButton(boardId: boardId)
-              ],
-            );
             actions.add(PinSymbolsAction(
               board: data,
             ));
+            controls.addAll([
+              const CreateRandomSymbol(),
+              const CreateSymbol(),
+            ]);
           } else {
             actions.add(const LockButton());
+            controls.addAll([
+              const RemoveLastWord(),
+              const DeleteAll(),
+            ]);
           }
 
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(title),
-              automaticallyImplyLeading: isParentMode || _isMainBoard,
-              actions: actions,
+          return ProviderScope(
+            overrides: [boardIdProvider.overrideWithValue(boardId)],
+            child: Scaffold(
+              appBar: BoardAppBar(
+                  title: title,
+                  isParentMode: isParentMode,
+                  isMainBoard: _isMainBoard,
+                  actions: actions),
+              body: OrientationBuilder(
+                builder: (context, orientation) {
+                  final List<Widget> children;
+                  if (orientation == Orientation.landscape) {
+                    children = [
+                      !isParentMode ? const SentenceBar() : const SizedBox(),
+                      Expanded(
+                        child: Row(
+                          children: [
+                            SymbolsGrid(board: data),
+                            ControlsWrapper(
+                                direction: Axis.vertical, children: controls)
+                          ],
+                        ),
+                      )
+                    ];
+                  } else {
+                    children = [
+                      !isParentMode ? const SentenceBar() : const SizedBox(),
+                      SymbolsGrid(board: data),
+                      ControlsWrapper(
+                        direction: Axis.horizontal,
+                        children: controls,
+                      )
+                    ];
+                  }
+                  return ProviderScope(
+                    overrides: [
+                      symbolGridScrollControllerProvider,
+                      symbolGridScrollPossibilityProvider
+                    ],
+                    child: Column(children: children),
+                  );
+                },
+              ),
             ),
-            body: Column(
-              children: [
-                const SentenceBar(),
-                SymbolsGrid(
-                  board: data,
-                )
-              ],
-            ),
-            floatingActionButton: floatingActionButton,
           );
         });
-  }
-}
-
-class CreateSymbolFloatingButton extends StatelessWidget {
-  const CreateSymbolFloatingButton({
-    super.key,
-    required this.boardId,
-  });
-
-  final Id boardId;
-
-  @override
-  Widget build(BuildContext context) {
-    return FloatingActionButton(
-      onPressed: () async {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => AddSymbolMenu(boardId: boardId)));
-      },
-      heroTag: null,
-      child: const Icon(Icons.add),
-    );
-  }
-}
-
-class RandomiseSymbolFloatingButton extends ConsumerWidget {
-  const RandomiseSymbolFloatingButton({
-    super.key,
-    required this.boardId,
-  });
-
-  final Id boardId;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return FloatingActionButton(
-      onPressed: () async {
-        randomiseSymbol(ref, boardId);
-      },
-      heroTag: null,
-      child: const Icon(Icons.shuffle),
-    );
   }
 }
 
@@ -146,23 +145,6 @@ class ErrorScreen extends StatelessWidget {
           )
         ]),
       ),
-    );
-  }
-}
-
-class SymbolsGrid extends StatelessWidget {
-  const SymbolsGrid({super.key, required this.board});
-
-  final Board board;
-
-  @override
-  Widget build(BuildContext context) {
-    return Flexible(
-      child: GridView.count(
-          crossAxisCount: board.crossAxisCount,
-          children: board.symbols
-              .map((e) => SymbolCard(symbol: e, board: board))
-              .toList()),
     );
   }
 }

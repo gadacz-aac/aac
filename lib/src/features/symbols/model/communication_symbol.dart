@@ -5,12 +5,14 @@ part 'communication_symbol.g.dart';
 
 @collection
 class CommunicationSymbol {
-  CommunicationSymbol({required this.label, required this.imagePath})
+  CommunicationSymbol(
+      {required this.label, required this.imagePath, this.color})
       : id = Isar.autoIncrement;
 
   Id id;
   String label;
   String imagePath;
+  int? color;
 
   @Backlink(to: 'symbols')
   final parentBoard = IsarLinks<Board>();

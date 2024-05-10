@@ -66,6 +66,6 @@ class TtsManager {
   }
 
   Future<void> setSpeechRate(double rate) async {
-  await tts.setSpeechRate(rate);
+    await tts.setSpeechRate(rate);
   }
 }
