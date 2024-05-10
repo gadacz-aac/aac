@@ -8,10 +8,14 @@ part 'board.g.dart';
 class Board {
   Id id;
   int crossAxisCount;
-  Board({
-    int? crossAxisCountOrNull,
-  })  : id = Isar.autoIncrement,
+  String name;
+  Board({int? crossAxisCountOrNull, required this.name})
+      : id = Isar.autoIncrement,
         crossAxisCount = crossAxisCountOrNull ?? 2;
 
   final symbols = IsarLinks<CommunicationSymbol>();
+
+  // full-text search
+  @Index(type: IndexType.value, caseSensitive: false)
+  List<String> get words => Isar.splitWords(name);
 }

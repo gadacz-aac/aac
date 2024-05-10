@@ -1,16 +1,18 @@
+import 'package:aac/src/features/boards/ui/actions/delete_forever_action.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
-import 'package:aac/src/features/symbols/ui/symbol_image.dart';
+import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:aac/src/shared/isar_provider.dart';
 import 'package:aac/src/shared/utils/debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:isar/isar.dart';
 
 import 'app_bar_actions.dart';
 
 final searchedSymbolProvider =
-    FutureProvider<List<CommunicationSymbol>>((ref) async {
+    FutureProvider.autoDispose<List<CommunicationSymbol>>((ref) async {
   final isar = ref.watch(isarPod);
   final query = ref.watch(queryProvider);
 
@@ -22,7 +24,7 @@ final searchedSymbolProvider =
       .findAll();
 });
 
-final queryProvider = StateProvider<String>((ref) => "");
+final queryProvider = StateProvider.autoDispose<String>((ref) => "");
 
 class SelectedSymbolNotifier extends ChangeNotifier {
   final state = <CommunicationSymbol>[];
@@ -48,7 +50,12 @@ final selectedSymbolsProvider =
   return SelectedSymbolNotifier();
 });
 
-final areSelectedProvider = Provider<bool>((ref) {
+final areMultipleSymbolsSelected = Provider<bool>((ref) {
+  final selected = ref.watch(selectedSymbolsProvider);
+  return selected.state.length > 1;
+});
+
+final areSymbolsSelectedProvider = Provider<bool>((ref) {
   final selected = ref.watch(selectedSymbolsProvider);
   return selected.state.isNotEmpty;
 });
@@ -84,60 +91,56 @@ class SymbolSearchScreen extends ConsumerWidget {
         child: Scaffold(
             appBar: const SearchAppBar(),
             body: results == null || results.isEmpty
-                ? const Center(child: Text("Jak pusto"))
-                : ListView.separated(
+                ? const NoResultsScreen()
+                : AlignedGridView.count(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 12.0,
+                    mainAxisSpacing: 12.0,
                     itemCount: results.length,
-                    separatorBuilder: (context, index) => const SizedBox(
-                      height: 10,
-                    ),
+                    padding: const EdgeInsets.all(12.0),
                     itemBuilder: (context, index) {
-                      final symbol = results[index];
-                      return SearchItem(symbol: symbol);
-                    },
-                  )));
+                      final e = results[index];
+                      return SymbolCard(
+                        symbol: e,
+                        onTapActions: const [SymbolOnTapAction.select],
+                      );
+                    })));
   }
 }
 
-class SearchItem extends ConsumerWidget {
-  const SearchItem({
-    super.key,
-    required this.symbol,
-  });
-
-  final CommunicationSymbol symbol;
-  final isSelected = false;
+class NoResultsScreen extends ConsumerWidget {
+  const NoResultsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isSelected = ref
-        .watch(selectedSymbolsProvider)
-        .state
-        .any((element) => element.id == symbol.id);
-
-    final shape = isSelected
-        ? RoundedRectangleBorder(
-            side: const BorderSide(width: 2, color: Colors.amberAccent),
-            borderRadius: BorderRadius.circular(10),
-          )
-        : null;
-
-    return ListTile(
-        shape: shape,
-        contentPadding: const EdgeInsets.all(8.0),
-        leading: SymbolImage(symbol.imagePath),
-        title: Text(symbol.label),
-        onTap: () {
-          final areSelected = ref.read(areSelectedProvider);
-          if (!areSelected) {
-            Navigator.pop(context, [symbol]);
-            return;
-          }
-
-          ref.read(selectedSymbolsProvider.notifier).toggle(symbol);
-        },
-        onLongPress: () {
-          ref.read(selectedSymbolsProvider.notifier).toggle(symbol);
-        });
+    final search = ref.watch(queryProvider);
+    final isLoading = ref.watch(searchedSymbolProvider).isLoading;
+    final textTheme = Theme.of(context).textTheme;
+    if (search.isEmpty || isLoading) return const SizedBox();
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/could-not-find-anything-symbol-arrasac.png',
+                width: MediaQuery.sizeOf(context).shortestSide / 2,
+              ),
+              const SizedBox(
+                height: 12.0,
+              ),
+              Text(
+                "Hmm.. nie znaleźliśmy wyników dla \"$search\"",
+                style: textTheme.headlineSmall,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -174,7 +177,7 @@ class _SearchAppBarState extends ConsumerState<SearchAppBar> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final areSelected = ref.watch(areSelectedProvider);
+    final areSelected = ref.watch(areSymbolsSelectedProvider);
 
     Widget? leading;
     List<Widget>? actions;
@@ -182,7 +185,7 @@ class _SearchAppBarState extends ConsumerState<SearchAppBar> {
 
     if (areSelected) {
       leading = const CancelAction();
-      actions = [const PinSelectedSymbolAction()];
+      actions = [const PinSelectedSymbolAction(), const DeleteForeverAction()];
     } else {
       leading = const BackAction();
       title = TextField(

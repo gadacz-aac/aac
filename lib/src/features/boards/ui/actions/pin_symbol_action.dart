@@ -13,6 +13,7 @@ class PinSymbolsAction extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return IconButton(
         onPressed: () async {
+          final symbolManager = ref.read(symbolManagerProvider);
           final symbols = await Navigator.push(
               context,
               MaterialPageRoute(
@@ -20,7 +21,7 @@ class PinSymbolsAction extends ConsumerWidget {
 
           if (symbols == null) return;
 
-          ref.read(symbolManagerProvider).pinSymbolsToBoard(symbols, board);
+          symbolManager.pinSymbolsToBoard(symbols, board);
         },
         icon: const Icon(Icons.search));
   }

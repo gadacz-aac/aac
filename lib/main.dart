@@ -35,7 +35,8 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(brightness: Brightness.dark),
+      theme:
+          ThemeData(useMaterial3: true, scaffoldBackgroundColor: Colors.white),
       home: const MainMenuScreen(), // Set MainMenuScreen as the home screen
     );
   }
