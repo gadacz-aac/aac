@@ -7,48 +7,25 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class ImageCherryPicker extends StatelessWidget {
-  const ImageCherryPicker({super.key});
+bool isValidImage(ContentType contentType) {
+  final imageTypes = [
+    "image/gif",
+    "image/jpeg",
+    "image/png",
+    "image/tiff",
+  ];
 
-  @override
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      animationDuration: Duration.zero,
-      child: Scaffold(
-        appBar: AppBar(
-            automaticallyImplyLeading: false,
-            flexibleSpace: const SafeArea(
-              child: TabBar(
-                tabs: [
-                  Tab(
-                    text: "Arasaac",
-                  ),
-                  Tab(
-                    text: "Urządzenie",
-                  ),
-                  Tab(
-                    text: "Link",
-                  ),
-                ],
-              ),
-            )),
-        body: const Padding(
-          padding: EdgeInsets.symmetric(vertical: 27.0, horizontal: 20.0),
-          child: TabBarView(
-            children: [
-              ArasaacSearchScreen(),
-              UploadFromDeviceScreen(),
-              UploadImageFromLinkScreen(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  return imageTypes.contains(contentType.toString().toLowerCase());
 }
 
 class AacTextField extends StatelessWidget {
+  final String placeholder;
+
+  final Widget? icon;
+  final TextEditingController? controller;
+  final void Function(String)? onChanged;
+  final String? errorText;
+  final FormFieldValidator<String>? validator;
   const AacTextField(
       {super.key,
       required this.placeholder,
@@ -57,13 +34,6 @@ class AacTextField extends StatelessWidget {
       this.onChanged,
       this.errorText,
       this.validator});
-
-  final String placeholder;
-  final Widget? icon;
-  final TextEditingController? controller;
-  final void Function(String)? onChanged;
-  final String? errorText;
-  final FormFieldValidator<String>? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -105,6 +75,123 @@ class ArasaacSearchScreen extends StatelessWidget {
   }
 }
 
+class ImageCherryPicker extends StatelessWidget {
+  const ImageCherryPicker({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 3,
+      animationDuration: Duration.zero,
+      child: Scaffold(
+        appBar: AppBar(
+            automaticallyImplyLeading: false,
+            flexibleSpace: const SafeArea(
+              child: TabBar(
+                tabs: [
+                  Tab(
+                    text: "Arasaac",
+                  ),
+                  Tab(
+                    text: "Urządzenie",
+                  ),
+                  Tab(
+                    text: "Link",
+                  ),
+                ],
+              ),
+            )),
+        body: const TabBarView(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 27.0, horizontal: 20.0),
+              child: ArasaacSearchScreen(),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 27.0, horizontal: 20.0),
+              child: UploadFromDeviceScreen(),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 27.0, horizontal: 20.0),
+              child: UploadImageFromLinkScreen(),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class UploadFromDeviceScreen extends StatelessWidget {
+  const UploadFromDeviceScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ElevatedButton.icon(
+            onPressed: () => pickImageFromCamera(context),
+            style: ButtonStyle(
+                backgroundColor:
+                    const MaterialStatePropertyAll(Color(0xFF2A1B3B)),
+                iconSize: const MaterialStatePropertyAll(24.0),
+                iconColor: const MaterialStatePropertyAll(Color(0xFFD3CEE3)),
+                shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4.0)))),
+            icon: const Icon(Icons.add_a_photo_outlined),
+            label: const Text(
+              "Aparat",
+              style: TextStyle(color: Color(0xFFD3CEE3)),
+            )),
+        ElevatedButton.icon(
+            onPressed: () => pickImageFromGallery(context),
+            style: ButtonStyle(
+                backgroundColor:
+                    const MaterialStatePropertyAll(Color(0xFF2A1B3B)),
+                iconSize: const MaterialStatePropertyAll(24.0),
+                iconColor: const MaterialStatePropertyAll(Color(0xFFD3CEE3)),
+                shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4.0)))),
+            icon: const Icon(Icons.add_photo_alternate_outlined),
+            label: const Text(
+              "Galeria",
+              style: TextStyle(color: Color(0xFFD3CEE3)),
+            )),
+      ],
+    );
+  }
+
+  void pickImageFromCamera(BuildContext context) async {
+    final file = await ImagePicker().pickImage(source: ImageSource.camera);
+
+    if (!context.mounted) return;
+    Navigator.pop(context, file?.path);
+  }
+
+  void pickImageFromGallery(BuildContext context) async {
+    final androidInfo = await DeviceInfoPlugin().androidInfo;
+    late final Map<Permission, PermissionStatus> statuses;
+
+    if (androidInfo.version.sdkInt <= 32) {
+      statuses = await [Permission.storage].request();
+    } else {
+      statuses = await [Permission.photos].request();
+    }
+
+    final hasPermission =
+        statuses.values.every((status) => status == PermissionStatus.granted);
+
+    if (!hasPermission) return;
+
+    final file = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (!context.mounted) return;
+
+    Navigator.pop(context, file?.path);
+  }
+}
+
 class UploadImageFromLinkScreen extends StatefulWidget {
   const UploadImageFromLinkScreen({super.key});
 
@@ -117,6 +204,46 @@ class _UploadImageFromLinkScreenState extends State<UploadImageFromLinkScreen> {
   final controller = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String? errorText;
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Expanded(
+          child: AacTextField(
+              controller: controller,
+              errorText: errorText,
+              placeholder: "Wklej link do obrazka",
+              validator: (value) {
+                if (value == null) return null;
+
+                if (!Uri.parse(value).isAbsolute) {
+                  return "Niepoprawny adres url";
+                }
+
+                return null;
+              }),
+        ),
+        const SizedBox(
+          width: 5,
+        ),
+        SizedBox(
+            height: 48,
+            child: ElevatedButton(
+                onPressed: tryDownload,
+                style: ButtonStyle(
+                    backgroundColor:
+                        const MaterialStatePropertyAll(Color(0xFF2A1B3B)),
+                    iconSize: const MaterialStatePropertyAll(24.0),
+                    iconColor:
+                        const MaterialStatePropertyAll(Color(0xFFD3CEE3)),
+                    shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.0)))),
+                child: const Icon(Icons.upload)))
+      ]),
+    );
+  }
 
   @override
   void dispose() {
@@ -158,125 +285,4 @@ class _UploadImageFromLinkScreenState extends State<UploadImageFromLinkScreen> {
     if (!context.mounted) return;
     Navigator.pop(context, file.path);
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Expanded(
-          child: AacTextField(
-              controller: controller,
-              errorText: errorText,
-              placeholder: "Wklej link do obrazka",
-              validator: (value) {
-                if (value == null) return null;
-
-                if (!Uri.parse(value).isAbsolute) {
-                  return "Niepoprawny adres url";
-                }
-
-                return null;
-              }),
-        ),
-        const SizedBox(
-          width: 5,
-        ),
-        SizedBox(
-            height: 48,
-            child: ElevatedButton(
-                onPressed: tryDownload,
-                style: ButtonStyle(
-                    backgroundColor:
-                        const MaterialStatePropertyAll(Color(0xFF2A1B3B)),
-                    iconSize: const MaterialStatePropertyAll(24.0),
-                    iconColor:
-                        const MaterialStatePropertyAll(Color(0xFFD3CEE3)),
-                    shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4.0)))),
-                child: const Icon(Icons.upload)))
-      ]),
-    );
-  }
-}
-
-class UploadFromDeviceScreen extends StatelessWidget {
-  const UploadFromDeviceScreen({super.key});
-
-  void pickImageFromGallery(BuildContext context) async {
-    final androidInfo = await DeviceInfoPlugin().androidInfo;
-    late final Map<Permission, PermissionStatus> statuses;
-
-    if (androidInfo.version.sdkInt <= 32) {
-      statuses = await [Permission.storage].request();
-    } else {
-      statuses = await [Permission.photos].request();
-    }
-
-    final hasPermission =
-        statuses.values.every((status) => status == PermissionStatus.granted);
-
-    if (!hasPermission) return;
-
-    final file = await ImagePicker().pickImage(source: ImageSource.gallery);
-
-    if (!context.mounted) return;
-
-    Navigator.pop(context, file?.path);
-  }
-
-  void pickImageFromCamera(BuildContext context) async {
-    final file = await ImagePicker().pickImage(source: ImageSource.camera);
-
-    if (!context.mounted) return;
-    Navigator.pop(context, file?.path);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        ElevatedButton.icon(
-            onPressed: () => pickImageFromCamera(context),
-            style: ButtonStyle(
-                backgroundColor:
-                    const MaterialStatePropertyAll(Color(0xFF2A1B3B)),
-                iconSize: const MaterialStatePropertyAll(24.0),
-                iconColor: const MaterialStatePropertyAll(Color(0xFFD3CEE3)),
-                shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4.0)))),
-            icon: const Icon(Icons.add_a_photo_outlined),
-            label: const Text(
-              "Aparat",
-              style: TextStyle(color: Color(0xFFD3CEE3)),
-            )),
-        ElevatedButton.icon(
-            onPressed: () => pickImageFromGallery(context),
-            style: ButtonStyle(
-                backgroundColor:
-                    const MaterialStatePropertyAll(Color(0xFF2A1B3B)),
-                iconSize: const MaterialStatePropertyAll(24.0),
-                iconColor: const MaterialStatePropertyAll(Color(0xFFD3CEE3)),
-                shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4.0)))),
-            icon: const Icon(Icons.add_photo_alternate_outlined),
-            label: const Text(
-              "Galeria",
-              style: TextStyle(color: Color(0xFFD3CEE3)),
-            )),
-      ],
-    );
-  }
-}
-
-bool isValidImage(ContentType contentType) {
-  final imageTypes = [
-    "image/gif",
-    "image/jpeg",
-    "image/png",
-    "image/tiff",
-  ];
-
-  return imageTypes.contains(contentType.toString().toLowerCase());
 }
