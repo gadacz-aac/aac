@@ -297,8 +297,7 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
       return;
     }
 
-    if (!context.mounted) return;
-
+    if (!mounted) return;
     showDialog(
       context: context,
       builder: (BuildContext context) {
