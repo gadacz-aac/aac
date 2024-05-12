@@ -1,4 +1,5 @@
 import 'package:aac/src/features/boards/model/board.dart';
+import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:isar/isar.dart';
 
 part 'communication_symbol.g.dart';
@@ -21,4 +22,17 @@ class CommunicationSymbol {
   // full-text search
   @Index(type: IndexType.value, caseSensitive: false)
   List<String> get words => Isar.splitWords(label);
+
+  CommunicationSymbol.fromParams(SymbolEditingParams params)
+      : this(
+            imagePath: params.imagePath ?? "",
+            label: params.label ?? "",
+            color: params.color);
+
+  CommunicationSymbol updateWithParams(SymbolEditingParams params) {
+    label = params.label ?? label;
+    imagePath = params.imagePath ?? imagePath;
+    color = params.color;
+    return this;
+  }
 }

@@ -30,6 +30,10 @@ class SymbolEditingParams {
         createChild = false,
         childBoard = symbol.childBoard.value,
         crossAxisCount = symbol.childBoard.value?.crossAxisCount;
+
+  @override
+  String toString() =>
+      "imagePath: $imagePath label: $label createChild: $createChild color: $color childBoard: $childBoard crossAxisCount: $crossAxisCount";
 }
 
 class SymbolManager {
@@ -44,12 +48,11 @@ class SymbolManager {
     if (params.imagePath == null) return;
 
     await isar.writeTxn(() async {
-      final CommunicationSymbol symbol = CommunicationSymbol(
-          label: params.label!,
-          imagePath: params.imagePath!,
-          color: params.color);
+      final CommunicationSymbol symbol = CommunicationSymbol.fromParams(params);
 
       await isar.communicationSymbols.put(symbol);
+
+      // TODO move to other function
       if (params.createChild) {
         final childBoard = Board(
             name: symbol.label, crossAxisCountOrNull: params.crossAxisCount);
@@ -74,7 +77,10 @@ class SymbolManager {
     await isar.writeTxn(() async {
       final parentBoard = await isar.boards.get(parentBoardId);
       if (parentBoard == null) return;
-      await isar.communicationSymbols.put(symbol);
+
+      await isar.communicationSymbols.put(symbol.updateWithParams(params));
+
+      // TODO move to other function
       if (params.createChild) {
         final childBoard = Board(
             name: symbol.label, crossAxisCountOrNull: params.crossAxisCount);
