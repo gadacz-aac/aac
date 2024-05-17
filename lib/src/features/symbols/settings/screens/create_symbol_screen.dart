@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 
 import 'package:aac/src/features/symbols/symbol_manager.dart';
-import 'package:aac/src/features/symbols/symbol_settings.dart';
+import 'package:aac/src/features/symbols/settings/screens/symbol_settings.dart';
 
 class AddSymbolMenu extends ConsumerStatefulWidget {
   const AddSymbolMenu({

@@ -1,8 +1,8 @@
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/boards/ui/controls/control.dart';
-import 'package:aac/src/features/symbols/cherry_pick_image.dart';
-import 'package:aac/src/features/symbols/create_symbol_screen.dart';
-import 'package:aac/src/features/symbols/randomise_symbol.dart';
+import 'package:aac/src/features/symbols/settings/widgets/cherry_pick_image.dart';
+import 'package:aac/src/features/symbols/settings/screens/create_symbol_screen.dart';
+import 'package:aac/src/features/symbols/settings/utils/randomise_symbol.dart';
 import 'package:aac/src/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:word_generator/word_generator.dart';
 
-import 'symbol_manager.dart';
+import '../../symbol_manager.dart';
 
 extension IsOk on http.Response {
   bool get ok {
