@@ -25,14 +25,22 @@ class GenericTextField extends StatefulWidget {
 }
 
 class _GenericTextFieldState extends State<GenericTextField> {
+  final textController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initalValue != null) {
+      textController.text = widget.initalValue!;
+    }
+  }
+
   @override
   void dispose() {
     textController.dispose();
 
     super.dispose();
   }
-
-  final textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +55,6 @@ class _GenericTextFieldState extends State<GenericTextField> {
         border: const OutlineInputBorder(),
         labelText: widget.labelText,
       ),
-      initialValue: widget.initalValue,
     );
   }
 }
