@@ -8,6 +8,7 @@ import 'package:aac/src/features/symbols/model/communication_color.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/search/search_screen.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
+import 'package:aac/src/shared/form/widgets/text_field.dart';
 import 'package:aac/src/shared/utils/debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -186,39 +187,22 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
               ]),
             ),
             const SizedBox(height: 28),
-            TextFormField(
-              controller: labelController,
-              autocorrect: true,
-              keyboardType: TextInputType.text,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
+            GenericTextField(
+              labelText: "Podpis",
+              initalValue: widget.params?.label,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Proszę wprowadzić nazwę symbolu';
                 }
                 return null;
               },
-              onChanged: (_) {
-                /* TODO idk about this. it just seems far
-                from ideal but it works for now, i guess */
-                setState(() {});
-              },
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: "Podpis",
-              ),
             ),
             const SizedBox(
               height: 14,
             ),
-            TextFormField(
-              controller: vocalizationController,
-              autocorrect: true,
-              keyboardType: TextInputType.text,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "Wokalizacja (opcjonalnie)",
-                  helperText: "Co powiedzieć po naciśnięciu"),
+            const GenericTextField(
+              labelText: "Wokalizacja (opcjonalnie)",
+              helperText: "Co powiedzieć po naciśnięciu?",
             ),
             const SizedBox(
               height: 14.0,

@@ -3,23 +3,28 @@ import 'package:flutter/material.dart';
 //Jest tu kto? Jeśli tak, to niech się wpisze na listę gości, ja zacznę
 //Wiktor i Piotrek 17.05.2024 zakładamy że nie będzie tu po co zaglądać
 
-class TextField extends StatefulWidget {
-  const TextField(
+//Licznik zaoszczędzonych linijek:
+//15 /features/symbols/symbol_settings
+
+class GenericTextField extends StatefulWidget {
+  const GenericTextField(
       {super.key,
       this.onChanged,
       this.validator,
       required this.labelText,
+      this.helperText,
       this.initalValue});
 
   final Function(String)? onChanged;
   final String? Function(String?)? validator;
   final String labelText;
   final String? initalValue;
+  final String? helperText;
   @override
-  State<TextField> createState() => _TextFieldState();
+  State<GenericTextField> createState() => _GenericTextFieldState();
 }
 
-class _TextFieldState extends State<TextField> {
+class _GenericTextFieldState extends State<GenericTextField> {
   @override
   void dispose() {
     textController.dispose();
