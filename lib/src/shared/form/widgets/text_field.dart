@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 class GenericTextField extends StatefulWidget {
   const GenericTextField(
       {super.key,
+      required this.name,
       this.onChanged,
       this.validator,
       required this.labelText,
@@ -17,35 +18,20 @@ class GenericTextField extends StatefulWidget {
 
   final Function(String)? onChanged;
   final String? Function(String?)? validator;
+  final String name;
   final String labelText;
   final String? initalValue;
   final String? helperText;
+
   @override
   State<GenericTextField> createState() => _GenericTextFieldState();
 }
 
 class _GenericTextFieldState extends State<GenericTextField> {
-  final textController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.initalValue != null) {
-      textController.text = widget.initalValue!;
-    }
-  }
-
-  @override
-  void dispose() {
-    textController.dispose();
-
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: textController,
+      initialValue: widget.initalValue,
       autocorrect: true,
       keyboardType: TextInputType.text,
       autovalidateMode: AutovalidateMode.onUserInteraction,

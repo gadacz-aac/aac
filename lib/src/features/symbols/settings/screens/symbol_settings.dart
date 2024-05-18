@@ -185,6 +185,7 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
             ),
             const SizedBox(height: 28),
             GenericTextField(
+              name: "label",
               labelText: "Podpis",
               initalValue: widget.params?.label,
               validator: (value) {
@@ -198,6 +199,7 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
               height: 14,
             ),
             const GenericTextField(
+              name: "vocalization",
               labelText: "Wokalizacja (opcjonalnie)",
               helperText: "Co powiedzieć po naciśnięciu?",
             ),
