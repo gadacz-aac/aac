@@ -4,17 +4,15 @@ import 'dart:io';
 import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/symbols/settings/widgets/cherry_pick_image.dart';
 import 'package:aac/src/features/symbols/settings/utils/file_helpers.dart';
-import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/settings/widgets/board_picker.dart';
 import 'package:aac/src/features/symbols/settings/widgets/color_picker.dart';
+import 'package:aac/src/features/symbols/settings/widgets/preview_symbol_image.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:aac/src/shared/form/widgets/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-
-import '../../ui/symbol_card.dart';
 
 const String defaultImagePath = "assets/default_image_file.png";
 
@@ -79,110 +77,14 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-          automaticallyImplyLeading: false,
-          flexibleSpace: SafeArea(
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  AppBarTextAction(
-                    child: const Text(
-                      "Anuluj",
-                      style: TextStyle(fontWeight: FontWeight.w600),
-                    ),
-                    onTap: () => Navigator.pop(context),
-                  ),
-                  AppBarTextAction(
-                    onTap: submit,
-                    child: const Text(
-                      "Zapisz",
-                      style: TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                  )
-                ]),
-          )),
+      appBar: const SymbolSettingsAppBar(),
       body: Form(
         key: formKey,
         child: ListView(
           padding: const EdgeInsets.all(10),
           children: [
             const SizedBox(height: 28),
-            FractionallySizedBox(
-              widthFactor: 0.55,
-              child: Stack(children: [
-                SymbolCard(
-                    symbol: CommunicationSymbol(
-                        label: labelController.text,
-                        imagePath: image,
-                        color: selectedColor)),
-                Positioned(
-                    top: 6,
-                    right: 3,
-                    child: InkWell(
-                      onTap: () {
-                        showModalBottomSheet(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12.0, vertical: 25.0),
-                                child: Wrap(
-                                  children: [
-                                    ListTile(
-                                      onTap: () {
-                                        Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const ImageCherryPicker()))
-                                            .then((value) {
-                                          setState(() {
-                                            imagePath = value;
-                                          });
-                                          Navigator.pop(context);
-                                        });
-                                      },
-                                      leading: const Icon(Icons.edit_outlined),
-                                      title: const Text("Zamień Obraz"),
-                                    ),
-                                    ListTile(
-                                      enabled: image != defaultImagePath,
-                                      onTap: () {
-                                        cropImage(imagePath);
-                                        Navigator.pop(context);
-                                      },
-                                      leading: const Icon(Icons.crop_outlined),
-                                      title: const Text("Przytnij Obraz"),
-                                    ),
-                                    ListTile(
-                                      enabled: image != defaultImagePath,
-                                      onTap: () {
-                                        deleteImage();
-                                        Navigator.pop(context);
-                                      },
-                                      leading:
-                                          const Icon(Icons.delete_outlined),
-                                      title: const Text("Usuń Obraz"),
-                                    )
-                                  ],
-                                ),
-                              );
-                            });
-                      },
-                      child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6),
-                          decoration: const BoxDecoration(
-                              color: Color(0xFF545454),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(4))),
-                          child: const Text(
-                            "Edytuj",
-                            style: TextStyle(height: 2, color: Colors.white),
-                          )),
-                    ))
-              ]),
-            ),
+            const PreviewSymbolImage(),
             const SizedBox(height: 28),
             GenericTextField(
               name: "label",
@@ -311,6 +213,41 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
         );
       },
     );
+  }
+}
+
+class SymbolSettingsAppBar extends StatelessWidget
+    implements PreferredSizeWidget {
+  const SymbolSettingsAppBar({super.key});
+
+  @override
+  final Size preferredSize = const Size.fromHeight(kToolbarHeight);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+        automaticallyImplyLeading: false,
+        flexibleSpace: SafeArea(
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                AppBarTextAction(
+                  child: const Text(
+                    "Anuluj",
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  onTap: () => Navigator.pop(context),
+                ),
+                AppBarTextAction(
+                  onTap: () {}, // TODO dupa,
+                  child: const Text(
+                    "Zapisz",
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                )
+              ]),
+        ));
   }
 }
 
