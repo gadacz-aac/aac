@@ -1,4 +1,5 @@
 import 'package:aac/src/features/symbols/model/communication_color.dart';
+import 'package:aac/src/features/symbols/settings/screens/symbol_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -12,11 +13,12 @@ final colors = [
   CommunicationColor(label: "Lucy", code: 0xFFFB4C4C),
 ];
 
-class ColorPicker extends ConsumerWidget {
-  const ColorPicker({super.key, required this.value, required this.onChange});
+final colorProvider = StateProvider(
+    (ref) => ref.watch(initalValuesProvider)?.color,
+    dependencies: [initalValuesProvider]);
 
-  final int? value;
-  final void Function(int?) onChange;
+class ColorPicker extends ConsumerWidget {
+  const ColorPicker({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,8 +29,6 @@ class ColorPicker extends ConsumerWidget {
                 .expand((e) => [
                       ColorChip(
                         color: e,
-                        onChange: onChange,
-                        selectedColor: value,
                       ),
                       const SizedBox(
                         width: 11,
@@ -39,19 +39,16 @@ class ColorPicker extends ConsumerWidget {
 }
 
 class ColorChip extends ConsumerWidget {
-  const ColorChip(
-      {super.key,
-      required this.color,
-      required this.selectedColor,
-      required this.onChange});
+  const ColorChip({
+    super.key,
+    required this.color,
+  });
 
   final CommunicationColor color;
-  final int? selectedColor;
-  final void Function(int?) onChange;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isSelected = selectedColor == color.code;
+    final isSelected = ref.watch(colorProvider) == color.code;
     return ChoiceChip(
         avatar: CircleAvatar(backgroundColor: Color(color.code)),
         selectedColor: const Color(0xFFF7F2F9),
@@ -59,7 +56,7 @@ class ColorChip extends ConsumerWidget {
         label: Text(color.label),
         selected: isSelected,
         onSelected: (_) {
-          onChange(color.code);
+          ref.read(colorProvider.notifier).state = color.code;
         });
   }
 }

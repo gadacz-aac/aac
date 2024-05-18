@@ -15,6 +15,8 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 const String defaultImagePath = "assets/default_image_file.png";
+final initalValuesProvider =
+    Provider<SymbolEditingParams?>((ref) => throw UnimplementedError());
 
 class SymbolSettings extends ConsumerStatefulWidget {
   final SymbolEditingParams? params;
@@ -30,7 +32,6 @@ class SymbolSettings extends ConsumerStatefulWidget {
 class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
   late String imagePath;
   late String symbolName;
-  int? selectedColor;
 
   final formKey = GlobalKey<FormState>();
   final labelController = TextEditingController();
@@ -41,94 +42,63 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
   Board? childBoard;
 
   @override
-  void initState() {
-    imagePath = widget.params?.imagePath ?? '';
-    symbolName = widget.params?.label ?? '';
-    selectedColor = widget.params?.color;
-    childBoard = widget.params?.childBoard;
-
-    labelController.text = symbolName;
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    labelController.dispose();
-    axisCountController.dispose();
-    vocalizationController.dispose();
-
-    super.dispose();
-  }
-
-  void handleColorChange(int? colorCode) {
-    setState(() {
-      selectedColor = colorCode;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    String image;
-    if (imagePath.isNotEmpty && File(imagePath).existsSync()) {
-      image = imagePath;
-    } else {
-      image = defaultImagePath;
-      log('imagePath is empty or file does not exist');
-    }
-
     return Scaffold(
       appBar: const SymbolSettingsAppBar(),
       body: Form(
         key: formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(10),
-          children: [
-            const SizedBox(height: 28),
-            const PreviewSymbolImage(),
-            const SizedBox(height: 28),
-            GenericTextField(
-              name: "label",
-              labelText: "Podpis",
-              initalValue: widget.params?.label,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Proszę wprowadzić nazwę symbolu';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(
-              height: 14,
-            ),
-            const GenericTextField(
-              name: "vocalization",
-              labelText: "Wokalizacja (opcjonalnie)",
-              helperText: "Co powiedzieć po naciśnięciu?",
-            ),
-            const SizedBox(
-              height: 14.0,
-            ),
-            ColorPicker(value: selectedColor, onChange: handleColorChange),
-            const SizedBox(
-              height: 28,
-            ),
-            Text("Podlinkuj tablice:",
-                style: Theme.of(context).textTheme.labelLarge),
-            BoardPicker(
-              childBoard: childBoard,
-              setChildBoard: (board) {
-                if (board == null) return;
-                setState(() {
-                  childBoard = board;
-                });
-              },
-              onCancel: () {
-                setState(() {
-                  childBoard = null;
-                });
-              },
-            ),
-          ],
+        child: ProviderScope(
+          overrides: [initalValuesProvider.overrideWithValue(widget.params)],
+          child: ListView(
+            padding: const EdgeInsets.all(10),
+            children: [
+              const SizedBox(height: 28),
+              const PreviewSymbolImage(),
+              const SizedBox(height: 28),
+              GenericTextField(
+                name: "label",
+                labelText: "Podpis",
+                initalValue: widget.params?.label,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Proszę wprowadzić nazwę symbolu';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(
+                height: 14,
+              ),
+              const GenericTextField(
+                name: "vocalization",
+                labelText: "Wokalizacja (opcjonalnie)",
+                helperText: "Co powiedzieć po naciśnięciu?",
+              ),
+              const SizedBox(
+                height: 14.0,
+              ),
+              const ColorPicker(),
+              const SizedBox(
+                height: 28,
+              ),
+              Text("Podlinkuj tablice:",
+                  style: Theme.of(context).textTheme.labelLarge),
+              BoardPicker(
+                childBoard: childBoard,
+                setChildBoard: (board) {
+                  if (board == null) return;
+                  setState(() {
+                    childBoard = board;
+                  });
+                },
+                onCancel: () {
+                  setState(() {
+                    childBoard = null;
+                  });
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -175,7 +145,7 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
     final params = SymbolEditingParams(
         imagePath: await saveImage(imagePath),
         label: labelController.text,
-        color: selectedColor);
+        color: null);
 
     if (imagePath.isNotEmpty && File(imagePath).existsSync()) {
       widget.updateSymbolSettings(params);

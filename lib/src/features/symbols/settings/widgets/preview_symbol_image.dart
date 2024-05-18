@@ -1,13 +1,16 @@
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/settings/widgets/cherry_pick_image.dart';
+import 'package:aac/src/features/symbols/settings/widgets/color_picker.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class PreviewSymbolImage extends StatelessWidget {
+class PreviewSymbolImage extends ConsumerWidget {
   const PreviewSymbolImage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final color = ref.watch(colorProvider);
     return FractionallySizedBox(
       widthFactor: 0.55,
       child: Stack(children: [
@@ -16,7 +19,7 @@ class PreviewSymbolImage extends StatelessWidget {
                 label: "oops...",
                 imagePath:
                     "https://www.catholicnewsagency.com/images/Church_on_fire_Credit_butterbits_via_Flickr_CC_BY_SA_20_CNA_8_3_15.jpg?jpg",
-                color: null)),
+                color: color)),
         Positioned(
             top: 6,
             right: 3,
