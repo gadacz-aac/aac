@@ -148,34 +148,40 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
 
     if (!mounted) return;
     showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Please Confirm'),
-          content: const Text(
-              "You didn't choose a symbol. Would you like to use the default symbol?"),
-          actions: [
-            TextButton(
-                onPressed: () {
-                  widget.updateSymbolSettings(params);
-                  Navigator.of(context, rootNavigator: true).pop();
-                },
-                child: const Text('Yes')),
-            TextButton(
-                onPressed: () async {
-                  Navigator.of(context, rootNavigator: true).pop();
-                  final path = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ImageCherryPicker()));
-                  setState(() {
-                    imagePath = path;
-                  });
-                },
-                child: const Text('No'))
-          ],
-        );
-      },
+        context: context,
+        builder: (BuildContext context) => const NoImageSelectedDialog());
+  }
+}
+
+class NoImageSelectedDialog extends StatelessWidget {
+  const NoImageSelectedDialog({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Please Confirm'),
+      content: const Text(
+          "You didn't choose a symbol. Would you like to use the default symbol?"),
+      actions: [
+        TextButton(
+            onPressed: () {
+              // widget.updateSymbolSettings(params); // TODO dupa
+              Navigator.of(context, rootNavigator: true).pop();
+            },
+            child: const Text('Yes')),
+        TextButton(
+            onPressed: () async {
+              Navigator.of(context, rootNavigator: true).pop();
+              // final path = await Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //         builder: (context) => const ImageCherryPicker()));
+              // setState(() {
+              //   imagePath = path;
+              // }); // TODO dupa
+            },
+            child: const Text('No'))
+      ],
     );
   }
 }
