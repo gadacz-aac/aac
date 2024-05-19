@@ -2,8 +2,6 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:aac/src/features/boards/model/board.dart';
-import 'package:aac/src/features/symbols/settings/widgets/cherry_pick_image.dart';
-import 'package:aac/src/features/symbols/settings/utils/file_helpers.dart';
 import 'package:aac/src/features/symbols/settings/widgets/board_picker.dart';
 import 'package:aac/src/features/symbols/settings/widgets/color_picker.dart';
 import 'package:aac/src/features/symbols/settings/widgets/preview_symbol_image.dart';
@@ -38,9 +36,6 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
   late String symbolName;
 
   final formKey = GlobalKey<FormState>();
-  final labelController = TextEditingController();
-  final vocalizationController = TextEditingController();
-  final axisCountController = TextEditingController();
   final picker = ImagePicker();
 
   Board? childBoard;
@@ -136,10 +131,11 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
       return;
     }
 
-    final params = SymbolEditingParams(
-        imagePath: await saveImage(imagePath),
-        label: labelController.text,
-        color: null);
+    const params = SymbolEditingParams();
+    // final params = SymbolEditingParams(
+    //     imagePath: await saveImage(imagePath),
+    //     label: labelController.text,
+    //     color: null);
 
     if (imagePath.isNotEmpty && File(imagePath).existsSync()) {
       widget.updateSymbolSettings(params);
