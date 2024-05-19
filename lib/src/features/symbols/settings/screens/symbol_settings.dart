@@ -18,6 +18,10 @@ const String defaultImagePath = "assets/default_image_file.png";
 final initalValuesProvider =
     Provider<SymbolEditingParams?>((ref) => throw UnimplementedError());
 
+final labelProvider = StateProvider<String>(
+    (ref) => ref.watch(initalValuesProvider)?.label ?? "",
+    dependencies: [initalValuesProvider]);
+
 class SymbolSettings extends ConsumerStatefulWidget {
   final SymbolEditingParams? params;
   // the params here should be at least it's own type
@@ -55,17 +59,7 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
               const SizedBox(height: 28),
               const PreviewSymbolImage(),
               const SizedBox(height: 28),
-              GenericTextField(
-                name: "label",
-                labelText: "Podpis",
-                initalValue: widget.params?.label,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Proszę wprowadzić nazwę symbolu';
-                  }
-                  return null;
-                },
-              ),
+              const LabelTextField(),
               const SizedBox(
                 height: 14,
               ),
@@ -181,6 +175,29 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
                 child: const Text('No'))
           ],
         );
+      },
+    );
+  }
+}
+
+class LabelTextField extends ConsumerWidget {
+  const LabelTextField({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final label = ref.watch(initalValuesProvider)?.label;
+    return GenericTextField(
+      name: "label",
+      labelText: "Podpis",
+      initalValue: label,
+      onChanged: (value) => ref.read(labelProvider.notifier).state = value,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Proszę wprowadzić nazwę symbolu';
+        }
+        return null;
       },
     );
   }

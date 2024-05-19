@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 //Licznik zaoszczędzonych linijek:
 //15 /features/symbols/symbol_settings
 
-class GenericTextField extends StatefulWidget {
+class GenericTextField extends StatelessWidget {
   const GenericTextField(
       {super.key,
       required this.name,
@@ -24,22 +24,17 @@ class GenericTextField extends StatefulWidget {
   final String? helperText;
 
   @override
-  State<GenericTextField> createState() => _GenericTextFieldState();
-}
-
-class _GenericTextFieldState extends State<GenericTextField> {
-  @override
   Widget build(BuildContext context) {
     return TextFormField(
-      initialValue: widget.initalValue,
+      initialValue: initalValue,
       autocorrect: true,
       keyboardType: TextInputType.text,
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: widget.validator,
-      onChanged: widget.onChanged,
+      validator: validator,
+      onChanged: onChanged,
       decoration: InputDecoration(
         border: const OutlineInputBorder(),
-        labelText: widget.labelText,
+        labelText: labelText,
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
+import 'package:aac/src/features/symbols/settings/screens/symbol_settings.dart';
 import 'package:aac/src/features/symbols/settings/widgets/cherry_pick_image.dart';
 import 'package:aac/src/features/symbols/settings/widgets/color_picker.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
@@ -11,12 +12,13 @@ class PreviewSymbolImage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final color = ref.watch(colorProvider);
+    final label = ref.watch(labelProvider);
     return FractionallySizedBox(
       widthFactor: 0.55,
       child: Stack(children: [
         SymbolCard(
             symbol: CommunicationSymbol(
-                label: "oops...",
+                label: label,
                 imagePath:
                     "https://www.catholicnewsagency.com/images/Church_on_fire_Credit_butterbits_via_Flickr_CC_BY_SA_20_CNA_8_3_15.jpg?jpg",
                 color: color)),
