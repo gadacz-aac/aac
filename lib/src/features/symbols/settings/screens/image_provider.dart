@@ -37,7 +37,7 @@ class ImageNotifier extends _$ImageNotifier {
         ]);
 
     if (croppedFile == null) return;
-    // imageCache.clear(); // TODO co to?
+    imageCache.clear(); // TODO co to?
     log('image cropped, path: ${croppedFile.path}');
     state = croppedFile.path;
   }

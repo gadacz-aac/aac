@@ -158,7 +158,7 @@ class SymbolManager {
 
   Future<Board> _createChildBoard(BoardEditingParams childBoardParams) async {
     final childBoard = Board(
-        name: childBoardParams.name!,
+        name: childBoardParams.name,
         crossAxisCountOrNull: childBoardParams.columnCount!);
     await isar.boards.put(childBoard);
     return childBoard;
