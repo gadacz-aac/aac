@@ -8,6 +8,7 @@ import 'package:isar/isar.dart';
 // TODO: make the symbol disappear(/change) from the sentence after the symbol is deleted(/edited). Particularly important when edited!
 // TODO since the symbol can be displayed on multiple boards at the same time we have to update all of the boards and not just one with id == boardId
 
+// TODO this doesn't have to be a stateful widget
 class EditSymbolScreen extends ConsumerStatefulWidget {
   const EditSymbolScreen(
       {super.key, required this.symbol, required this.boardId});
@@ -32,9 +33,14 @@ class _EditSymbolScreenState extends ConsumerState<EditSymbolScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SymbolSettings(
-      params: SymbolEditingParams.fromSymbol(widget.symbol),
-      updateSymbolSettings: save,
+    return ProviderScope(
+      overrides: [
+        initialValuesProvider
+            .overrideWithValue(SymbolEditingParams.fromSymbol(widget.symbol))
+      ],
+      child: SymbolSettings(
+        updateSymbolSettings: save,
+      ),
     );
   }
 }

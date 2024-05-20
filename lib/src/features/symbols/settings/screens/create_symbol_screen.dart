@@ -31,8 +31,13 @@ class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return SymbolSettings(
-        params: SymbolEditingParams(imagePath: widget.imagePath),
-        updateSymbolSettings: submit);
+    return ProviderScope(
+      overrides: [
+        initialValuesProvider.overrideWithValue(
+          SymbolEditingParams(imagePath: widget.imagePath),
+        )
+      ],
+      child: SymbolSettings(updateSymbolSettings: submit),
+    );
   }
 }

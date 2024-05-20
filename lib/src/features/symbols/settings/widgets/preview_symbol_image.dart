@@ -1,6 +1,6 @@
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
+import 'package:aac/src/features/symbols/settings/screens/image_provider.dart';
 import 'package:aac/src/features/symbols/settings/screens/symbol_settings.dart';
-import 'package:aac/src/features/symbols/settings/widgets/cherry_pick_image.dart';
 import 'package:aac/src/features/symbols/settings/widgets/color_picker.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:flutter/material.dart';
@@ -13,26 +13,31 @@ class PreviewSymbolImage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final color = ref.watch(colorProvider);
     final label = ref.watch(labelProvider);
+    final image = ref.watch(imageNotifierProvider);
+
     return FractionallySizedBox(
       widthFactor: 0.55,
       child: Stack(children: [
         SymbolCard(
             symbol: CommunicationSymbol(
-                label: label,
-                imagePath:
-                    "https://www.catholicnewsagency.com/images/Church_on_fire_Credit_butterbits_via_Flickr_CC_BY_SA_20_CNA_8_3_15.jpg?jpg",
-                color: color)),
-        Positioned(
-            top: 6,
-            right: 3,
-            child: InkWell(
-              onTap: () {
-                showModalBottomSheet(
-                    context: context,
-                    builder: (BuildContext context) => const ImageOptions());
-              },
-              child: const ShowImageOptions(),
-            ))
+                label: label, imagePath: image, color: color)),
+        Consumer(builder: (context, ref, _) {
+          // this is a bit funky, i admit. but because show modal creates another context so when you try to access provider later it be the same one as in here, unless you pass ref like so
+          // https://github.com/rrousselGit/riverpod/issues/2338
+
+          return Positioned(
+              top: 6,
+              right: 3,
+              child: InkWell(
+                onTap: () {
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext context) =>
+                          ImageOptions(ref: ref));
+                },
+                child: const ShowImageOptions(),
+              ));
+        })
       ]),
     );
   }
@@ -60,14 +65,21 @@ class ShowImageOptions extends StatelessWidget {
 class ImageOptions extends StatelessWidget {
   const ImageOptions({
     super.key,
+    required this.ref,
   });
+
+  final WidgetRef ref;
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 25.0),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 25.0),
       child: Wrap(
-        children: [ChangeImage(), CropImage(), RemoveImage()],
+        children: [
+          ChangeImage(ref: ref),
+          CropImage(ref: ref),
+          RemoveImage(ref: ref)
+        ],
       ),
     );
   }
@@ -76,14 +88,15 @@ class ImageOptions extends StatelessWidget {
 class RemoveImage extends StatelessWidget {
   const RemoveImage({
     super.key,
+    required this.ref,
   });
-
+  final WidgetRef ref;
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      enabled: true,
+      enabled: !ref.watch(isDefaultImageProvider),
       onTap: () {
-        // deleteImage(); // TODO dupa
+        ref.read(imageNotifierProvider.notifier).deleteImage();
         Navigator.pop(context);
       },
       leading: const Icon(Icons.delete_outlined),
@@ -93,16 +106,16 @@ class RemoveImage extends StatelessWidget {
 }
 
 class CropImage extends StatelessWidget {
-  const CropImage({
-    super.key,
-  });
+  const CropImage({super.key, required this.ref});
+
+  final WidgetRef ref;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      enabled: true,
+      enabled: !ref.watch(isDefaultImageProvider),
       onTap: () {
-        // cropImage(imagePath); // TODO dupa
+        ref.read(imageNotifierProvider.notifier).cropImage();
         Navigator.pop(context);
       },
       leading: const Icon(Icons.crop_outlined),
@@ -112,23 +125,15 @@ class CropImage extends StatelessWidget {
 }
 
 class ChangeImage extends StatelessWidget {
-  const ChangeImage({
-    super.key,
-  });
+  const ChangeImage({super.key, required this.ref});
+
+  final WidgetRef ref;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const ImageCherryPicker())).then((value) {
-          // setState(() {
-          //   imagePath = value;
-          // });
-          Navigator.pop(context);
-        });
+        ref.read(imageNotifierProvider.notifier).cherryPick(context);
       },
       leading: const Icon(Icons.edit_outlined),
       title: const Text("Zamień Obraz"),

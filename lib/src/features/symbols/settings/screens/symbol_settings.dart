@@ -1,6 +1,3 @@
-import 'dart:developer';
-import 'dart:io';
-
 import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/symbols/settings/widgets/board_picker.dart';
 import 'package:aac/src/features/symbols/settings/widgets/color_picker.dart';
@@ -9,35 +6,33 @@ import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:aac/src/shared/form/widgets/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-const String defaultImagePath = "assets/default_image_file.png";
-final initalValuesProvider =
-    Provider<SymbolEditingParams?>((ref) => throw UnimplementedError());
+part 'symbol_settings.g.dart';
 
-final labelProvider = StateProvider<String>(
-    (ref) => ref.watch(initalValuesProvider)?.label ?? "",
-    dependencies: [initalValuesProvider]);
+@riverpod
+String defaultImagePath(DefaultImagePathRef ref) =>
+    "assets/default_image_file.png";
+
+@Riverpod(dependencies: [])
+SymbolEditingParams initialValues(InitialValuesRef ref) {
+  return const SymbolEditingParams();
+}
+
+final labelProvider = StateProvider.autoDispose<String>(
+    (ref) => ref.watch(initialValuesProvider).label ?? "",
+    dependencies: [initialValuesProvider]);
 
 class SymbolSettings extends ConsumerStatefulWidget {
-  final SymbolEditingParams? params;
-  // the params here should be at least it's own type
   final void Function(SymbolEditingParams) updateSymbolSettings;
-  const SymbolSettings(
-      {super.key, this.params, required this.updateSymbolSettings});
+  const SymbolSettings({super.key, required this.updateSymbolSettings});
 
   @override
   ConsumerState<SymbolSettings> createState() => _SymbolSettingsState();
 }
 
 class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
-  late String imagePath;
-  late String symbolName;
-
   final formKey = GlobalKey<FormState>();
-  final picker = ImagePicker();
-
   Board? childBoard;
 
   @override
@@ -46,84 +41,48 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
       appBar: const SymbolSettingsAppBar(),
       body: Form(
         key: formKey,
-        child: ProviderScope(
-          overrides: [initalValuesProvider.overrideWithValue(widget.params)],
-          child: ListView(
-            padding: const EdgeInsets.all(10),
-            children: [
-              const SizedBox(height: 28),
-              const PreviewSymbolImage(),
-              const SizedBox(height: 28),
-              const LabelTextField(),
-              const SizedBox(
-                height: 14,
-              ),
-              const GenericTextField(
-                name: "vocalization",
-                labelText: "Wokalizacja (opcjonalnie)",
-                helperText: "Co powiedzieć po naciśnięciu?",
-              ),
-              const SizedBox(
-                height: 14.0,
-              ),
-              const ColorPicker(),
-              const SizedBox(
-                height: 28,
-              ),
-              Text("Podlinkuj tablice:",
-                  style: Theme.of(context).textTheme.labelLarge),
-              BoardPicker(
-                childBoard: childBoard,
-                setChildBoard: (board) {
-                  if (board == null) return;
-                  setState(() {
-                    childBoard = board;
-                  });
-                },
-                onCancel: () {
-                  setState(() {
-                    childBoard = null;
-                  });
-                },
-              ),
-            ],
-          ),
+        child: ListView(
+          padding: const EdgeInsets.all(10),
+          children: [
+            const SizedBox(height: 28),
+            const PreviewSymbolImage(),
+            const SizedBox(height: 28),
+            const LabelTextField(),
+            const SizedBox(
+              height: 14,
+            ),
+            const GenericTextField(
+              name: "vocalization",
+              labelText: "Wokalizacja (opcjonalnie)",
+              helperText: "Co powiedzieć po naciśnięciu?",
+            ),
+            const SizedBox(
+              height: 14.0,
+            ),
+            const ColorPicker(),
+            const SizedBox(
+              height: 28,
+            ),
+            Text("Podlinkuj tablice:",
+                style: Theme.of(context).textTheme.labelLarge),
+            BoardPicker(
+              childBoard: childBoard,
+              setChildBoard: (board) {
+                if (board == null) return;
+                setState(() {
+                  childBoard = board;
+                });
+              },
+              onCancel: () {
+                setState(() {
+                  childBoard = null;
+                });
+              },
+            ),
+          ],
         ),
       ),
     );
-  }
-
-  cropImage(String path) async {
-    final croppedFile = await ImageCropper().cropImage(
-        sourcePath: path,
-        compressQuality: 60, //? isn't it too low?
-        compressFormat: ImageCompressFormat.png,
-        aspectRatioPresets: [
-          CropAspectRatioPreset.square
-        ],
-        uiSettings: [
-          AndroidUiSettings(
-              toolbarTitle: "Przycinanie zdjęcia",
-              initAspectRatio: CropAspectRatioPreset.square,
-              lockAspectRatio: true),
-          IOSUiSettings(
-            title:
-                "Przycinanie zdjęcia", //TODO: lockAspectRatio for IOS also!!!
-          )
-        ]);
-    if (croppedFile != null) {
-      imageCache.clear();
-      log('image cropped, path: ${croppedFile.path}');
-      setState(() {
-        imagePath = croppedFile.path;
-      });
-    }
-  }
-
-  void deleteImage() {
-    setState(() {
-      imagePath = defaultImagePath;
-    });
   }
 
   void submit() async {
@@ -131,16 +90,16 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
       return;
     }
 
-    const params = SymbolEditingParams();
+    // const params = SymbolEditingParams();
     // final params = SymbolEditingParams(
     //     imagePath: await saveImage(imagePath),
     //     label: labelController.text,
     //     color: null);
 
-    if (imagePath.isNotEmpty && File(imagePath).existsSync()) {
-      widget.updateSymbolSettings(params);
-      return;
-    }
+    // if (imagePath.isNotEmpty && File(imagePath).existsSync()) {
+    //   widget.updateSymbolSettings(params);
+    //   return;
+    // }
 
     if (!mounted) return;
     showDialog(
@@ -189,7 +148,7 @@ class LabelTextField extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final label = ref.watch(initalValuesProvider)?.label;
+    final label = ref.watch(initialValuesProvider).label;
     return GenericTextField(
       name: "label",
       labelText: "Podpis",

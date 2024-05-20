@@ -13,9 +13,9 @@ final colors = [
   CommunicationColor(label: "Lucy", code: 0xFFFB4C4C),
 ];
 
-final colorProvider = StateProvider(
-    (ref) => ref.watch(initalValuesProvider)?.color,
-    dependencies: [initalValuesProvider]);
+final colorProvider = StateProvider.autoDispose(
+    (ref) => ref.watch(initialValuesProvider).color,
+    dependencies: [initialValuesProvider]);
 
 class ColorPicker extends ConsumerWidget {
   const ColorPicker({super.key});
