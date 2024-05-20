@@ -5,19 +5,30 @@ import 'package:aac/src/shared/ui/button.dart';
 import 'package:flutter/material.dart';
 
 class CreateBoardScreen extends StatefulWidget {
-  const CreateBoardScreen({
-    super.key,
-  });
+  const CreateBoardScreen({super.key, required this.params});
+
+  final BoardEditingParams params;
 
   @override
   State<CreateBoardScreen> createState() => _CreateBoardScreenState();
 }
 
 class _CreateBoardScreenState extends State<CreateBoardScreen> {
-  bool isUnlimitedRows = true;
-  final nameController = TextEditingController();
-  final columnCountController = TextEditingController(text: "3");
-  final rowCountController = TextEditingController(text: "3");
+  late bool isUnlimitedRows = widget.params.rowCount == null;
+  late final TextEditingController nameController;
+  late final TextEditingController columnCountController;
+  late final TextEditingController rowCountController;
+
+  @override
+  void initState() {
+    super.initState();
+    isUnlimitedRows = widget.params.rowCount == null;
+    nameController = TextEditingController(text: widget.params.name);
+    columnCountController =
+        TextEditingController(text: "${widget.params.columnCount}");
+    rowCountController =
+        TextEditingController(text: "${widget.params.rowCount}");
+  }
 
   @override
   void dispose() {
@@ -29,74 +40,77 @@ class _CreateBoardScreenState extends State<CreateBoardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 29.0, vertical: 27.0),
-      child: Column(children: [
-        GenericTextField(
-            controller: nameController, name: "dupa", labelText: "Nazwa"),
-        const SizedBox(
-          height: 14,
-        ),
-        Row(
-          children: [
-            Expanded(
-                child: GenericNumberField(
-              name: "dupa",
-              controller: columnCountController,
-              labelText: "Liczba Kolumn",
-            )),
-            const SizedBox(
-              width: 14,
-            ),
-            const Text("x"),
-            const SizedBox(
-              width: 14,
-            ),
-            Expanded(
-                child: GenericNumberField(
-                    controller: rowCountController,
-                    enabled: !isUnlimitedRows,
-                    name: "dupa",
-                    labelText: "Liczba wierszy"))
-          ],
-        ),
-        const SizedBox(
-          height: 14,
-        ),
-        ListTile(
-          title: const Text("Nieograniczona liczba wierszy"),
-          trailing: Switch(
-              value: isUnlimitedRows,
-              onChanged: (value) {
-                setState(() {
-                  isUnlimitedRows = value;
-                });
-              }),
-        ),
-        const Spacer(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Button(
-              onPressed: Navigator.of(context).pop,
-              type: ButtonType.noBackground,
-              child: const Text("Anuluj"),
-            ),
-            Button(
-                onPressed: () {
-                  Navigator.pop(
-                      context,
-                      BoardEditingParams(
-                          name: nameController.text,
-                          columnCount: int.tryParse(columnCountController.text),
-                          rowCount: isUnlimitedRows
-                              ? null
-                              : int.tryParse(rowCountController.text)));
-                },
-                child: const Text("Zapisz"))
-          ],
-        )
-      ]),
+    return PopScope(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 29.0, vertical: 27.0),
+        child: Column(children: [
+          GenericTextField(
+              controller: nameController, name: "dupa", labelText: "Nazwa"),
+          const SizedBox(
+            height: 14,
+          ),
+          Row(
+            children: [
+              Expanded(
+                  child: GenericNumberField(
+                name: "dupa",
+                controller: columnCountController,
+                labelText: "Liczba Kolumn",
+              )),
+              const SizedBox(
+                width: 14,
+              ),
+              const Text("x"),
+              const SizedBox(
+                width: 14,
+              ),
+              Expanded(
+                  child: GenericNumberField(
+                      controller: rowCountController,
+                      enabled: !isUnlimitedRows,
+                      name: "dupa",
+                      labelText: "Liczba wierszy"))
+            ],
+          ),
+          const SizedBox(
+            height: 14,
+          ),
+          ListTile(
+            title: const Text("Nieograniczona liczba wierszy"),
+            trailing: Switch(
+                value: isUnlimitedRows,
+                onChanged: (value) {
+                  setState(() {
+                    isUnlimitedRows = value;
+                  });
+                }),
+          ),
+          const Spacer(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Button(
+                onPressed: Navigator.of(context).pop,
+                type: ButtonType.noBackground,
+                child: const Text("Anuluj"),
+              ),
+              Button(
+                  onPressed: () {
+                    Navigator.pop(
+                        context,
+                        BoardEditingParams(
+                            name: nameController.text,
+                            columnCount:
+                                int.tryParse(columnCountController.text),
+                            rowCount: isUnlimitedRows
+                                ? null
+                                : int.tryParse(rowCountController.text)));
+                  },
+                  child: const Text("Zapisz"))
+            ],
+          )
+        ]),
+      ),
     );
   }
 }

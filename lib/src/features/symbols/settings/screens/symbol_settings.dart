@@ -37,6 +37,16 @@ class SymbolSettings extends ConsumerStatefulWidget {
 class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
   final formKey = GlobalKey<FormState>();
 
+  late final TextEditingController vocalizationController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    vocalizationController = TextEditingController(
+        text: ref.read(initialValuesProvider).vocalization);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +65,8 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
             const SizedBox(
               height: 14,
             ),
-            const GenericTextField(
+            GenericTextField(
+              controller: vocalizationController,
               name: "vocalization",
               labelText: "Wokalizacja (opcjonalnie)",
               helperText: "Co powiedzieć po naciśnięciu?",
@@ -97,6 +108,7 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
         imagePath: await saveImage(imagePath),
         label: ref.read(labelProvider),
         color: ref.read(colorProvider),
+        vocalization: vocalizationController.text,
         childBoard: ref.read(boardNotifierProvider));
 
     widget.updateSymbolSettings(params);

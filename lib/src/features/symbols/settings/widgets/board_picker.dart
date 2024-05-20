@@ -1,3 +1,4 @@
+import 'package:aac/src/features/symbols/settings/screens/create_board_screen.dart';
 import 'package:aac/src/features/symbols/settings/screens/symbol_settings.dart';
 import 'package:aac/src/features/symbols/settings/widgets/link_existing_board_chip.dart';
 import 'package:aac/src/features/symbols/settings/widgets/link_new_board_chip.dart';
@@ -37,12 +38,7 @@ class BoardPicker extends ConsumerWidget {
     if (childBoard == null) {
       chips = [const LinkNewBoardChip(), const LinkExistingBoardChip()];
     } else {
-      chips = [
-        InputChip(
-          label: Text("${childBoard.name}"),
-          onDeleted: ref.read(boardNotifierProvider.notifier).delete,
-        )
-      ];
+      chips = [const LinkedBoardChip()];
     }
 
     return Row(
@@ -55,5 +51,29 @@ class BoardPicker extends ConsumerWidget {
               ])
           .toList(),
     );
+  }
+}
+
+class LinkedBoardChip extends ConsumerWidget {
+  const LinkedBoardChip({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final childBoard = ref.watch(boardNotifierProvider);
+    if (childBoard == null) return const SizedBox();
+
+    return InputChip(
+        label: Text(childBoard.name),
+        onDeleted: ref.read(boardNotifierProvider.notifier).delete,
+        onPressed: () => showModalBottomSheet<BoardEditingParams?>(
+                    context: context,
+                    backgroundColor: Colors.white,
+                    builder: (context) => CreateBoardScreen(params: childBoard))
+                .then((val) {
+              if (val == null) return;
+              ref.read(boardNotifierProvider.notifier).set(val);
+            }));
   }
 }

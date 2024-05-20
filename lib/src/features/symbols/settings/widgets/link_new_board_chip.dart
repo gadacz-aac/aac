@@ -13,10 +13,12 @@ class LinkNewBoardChip extends ConsumerWidget {
       avatar: const Icon(Icons.add),
       onPressed: () {
         showModalBottomSheet<BoardEditingParams?>(
-            context: context,
-            backgroundColor: Colors.white,
-            builder: (context) => const CreateBoardScreen()).then((val) {
-          print(val);
+                context: context,
+                backgroundColor: Colors.white,
+                builder: (context) =>
+                    const CreateBoardScreen(params: BoardEditingParams()))
+            .then((val) {
+          if (val == null) return;
           ref.read(boardNotifierProvider.notifier).set(val);
         });
       },

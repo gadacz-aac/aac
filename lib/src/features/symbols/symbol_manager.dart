@@ -8,15 +8,18 @@ import '../../shared/isar_provider.dart';
 
 @immutable
 class BoardEditingParams {
-  final String? name;
+  final String name;
   final int? columnCount;
   final int? rowCount;
 
-  const BoardEditingParams({this.name, this.columnCount, this.rowCount});
+  const BoardEditingParams(
+      {this.name = "", this.columnCount = 3, this.rowCount});
+
   BoardEditingParams.fromBoard(Board board)
-      : name = board.name,
-        columnCount = board.crossAxisCount,
-        rowCount = null;
+      : this(
+            name: board.name,
+            columnCount: board.crossAxisCount,
+            rowCount: null);
 
   @override
   String toString() =>
@@ -27,6 +30,7 @@ class BoardEditingParams {
 class SymbolEditingParams {
   final String? imagePath;
   final String? label;
+  final String? vocalization;
   final int? color;
   final BoardEditingParams? childBoard;
 
@@ -34,6 +38,7 @@ class SymbolEditingParams {
     this.imagePath,
     this.label,
     this.color,
+    this.vocalization,
     this.childBoard,
   });
 
@@ -41,6 +46,7 @@ class SymbolEditingParams {
       : imagePath = symbol.imagePath,
         label = symbol.label,
         color = symbol.color,
+        vocalization = symbol.vocalization,
         childBoard = symbol.childBoard.value != null
             ? BoardEditingParams.fromBoard(symbol.childBoard.value!)
             : null;
