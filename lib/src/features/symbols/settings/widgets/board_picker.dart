@@ -1,34 +1,46 @@
-import 'package:aac/src/features/boards/model/board.dart';
+import 'package:aac/src/features/symbols/settings/screens/symbol_settings.dart';
 import 'package:aac/src/features/symbols/settings/widgets/link_existing_board_chip.dart';
 import 'package:aac/src/features/symbols/settings/widgets/link_new_board_chip.dart';
+import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class BoardPicker extends StatelessWidget {
-  const BoardPicker(
-      {super.key,
-      required this.childBoard,
-      required this.onCancel,
-      required this.setChildBoard});
+part 'board_picker.g.dart';
 
-  final Board? childBoard;
-  final void Function(Board?) setChildBoard;
-  final void Function() onCancel;
+@Riverpod(dependencies: [initialValues])
+class BoardNotifier extends _$BoardNotifier {
+  @override
+  BoardEditingParams? build() {
+    return ref.watch(initialValuesProvider).childBoard;
+  }
+
+  void delete() {
+    state = null;
+  }
+
+  void set(BoardEditingParams? board) {
+    state = board;
+  }
+}
+
+class BoardPicker extends ConsumerWidget {
+  const BoardPicker({
+    super.key,
+  });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final List<Widget> chips;
+    final childBoard = ref.watch(boardNotifierProvider);
 
     if (childBoard == null) {
-      chips = [
-        LinkNewBoardChip(setChildBoard: setChildBoard),
-        LinkExistingBoardChip(
-            childBoard: childBoard, setChildBoard: setChildBoard)
-      ];
+      chips = [const LinkNewBoardChip(), const LinkExistingBoardChip()];
     } else {
       chips = [
         InputChip(
-          label: Text("${childBoard?.name}"),
-          onDeleted: onCancel,
+          label: Text("${childBoard.name}"),
+          onDeleted: ref.read(boardNotifierProvider.notifier).delete,
         )
       ];
     }

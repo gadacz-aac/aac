@@ -1,4 +1,7 @@
-import 'package:aac/src/features/boards/model/board.dart';
+import 'dart:io';
+
+import 'package:aac/src/features/symbols/settings/screens/image_provider.dart';
+import 'package:aac/src/features/symbols/settings/utils/file_helpers.dart';
 import 'package:aac/src/features/symbols/settings/widgets/board_picker.dart';
 import 'package:aac/src/features/symbols/settings/widgets/color_picker.dart';
 import 'package:aac/src/features/symbols/settings/widgets/preview_symbol_image.dart';
@@ -33,12 +36,13 @@ class SymbolSettings extends ConsumerStatefulWidget {
 
 class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
   final formKey = GlobalKey<FormState>();
-  Board? childBoard;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const SymbolSettingsAppBar(),
+      appBar: SymbolSettingsAppBar(
+        submit: submit,
+      ),
       body: Form(
         key: formKey,
         child: ListView(
@@ -65,20 +69,7 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
             ),
             Text("Podlinkuj tablice:",
                 style: Theme.of(context).textTheme.labelLarge),
-            BoardPicker(
-              childBoard: childBoard,
-              setChildBoard: (board) {
-                if (board == null) return;
-                setState(() {
-                  childBoard = board;
-                });
-              },
-              onCancel: () {
-                setState(() {
-                  childBoard = null;
-                });
-              },
-            ),
+            const BoardPicker(),
           ],
         ),
       ),
@@ -90,26 +81,32 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
       return;
     }
 
-    // const params = SymbolEditingParams();
-    // final params = SymbolEditingParams(
-    //     imagePath: await saveImage(imagePath),
-    //     label: labelController.text,
-    //     color: null);
+    final imagePath = ref.read(imageNotifierProvider);
 
-    // if (imagePath.isNotEmpty && File(imagePath).existsSync()) {
-    //   widget.updateSymbolSettings(params);
-    //   return;
-    // }
+    if (imagePath.isEmpty || !File(imagePath).existsSync()) {
+      if (!mounted) return;
 
-    if (!mounted) return;
-    showDialog(
-        context: context,
-        builder: (BuildContext context) => const NoImageSelectedDialog());
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => NoImageSelectedDialog(ref: ref));
+
+      return;
+    }
+
+    final params = SymbolEditingParams(
+        imagePath: await saveImage(imagePath),
+        label: ref.read(labelProvider),
+        color: ref.read(colorProvider),
+        childBoard: ref.read(boardNotifierProvider));
+
+    widget.updateSymbolSettings(params);
   }
 }
 
 class NoImageSelectedDialog extends StatelessWidget {
-  const NoImageSelectedDialog({super.key});
+  const NoImageSelectedDialog({super.key, required this.ref});
+
+  final WidgetRef ref;
 
   @override
   Widget build(BuildContext context) {
@@ -121,19 +118,12 @@ class NoImageSelectedDialog extends StatelessWidget {
         TextButton(
             onPressed: () {
               // widget.updateSymbolSettings(params); // TODO dupa
-              Navigator.of(context, rootNavigator: true).pop();
+              // Navigator.of(context, rootNavigator: true).pop();
             },
             child: const Text('Yes')),
         TextButton(
-            onPressed: () async {
-              Navigator.of(context, rootNavigator: true).pop();
-              // final path = await Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //         builder: (context) => const ImageCherryPicker()));
-              // setState(() {
-              //   imagePath = path;
-              // }); // TODO dupa
+            onPressed: () {
+              ref.read(imageNotifierProvider.notifier).cherryPick(context);
             },
             child: const Text('No'))
       ],
@@ -166,7 +156,9 @@ class LabelTextField extends ConsumerWidget {
 
 class SymbolSettingsAppBar extends StatelessWidget
     implements PreferredSizeWidget {
-  const SymbolSettingsAppBar({super.key});
+  const SymbolSettingsAppBar({super.key, required this.submit});
+
+  final void Function() submit;
 
   @override
   final Size preferredSize = const Size.fromHeight(kToolbarHeight);
@@ -181,14 +173,14 @@ class SymbolSettingsAppBar extends StatelessWidget
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 AppBarTextAction(
+                  onTap: Navigator.of(context).pop,
                   child: const Text(
                     "Anuluj",
                     style: TextStyle(fontWeight: FontWeight.w600),
                   ),
-                  onTap: () => Navigator.pop(context),
                 ),
                 AppBarTextAction(
-                  onTap: () {}, // TODO dupa,
+                  onTap: submit,
                   child: const Text(
                     "Zapisz",
                     style: TextStyle(fontWeight: FontWeight.w500),

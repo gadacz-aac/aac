@@ -1,6 +1,7 @@
 import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/symbols/settings/widgets/cherry_pick_image.dart';
 import 'package:aac/src/features/symbols/search/search_screen.dart';
+import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:aac/src/shared/isar_provider.dart';
 import 'package:aac/src/shared/utils/debounce.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +52,8 @@ class BoardSearch extends ConsumerWidget {
                   itemBuilder: (context, index) {
                     final board = results[index];
                     return ListTile(
-                      onTap: () => Navigator.pop(context, board),
+                      onTap: () => Navigator.pop(
+                          context, BoardEditingParams.fromBoard(board)),
                       title: Text(
                         board.name,
                       ),

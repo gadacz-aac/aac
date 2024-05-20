@@ -1,38 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-//Jest tu kto? Jeśli tak, to niech się wpisze na listę gości, ja zacznę
-//Wiktor i Piotrek 17.05.2024 zakładamy że nie będzie tu po co zaglądać
-
-//Licznik zaoszczędzonych linijek:
-//15 /features/symbols/symbol_settings
-
-class GenericTextField extends StatelessWidget {
-  const GenericTextField(
+class GenericNumberField extends StatelessWidget {
+  const GenericNumberField(
       {super.key,
       required this.name,
       this.onChanged,
-      this.controller,
       this.validator,
+      this.controller,
       required this.labelText,
       this.helperText,
-      this.initalValue});
+      this.initalValue = 0,
+      this.enabled});
 
   final Function(String)? onChanged;
   final String? Function(String?)? validator;
-  final TextEditingController? controller;
   final String name;
   final String labelText;
-  final String? initalValue;
+  final bool? enabled;
+  final int initalValue;
+  final TextEditingController? controller;
   final String? helperText;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      initialValue: controller == null ? initalValue : null,
+      initialValue: controller == null ? "$initalValue" : null,
       autocorrect: true,
       controller: controller,
-      keyboardType: TextInputType.text,
       autovalidateMode: AutovalidateMode.onUserInteraction,
+      enabled: enabled,
+      keyboardType: TextInputType.number,
+      inputFormatters: <TextInputFormatter>[
+        FilteringTextInputFormatter.digitsOnly
+      ],
       validator: validator,
       onChanged: onChanged,
       decoration: InputDecoration(
