@@ -24,6 +24,7 @@ class GenericNumberField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (int.tryParse(controller?.text ?? "") == null) controller?.text = "0";
     return TextFormField(
       initialValue: controller == null ? "$initalValue" : null,
       autocorrect: true,
