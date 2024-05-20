@@ -155,7 +155,7 @@ class _UploadImageFromLinkScreenState extends State<UploadImageFromLinkScreen> {
     // TODO handle failed writes
     await response.pipe(file.openWrite());
 
-    if (!context.mounted) return;
+    if (!mounted) return;
     Navigator.pop(context, file.path);
   }
 
@@ -220,16 +220,20 @@ class UploadFromDeviceScreen extends StatelessWidget {
 
     final file = await ImagePicker().pickImage(source: ImageSource.gallery);
 
+    if (file == null) return;
+
     if (!context.mounted) return;
 
-    Navigator.pop(context, file?.path);
+    Navigator.pop(context, file.path);
   }
 
   void pickImageFromCamera(BuildContext context) async {
     final file = await ImagePicker().pickImage(source: ImageSource.camera);
 
+    if (file == null) return;
+
     if (!context.mounted) return;
-    Navigator.pop(context, file?.path);
+    Navigator.pop(context, file.path);
   }
 
   @override
