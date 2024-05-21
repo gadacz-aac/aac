@@ -48,6 +48,12 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    vocalizationController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: SymbolSettingsAppBar(
