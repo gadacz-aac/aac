@@ -17,19 +17,23 @@ class CreateSymbol extends ConsumerWidget {
         backgroundColor: AacColors.mainControlBackground,
         onPressed: () {
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const ImageCherryPicker())).then(
-              (imagePath) => Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => AddSymbolMenu(
-                          imagePath: imagePath,
-                          boardId: ref.read(boardIdProvider)))));
+                      builder: (context) => const ImageCherryPicker()))
+              .then((imagePath) {
+            if (imagePath == null) {
+              return;
+            }
+
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AddSymbolMenu(
+                        imagePath: imagePath,
+                        boardId: ref.read(boardIdProvider))));
+          });
         });
   }
-  // onPressed: () async {
-  // },
 }
 
 class CreateRandomSymbol extends ConsumerWidget {
