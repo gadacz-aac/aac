@@ -228,6 +228,10 @@ class UploadFromDeviceScreen extends StatelessWidget {
   }
 
   void pickImageFromCamera(BuildContext context) async {
+    final camera = await Permission.camera.request();
+
+    if (camera.isDenied) return;
+
     final file = await ImagePicker().pickImage(source: ImageSource.camera);
 
     if (file == null) return;
