@@ -99,17 +99,6 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
     }
 
     final imagePath = ref.read(imageNotifierProvider);
-
-    if (imagePath.isEmpty || !File(imagePath).existsSync()) {
-      if (!mounted) return;
-
-      showDialog(
-          context: context,
-          builder: (BuildContext context) => NoImageSelectedDialog(ref: ref));
-
-      return;
-    }
-
     final params = SymbolEditingParams(
         imagePath: await saveImage(imagePath),
         label: ref.read(labelProvider),
@@ -117,33 +106,46 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
         vocalization: vocalizationController.text,
         childBoard: ref.read(boardNotifierProvider));
 
+    if (imagePath.isEmpty || !File(imagePath).existsSync()) {
+      if (!mounted) return;
+
+      showDialog(
+          context: context,
+          builder: (BuildContext context) =>
+              Consumer(builder: (context, ref, _) {
+                return NoImageSelectedDialog(
+                  onDeclined: () {
+                    widget.updateSymbolSettings(params);
+                    Navigator.pop(context);
+                  },
+                  onAccepted: () => ref
+                      .read(imageNotifierProvider.notifier)
+                      .cherryPick(context),
+                );
+              }));
+
+      return;
+    }
+
     widget.updateSymbolSettings(params);
   }
 }
 
 class NoImageSelectedDialog extends StatelessWidget {
-  const NoImageSelectedDialog({super.key, required this.ref});
+  const NoImageSelectedDialog(
+      {super.key, required this.onAccepted, required this.onDeclined});
 
-  final WidgetRef ref;
+  final void Function() onAccepted;
+  final void Function() onDeclined;
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Please Confirm'),
-      content: const Text(
-          "You didn't choose a symbol. Would you like to use the default symbol?"),
+      title: const Text("Nie dodałeś obrazka"),
+      content: const Text("Czy chcesz to zrobić teraz?"),
       actions: [
-        TextButton(
-            onPressed: () {
-              // widget.updateSymbolSettings(params); // TODO dupa
-              // Navigator.of(context, rootNavigator: true).pop();
-            },
-            child: const Text('Yes')),
-        TextButton(
-            onPressed: () {
-              ref.read(imageNotifierProvider.notifier).cherryPick(context);
-            },
-            child: const Text('No'))
+        TextButton(onPressed: onDeclined, child: const Text('Nie')),
+        TextButton(onPressed: onAccepted, child: const Text('Tak')),
       ],
     );
   }
