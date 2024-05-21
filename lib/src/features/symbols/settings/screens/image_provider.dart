@@ -48,8 +48,13 @@ class ImageNotifier extends _$ImageNotifier {
 
     final open = pushReplacement ? Navigator.pushReplacement : Navigator.push;
 
-    state = await open(context,
+    final imagePath = await open(context,
         MaterialPageRoute(builder: (context) => const ImageCherryPicker()));
+
+    if (imagePath == null) return;
+    print(imagePath);
+
+    state = imagePath;
   }
 
   void deleteImage() {
