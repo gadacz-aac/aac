@@ -13,7 +13,7 @@ import 'app_bar_actions.dart';
 
 final searchedSymbolProvider =
     FutureProvider.autoDispose<List<CommunicationSymbol>>((ref) async {
-  final isar = ref.watch(isarPod);
+  final isar = ref.watch(isarProvider);
   final query = ref.watch(queryProvider);
 
   if (query.trim().isEmpty) return [];

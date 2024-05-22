@@ -534,7 +534,7 @@ class LinkExistingBoardChip extends StatelessWidget {
 }
 
 final foundBoards = FutureProvider.autoDispose<List<Board>>((ref) async {
-  final isar = ref.watch(isarPod);
+  final isar = ref.watch(isarProvider);
   final query = ref.watch(queryProvider);
 
   return isar.boards.where().wordsElementStartsWith(query).findAll();
