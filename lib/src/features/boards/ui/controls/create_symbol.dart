@@ -13,7 +13,7 @@ class CreateSymbol extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Control(
-        icon: Icons.add,
+        icon: Icons.add_box_outlined,
         backgroundColor: AacColors.mainControlBackground,
         onPressed: () {
           Navigator.push(
@@ -28,8 +28,6 @@ class CreateSymbol extends ConsumerWidget {
                           boardId: ref.read(boardIdProvider)))));
         });
   }
-  // onPressed: () async {
-  // },
 }
 
 class CreateRandomSymbol extends ConsumerWidget {
