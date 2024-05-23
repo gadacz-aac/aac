@@ -552,7 +552,7 @@ class BoardSearch extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 29.0, vertical: 27.0),
       child: Column(
         children: [
-          AacTextField(
+          AacSearchField(
             icon: const Icon(Icons.search),
             placeholder: "Szukaj w tablicach",
             onChanged: (value) {

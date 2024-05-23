@@ -18,19 +18,27 @@ bool isValidImage(ContentType contentType) {
   return imageTypes.contains(contentType.toString().toLowerCase());
 }
 
-class AacTextField extends StatelessWidget {
+class AacSearchField extends StatelessWidget {
   final String placeholder;
 
   final Widget? icon;
+  final Widget? suffixIcon;
   final TextEditingController? controller;
   final void Function(String)? onChanged;
+  final void Function()? onClick;
   final String? errorText;
   final FormFieldValidator<String>? validator;
-  const AacTextField(
+  final bool readOnly;
+  final FocusNode? focusNode;
+  const AacSearchField(
       {super.key,
       required this.placeholder,
       this.icon,
+      this.readOnly = false,
+      this.focusNode,
+      this.suffixIcon,
       this.controller,
+      this.onClick,
       this.onChanged,
       this.errorText,
       this.validator});
@@ -38,7 +46,10 @@ class AacTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      readOnly: readOnly,
+      focusNode: focusNode,
       style: const TextStyle(fontSize: 16),
+      onTap: onClick,
       controller: controller,
       validator: validator,
       onChanged: onChanged,
@@ -46,7 +57,8 @@ class AacTextField extends StatelessWidget {
         fillColor: const Color(0xFFF4F2F2),
         filled: true,
         hintText: placeholder,
-        prefixIcon: icon,
+        prefixIcon: icon ?? const Icon(Icons.search),
+        suffixIcon: suffixIcon,
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 12, vertical: 11),
         errorText: errorText,
@@ -65,7 +77,7 @@ class ArasaacSearchScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        AacTextField(
+        AacSearchField(
           controller: TextEditingController(),
           placeholder: "Szukaj w arrasac",
           icon: const Icon(Icons.search_outlined),
@@ -211,7 +223,7 @@ class _UploadImageFromLinkScreenState extends State<UploadImageFromLinkScreen> {
       key: _formKey,
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Expanded(
-          child: AacTextField(
+          child: AacSearchField(
               controller: controller,
               errorText: errorText,
               placeholder: "Wklej link do obrazka",

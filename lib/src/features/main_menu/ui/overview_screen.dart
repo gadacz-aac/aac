@@ -1,6 +1,8 @@
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/boards/model/board.dart';
+import 'package:aac/src/features/symbols/cherry_pick_image.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
+import 'package:aac/src/features/symbols/search/search_screen.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:aac/src/shared/colors.dart';
 import 'package:aac/src/shared/isar_provider.dart';
@@ -37,9 +39,29 @@ class OverviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: AacColors.greyBackground,
+          title: Hero(
+              tag: "search",
+              child: Material(
+                child: AacSearchField(
+                    readOnly: true,
+                    onClick: () => Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                            transitionDuration: Duration.zero,
+                            reverseTransitionDuration: Duration.zero,
+                            pageBuilder: (context, a1, a2) =>
+                                const SymbolSearchScreen())),
+                    placeholder: "Szukaj"),
+              )),
+          actions: [
+            IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert))
+          ],
+        ),
         backgroundColor: AacColors.greyBackground,
-        body: Column(
+        body: const Column(
           children: [
             RecentSymbols(),
             SizedBox(
@@ -62,7 +84,7 @@ class RecentBoards extends ConsumerWidget {
     }
     return Flexible(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 27.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: DecoratedBox(
           decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(5)),
@@ -136,7 +158,7 @@ class RecentSymbols extends ConsumerWidget {
       return const SizedBox();
     }
     return Padding(
-      padding: const EdgeInsets.fromLTRB(27.0, 30, 0, 0),
+      padding: const EdgeInsets.fromLTRB(8.0, 30, 0, 0),
       child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
