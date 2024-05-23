@@ -1,12 +1,15 @@
 import 'package:aac/src/features/settings/settings_manager.dart';
 import 'package:aac/src/features/text_to_speech/provider.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final ttsManagerProvider = Provider<TtsManager>((ref) {
+part 'tts_manager.g.dart';
+
+@riverpod
+TtsManager ttsManager(TtsManagerRef ref) {
   final settingsManger = ref.watch(settingsManagerProvider);
   return TtsManager(settingsManager: settingsManger);
-});
+}
 
 class TtsManager {
   final SettingsManager settingsManager;

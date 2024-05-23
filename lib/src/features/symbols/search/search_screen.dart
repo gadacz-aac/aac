@@ -1,4 +1,5 @@
 import 'package:aac/src/features/boards/ui/actions/delete_forever_action.dart';
+import 'package:aac/src/features/symbols/cherry_pick_image.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:aac/src/shared/isar_provider.dart';
@@ -13,7 +14,7 @@ import 'app_bar_actions.dart';
 
 final searchedSymbolProvider =
     FutureProvider.autoDispose<List<CommunicationSymbol>>((ref) async {
-  final isar = ref.watch(isarPod);
+  final isar = ref.watch(isarProvider);
   final query = ref.watch(queryProvider);
 
   if (query.trim().isEmpty) return [];
@@ -158,6 +159,7 @@ class SearchAppBar extends ConsumerStatefulWidget
 }
 
 class _SearchAppBarState extends ConsumerState<SearchAppBar> {
+  final controller = TextEditingController();
   final _debounce = Debouncer(const Duration(milliseconds: 300));
   final focusNode = FocusNode();
 
@@ -171,37 +173,47 @@ class _SearchAppBarState extends ConsumerState<SearchAppBar> {
   void dispose() {
     super.dispose();
     _debounce.dispose();
+    controller.dispose();
     focusNode.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final areSelected = ref.watch(areSymbolsSelectedProvider);
 
-    Widget? leading;
     List<Widget>? actions;
     Widget? title;
 
+    void clearOrPop() {
+      if (controller.text.isEmpty) {
+        Navigator.pop(context);
+        return;
+      }
+
+      controller.clear();
+    }
+
     if (areSelected) {
-      leading = const CancelAction();
       actions = [const PinSelectedSymbolAction(), const DeleteForeverAction()];
     } else {
-      leading = const BackAction();
-      title = TextField(
-        focusNode: focusNode,
-        style: theme.textTheme.titleLarge,
-        onChanged: (value) {
-          _debounce(
-              () => ref.read(queryProvider.notifier).update((state) => value));
-        },
-        textInputAction: TextInputAction.search,
-        decoration: const InputDecoration(hintText: "Szukaj"),
+      title = Hero(
+        tag: "search",
+        child: Material(
+          child: AacSearchField(
+            focusNode: focusNode,
+            placeholder: "Szukaj",
+            controller: controller,
+            onChanged: (value) =>
+                ref.read(queryProvider.notifier).state = value,
+            suffixIcon: IconButton(
+                onPressed: clearOrPop, icon: const Icon(Icons.cancel)),
+          ),
+        ),
       );
     }
 
     return AppBar(
-      leading: leading,
+      automaticallyImplyLeading: false,
       title: title,
       actions: actions,
     );

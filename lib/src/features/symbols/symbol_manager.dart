@@ -1,10 +1,11 @@
 import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../shared/isar_provider.dart';
+part 'symbol_manager.g.dart';
 
 @immutable
 class SymbolEditingParams {
@@ -140,7 +141,8 @@ class SymbolManager {
   }
 }
 
-final symbolManagerProvider = Provider<SymbolManager>((ref) {
-  final isar = ref.watch(isarPod);
+@riverpod
+SymbolManager symbolManager(SymbolManagerRef ref) {
+  final isar = ref.watch(isarProvider);
   return SymbolManager(isar: isar);
-});
+}

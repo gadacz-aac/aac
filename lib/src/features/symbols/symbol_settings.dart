@@ -534,7 +534,7 @@ class LinkExistingBoardChip extends StatelessWidget {
 }
 
 final foundBoards = FutureProvider.autoDispose<List<Board>>((ref) async {
-  final isar = ref.watch(isarPod);
+  final isar = ref.watch(isarProvider);
   final query = ref.watch(queryProvider);
 
   return isar.boards.where().wordsElementStartsWith(query).findAll();
@@ -552,7 +552,7 @@ class BoardSearch extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 29.0, vertical: 27.0),
       child: Column(
         children: [
-          AacTextField(
+          AacSearchField(
             icon: const Icon(Icons.search),
             placeholder: "Szukaj w tablicach",
             onChanged: (value) {

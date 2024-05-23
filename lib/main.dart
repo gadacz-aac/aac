@@ -1,4 +1,3 @@
-import 'package:aac/src/features/main_menu/ui/main_menu_screen.dart';
 import 'package:aac/src/features/settings/model/settings_entry.dart';
 import 'package:aac/src/features/settings/utils/orientation.dart';
 import 'package:aac/src/shared/isar_provider.dart';
@@ -8,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'src/features/main_menu/overview_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +26,8 @@ void main() async {
 
   changeOrientation(orientation?.value);
   runApp(ProviderScope(
-      overrides: [isarPod.overrideWithValue(isar)], child: const MainApp()));
+      overrides: [isarProvider.overrideWithValue(isar)],
+      child: const MainApp()));
 }
 
 class MainApp extends StatelessWidget {
@@ -37,7 +38,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       theme:
           ThemeData(useMaterial3: true, scaffoldBackgroundColor: Colors.white),
-      home: const MainMenuScreen(), // Set MainMenuScreen as the home screen
+      home: const OverviewScreen(),
     );
   }
 }
