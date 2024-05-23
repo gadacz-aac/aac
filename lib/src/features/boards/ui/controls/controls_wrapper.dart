@@ -5,7 +5,7 @@ import 'package:aac/src/shared/colors.dart';
 
 class ControlsWrapper extends ConsumerWidget {
   const ControlsWrapper(
-      {super.key, required this.direction, required this.children});
+      {super.key, this.direction = Axis.horizontal, required this.children});
   final Axis direction;
   final List<Widget> children;
 
@@ -46,8 +46,8 @@ class Gap extends StatelessWidget {
   const Gap(
     this.size,
     this.direction, {
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final double size;
   final Axis direction;

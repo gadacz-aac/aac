@@ -1,5 +1,7 @@
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/boards/model/board.dart';
+import 'package:aac/src/features/boards/ui/controls/control.dart';
+import 'package:aac/src/features/boards/ui/controls/controls_wrapper.dart';
 import 'package:aac/src/features/symbols/cherry_pick_image.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/search/search_screen.dart';
@@ -30,7 +32,7 @@ Stream<List<Board>> recentylEditedBoard(RecentylEditedBoardRef ref) {
 
   return isar.boards
       .where(sort: Sort.desc)
-      .limit(10)
+      .limit(3)
       .watch(fireImmediately: true);
 }
 
@@ -42,6 +44,7 @@ class OverviewScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: AacColors.greyBackground,
+          scrolledUnderElevation: 0,
           title: Hero(
               tag: "search",
               child: Material(
@@ -62,14 +65,45 @@ class OverviewScreen extends StatelessWidget {
         ),
         backgroundColor: AacColors.greyBackground,
         body: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(
+              height: 23.0,
+            ),
+            OverviewSectionTitle("Ostatnio Edytowane"),
             RecentSymbols(),
             SizedBox(
               height: 29.0,
             ),
-            RecentBoards()
+            OverviewSectionTitle("Ostatnio Edytowane"),
+            SizedBox(
+              height: 8,
+            ),
+            RecentBoards(),
+            ControlsWrapper(children: [
+              Control(icon: Icons.home_outlined),
+              Control(icon: Icons.lock_outline),
+              Control(icon: Icons.search_outlined),
+              Control(icon: Icons.add_box_outlined),
+            ])
           ],
         ));
+  }
+}
+
+class OverviewSectionTitle extends StatelessWidget {
+  const OverviewSectionTitle(this.text, {super.key});
+
+  final String text;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Text(
+        text,
+        style: Theme.of(context).textTheme.labelMedium,
+      ),
+    );
   }
 }
 
@@ -82,18 +116,17 @@ class RecentBoards extends ConsumerWidget {
     if (boards == null) {
       return const SizedBox();
     }
-    return Flexible(
+    return Expanded(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: DecoratedBox(
           decoration: BoxDecoration(
+              color: Colors.white,
               borderRadius: const BorderRadius.all(Radius.circular(5)),
               border: Border.all(width: 1, color: const Color(0xFFE9E9E9))),
           child: ListView.separated(
               physics: const ClampingScrollPhysics(),
-              clipBehavior: Clip.hardEdge,
               padding: EdgeInsets.zero,
-              shrinkWrap: true,
               itemCount: boards.length,
               itemBuilder: (context, index) {
                 final e = boards[index];
@@ -129,7 +162,6 @@ class BoardTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
         onTap: () => openBoard(context),
-        tileColor: Colors.white,
         title: Text(title),
         subtitle: Text(subtitle),
         trailing:
@@ -158,7 +190,7 @@ class RecentSymbols extends ConsumerWidget {
       return const SizedBox();
     }
     return Padding(
-      padding: const EdgeInsets.fromLTRB(8.0, 30, 0, 0),
+      padding: const EdgeInsets.only(left: 8),
       child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
