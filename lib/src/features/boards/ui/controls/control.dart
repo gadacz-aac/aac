@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 
 class Control extends StatelessWidget {
   const Control({
-    Key? key,
+    super.key,
     this.onPressed,
     required this.icon,
     this.disabled = false,
     this.backgroundColor,
-  }) : super(key: key);
+  });
 
   final VoidCallback? onPressed;
   final IconData icon;

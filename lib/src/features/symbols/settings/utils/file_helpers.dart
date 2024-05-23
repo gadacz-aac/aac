@@ -12,11 +12,15 @@ Future<String> saveImage(String imagePath, [String? label]) async {
   }
 
   final imageFile = File(imagePath);
+
+  // if the file already exists you can't copy it to the same file
+  if (imageFile.existsSync()) return imagePath;
+
   final appDir = await getApplicationDocumentsDirectory();
   final fileName = label != null
       ? transformToFileName(label)
       : path.basename(imageFile.path);
-  final savedImage = await imageFile.copy('${appDir.path}/$fileName');
+  final savedImage = await imageFile.copy(path.join(appDir.path, fileName));
   log('sciezka do zapisanego obrazu na urzadzeniu: $savedImage $fileName');
   return savedImage.path;
 }
