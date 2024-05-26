@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 class GenericTextField extends StatelessWidget {
   const GenericTextField(
       {super.key,
-      required this.name,
       this.onChanged,
       this.controller,
       this.validator,
@@ -20,7 +19,6 @@ class GenericTextField extends StatelessWidget {
   final Function(String)? onChanged;
   final String? Function(String?)? validator;
   final TextEditingController? controller;
-  final String name;
   final String labelText;
   final String? initalValue;
   final String? helperText;

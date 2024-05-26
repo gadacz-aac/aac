@@ -44,8 +44,7 @@ class _CreateBoardScreenState extends State<CreateBoardScreen> {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 29.0, vertical: 27.0),
         child: Column(children: [
-          GenericTextField(
-              controller: nameController, name: "dupa", labelText: "Nazwa"),
+          GenericTextField(controller: nameController, labelText: "Nazwa"),
           const SizedBox(
             height: 14,
           ),

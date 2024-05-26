@@ -73,7 +73,6 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
             ),
             GenericTextField(
               controller: vocalizationController,
-              name: "vocalization",
               labelText: "Wokalizacja (opcjonalnie)",
               helperText: "Co powiedzieć po naciśnięciu?",
             ),
@@ -160,7 +159,6 @@ class LabelTextField extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final label = ref.watch(initialValuesProvider).label;
     return GenericTextField(
-      name: "label",
       labelText: "Podpis",
       initalValue: label,
       onChanged: (value) => ref.read(labelProvider.notifier).state = value,
