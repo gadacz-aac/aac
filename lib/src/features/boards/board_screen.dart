@@ -120,9 +120,9 @@ class BoardScreen extends ConsumerWidget {
 
 class ErrorScreen extends StatelessWidget {
   const ErrorScreen({
-    Key? key,
+    super.key,
     required this.error,
-  }) : super(key: key);
+  });
 
   final String error;
 

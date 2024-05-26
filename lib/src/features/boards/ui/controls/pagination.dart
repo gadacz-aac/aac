@@ -6,9 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class PaginationControl extends ConsumerWidget {
   const PaginationControl({
-    Key? key,
+    super.key,
     required this.direction,
-  }) : super(key: key);
+  });
 
   final SymbolGridScrollDirection direction;
 

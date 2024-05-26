@@ -21,7 +21,7 @@ class PersistentSlider extends ConsumerStatefulWidget {
 
   const PersistentSlider(
     this.settingsEntryKey, {
-    Key? key,
+    super.key,
     this.icon,
     required this.titlePrefix,
     this.min = 0.0,
@@ -29,7 +29,7 @@ class PersistentSlider extends ConsumerStatefulWidget {
     this.onChanged,
     this.writeOnChange = false,
     required this.defaultValue,
-  }) : super(key: key);
+  });
 
   @override
   ConsumerState<PersistentSlider> createState() => _PersistentSliderState();

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class PersistentGroup extends StatelessWidget {
   const PersistentGroup({
-    Key? key,
+    super.key,
     this.title,
     this.isFirst = false,
     required this.children,
-  }) : super(key: key);
+  });
 
   final Widget? title;
   final List<Widget> children;
