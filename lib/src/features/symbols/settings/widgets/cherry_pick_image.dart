@@ -134,76 +134,6 @@ class ImageCherryPicker extends StatelessWidget {
   }
 }
 
-class UploadFromDeviceScreen extends StatelessWidget {
-  const UploadFromDeviceScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        ElevatedButton.icon(
-            onPressed: () => pickImageFromCamera(context),
-            style: ButtonStyle(
-                backgroundColor:
-                    const MaterialStatePropertyAll(Color(0xFF2A1B3B)),
-                iconSize: const MaterialStatePropertyAll(24.0),
-                iconColor: const MaterialStatePropertyAll(Color(0xFFD3CEE3)),
-                shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4.0)))),
-            icon: const Icon(Icons.add_a_photo_outlined),
-            label: const Text(
-              "Aparat",
-              style: TextStyle(color: Color(0xFFD3CEE3)),
-            )),
-        ElevatedButton.icon(
-            onPressed: () => pickImageFromGallery(context),
-            style: ButtonStyle(
-                backgroundColor:
-                    const MaterialStatePropertyAll(Color(0xFF2A1B3B)),
-                iconSize: const MaterialStatePropertyAll(24.0),
-                iconColor: const MaterialStatePropertyAll(Color(0xFFD3CEE3)),
-                shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4.0)))),
-            icon: const Icon(Icons.add_photo_alternate_outlined),
-            label: const Text(
-              "Galeria",
-              style: TextStyle(color: Color(0xFFD3CEE3)),
-            )),
-      ],
-    );
-  }
-
-  void pickImageFromCamera(BuildContext context) async {
-    final file = await ImagePicker().pickImage(source: ImageSource.camera);
-
-    if (!context.mounted) return;
-    Navigator.pop(context, file?.path);
-  }
-
-  void pickImageFromGallery(BuildContext context) async {
-    final androidInfo = await DeviceInfoPlugin().androidInfo;
-    late final Map<Permission, PermissionStatus> statuses;
-
-    if (androidInfo.version.sdkInt <= 32) {
-      statuses = await [Permission.storage].request();
-    } else {
-      statuses = await [Permission.photos].request();
-    }
-
-    final hasPermission =
-        statuses.values.every((status) => status == PermissionStatus.granted);
-
-    if (!hasPermission) return;
-
-    final file = await ImagePicker().pickImage(source: ImageSource.gallery);
-
-    if (!context.mounted) return;
-
-    Navigator.pop(context, file?.path);
-  }
-}
-
 class UploadImageFromLinkScreen extends StatefulWidget {
   const UploadImageFromLinkScreen({super.key});
 
@@ -294,7 +224,85 @@ class _UploadImageFromLinkScreenState extends State<UploadImageFromLinkScreen> {
     // TODO handle failed writes
     await response.pipe(file.openWrite());
 
+    if (!mounted) return;
+    Navigator.pop(context, file.path);
+  }
+}
+
+class UploadFromDeviceScreen extends StatelessWidget {
+  const UploadFromDeviceScreen({super.key});
+
+  void pickImageFromGallery(BuildContext context) async {
+    final androidInfo = await DeviceInfoPlugin().androidInfo;
+    late final Map<Permission, PermissionStatus> statuses;
+
+    if (androidInfo.version.sdkInt <= 32) {
+      statuses = await [Permission.storage].request();
+    } else {
+      statuses = await [Permission.photos].request();
+    }
+
+    final hasPermission =
+        statuses.values.every((status) => status == PermissionStatus.granted);
+
+    if (!hasPermission) return;
+
+    final file = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (file == null) return;
+
+    if (!context.mounted) return;
+
+    Navigator.pop(context, file.path);
+  }
+
+  void pickImageFromCamera(BuildContext context) async {
+    final camera = await Permission.camera.request();
+
+    if (camera.isDenied) return;
+
+    final file = await ImagePicker().pickImage(source: ImageSource.camera);
+
+    if (file == null) return;
+
     if (!context.mounted) return;
     Navigator.pop(context, file.path);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ElevatedButton.icon(
+            onPressed: () => pickImageFromCamera(context),
+            style: ButtonStyle(
+                backgroundColor:
+                    const MaterialStatePropertyAll(Color(0xFF2A1B3B)),
+                iconSize: const MaterialStatePropertyAll(24.0),
+                iconColor: const MaterialStatePropertyAll(Color(0xFFD3CEE3)),
+                shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4.0)))),
+            icon: const Icon(Icons.add_a_photo_outlined),
+            label: const Text(
+              "Aparat",
+              style: TextStyle(color: Color(0xFFD3CEE3)),
+            )),
+        ElevatedButton.icon(
+            onPressed: () => pickImageFromGallery(context),
+            style: ButtonStyle(
+                backgroundColor:
+                    const MaterialStatePropertyAll(Color(0xFF2A1B3B)),
+                iconSize: const MaterialStatePropertyAll(24.0),
+                iconColor: const MaterialStatePropertyAll(Color(0xFFD3CEE3)),
+                shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4.0)))),
+            icon: const Icon(Icons.add_photo_alternate_outlined),
+            label: const Text(
+              "Galeria",
+              style: TextStyle(color: Color(0xFFD3CEE3)),
+            )),
+      ],
+    );
   }
 }

@@ -8,33 +8,52 @@ import '../../shared/isar_provider.dart';
 part 'symbol_manager.g.dart';
 
 @immutable
+class BoardEditingParams {
+  final String name;
+  final int? columnCount;
+  final int? rowCount;
+
+  const BoardEditingParams(
+      {this.name = "", this.columnCount = 3, this.rowCount});
+
+  BoardEditingParams.fromBoard(Board board)
+      : this(
+            name: board.name,
+            columnCount: board.crossAxisCount,
+            rowCount: null);
+
+  @override
+  String toString() =>
+      "name: $name columnCount: $columnCount rowCount: $rowCount";
+}
+
+@immutable
 class SymbolEditingParams {
   final String? imagePath;
   final String? label;
-  final bool createChild;
+  final String? vocalization;
   final int? color;
-  final Board? childBoard;
-  final int? crossAxisCount;
+  final BoardEditingParams? childBoard;
 
-  const SymbolEditingParams(
-      {this.imagePath,
-      this.label,
-      this.createChild = false,
-      this.color,
-      this.childBoard,
-      this.crossAxisCount});
+  const SymbolEditingParams({
+    this.imagePath,
+    this.label,
+    this.color,
+    this.vocalization,
+    this.childBoard,
+  });
 
   SymbolEditingParams.fromSymbol(CommunicationSymbol symbol)
       : imagePath = symbol.imagePath,
         label = symbol.label,
         color = symbol.color,
-        createChild = false,
-        childBoard = symbol.childBoard.value,
-        crossAxisCount = symbol.childBoard.value?.crossAxisCount;
+        vocalization = symbol.vocalization,
+        childBoard = symbol.childBoard.value != null
+            ? BoardEditingParams.fromBoard(symbol.childBoard.value!)
+            : null;
 
   @override
-  String toString() =>
-      "imagePath: $imagePath label: $label createChild: $createChild color: $color childBoard: $childBoard crossAxisCount: $crossAxisCount";
+  String toString() => "imagePath: $imagePath label: $label color: $color";
 }
 
 class SymbolManager {
@@ -53,11 +72,8 @@ class SymbolManager {
 
       await isar.communicationSymbols.put(symbol);
 
-      // TODO move to other function
-      if (params.createChild) {
-        final childBoard = Board(
-            name: symbol.label, crossAxisCountOrNull: params.crossAxisCount);
-        await isar.boards.put(childBoard);
+      if (params.childBoard != null) {
+        final childBoard = await _createChildBoard(params.childBoard!);
         _linkSymbolToBoard(symbol, childBoard);
       }
 
@@ -81,15 +97,11 @@ class SymbolManager {
 
       await isar.communicationSymbols.put(symbol.updateWithParams(params));
 
-      // TODO move to other function
-      if (params.createChild) {
-        final childBoard = Board(
-            name: symbol.label, crossAxisCountOrNull: params.crossAxisCount);
-        await isar.boards.put(childBoard);
+      if (params.childBoard != null) {
+        final childBoard = await _createChildBoard(params.childBoard!);
         _linkSymbolToBoard(symbol, childBoard);
       } else {
-        symbol.childBoard.reset();
-        symbol.childBoard.save();
+        _unlinkSymbolFromBoard(symbol);
       }
 
       isar.boards.put(parentBoard);
@@ -100,6 +112,11 @@ class SymbolManager {
       CommunicationSymbol symbol, Board board) async {
     symbol.childBoard.value = board;
     await symbol.childBoard.save();
+  }
+
+  Future<void> _unlinkSymbolFromBoard(CommunicationSymbol symbol) async {
+    symbol.childBoard.reset();
+    symbol.childBoard.save();
   }
 
   Future<void> _pinSymbolToBoard(
@@ -138,6 +155,14 @@ class SymbolManager {
       await isar.communicationSymbols.deleteAll(symbolIds);
       await isar.boards.put(board);
     });
+  }
+
+  Future<Board> _createChildBoard(BoardEditingParams childBoardParams) async {
+    final childBoard = Board(
+        name: childBoardParams.name,
+        crossAxisCountOrNull: childBoardParams.columnCount!);
+    await isar.boards.put(childBoard);
+    return childBoard;
   }
 }
 

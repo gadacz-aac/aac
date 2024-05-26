@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 
 import 'package:aac/src/features/symbols/symbol_manager.dart';
-import 'package:aac/src/features/symbols/symbol_settings.dart';
+import 'package:aac/src/features/symbols/settings/screens/symbol_settings.dart';
 
 class AddSymbolMenu extends ConsumerStatefulWidget {
   const AddSymbolMenu({
@@ -31,8 +31,13 @@ class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return SymbolSettings(
-        params: SymbolEditingParams(imagePath: widget.imagePath),
-        updateSymbolSettings: submit);
+    return ProviderScope(
+      overrides: [
+        initialValuesProvider.overrideWithValue(
+          SymbolEditingParams(imagePath: widget.imagePath),
+        )
+      ],
+      child: SymbolSettings(updateSymbolSettings: submit),
+    );
   }
 }

@@ -7,11 +7,15 @@ part 'communication_symbol.g.dart';
 @collection
 class CommunicationSymbol {
   CommunicationSymbol(
-      {required this.label, required this.imagePath, this.color})
+      {required this.label,
+      required this.imagePath,
+      this.vocalization,
+      this.color})
       : id = Isar.autoIncrement;
 
   Id id;
   String label;
+  String? vocalization;
   String imagePath;
   int? color;
 
@@ -27,12 +31,14 @@ class CommunicationSymbol {
       : this(
             imagePath: params.imagePath ?? "",
             label: params.label ?? "",
-            color: params.color);
+            color: params.color,
+            vocalization: params.vocalization);
 
   CommunicationSymbol updateWithParams(SymbolEditingParams params) {
     label = params.label ?? label;
     imagePath = params.imagePath ?? imagePath;
     color = params.color;
+    vocalization = params.vocalization;
     return this;
   }
 }

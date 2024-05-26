@@ -1,6 +1,6 @@
 import 'package:aac/src/features/boards/ui/actions/delete_forever_action.dart';
-import 'package:aac/src/features/symbols/cherry_pick_image.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
+import 'package:aac/src/features/symbols/settings/widgets/cherry_pick_image.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:aac/src/shared/isar_provider.dart';
 import 'package:aac/src/shared/utils/debounce.dart';
