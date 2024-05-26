@@ -29,7 +29,6 @@ class RecentBoards extends ConsumerWidget {
                 final e = boards[index];
                 String title = e.name;
                 String subtitle = "${e.symbols.length} symboli";
-                if (title.trim().isEmpty) title = "Bez nazwy";
                 return BoardTile(title: title, subtitle: subtitle, id: e.id);
               },
               separatorBuilder: (context, _) => const DecoratedBox(
