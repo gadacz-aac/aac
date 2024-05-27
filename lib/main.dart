@@ -1,3 +1,4 @@
+import 'package:aac/src/features/main_menu/main_menu_screen.dart';
 import 'package:aac/src/features/settings/model/settings_entry.dart';
 import 'package:aac/src/features/settings/utils/orientation.dart';
 import 'package:aac/src/shared/isar_provider.dart';
@@ -7,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'src/features/main_menu/overview_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,7 +38,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       theme:
           ThemeData(useMaterial3: true, scaffoldBackgroundColor: Colors.white),
-      home: const OverviewScreen(),
+      home: const MainMenuScreen(),
     );
   }
 }

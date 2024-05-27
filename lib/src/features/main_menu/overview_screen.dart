@@ -46,51 +46,61 @@ class OverviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: AacColors.greyBackground,
-          scrolledUnderElevation: 0,
-          title: Hero(
-              tag: "search",
-              child: Material(
-                child: AacSearchField(
-                    readOnly: true,
-                    onClick: () => Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                            transitionDuration: Duration.zero,
-                            reverseTransitionDuration: Duration.zero,
-                            pageBuilder: (context, a1, a2) =>
-                                const SymbolSearchScreen())),
-                    placeholder: "Szukaj"),
-              )),
-          actions: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert))
-          ],
-        ),
+      appBar: AppBar(
         backgroundColor: AacColors.greyBackground,
-        body: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 23.0,
-            ),
-            OverviewSectionTitle("Ostatnio Edytowane"),
-            RecentSymbols(),
-            SizedBox(
-              height: 29.0,
-            ),
-            OverviewSectionTitle("Ostatnio Edytowane"),
-            SizedBox(
-              height: 8,
-            ),
-            RecentBoards(),
-            ControlsWrapper(children: [
-              Control(icon: Icons.home_outlined),
-              Control(icon: Icons.lock_outline),
-              Control(icon: Icons.search_outlined),
-              Control(icon: Icons.add_box_outlined),
-            ])
-          ],
-        ));
+        scrolledUnderElevation: 0,
+        title: Hero(
+            tag: "search",
+            child: Material(
+              child: AacSearchField(
+                  readOnly: true,
+                  onClick: () => Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                          transitionDuration: Duration.zero,
+                          reverseTransitionDuration: Duration.zero,
+                          pageBuilder: (context, a1, a2) =>
+                              const SymbolSearchScreen())),
+                  placeholder: "Szukaj"),
+            )),
+        actions: [MoreOptionsAction()],
+      ),
+      backgroundColor: AacColors.greyBackground,
+      body: const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 23.0,
+          ),
+          OverviewSectionTitle("Ostatnio Edytowane"),
+          RecentSymbols(),
+          SizedBox(
+            height: 29.0,
+          ),
+          OverviewSectionTitle("Ostatnio Edytowane"),
+          SizedBox(
+            height: 8,
+          ),
+          RecentBoards(),
+        ],
+      ),
+      bottomNavigationBar: const ControlsWrapper(children: [
+        Control(icon: Icons.home_outlined),
+        Control(icon: Icons.lock_outline),
+        Control(icon: Icons.search_outlined),
+        Control(icon: Icons.add_box_outlined),
+      ]),
+    );
+  }
+}
+
+class MoreOptionsAction extends StatelessWidget {
+  const MoreOptionsAction({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton(itemBuilder: (context) => <PopupMenuItem>[]);
   }
 }
