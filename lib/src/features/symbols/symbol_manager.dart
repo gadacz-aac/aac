@@ -26,7 +26,7 @@ class BoardEditingParams {
 
   @override
   String toString() =>
-      "name: $name columnCount: $columnCount rowCount: $rowCount";
+      "name: $name id: $id columnCount: $columnCount rowCount: $rowCount";
 }
 
 @immutable
@@ -161,7 +161,6 @@ class SymbolManager {
 
   Future<Board> _createOrUpdateChildBoard(BoardEditingParams params) async {
     final childBoard = Board.fromParams(params);
-    print(childBoard);
     await isar.boards.put(childBoard);
     return childBoard;
   }

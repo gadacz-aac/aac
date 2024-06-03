@@ -20,8 +20,10 @@ class Board {
     final board =
         Board(crossAxisCountOrNull: params.columnCount, name: params.name);
 
+    print("dupa ${params.id}");
     if (params.id == null) return board;
 
+    print("dupaaaaa");
     return board..id = params.id!;
   }
 

@@ -99,6 +99,7 @@ class _CreateBoardScreenState extends State<CreateBoardScreen> {
                         context,
                         BoardEditingParams(
                             name: nameController.text,
+                            id: widget.params.id,
                             columnCount:
                                 int.tryParse(columnCountController.text),
                             rowCount: isUnlimitedRows
