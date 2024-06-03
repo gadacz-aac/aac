@@ -9,22 +9,24 @@ part 'symbol_manager.g.dart';
 
 @immutable
 class BoardEditingParams {
+  final Id? id;
   final String name;
   final int? columnCount;
   final int? rowCount;
 
   const BoardEditingParams(
-      {this.name = "", this.columnCount = 3, this.rowCount});
+      {this.id, this.name = "", this.columnCount = 3, this.rowCount});
 
   BoardEditingParams.fromBoard(Board board)
       : this(
             name: board.name,
+            id: board.id,
             columnCount: board.crossAxisCount,
             rowCount: null);
 
   @override
   String toString() =>
-      "name: $name columnCount: $columnCount rowCount: $rowCount";
+      "name: $name id: $id columnCount: $columnCount rowCount: $rowCount";
 }
 
 @immutable
@@ -73,7 +75,7 @@ class SymbolManager {
       await isar.communicationSymbols.put(symbol);
 
       if (params.childBoard != null) {
-        final childBoard = await _createChildBoard(params.childBoard!);
+        final childBoard = await _createOrUpdateChildBoard(params.childBoard!);
         _linkSymbolToBoard(symbol, childBoard);
       }
 
@@ -98,7 +100,7 @@ class SymbolManager {
       await isar.communicationSymbols.put(symbol.updateWithParams(params));
 
       if (params.childBoard != null) {
-        final childBoard = await _createChildBoard(params.childBoard!);
+        final childBoard = await _createOrUpdateChildBoard(params.childBoard!);
         _linkSymbolToBoard(symbol, childBoard);
       } else {
         _unlinkSymbolFromBoard(symbol);
@@ -157,10 +159,8 @@ class SymbolManager {
     });
   }
 
-  Future<Board> _createChildBoard(BoardEditingParams childBoardParams) async {
-    final childBoard = Board(
-        name: childBoardParams.name,
-        crossAxisCountOrNull: childBoardParams.columnCount!);
+  Future<Board> _createOrUpdateChildBoard(BoardEditingParams params) async {
+    final childBoard = Board.fromParams(params);
     await isar.boards.put(childBoard);
     return childBoard;
   }
