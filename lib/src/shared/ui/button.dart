@@ -40,12 +40,12 @@ class Button extends StatelessWidget {
         style: ButtonStyle(
             // when this wasn't set transperent background was actually grey
             // https://github.com/flutter/flutter/issues/95793
-            elevation: const MaterialStatePropertyAll(0),
-            backgroundColor: MaterialStatePropertyAll(backgroundColor),
-            foregroundColor: MaterialStatePropertyAll(foregroundColor),
-            iconSize: const MaterialStatePropertyAll(24.0),
-            iconColor: const MaterialStatePropertyAll(Colors.white),
-            shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+            elevation: const WidgetStatePropertyAll(0),
+            backgroundColor: WidgetStatePropertyAll(backgroundColor),
+            foregroundColor: WidgetStatePropertyAll(foregroundColor),
+            iconSize: const WidgetStatePropertyAll(24.0),
+            iconColor: const WidgetStatePropertyAll(Colors.white),
+            shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4.0)))),
         child: child);
   }

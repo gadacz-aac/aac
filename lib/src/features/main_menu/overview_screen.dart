@@ -63,7 +63,7 @@ class OverviewScreen extends StatelessWidget {
                               const SymbolSearchScreen())),
                   placeholder: "Szukaj"),
             )),
-        actions: [MoreOptionsAction()],
+        actions: const [MoreOptionsAction()],
       ),
       backgroundColor: AacColors.greyBackground,
       body: const Column(

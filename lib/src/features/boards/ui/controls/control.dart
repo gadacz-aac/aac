@@ -29,10 +29,10 @@ class Control extends StatelessWidget {
     return ElevatedButton(
         onPressed: disabled ? null : onPressed,
         style: ButtonStyle(
-            backgroundColor: MaterialStatePropertyAll(backgroundColor),
-            iconSize: const MaterialStatePropertyAll(24.0),
-            iconColor: const MaterialStatePropertyAll(Colors.white),
-            shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+            backgroundColor: WidgetStatePropertyAll(backgroundColor),
+            iconSize: const WidgetStatePropertyAll(24.0),
+            iconColor: const WidgetStatePropertyAll(Colors.white),
+            shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4.0)))),
         child: Icon(icon));
   }
