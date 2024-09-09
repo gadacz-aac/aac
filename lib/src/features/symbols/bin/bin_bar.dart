@@ -1,24 +1,23 @@
-import 'package:aac/src/features/boards/ui/actions/edit_symbol_action.dart';
-import 'package:aac/src/features/boards/ui/actions/move_symbol_to_bin_action.dart';
-import 'package:aac/src/features/boards/ui/actions/unpin_symbol_action.dart';
+import 'package:aac/src/features/boards/ui/actions/delete_forever_action.dart';
+import 'package:aac/src/features/boards/ui/actions/restore_symbol_action.dart';
 import 'package:aac/src/features/symbols/search/app_bar_actions.dart';
 import 'package:aac/src/features/symbols/search/search_screen.dart';
 import 'package:aac/src/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class BoardAppBar extends ConsumerWidget implements PreferredSizeWidget {
-  const BoardAppBar({
+class BinAppBar extends ConsumerWidget implements PreferredSizeWidget {
+  const BinAppBar({
     super.key,
     required this.title,
-    required this.isParentMode,
-    required this.isMainBoard,
-    required this.actions,
+    // required this.isParentMode,
+    // required this.isMainBoard,
+    this.actions = const [],
   });
 
   final String title;
-  final bool isParentMode;
-  final bool isMainBoard;
+  // final bool isParentMode;
+  // final bool isMainBoard;
   final List<Widget> actions;
 
   @override
@@ -28,14 +27,13 @@ class BoardAppBar extends ConsumerWidget implements PreferredSizeWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final areSymbolSelected = ref.watch(areSymbolsSelectedProvider);
     final List<Widget> actionsSelected = [
-      const EditSymbolAction(),
-      const UnpinSymbolAction(),
-      const MoveSymbolToBinAction(),
+      const DeleteForeverAction(),
+      const RestoreSymbolAction()
     ];
 
     return AppBar(
       title: areSymbolSelected ? null : Text(title),
-      automaticallyImplyLeading: isParentMode || isMainBoard,
+      // automaticallyImplyLeading: isParentMode || isMainBoard,
       leading: areSymbolSelected ? const CancelAction() : null,
       actions: areSymbolSelected ? actionsSelected : actions,
       backgroundColor: AacColors.sentenceBarGrey,

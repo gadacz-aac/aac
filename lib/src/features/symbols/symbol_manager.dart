@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:flutter/foundation.dart';
@@ -5,6 +7,7 @@ import 'package:isar/isar.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../shared/isar_provider.dart';
+
 part 'symbol_manager.g.dart';
 
 @immutable
@@ -34,15 +37,17 @@ class SymbolEditingParams {
   final String? imagePath;
   final String? label;
   final String? vocalization;
+  final bool? isDeleted;
   final int? color;
   final BoardEditingParams? childBoard;
 
   const SymbolEditingParams({
     this.imagePath,
     this.label,
-    this.color,
     this.vocalization,
-    this.childBoard,
+    this.isDeleted,
+    this.color,
+    this.childBoard
   });
 
   SymbolEditingParams.fromSymbol(CommunicationSymbol symbol)
@@ -50,6 +55,7 @@ class SymbolEditingParams {
         label = symbol.label,
         color = symbol.color,
         vocalization = symbol.vocalization,
+        isDeleted = symbol.isDeleted,
         childBoard = symbol.childBoard.value != null
             ? BoardEditingParams.fromBoard(symbol.childBoard.value!)
             : null;
@@ -58,12 +64,18 @@ class SymbolEditingParams {
   String toString() => "imagePath: $imagePath label: $label color: $color";
 }
 
+final symbolsProvider = StreamProvider.autoDispose<List<CommunicationSymbol>>((ref) {
+  final symbolManager = ref.watch(symbolManagerProvider);
+  return symbolManager.watchAllSymbols();
+});
+
 class SymbolManager {
+  final Isar isar;
+
   SymbolManager({
     required this.isar,
   });
 
-  final Isar isar;
 
   Future<void> saveSymbol(Id boardId, SymbolEditingParams params) async {
     if (params.label == null) return;
@@ -148,21 +160,107 @@ class SymbolManager {
     });
   }
 
-  Future<void> deleteSymbol(
-      List<CommunicationSymbol> symbols, Id boardId) async {
+
+  Future<void> unpinSymbolsFromEveryBoard(List<CommunicationSymbol> symbols) async {
+    await restoreSymbols(symbols);
+      for (var symbol in symbols) {
+        try {
+          final boards = await _getAllParentBoards(symbol);
+          await Future.wait(
+            boards.map((board) => unpinSymbolFromBoard([symbol], board.id))
+          );
+        } catch (e) {
+          print('Błąd podczas odpinania symbolu $symbol: $e');
+        }
+      }
+  }
+
+  Future<void> moveSymbolToBin(List<CommunicationSymbol> symbols, bool deleteWithInsideSymbols) async {
     final symbolIds = symbols.map((e) => e.id).toList();
+    final allSymbolIds = <Id>{};
+
+    Future<void> collectAllSymbols(Id symbolId) async {
+      final symbol = await isar.communicationSymbols.get(symbolId);
+      if (symbol == null) return;
+      allSymbolIds.add(symbolId);
+      if (symbol.childBoard.value != null) {
+        final childBoardId = symbol.childBoard.value!.id;
+        final childBoard = await isar.boards.get(childBoardId);
+        if (childBoard != null) {
+          for (var childSymbol in childBoard.symbols) {
+            await collectAllSymbols(childSymbol.id);
+          }
+        }
+      }
+    }
+
+    if (deleteWithInsideSymbols){
+      for (var symbolId in symbolIds) {
+        await collectAllSymbols(symbolId);
+      }
+    } else {
+      allSymbolIds.addAll(symbolIds);
+    }
+
+
+    await Future.wait(allSymbolIds.map((symbolId) async {
+      await isar.writeTxn(() async {
+        final symbol = await isar.communicationSymbols.get(symbolId);
+        if (symbol == null) return;
+        await isar.communicationSymbols.put(symbol.updateWithParams(const SymbolEditingParams(isDeleted: true)));
+      });
+    }));
+
+    await updateAllBoards();
+
     await isar.writeTxn(() async {
-      final board = await isar.boards.get(boardId);
-      if (board == null) return;
-      await isar.communicationSymbols.deleteAll(symbolIds);
-      await isar.boards.put(board);
+      final symbols = await isar.communicationSymbols.where().findAll();
+      await isar.communicationSymbols.putAll(symbols);
     });
+  }
+
+  Future<void> updateAllBoards() async {
+    await isar.writeTxn(() async {
+      final allBoards = await isar.boards.where().findAll();
+      if (allBoards.isEmpty) return;
+      await isar.boards.putAll(allBoards);
+    });
+  }
+
+  Future<void> restoreSymbols(List<CommunicationSymbol> symbols) async {
+    for (var symbol in symbols) {
+      await isar.writeTxn(() async {
+        await isar.communicationSymbols.put(symbol.updateWithParams(const SymbolEditingParams(isDeleted: false)));
+      });
+    }
+    await updateAllBoards();
+  }
+
+  Future<void> deleteSymbols(List<CommunicationSymbol> symbols) async {
+    await isar.writeTxn(() async {
+      for (var symbol in symbols) {
+        await isar.communicationSymbols.delete(symbol.id);
+      }
+    });
+    updateAllBoards();
   }
 
   Future<Board> _createOrUpdateChildBoard(BoardEditingParams params) async {
     final childBoard = Board.fromParams(params);
     await isar.boards.put(childBoard);
     return childBoard;
+  }
+
+  Future<List<Board>> _getAllParentBoards(CommunicationSymbol symbol) async {
+    await symbol.parentBoard.load();
+    return symbol.parentBoard.toList();
+  }
+
+  Stream<List<CommunicationSymbol>> watchAllSymbols() async* {
+    yield* isar.communicationSymbols
+      .where()
+      .watch(fireImmediately: true)
+      .asyncMap((_) async => await isar.communicationSymbols.where().findAll());
   }
 }
 

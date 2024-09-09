@@ -2,11 +2,12 @@ import 'package:aac/src/features/main_menu/main_menu_screen.dart';
 import 'package:aac/src/features/settings/model/settings_entry.dart';
 import 'package:aac/src/features/settings/utils/orientation.dart';
 import 'package:aac/src/shared/isar_provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'firebase_options.dart';
 
 void main() async {

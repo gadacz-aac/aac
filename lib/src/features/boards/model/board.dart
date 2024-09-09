@@ -1,7 +1,6 @@
+import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:isar/isar.dart';
-
-import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 
 part 'board.g.dart';
 

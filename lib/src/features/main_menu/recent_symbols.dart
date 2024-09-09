@@ -1,5 +1,5 @@
 import 'package:aac/src/features/main_menu/overview_screen.dart';
-import 'package:aac/src/features/symbols/ui/symbol_card.dart';
+import 'package:aac/src/features/symbols/ui/grid_symbol_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -21,7 +21,7 @@ class RecentSymbols extends ConsumerWidget {
                   .map((e) => Padding(
                         padding: const EdgeInsets.all(8.0),
                         child:
-                            SizedBox(width: 140, child: SymbolCard(symbol: e)),
+                            SizedBox(width: 140, child: GridSymbolCard(symbol: e)),
                       ))
                   .toList())),
     );

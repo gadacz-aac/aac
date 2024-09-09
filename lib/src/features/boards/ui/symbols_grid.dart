@@ -1,4 +1,5 @@
 import 'package:aac/src/features/boards/model/board.dart';
+import 'package:aac/src/features/symbols/ui/grid_symbol_card.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -67,26 +68,29 @@ class SymbolsGrid extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.watch(symbolGridScrollControllerProvider);
+    final nonDeletedSymbols = board.symbols.where((e) => !e.isDeleted).toList();
+
     return Expanded(
       child: AlignedGridView.count(
-          crossAxisCount: 3,
-          crossAxisSpacing: 12.0,
-          mainAxisSpacing: 12.0,
-          itemCount: board.symbols.length,
-          padding: const EdgeInsets.all(12.0),
-          controller: controller,
-          itemBuilder: (context, index) {
-            final e = board.symbols.elementAt(index);
-            return SymbolCard(
-              symbol: e,
-              onLongPressActions: const [SymbolOnTapAction.select],
-              onTapActions: const [
-                SymbolOnTapAction.speak,
-                SymbolOnTapAction.cd,
-                SymbolOnTapAction.multiselect
-              ],
-            );
-          }),
+        crossAxisCount: 3,
+        crossAxisSpacing: 12.0,
+        mainAxisSpacing: 12.0,
+        itemCount: nonDeletedSymbols.length,
+        padding: const EdgeInsets.all(12.0),
+        controller: controller,
+        itemBuilder: (context, index) {
+          final e = nonDeletedSymbols[index];
+          return GridSymbolCard(
+            symbol: e,
+            onLongPressActions: const [SymbolOnTapAction.select],
+            onTapActions: const [
+              SymbolOnTapAction.speak,
+              SymbolOnTapAction.cd,
+              SymbolOnTapAction.multiselect
+            ],
+          );
+        }
+      ),
     );
   }
 }

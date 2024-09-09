@@ -1,28 +1,37 @@
-import 'package:aac/src/features/boards/ui/actions/delete_forever_action.dart';
+import 'package:aac/src/features/boards/ui/actions/move_symbol_to_bin_action.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/settings/widgets/cherry_pick_image.dart';
+import 'package:aac/src/features/symbols/symbol_manager.dart';
+import 'package:aac/src/features/symbols/ui/grid_symbol_card.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
-import 'package:aac/src/shared/isar_provider.dart';
 import 'package:aac/src/shared/utils/debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:isar/isar.dart';
 
 import 'app_bar_actions.dart';
 
 final searchedSymbolProvider =
     FutureProvider.autoDispose<List<CommunicationSymbol>>((ref) async {
-  final isar = ref.watch(isarProvider);
+  // final isar = ref.watch(isarProvider);
   final query = ref.watch(queryProvider);
-
+  final allSymbolsAsync = ref.watch(symbolsProvider);
   if (query.trim().isEmpty) return [];
 
-  return isar.communicationSymbols
-      .where()
-      .wordsElementStartsWith(query)
-      .findAll();
+  final allSymbols = allSymbolsAsync.asData?.value;
+  if (allSymbols == null) {
+    return [];
+  }
+  // return allSymbols
+  //     .where().filter().isDeletedEqualTo(false)
+  //     .wordsElementStartsWith(query)
+  //     .findAll();
+  return allSymbols //necessary for refreshing after delete
+      .where((symbol) => !symbol.isDeleted)
+      .where((symbol) =>
+          symbol.words.any((word) => word.startsWith(query)))
+      .toList();
 });
 
 final queryProvider = StateProvider.autoDispose<String>((ref) => "");
@@ -101,7 +110,7 @@ class SymbolSearchScreen extends ConsumerWidget {
                     padding: const EdgeInsets.all(12.0),
                     itemBuilder: (context, index) {
                       final e = results[index];
-                      return SymbolCard(
+                      return GridSymbolCard(
                         symbol: e,
                         onTapActions: const [SymbolOnTapAction.select],
                       );
@@ -194,7 +203,7 @@ class _SearchAppBarState extends ConsumerState<SearchAppBar> {
     }
 
     if (areSelected) {
-      actions = [const PinSelectedSymbolAction(), const DeleteForeverAction()];
+      actions = [const PinSelectedSymbolAction(), const MoveSymbolToBinAction()];
     } else {
       title = Hero(
         tag: "search",
