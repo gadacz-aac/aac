@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:aac/src/features/arasaac/arasaac_service.dart';
 import 'package:aac/src/shared/utils/get_random_string.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -70,18 +72,57 @@ class AacSearchField extends StatelessWidget {
   }
 }
 
-class ArasaacSearchScreen extends StatelessWidget {
+class ArasaacSearchScreen extends ConsumerStatefulWidget {
   const ArasaacSearchScreen({super.key});
 
   @override
+  ConsumerState<ArasaacSearchScreen> createState() =>
+      _ArasaacSearchScreenState();
+}
+
+class _ArasaacSearchScreenState extends ConsumerState<ArasaacSearchScreen> {
+  String query = "";
+
+  @override
   Widget build(BuildContext context) {
+    final symbols = ref.watch(arasaacSearchResultsProvider(query)).valueOrNull;
+
     return Column(
       children: [
         AacSearchField(
-          controller: TextEditingController(),
+          onChanged: (value) => setState(() {
+            query = value;
+          }),
           placeholder: "Szukaj w arrasac",
           icon: const Icon(Icons.search_outlined),
-        )
+        ),
+        const SizedBox(
+          height: 28.0,
+        ),
+        symbols == null || symbols.isEmpty
+            ? Expanded(
+                child: Center(
+                    child: Text(
+                "Oj mój... jak tu pusto",
+                style: Theme.of(context).textTheme.titleLarge,
+              )))
+            : Expanded(
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      mainAxisSpacing: 18,
+                      crossAxisSpacing: 13),
+                  itemCount: symbols.length,
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      child: Image.network(
+                        symbols[index],
+                      ),
+                      onTap: () => Navigator.pop(context, symbols[index]),
+                    );
+                  },
+                ),
+              )
       ],
     );
   }
@@ -178,8 +219,7 @@ class _UploadImageFromLinkScreenState extends State<UploadImageFromLinkScreen> {
                     backgroundColor:
                         const WidgetStatePropertyAll(Color(0xFF2A1B3B)),
                     iconSize: const WidgetStatePropertyAll(24.0),
-                    iconColor:
-                        const WidgetStatePropertyAll(Color(0xFFD3CEE3)),
+                    iconColor: const WidgetStatePropertyAll(Color(0xFFD3CEE3)),
                     shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4.0)))),
                 child: const Icon(Icons.upload)))
