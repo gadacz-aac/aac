@@ -12,8 +12,7 @@ class CreateSymbol extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Control(
-        icon: Icons.add_box_outlined,
+    return FloatingActionButton(
         backgroundColor: AacColors.mainControlBackground,
         onPressed: () {
           Navigator.push(
@@ -32,7 +31,8 @@ class CreateSymbol extends ConsumerWidget {
                         imagePath: imagePath,
                         boardId: ref.read(boardIdProvider))));
           });
-        });
+        },
+        child: const Icon(Icons.add_box_outlined, color: AacColors.noColorWhite,));
   }
 }
 

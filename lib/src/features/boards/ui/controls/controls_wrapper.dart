@@ -11,6 +11,8 @@ class ControlsWrapper extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (children.isEmpty) return const SizedBox();
+
     const decoration =
         BoxDecoration(color: AacColors.bottomControlsGrey, boxShadow: [
       BoxShadow(

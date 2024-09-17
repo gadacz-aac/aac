@@ -43,7 +43,6 @@ class BoardAppBar extends ConsumerWidget implements PreferredSizeWidget {
       elevation: 0,
       scrolledUnderElevation: 0,
       iconTheme: const IconThemeData(color: AacColors.iconsGrey),
-      centerTitle: true,
       titleTextStyle: const TextStyle(color: Colors.black),
     );
   }
