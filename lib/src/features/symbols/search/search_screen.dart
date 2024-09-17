@@ -89,23 +89,30 @@ class SymbolSearchScreen extends ConsumerWidget {
 
     return Theme(
         data: appBarTheme,
-        child: Scaffold(
-            appBar: const SearchAppBar(),
-            body: results == null || results.isEmpty
-                ? const NoResultsScreen()
-                : AlignedGridView.count(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 12.0,
-                    mainAxisSpacing: 12.0,
-                    itemCount: results.length,
-                    padding: const EdgeInsets.all(12.0),
-                    itemBuilder: (context, index) {
-                      final e = results[index];
-                      return SymbolCard(
-                        symbol: e,
-                        onTapActions: const [SymbolOnTapAction.select],
-                      );
-                    })));
+        child: PopScope(
+          onPopInvoked: (didPop) {
+            if (didPop) {
+              ref.read(selectedSymbolsProvider).clear();
+            }
+          },
+          child: Scaffold(
+              appBar: const SearchAppBar(),
+              body: results == null || results.isEmpty
+                  ? const NoResultsScreen()
+                  : AlignedGridView.count(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 12.0,
+                      mainAxisSpacing: 12.0,
+                      itemCount: results.length,
+                      padding: const EdgeInsets.all(12.0),
+                      itemBuilder: (context, index) {
+                        final e = results[index];
+                        return SymbolCard(
+                          symbol: e,
+                          onTapActions: const [SymbolOnTapAction.select],
+                        );
+                      })),
+        ));
   }
 }
 
