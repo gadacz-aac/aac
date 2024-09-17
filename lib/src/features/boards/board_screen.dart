@@ -1,5 +1,6 @@
 import 'package:aac/src/features/boards/ui/actions/lock_button.dart';
 import 'package:aac/src/features/boards/ui/actions/pin_symbol_action.dart';
+import 'package:aac/src/features/boards/ui/actions/show_more_options.dart';
 import 'package:aac/src/features/boards/ui/app_bar.dart';
 import 'package:aac/src/features/boards/ui/controls/create_symbol.dart';
 import 'package:aac/src/features/boards/ui/controls/delete_all.dart';
@@ -14,15 +15,14 @@ import 'package:aac/src/features/boards/board_manager.dart';
 import 'package:aac/src/features/boards/ui/controls/controls_wrapper.dart';
 import 'package:aac/src/features/boards/ui/sentence_bar.dart';
 
-final isParentModeProvider = StateProvider<bool>((_) => false);
+final isParentModeProvider = StateProvider<bool>((_) => true);
 final boardIdProvider = Provider<Id>((_) => throw UnimplementedError());
 
 class BoardScreen extends ConsumerWidget {
-  BoardScreen({super.key, this.title = 'dupa', required this.boardId}) {
+  BoardScreen({super.key, required this.boardId}) {
     _isMainBoard = boardId != 1;
   }
 
-  final String title;
   final Id boardId;
   late final bool _isMainBoard;
 
@@ -45,25 +45,23 @@ class BoardScreen extends ConsumerWidget {
 
           List<Widget> actions = [];
 
-          final List<Widget> controls = [
-            const PaginationControl(
-              direction: SymbolGridScrollDirection.backward,
-            ),
-            const PaginationControl(
-                direction: SymbolGridScrollDirection.forward),
-          ];
+          final List<Widget> controls = [];
 
           if (isParentMode) {
-            actions.add(PinSymbolsAction(
-              board: data,
-            ));
-            controls.addAll([
-              const CreateRandomSymbol(),
-              const CreateSymbol(),
+            actions.addAll([
+              PinSymbolsAction(
+                board: data,
+              ),
+              const ShowMoreOptions()
             ]);
           } else {
             actions.add(const LockButton());
             controls.addAll([
+              const PaginationControl(
+                direction: SymbolGridScrollDirection.backward,
+              ),
+              const PaginationControl(
+                  direction: SymbolGridScrollDirection.forward),
               const RemoveLastWord(),
               const DeleteAll(),
             ]);
@@ -73,10 +71,11 @@ class BoardScreen extends ConsumerWidget {
             overrides: [boardIdProvider.overrideWithValue(boardId)],
             child: Scaffold(
               appBar: BoardAppBar(
-                  title: title,
+                  title: data.name,
                   isParentMode: isParentMode,
                   isMainBoard: _isMainBoard,
                   actions: actions),
+              floatingActionButton: isParentMode ? const CreateSymbol() : null,
               body: OrientationBuilder(
                 builder: (context, orientation) {
                   final List<Widget> children;

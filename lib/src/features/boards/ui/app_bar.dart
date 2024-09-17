@@ -39,12 +39,6 @@ class BoardAppBar extends ConsumerWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: isParentMode || isMainBoard,
       leading: areSymbolSelected ? const CancelAction() : null,
       actions: areSymbolSelected ? actionsSelected : actions,
-      backgroundColor: AacColors.sentenceBarGrey,
-      elevation: 0,
-      scrolledUnderElevation: 0,
-      iconTheme: const IconThemeData(color: AacColors.iconsGrey),
-      centerTitle: true,
-      titleTextStyle: const TextStyle(color: Colors.black),
     );
   }
 }

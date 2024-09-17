@@ -1,18 +1,20 @@
 import 'dart:async';
 
+import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/settings/utils/protective_mode.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LockButton extends StatefulWidget {
+class LockButton extends ConsumerStatefulWidget {
   const LockButton({super.key, this.isOpen = false});
 
   final bool isOpen;
 
   @override
-  State<LockButton> createState() => _LockButtonState();
+  ConsumerState<LockButton> createState() => _LockButtonState();
 }
 
-class _LockButtonState extends State<LockButton> {
+class _LockButtonState extends ConsumerState<LockButton> {
   int _tapLeft = 3;
 
   @override
@@ -27,9 +29,8 @@ class _LockButtonState extends State<LockButton> {
           _tapLeft -= 1;
 
           if (_tapLeft == 0) {
+            ref.read(isParentModeProvider.notifier).state = true;
             stopProtectiveMode();
-            Navigator.popUntil(
-                context, (Route<dynamic> predicate) => predicate.isFirst);
 
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
           } else {
