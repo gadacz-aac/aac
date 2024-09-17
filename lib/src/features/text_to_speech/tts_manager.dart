@@ -1,4 +1,5 @@
 import 'package:aac/src/features/settings/settings_manager.dart';
+import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/text_to_speech/provider.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -53,12 +54,12 @@ class TtsManager {
     await tts.speak(word);
   }
 
-  Future<void> sayWord(String word) async {
-    await _speak(word);
+  Future<void> sayWord(CommunicationSymbol symbol) async {
+    await _speak((symbol.vocalization != null && symbol.vocalization!.isNotEmpty) ? symbol.vocalization! : symbol.label);
   }
 
   Future<void> saySentence(List<CommunicationSymbolDto> sentence) async {
-    final words = sentence.map((e) => e.label);
+    final words = sentence.map((e) => (e.vocalization != null && e.vocalization!.isNotEmpty) ? e.vocalization! : e.label);
     await _speak(words.join(' '));
   }
 

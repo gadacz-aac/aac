@@ -176,11 +176,11 @@ class _UploadImageFromLinkScreenState extends State<UploadImageFromLinkScreen> {
                 onPressed: tryDownload,
                 style: ButtonStyle(
                     backgroundColor:
-                        const MaterialStatePropertyAll(Color(0xFF2A1B3B)),
-                    iconSize: const MaterialStatePropertyAll(24.0),
+                        const WidgetStatePropertyAll(Color(0xFF2A1B3B)),
+                    iconSize: const WidgetStatePropertyAll(24.0),
                     iconColor:
-                        const MaterialStatePropertyAll(Color(0xFFD3CEE3)),
-                    shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                        const WidgetStatePropertyAll(Color(0xFFD3CEE3)),
+                    shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4.0)))),
                 child: const Icon(Icons.upload)))
       ]),
@@ -278,10 +278,10 @@ class UploadFromDeviceScreen extends StatelessWidget {
             onPressed: () => pickImageFromCamera(context),
             style: ButtonStyle(
                 backgroundColor:
-                    const MaterialStatePropertyAll(Color(0xFF2A1B3B)),
-                iconSize: const MaterialStatePropertyAll(24.0),
-                iconColor: const MaterialStatePropertyAll(Color(0xFFD3CEE3)),
-                shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                    const WidgetStatePropertyAll(Color(0xFF2A1B3B)),
+                iconSize: const WidgetStatePropertyAll(24.0),
+                iconColor: const WidgetStatePropertyAll(Color(0xFFD3CEE3)),
+                shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4.0)))),
             icon: const Icon(Icons.add_a_photo_outlined),
             label: const Text(
@@ -292,10 +292,10 @@ class UploadFromDeviceScreen extends StatelessWidget {
             onPressed: () => pickImageFromGallery(context),
             style: ButtonStyle(
                 backgroundColor:
-                    const MaterialStatePropertyAll(Color(0xFF2A1B3B)),
-                iconSize: const MaterialStatePropertyAll(24.0),
-                iconColor: const MaterialStatePropertyAll(Color(0xFFD3CEE3)),
-                shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                    const WidgetStatePropertyAll(Color(0xFF2A1B3B)),
+                iconSize: const WidgetStatePropertyAll(24.0),
+                iconColor: const WidgetStatePropertyAll(Color(0xFFD3CEE3)),
+                shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4.0)))),
             icon: const Icon(Icons.add_photo_alternate_outlined),
             label: const Text(

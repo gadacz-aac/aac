@@ -22,15 +22,11 @@ class MainMenuScreen extends ConsumerWidget {
               children: <Widget>[
                 ElevatedButton(
                   onPressed: () {
-                    ref
-                        .read(isParentModeProvider.notifier)
-                        .update((state) => true);
+                    ref.read(isParentModeProvider.notifier).state = true;
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ProviderScope(overrides: [
-                          isParentModeProvider.overrideWith((ref) => true)
-                        ], child: BoardScreen(boardId: 1)),
+                        builder: (context) => BoardScreen(boardId: 1),
                       ),
                     );
                   },
@@ -38,6 +34,7 @@ class MainMenuScreen extends ConsumerWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
+                    ref.read(isParentModeProvider.notifier).state = false;
                     startWakelock(ref);
                     startProtectiveModeIfEnabled(ref);
                     Navigator.push(
