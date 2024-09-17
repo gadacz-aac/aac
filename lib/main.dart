@@ -38,7 +38,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(we declare a provider with autoDispose, its state will be disposed as soon as the last listener is removed (typically
+      theme: ThemeData(
           useMaterial3: true,
           scaffoldBackgroundColor: Colors.white,
           appBarTheme: const AppBarTheme(
