@@ -60,7 +60,6 @@ class SymbolCard extends ConsumerWidget {
         context,
         MaterialPageRoute(
             builder: (context) => BoardScreen(
-                  title: symbol.label,
                   boardId: symbol.childBoard.value!.id,
                 )),
       );

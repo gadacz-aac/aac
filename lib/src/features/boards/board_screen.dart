@@ -19,11 +19,10 @@ final isParentModeProvider = StateProvider<bool>((_) => true);
 final boardIdProvider = Provider<Id>((_) => throw UnimplementedError());
 
 class BoardScreen extends ConsumerWidget {
-  BoardScreen({super.key, this.title = 'dupa', required this.boardId}) {
+  BoardScreen({super.key, required this.boardId}) {
     _isMainBoard = boardId != 1;
   }
 
-  final String title;
   final Id boardId;
   late final bool _isMainBoard;
 
@@ -72,7 +71,7 @@ class BoardScreen extends ConsumerWidget {
             overrides: [boardIdProvider.overrideWithValue(boardId)],
             child: Scaffold(
               appBar: BoardAppBar(
-                  title: title,
+                  title: data.name,
                   isParentMode: isParentMode,
                   isMainBoard: _isMainBoard,
                   actions: actions),

@@ -1,5 +1,6 @@
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/settings/ui/settings_screen.dart';
+import 'package:aac/src/features/settings/utils/protective_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -42,7 +43,10 @@ class LockOption extends ConsumerWidget {
     return Option(
       icon: const Icon(Icons.lock),
       label: "Zablokuj",
-      onTap: () => ref.read(isParentModeProvider.notifier).state = false,
+      onTap: () {
+        ref.read(isParentModeProvider.notifier).state = false;
+        startProtectiveModeIfEnabled(ref);
+      } 
     );
   }
 }
