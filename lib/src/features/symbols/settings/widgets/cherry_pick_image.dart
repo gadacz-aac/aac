@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:aac/src/features/arasaac/arasaac_service.dart';
 import 'package:aac/src/shared/utils/get_random_string.dart';
+import 'package:aac/src/shared/utils/try_download_image.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -99,30 +100,53 @@ class _ArasaacSearchScreenState extends ConsumerState<ArasaacSearchScreen> {
         const SizedBox(
           height: 28.0,
         ),
-        symbols == null || symbols.isEmpty
-            ? Expanded(
-                child: Center(
-                    child: Text(
-                "Oj mój... jak tu pusto",
-                style: Theme.of(context).textTheme.titleLarge,
-              )))
-            : Expanded(
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      mainAxisSpacing: 18,
-                      crossAxisSpacing: 13),
-                  itemCount: symbols.length,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      child: Image.network(
-                        symbols[index],
-                      ),
-                      onTap: () => Navigator.pop(context, symbols[index]),
-                    );
-                  },
-                ),
-              )
+        if (symbols == null || symbols.isEmpty)
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "Oj mój... jak tu pusto",
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  Text(
+                    "pora coś wyszukać, bo ta pustka jest ciut niezręczna",
+                    style: Theme.of(context).textTheme.bodyLarge,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          )
+        else
+          Expanded(
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3, mainAxisSpacing: 18, crossAxisSpacing: 13),
+              itemCount: symbols.length,
+              itemBuilder: (context, index) {
+                return InkWell(
+                    child: Image.network(
+                      symbols[index],
+                    ),
+                    onTap: () async {
+                      final (file, err) =
+                          await tryDownloadImage(Uri.parse(symbols[index]));
+
+                      if (err != null) {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text(err)));
+                      }
+
+                      Navigator.pop(context, file!.path);
+                    });
+              },
+            ),
+          )
       ],
     );
   }
@@ -241,31 +265,16 @@ class _UploadImageFromLinkScreenState extends State<UploadImageFromLinkScreen> {
     final uri = Uri.parse(controller.text);
     if (!uri.isAbsolute) return;
 
-    // TODO this can i throw for various reasons, one might be url that can't be resolved because Łukasz broke DNS
-    final request = await HttpClient().getUrl(uri);
-    final response = await request.close();
+    final (file, err) = await tryDownloadImage(uri);
 
-    final contentType = response.headers.contentType;
-
-    if (contentType == null || !isValidImage(contentType)) {
+    if (err != null) {
       setState(() {
-        errorText = "Podany url jest obrazkiem";
+        errorText = err;
       });
-      return;
     }
 
-    File file;
-    final tempDir = await getTemporaryDirectory();
-    do {
-      final fileName = getRandomString(8);
-      file = File('${tempDir.path}/$fileName.${contentType.subType}');
-    } while (file.existsSync());
-
-    // TODO handle failed writes
-    await response.pipe(file.openWrite());
-
     if (!mounted) return;
-    Navigator.pop(context, file.path);
+    Navigator.pop(context, file!.path);
   }
 }
 
