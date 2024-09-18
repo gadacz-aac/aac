@@ -12,7 +12,7 @@ class Board {
   String name;
   Board({int? crossAxisCountOrNull, required this.name})
       : id = Isar.autoIncrement,
-        crossAxisCount = crossAxisCountOrNull ?? 2;
+        crossAxisCount = crossAxisCountOrNull ?? 3;
 
   final symbols = IsarLinks<CommunicationSymbol>();
 

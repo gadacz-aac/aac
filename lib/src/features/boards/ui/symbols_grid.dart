@@ -69,7 +69,7 @@ class SymbolsGrid extends ConsumerWidget {
     final controller = ref.watch(symbolGridScrollControllerProvider);
     return Expanded(
       child: AlignedGridView.count(
-          crossAxisCount: 3,
+          crossAxisCount: board.crossAxisCount,
           crossAxisSpacing: 12.0,
           mainAxisSpacing: 12.0,
           itemCount: board.symbols.length,
