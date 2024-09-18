@@ -1,4 +1,5 @@
 import 'package:aac/src/features/boards/model/board.dart';
+import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:isar/isar.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -24,6 +25,17 @@ class BoardManager {
   BoardManager({
     required this.isar,
   });
+
+  Future<Board> createOrUpdate(BoardEditingParams params) async {
+    print(params);
+    final board = Board.fromParams(params);
+    print(board);
+    isar.writeTxn(() async {
+      await isar.boards.put(board);
+    });
+
+    return board;
+  }
 
   Stream<Board?> watchBoardById(Id id) async* {
     yield* isar.boards.watchObject(id, fireImmediately: true);
