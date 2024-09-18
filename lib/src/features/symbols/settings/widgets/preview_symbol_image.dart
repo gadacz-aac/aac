@@ -1,6 +1,8 @@
+import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/settings/screens/image_provider.dart';
 import 'package:aac/src/features/symbols/settings/screens/symbol_settings.dart';
+import 'package:aac/src/features/symbols/settings/widgets/board_picker.dart';
 import 'package:aac/src/features/symbols/settings/widgets/color_picker.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:flutter/material.dart';
@@ -15,12 +17,22 @@ class PreviewSymbolImage extends ConsumerWidget {
     final label = ref.watch(labelProvider);
     final image = ref.watch(imageNotifierProvider);
 
+    final childBoard = ref.watch(boardNotifierProvider);
+
+    final symbol = CommunicationSymbol(
+      label: label,
+      imagePath: image,
+      color: color,
+    );
+
+    if (childBoard != null) {
+      symbol.childBoard.value = Board.fromParams(childBoard);
+    }
+
     return FractionallySizedBox(
       widthFactor: 0.55,
       child: Stack(children: [
-        SymbolCard(
-            symbol: CommunicationSymbol(
-                label: label, imagePath: image, color: color)),
+        SymbolCard(symbol: symbol),
         Consumer(builder: (context, ref, _) {
           // this is a bit funky, i admit. but because show modal creates another context so when you try to access provider later it be the same one as in here, unless you pass ref like so
           // https://github.com/rrousselGit/riverpod/issues/2338
