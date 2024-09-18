@@ -6,11 +6,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 //TODO Move to constants
 
 final colors = [
-  CommunicationColor(label: "Rzeczownik", code: 0xFFFBAF3C),
-  CommunicationColor(label: "Przymiotnik", code: 0xFF66C4FB),
-  CommunicationColor(label: "Czasownik", code: 0xFF9ADF7D),
-  CommunicationColor(label: "Barbie", code: 0xFFFB88CF),
-  CommunicationColor(label: "Lucy", code: 0xFFFB4C4C),
+  CommunicationColor(label: "Rzeczownik", code: 0xFFFBAF3C, folderBackgroundCode: 0xFFFFE0B1),
+  CommunicationColor(label: "Przymiotnik", code: 0xFF66C4FB, folderBackgroundCode: 0xFFC2E9FF),
+  CommunicationColor(label: "Czasownik", code: 0xFF9ADF7D, folderBackgroundCode: 0xFFE4FFD9),
+  CommunicationColor(label: "Barbie", code: 0xFFFB88CF, folderBackgroundCode: 0xFFFFC6E9),
+  CommunicationColor(label: "Lucy", code: 0xFFFB4C4C, folderBackgroundCode: 0xFFFFB6B6),
 ];
 
 final colorProvider = StateProvider.autoDispose(
