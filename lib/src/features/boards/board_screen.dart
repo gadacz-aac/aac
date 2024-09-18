@@ -7,6 +7,7 @@ import 'package:aac/src/features/boards/ui/controls/delete_all.dart';
 import 'package:aac/src/features/boards/ui/controls/pagination.dart';
 import 'package:aac/src/features/boards/ui/controls/remove_last_word.dart';
 import 'package:aac/src/features/boards/ui/symbols_grid.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
@@ -15,7 +16,9 @@ import 'package:aac/src/features/boards/board_manager.dart';
 import 'package:aac/src/features/boards/ui/controls/controls_wrapper.dart';
 import 'package:aac/src/features/boards/ui/sentence_bar.dart';
 
-final isParentModeProvider = StateProvider<bool>((_) => true);
+// in debug mode parent mode default
+// in release mode child mode default
+final isParentModeProvider = StateProvider<bool>((_) => kDebugMode);
 final boardIdProvider = Provider<Id>((_) => throw UnimplementedError());
 
 class BoardScreen extends ConsumerWidget {
