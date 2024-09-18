@@ -12,7 +12,7 @@ class Board {
   String name;
   Board({int? crossAxisCountOrNull, required this.name})
       : id = Isar.autoIncrement,
-        crossAxisCount = crossAxisCountOrNull ?? 2;
+        crossAxisCount = crossAxisCountOrNull ?? 3;
 
   final symbols = IsarLinks<CommunicationSymbol>();
 
@@ -20,10 +20,8 @@ class Board {
     final board =
         Board(crossAxisCountOrNull: params.columnCount, name: params.name);
 
-    print("dupa ${params.id}");
     if (params.id == null) return board;
 
-    print("dupaaaaa");
     return board..id = params.id!;
   }
 

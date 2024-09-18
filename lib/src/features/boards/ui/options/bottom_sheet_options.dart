@@ -1,6 +1,10 @@
+import 'package:aac/src/features/boards/board_manager.dart';
 import 'package:aac/src/features/boards/board_screen.dart';
+import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/settings/ui/settings_screen.dart';
 import 'package:aac/src/features/settings/utils/protective_mode.dart';
+import 'package:aac/src/features/symbols/settings/screens/create_board_screen.dart';
+import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -15,19 +19,25 @@ class BottomSheetOptions extends StatelessWidget {
         const OptionGroup(
           options: [
             LockOption(),
-            OpenSettingsOption()
           ],
         ),
         const SizedBox(
           height: 24,
         ),
         OptionGroup(options: [
+          const OpenSettingsOption(),
           Option(
             icon: const Icon(Icons.delete),
-            label: "Śmietnik",
+            label: "Kosz",
             onTap: () {},
           )
-        ])
+        ]),
+        const SizedBox(
+          height: 24,
+        ),
+        const OptionGroup(options: [
+          EditBoardOption(),
+        ]),
       ]),
     );
   }
@@ -41,13 +51,12 @@ class LockOption extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Option(
-      icon: const Icon(Icons.lock),
-      label: "Zablokuj",
-      onTap: () {
-        ref.read(isParentModeProvider.notifier).state = false;
-        startProtectiveModeIfEnabled(ref);
-      } 
-    );
+        icon: const Icon(Icons.lock),
+        label: "Zablokuj",
+        onTap: () {
+          ref.read(isParentModeProvider.notifier).state = false;
+          startProtectiveModeIfEnabled(ref);
+        });
   }
 }
 
@@ -61,18 +70,47 @@ class OpenSettingsOption extends StatelessWidget {
     return Option(
       icon: const Icon(Icons.settings),
       label: "Ustawienia",
-      onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const SettingsScreen())),
+      onTap: () => Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const SettingsScreen())),
     );
+  }
+}
+
+class EditBoardOption extends ConsumerWidget {
+  const EditBoardOption({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final boardId = ref.watch(boardIdProvider);
+    final board = ref.watch(boardProvider(boardId)).valueOrNull;
+    final manager = ref.watch(boardManagerProvider);
+
+    return Option(
+        onTap: board != null
+            ? () async {
+                final editingParams =
+                    await showModalBottomSheet<BoardEditingParams>(
+                        context: context,
+                        builder: (context) {
+                          return Material(
+                              child: CreateBoardScreen(
+                                  params: BoardEditingParams.fromBoard(board)));
+                        });
+
+                if (editingParams != null) {
+                  manager.createOrUpdate(editingParams);
+                }
+              }
+            : null,
+        icon: const Icon(Icons.edit),
+        label: "Edytuj tablice");
   }
 }
 
 class Option extends StatelessWidget {
   final Widget icon;
   final String label;
-  final void Function() onTap;
+  final void Function()? onTap;
 
   const Option({
     required this.onTap,
@@ -86,7 +124,7 @@ class Option extends StatelessWidget {
     return InkWell(
       onTap: () {
         Navigator.pop(context);
-        onTap();
+        if (onTap != null) onTap!();
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
