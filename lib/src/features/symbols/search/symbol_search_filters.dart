@@ -75,38 +75,42 @@ class SymbolSearchColorFilterChip extends ConsumerWidget {
         onPressed: () {
           showModalBottomSheet(
               backgroundColor: AacColors.greyBackground,
+              isScrollControlled: true,
+              useSafeArea: true,
               context: context,
               builder: (context) {
                 return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 14.0),
-                    child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: colors
-                            .map((e) => RadioListTile(
-                                controlAffinity:
-                                    ListTileControlAffinity.trailing,
-                                title: Row(children: [
-                                  CircleAvatar(
-                                      radius: 9,
-                                      backgroundColor: Color(e.code)),
-                                  const SizedBox(
-                                    width: 8.0,
-                                  ),
-                                  Text(e.label),
-                                ]),
-                                value: e.code,
-                                groupValue: ref
-                                    .watch(symbolSearchColorFilterProvider)
-                                    ?.code,
-                                  toggleable: true,
-                                onChanged: (val) {
-                                  ref
-                                      .read(symbolSearchColorFilterProvider
-                                          .notifier)
-                                      .state = val == null ? null : e;
-                                  Navigator.pop(context);
-                                }))
-                            .toList()));
+                    child: SingleChildScrollView(
+                      child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: colors
+                              .map((e) => RadioListTile(
+                                  controlAffinity:
+                                      ListTileControlAffinity.trailing,
+                                  title: Row(children: [
+                                    CircleAvatar(
+                                        radius: 9,
+                                        backgroundColor: Color(e.code)),
+                                    const SizedBox(
+                                      width: 8.0,
+                                    ),
+                                    Text(e.label),
+                                  ]),
+                                  value: e.code,
+                                  groupValue: ref
+                                      .watch(symbolSearchColorFilterProvider)
+                                      ?.code,
+                                    toggleable: true,
+                                  onChanged: (val) {
+                                    ref
+                                        .read(symbolSearchColorFilterProvider
+                                            .notifier)
+                                        .state = val == null ? null : e;
+                                    Navigator.pop(context);
+                                  }))
+                              .toList()),
+                    ));
               });
         });
   }
