@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:aac/src/features/symbols/search/app_bar_actions.dart';
 import 'package:aac/src/features/symbols/search/search_screen.dart';
-import 'package:aac/src/shared/colors.dart';
 
 class BoardAppBar extends ConsumerWidget implements PreferredSizeWidget {
   const BoardAppBar({

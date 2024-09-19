@@ -9,15 +9,17 @@ class ShowMoreOptions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final boardId = ref.watch(boardIdProvider) ;
+    final boardId = ref.watch(boardIdProvider);
 
     return IconButton(
         onPressed: () => showModalBottomSheet(
-        isScrollControlled: true, 
-        backgroundColor: AacColors.greyBackground,
+              isScrollControlled: true,
+              backgroundColor: AacColors.greyBackground,
               context: context,
               builder: (context) {
-                return  ProviderScope(overrides: [boardIdProvider.overrideWithValue(boardId)],child: BottomSheetOptions());
+                return ProviderScope(
+                    overrides: [boardIdProvider.overrideWithValue(boardId)],
+                    child: const BottomSheetOptions());
               },
             ),
         icon: const Icon(Icons.more_vert));
