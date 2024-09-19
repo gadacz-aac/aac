@@ -38,7 +38,7 @@ class SymbolSearchPinnedFilterChip extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ChoiceChip(
-      label: const Text("Nie przypięte"),
+      label: const Text("Nieprzypięte"),
       selected: ref.watch(symbolSearchOnlyPinnedFilterProvider),
       onSelected: (_) => ref
           .read(symbolSearchOnlyPinnedFilterProvider.notifier)
