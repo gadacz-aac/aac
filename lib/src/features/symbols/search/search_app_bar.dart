@@ -27,6 +27,7 @@ class _SearchAppBarState extends ConsumerState<SearchAppBar> {
   @override
   void initState() {
     super.initState();
+    controller.addListener(() => ref.read(queryProvider.notifier).state = controller.text);
     focusNode.requestFocus();
   }
 
@@ -64,8 +65,6 @@ class _SearchAppBarState extends ConsumerState<SearchAppBar> {
             focusNode: focusNode,
             placeholder: "Szukaj",
             controller: controller,
-            onChanged: (value) =>
-                ref.read(queryProvider.notifier).state = value,
             suffixIcon: IconButton(
                 onPressed: clearOrPop, icon: const Icon(Icons.cancel)),
           ),
