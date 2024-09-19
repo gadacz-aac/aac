@@ -3,8 +3,8 @@ import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/settings/ui/settings_screen.dart';
 import 'package:aac/src/features/settings/utils/protective_mode.dart';
 import 'package:aac/src/features/symbols/settings/screens/create_board_screen.dart';
-import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:aac/src/features/symbols/settings/utils/randomise_symbol.dart';
+import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,40 +14,42 @@ class BottomSheetOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(26.0),
-      child: Column(mainAxisSize: MainAxisSize.min, children: [
-        const OptionGroup(
-          options: [
-            LockOption(),
-          ],
-        ),
-        const SizedBox(
-          height: 24,
-        ),
-        OptionGroup(options: [
-          const OpenSettingsOption(),
-          Option(
-            icon: const Icon(Icons.delete),
-            label: "Kosz",
-            onTap: () {},
-          )
-        ]),
-        const SizedBox(
-          height: 24,
-        ),
-        const OptionGroup(options: [
-          EditBoardOption(),
-        ]),
-        if (kDebugMode) ...[
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(26.0),
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          const OptionGroup(
+            options: [
+              LockOption(),
+            ],
+          ),
           const SizedBox(
             height: 24,
           ),
-          const OptionGroup(
-            options: [CreateRandomSymbol()],
-          )
-        ]
-      ]),
+          OptionGroup(options: [
+            const OpenSettingsOption(),
+            Option(
+              icon: const Icon(Icons.delete),
+              label: "Kosz",
+              onTap: () {},
+            )
+          ]),
+          const SizedBox(
+            height: 24,
+          ),
+          const OptionGroup(options: [
+            EditBoardOption(),
+          ]),
+          if (kDebugMode) ...[
+            const SizedBox(
+              height: 24,
+            ),
+            const OptionGroup(
+              options: [CreateRandomSymbol()],
+            )
+          ]
+        ]),
+      ),
     );
   }
 }
@@ -82,6 +84,37 @@ class CreateRandomSymbol extends ConsumerWidget {
   }
 }
 
+class EditBoardOption extends ConsumerWidget {
+  const EditBoardOption({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final boardId = ref.watch(boardIdProvider);
+    final board = ref.watch(boardProvider(boardId)).valueOrNull;
+    final manager = ref.watch(boardManagerProvider);
+
+    return Option(
+        onTap: board != null
+            ? () async {
+                final editingParams =
+                    await showModalBottomSheet<BoardEditingParams>(
+                        context: context,
+                        builder: (context) {
+                          return Material(
+                              child: CreateBoardScreen(
+                                  params: BoardEditingParams.fromBoard(board)));
+                        });
+
+                if (editingParams != null) {
+                  manager.createOrUpdate(editingParams);
+                }
+              }
+            : null,
+        icon: const Icon(Icons.edit),
+        label: "Edytuj tablice");
+  }
+}
+
 class LockOption extends ConsumerWidget {
   const LockOption({
     super.key,
@@ -113,37 +146,6 @@ class OpenSettingsOption extends StatelessWidget {
       onTap: () => Navigator.push(context,
           MaterialPageRoute(builder: (context) => const SettingsScreen())),
     );
-  }
-}
-
-class EditBoardOption extends ConsumerWidget {
-  const EditBoardOption({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final boardId = ref.watch(boardIdProvider);
-    final board = ref.watch(boardProvider(boardId)).valueOrNull;
-    final manager = ref.watch(boardManagerProvider);
-
-    return Option(
-        onTap: board != null
-            ? () async {
-                final editingParams =
-                    await showModalBottomSheet<BoardEditingParams>(
-                        context: context,
-                        builder: (context) {
-                          return Material(
-                              child: CreateBoardScreen(
-                                  params: BoardEditingParams.fromBoard(board)));
-                        });
-
-                if (editingParams != null) {
-                  manager.createOrUpdate(editingParams);
-                }
-              }
-            : null,
-        icon: const Icon(Icons.edit),
-        label: "Edytuj tablice");
   }
 }
 
