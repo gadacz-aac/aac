@@ -1,13 +1,11 @@
 import 'dart:io';
 
 import 'package:aac/src/features/arasaac/arasaac_service.dart';
-import 'package:aac/src/shared/utils/get_random_string.dart';
 import 'package:aac/src/shared/utils/try_download_image.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 bool isValidImage(ContentType contentType) {
@@ -86,7 +84,7 @@ class _ArasaacSearchScreenState extends ConsumerState<ArasaacSearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final symbols = ref.watch(arasaacSearchResultsProvider(query)).valueOrNull;
+    final symbols = ref.watch(arasaacSearchResultsProvider(query));
 
     return Column(
       children: [
@@ -100,53 +98,64 @@ class _ArasaacSearchScreenState extends ConsumerState<ArasaacSearchScreen> {
         const SizedBox(
           height: 28.0,
         ),
-        if (symbols == null || symbols.isEmpty)
-          Expanded(
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    "Oj mój... jak tu pusto",
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  const SizedBox(
-                    height: 4,
-                  ),
-                  Text(
-                    "pora coś wyszukać, bo ta pustka jest ciut niezręczna",
-                    style: Theme.of(context).textTheme.bodyLarge,
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-          )
-        else
-          Expanded(
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3, mainAxisSpacing: 18, crossAxisSpacing: 13),
-              itemCount: symbols.length,
-              itemBuilder: (context, index) {
-                return InkWell(
-                    child: Image.network(
-                      symbols[index],
-                    ),
-                    onTap: () async {
-                      final (file, err) =
-                          await tryDownloadImage(Uri.parse(symbols[index]));
+        symbols.when(
+            data: (data) {
+              if (data.isNotEmpty) {
+                return Expanded(
+                  child: GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            mainAxisSpacing: 18,
+                            crossAxisSpacing: 13),
+                    itemCount: data.length,
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                          child: Image.network(
+                            data[index],
+                          ),
+                          onTap: () async {
+                            final (file, err) =
+                                await tryDownloadImage(Uri.parse(data[index]));
 
-                      if (err != null) {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(SnackBar(content: Text(err)));
-                      }
+                            if (err != null) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(content: Text(err)));
+                            }
 
-                      Navigator.pop(context, file!.path);
-                    });
-              },
-            ),
-          )
+                            Navigator.pop(context, file!.path);
+                          });
+                    },
+                  ),
+                );
+              }
+              return Expanded(
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "Oj mój... jak tu pusto",
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      const SizedBox(
+                        height: 4,
+                      ),
+                      Text(
+                        "pora coś wyszukać, bo ta pustka jest ciut niezręczna",
+                        style: Theme.of(context).textTheme.bodyLarge,
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+            // TODO może coś innego? i kiedy to wgl będzie miało error?
+            error: (error, _) => Center(
+                  child: Text("$error"),
+                ),
+            loading: () => const Expanded(child: Center(child: CircularProgressIndicator())))
       ],
     );
   }
