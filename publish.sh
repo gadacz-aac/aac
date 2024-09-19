@@ -2,7 +2,7 @@
 
 branch=$(git branch --show-current)
 
-if [[ -z "$branch" != "main"]]; then
+if [[ "$branch" != "main" ]]; then
 	echo "You're not on main branch. If you want to publish from non main branch, please add a flag that always that to happen"
 	exit 1
 fi
@@ -21,7 +21,6 @@ confirm=$(echo $confirm | awk '{print tolower($0)}')
 
 while true; do
 	if [[ -z "$confirm" || "$confirm" == "y" ]]; then
-		echo "building"
 		flutter build apk
 		
 		name=$(cat pubspec.yaml | head -1 | cut -f 2 -d " ")
@@ -29,6 +28,7 @@ while true; do
 
 		mv "build/app/outputs/flutter-apk/app-release.apk" "$tmpFile"
 
+		echo "Hang on, Uploading apk"
 		gh release upload "$number" "$tmpFile"
 
 		rm "$tmpFile"
