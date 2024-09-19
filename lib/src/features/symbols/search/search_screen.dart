@@ -1,27 +1,27 @@
-import 'package:aac/src/features/boards/ui/actions/delete_forever_action.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
-import 'package:aac/src/features/symbols/settings/widgets/cherry_pick_image.dart';
+import 'package:aac/src/features/symbols/search/search_app_bar.dart';
+import 'package:aac/src/features/symbols/search/symbol_search_filters.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:aac/src/shared/isar_provider.dart';
-import 'package:aac/src/shared/utils/debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:isar/isar.dart';
 
-import 'app_bar_actions.dart';
-
 final searchedSymbolProvider =
     FutureProvider.autoDispose<List<CommunicationSymbol>>((ref) async {
   final isar = ref.watch(isarProvider);
   final query = ref.watch(queryProvider);
-
-  if (query.trim().isEmpty) return [];
+  final color = ref.watch(symbolSearchColorFilterProvider)?.code;
+  final onlyPinned = ref.watch(symbolSearchOnlyPinnedFilterProvider);
 
   return isar.communicationSymbols
       .where()
       .wordsElementStartsWith(query)
+      .filter()
+      .optional(color != null, (q) => q.colorEqualTo(color))
+      .optional(onlyPinned, (q) => q.parentBoardIsEmpty())
       .findAll();
 });
 
@@ -67,6 +67,7 @@ class SymbolSearchScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final results = ref.watch(searchedSymbolProvider).valueOrNull;
+    final hasResults = results != null && results.isNotEmpty;
 
     final theme = Theme.of(context);
     final appBarTheme = theme.copyWith(
@@ -90,29 +91,40 @@ class SymbolSearchScreen extends ConsumerWidget {
     return Theme(
         data: appBarTheme,
         child: PopScope(
-          onPopInvoked: (didPop) {
-            if (didPop) {
-              ref.read(selectedSymbolsProvider).clear();
-            }
-          },
-          child: Scaffold(
-              appBar: const SearchAppBar(),
-              body: results == null || results.isEmpty
-                  ? const NoResultsScreen()
-                  : AlignedGridView.count(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 12.0,
-                      mainAxisSpacing: 12.0,
-                      itemCount: results.length,
-                      padding: const EdgeInsets.all(12.0),
-                      itemBuilder: (context, index) {
-                        final e = results[index];
-                        return SymbolCard(
-                          symbol: e,
-                          onTapActions: const [SymbolOnTapAction.select],
-                        );
-                      })),
-        ));
+            onPopInvoked: (didPop) {
+              if (didPop) {
+                ref.read(selectedSymbolsProvider).clear();
+              }
+            },
+            child: Scaffold(
+                appBar: const SearchAppBar(),
+                body: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: SearchFilters(),
+                    ),
+                    if (!hasResults)
+                      const NoResultsScreen()
+                    else
+                      Expanded(
+                        child: AlignedGridView.count(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 12.0,
+                            mainAxisSpacing: 12.0,
+                            padding: const EdgeInsets.all(8.0),
+                            itemCount: results.length,
+                            itemBuilder: (context, index) {
+                              final e = results[index];
+                              return SymbolCard(
+                                symbol: e,
+                                onTapActions: const [SymbolOnTapAction.select],
+                              );
+                            }),
+                      ),
+                  ],
+                ))));
   }
 }
 
@@ -148,81 +160,6 @@ class NoResultsScreen extends ConsumerWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class SearchAppBar extends ConsumerStatefulWidget
-    implements PreferredSizeWidget {
-  const SearchAppBar({
-    super.key,
-  });
-
-  @override
-  ConsumerState<SearchAppBar> createState() => _SearchAppBarState();
-
-  @override
-  final Size preferredSize = const Size.fromHeight(kToolbarHeight);
-}
-
-class _SearchAppBarState extends ConsumerState<SearchAppBar> {
-  final controller = TextEditingController();
-  final _debounce = Debouncer(const Duration(milliseconds: 300));
-  final focusNode = FocusNode();
-
-  @override
-  void initState() {
-    super.initState();
-    focusNode.requestFocus();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _debounce.dispose();
-    controller.dispose();
-    focusNode.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final areSelected = ref.watch(areSymbolsSelectedProvider);
-
-    List<Widget>? actions;
-    Widget? title;
-
-    void clearOrPop() {
-      if (controller.text.isEmpty) {
-        Navigator.pop(context);
-        return;
-      }
-
-      controller.clear();
-    }
-
-    if (areSelected) {
-      actions = [const PinSelectedSymbolAction(), const DeleteForeverAction()];
-    } else {
-      title = Hero(
-        tag: "search",
-        child: Material(
-          child: AacSearchField(
-            focusNode: focusNode,
-            placeholder: "Szukaj",
-            controller: controller,
-            onChanged: (value) =>
-                ref.read(queryProvider.notifier).state = value,
-            suffixIcon: IconButton(
-                onPressed: clearOrPop, icon: const Icon(Icons.cancel)),
-          ),
-        ),
-      );
-    }
-
-    return AppBar(
-      automaticallyImplyLeading: false,
-      title: title,
-      actions: actions,
     );
   }
 }

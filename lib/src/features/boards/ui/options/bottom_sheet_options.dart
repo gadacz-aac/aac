@@ -1,10 +1,11 @@
 import 'package:aac/src/features/boards/board_manager.dart';
 import 'package:aac/src/features/boards/board_screen.dart';
-import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/settings/ui/settings_screen.dart';
 import 'package:aac/src/features/settings/utils/protective_mode.dart';
 import 'package:aac/src/features/symbols/settings/screens/create_board_screen.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
+import 'package:aac/src/features/symbols/settings/utils/randomise_symbol.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -38,7 +39,45 @@ class BottomSheetOptions extends StatelessWidget {
         const OptionGroup(options: [
           EditBoardOption(),
         ]),
+        if (kDebugMode) ...[
+          const SizedBox(
+            height: 24,
+          ),
+          const OptionGroup(
+            options: [CreateRandomSymbol()],
+          )
+        ]
       ]),
+    );
+  }
+}
+
+class CreateRandomSymbol extends ConsumerWidget {
+  const CreateRandomSymbol({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Option(
+      onTap: () async {
+        // final number = await showDialog(
+        //     context: context,
+        //     builder: (context) => Material(
+        //           child: TextField(onSubmitted: (val) {
+        //             print("dssdcdscs $val");
+        //             Navigator.pop(context, val);
+        //           }),
+        //         ));
+
+        var number = "12";
+
+        for (int i = 0; i < (int.tryParse(number) ?? 1); i++) {
+          randomiseSymbol(ref);
+        }
+      },
+      label: "Dodaj jakieś symbole",
+      icon: const Icon(Icons.shuffle),
     );
   }
 }
@@ -53,7 +92,8 @@ class LockOption extends ConsumerWidget {
     return Option(
         icon: const Icon(Icons.lock),
         label: "Zablokuj",
-        onTap: () {
+        onTap: () async {
+          await Future.delayed(const Duration(seconds: 3));
           ref.read(isParentModeProvider.notifier).state = false;
           startProtectiveModeIfEnabled(ref);
         });
