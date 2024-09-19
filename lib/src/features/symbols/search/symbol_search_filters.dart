@@ -98,11 +98,12 @@ class SymbolSearchColorFilterChip extends ConsumerWidget {
                                 groupValue: ref
                                     .watch(symbolSearchColorFilterProvider)
                                     ?.code,
+                                  toggleable: true,
                                 onChanged: (val) {
                                   ref
                                       .read(symbolSearchColorFilterProvider
                                           .notifier)
-                                      .state = e;
+                                      .state = val == null ? null : e;
                                   Navigator.pop(context);
                                 }))
                             .toList()));
