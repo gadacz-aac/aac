@@ -14,6 +14,8 @@ class CreateBoardScreen extends StatefulWidget {
 }
 
 class _CreateBoardScreenState extends State<CreateBoardScreen> {
+  final _formKey = GlobalKey<FormState>();
+
   late final TextEditingController nameController;
   late final TextEditingController columnCountController;
 
@@ -34,11 +36,21 @@ class _CreateBoardScreenState extends State<CreateBoardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
+    return Form(
+      key: _formKey,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 29.0, vertical: 27.0),
         child: Column(children: [
-          GenericTextField(controller: nameController, labelText: "Nazwa"),
+          GenericTextField(
+            controller: nameController,
+            labelText: "Nazwa",
+            validator: (val) {
+              if (val == null || val.isEmpty) {
+                return "Nazwa nie może być pusta";
+              }
+              return null;
+            },
+          ),
           const SizedBox(
             height: 14,
           ),
@@ -48,6 +60,13 @@ class _CreateBoardScreenState extends State<CreateBoardScreen> {
                   child: GenericNumberField(
                 name: "dupa",
                 controller: columnCountController,
+                inputFormatters: [positiveDigitsOnly],
+                validator: (val) {
+                  if (val != null && val.startsWith("0")) {
+                    return "Liczba kolumn powinna być większa od 0";
+                  }
+                  return null;
+                },
                 labelText: "Liczba Kolumn",
               )),
             ],
@@ -63,13 +82,15 @@ class _CreateBoardScreenState extends State<CreateBoardScreen> {
               ),
               Button(
                   onPressed: () {
+                    if (!_formKey.currentState!.validate()) return;
                     Navigator.pop(
                         context,
                         BoardEditingParams(
-                            name: nameController.text,
-                            id: widget.params.id,
-                            columnCount:
-                                int.tryParse(columnCountController.text),)); },
+                          name: nameController.text,
+                          id: widget.params.id,
+                          columnCount: int.tryParse(columnCountController.text),
+                        ));
+                  },
                   child: const Text("Zapisz"))
             ],
           )
