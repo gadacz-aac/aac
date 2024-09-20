@@ -1,6 +1,5 @@
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/boards/ui/options/bottom_sheet_options.dart';
-import 'package:aac/src/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -15,7 +14,6 @@ class ShowMoreOptions extends ConsumerWidget {
         onPressed: () => showModalBottomSheet(
               isScrollControlled: true,
               useSafeArea: true,
-              backgroundColor: AacColors.greyBackground,
               context: context,
               builder: (context) {
                 return ProviderScope(
