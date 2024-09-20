@@ -73,10 +73,10 @@ class CreateRandomSymbol extends ConsumerWidget {
         //         ));
 
         var number = "12";
-
         for (int i = 0; i < (int.tryParse(number) ?? 1); i++) {
           randomiseSymbol(ref);
         }
+        Navigator.pop(context);
       },
       label: "Dodaj jakieś symbole",
       icon: const Icon(Icons.shuffle),
@@ -108,6 +108,10 @@ class EditBoardOption extends ConsumerWidget {
                 if (editingParams != null) {
                   manager.createOrUpdate(editingParams);
                 }
+
+                if (context.mounted) {
+                  Navigator.pop(context);
+                }
               }
             : null,
         icon: const Icon(Icons.edit),
@@ -126,9 +130,9 @@ class LockOption extends ConsumerWidget {
         icon: const Icon(Icons.lock),
         label: "Zablokuj",
         onTap: () async {
-          await Future.delayed(const Duration(seconds: 3));
           ref.read(isParentModeProvider.notifier).state = false;
           startProtectiveModeIfEnabled(ref);
+          Navigator.pop(context);
         });
   }
 }
@@ -143,7 +147,7 @@ class OpenSettingsOption extends StatelessWidget {
     return Option(
       icon: const Icon(Icons.settings),
       label: "Ustawienia",
-      onTap: () => Navigator.push(context,
+      onTap: () => Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (context) => const SettingsScreen())),
     );
   }
@@ -165,7 +169,6 @@ class Option extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pop(context);
         if (onTap != null) onTap!();
       },
       child: Padding(
