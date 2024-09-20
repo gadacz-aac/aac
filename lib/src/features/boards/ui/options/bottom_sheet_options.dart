@@ -99,10 +99,9 @@ class EditBoardOption extends ConsumerWidget {
                 final editingParams =
                     await showModalBottomSheet<BoardEditingParams>(
                         context: context,
-                        builder: (context) {
-                          return Material(
-                              child: CreateBoardScreen(
-                                  params: BoardEditingParams.fromBoard(board)));
+                        builder: (modalContext) {
+                          return CreateBoardScreen(
+                                params: BoardEditingParams.fromBoard(board));
                         });
 
                 if (editingParams != null) {

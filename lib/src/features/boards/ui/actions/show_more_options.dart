@@ -15,7 +15,6 @@ class ShowMoreOptions extends ConsumerWidget {
         onPressed: () => showModalBottomSheet(
               isScrollControlled: true,
               useSafeArea: true,
-              backgroundColor: AacColors.greyBackground,
               context: context,
               builder: (context) {
                 return ProviderScope(

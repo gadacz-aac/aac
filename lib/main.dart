@@ -51,7 +51,10 @@ class MainApp extends StatelessWidget {
               titleTextStyle: TextStyle(
                   color: AacColors.iconsGrey,
                   fontSize: 16,
-                  fontWeight: FontWeight.bold))),
+                  fontWeight: FontWeight.bold)),
+          bottomSheetTheme: const BottomSheetThemeData(
+            backgroundColor: AacColors.greyBackground,
+          )),
       home: BoardScreen(boardId: 1),
     );
   }
