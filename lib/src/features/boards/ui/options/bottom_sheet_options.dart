@@ -96,20 +96,19 @@ class EditBoardOption extends ConsumerWidget {
     return Option(
         onTap: board != null
             ? () async {
-                final editingParams =
-                    await showModalBottomSheet<BoardEditingParams>(
-                        context: context,
-                        builder: (modalContext) {
-                          return CreateBoardScreen(
-                                params: BoardEditingParams.fromBoard(board));
-                        });
+                Navigator.pop(context);
+                final editingParams = await showModalBottomSheet(
+                    context: context,
+                    // we don't use any scrollable thing there, but it allows for the boxConstrains to take effect
+                    isScrollControlled: true,
+                    useSafeArea: true,
+                    builder: (modalContext) {
+                      return CreateBoardScreen(
+                          params: BoardEditingParams.fromBoard(board));
+                    });
 
                 if (editingParams != null) {
                   manager.createOrUpdate(editingParams);
-                }
-
-                if (context.mounted) {
-                  Navigator.pop(context);
                 }
               }
             : null,

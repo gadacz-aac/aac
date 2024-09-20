@@ -54,7 +54,9 @@ class MainApp extends StatelessWidget {
                   fontWeight: FontWeight.bold)),
           bottomSheetTheme: const BottomSheetThemeData(
             backgroundColor: AacColors.greyBackground,
-          )),
+          ),
+          dialogTheme:
+              const DialogTheme(backgroundColor: AacColors.greyBackground)),
       home: BoardScreen(boardId: 1),
     );
   }
