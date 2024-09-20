@@ -74,6 +74,8 @@ class SymbolCard extends ConsumerWidget {
 
     if (symbol.childBoard.value == null) {
       bgColor = Colors.white;
+    } else if (symbol.color == null) {
+      bgColor = const Color(0xFFECECEC);
     } else {
       bgColor = Color(colors
           .firstWhere((e) => e.code == symbol.color)
