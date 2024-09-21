@@ -109,26 +109,23 @@ class _ArasaacSearchScreenState extends ConsumerState<ArasaacSearchScreen> {
                       crossAxisCount: 3,
                       mainAxisSpacing: 18,
                       crossAxisSpacing: 13),
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      return InkWell(
-                          child: Image.network(
-                            data[index],
-                          ),
-                          onTap: () async {
-                            final (file, err) =
-                                await tryDownloadImage(Uri.parse(data[index]));
-                    
-                            if (err != null) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(content: Text(err)));
-                            }
-                    
-                            Navigator.pop(context, file!.path);
-                          });
-                    },
-                    childCount: data.length
-                  ),
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    return InkWell(
+                        child: Image.network(
+                          data[index],
+                        ),
+                        onTap: () async {
+                          final (file, err) =
+                              await tryDownloadImage(Uri.parse(data[index]));
+
+                          if (err != null) {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(SnackBar(content: Text(err)));
+                          }
+
+                          Navigator.pop(context, file!.path);
+                        });
+                  }, childCount: data.length),
                 ),
               );
             }
@@ -230,16 +227,17 @@ class _UploadImageFromLinkScreenState extends State<UploadImageFromLinkScreen> {
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Expanded(
               child: AacSearchField(
+                  icon: const Icon(Icons.link),
                   controller: controller,
                   errorText: errorText,
                   placeholder: "Wklej link do obrazka",
                   validator: (value) {
                     if (value == null) return null;
-        
+
                     if (!Uri.parse(value).isAbsolute) {
                       return "Niepoprawny adres url";
                     }
-        
+
                     return null;
                   }),
             ),
@@ -254,7 +252,8 @@ class _UploadImageFromLinkScreenState extends State<UploadImageFromLinkScreen> {
                         backgroundColor:
                             const WidgetStatePropertyAll(Color(0xFF2A1B3B)),
                         iconSize: const WidgetStatePropertyAll(24.0),
-                        iconColor: const WidgetStatePropertyAll(Color(0xFFD3CEE3)),
+                        iconColor:
+                            const WidgetStatePropertyAll(Color(0xFFD3CEE3)),
                         shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4.0)))),
                     child: const Icon(Icons.upload)))
