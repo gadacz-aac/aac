@@ -86,30 +86,31 @@ class _ArasaacSearchScreenState extends ConsumerState<ArasaacSearchScreen> {
   Widget build(BuildContext context) {
     final symbols = ref.watch(arasaacSearchResultsProvider(query));
 
-    return Column(
-      children: [
-        AacSearchField(
-          onChanged: (value) => setState(() {
-            query = value;
-          }),
-          placeholder: "Szukaj w arrasac",
-          icon: const Icon(Icons.search_outlined),
+    return CustomScrollView(slivers: [
+      SliverToBoxAdapter(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 27.0, horizontal: 20.0),
+          child: AacSearchField(
+            onChanged: (value) => setState(() {
+              query = value;
+            }),
+            placeholder: "Szukaj w arrasac",
+            icon: const Icon(Icons.search_outlined),
+          ),
         ),
-        const SizedBox(
-          height: 28.0,
-        ),
-        symbols.when(
-            data: (data) {
-              if (data.isNotEmpty) {
-                return Expanded(
-                  child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            mainAxisSpacing: 18,
-                            crossAxisSpacing: 13),
-                    itemCount: data.length,
-                    itemBuilder: (context, index) {
+      ),
+      symbols.when(
+          data: (data) {
+            if (data.isNotEmpty) {
+              return SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 27.0),
+                sliver: SliverGrid(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      mainAxisSpacing: 18,
+                      crossAxisSpacing: 13),
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
                       return InkWell(
                           child: Image.network(
                             data[index],
@@ -117,47 +118,51 @@ class _ArasaacSearchScreenState extends ConsumerState<ArasaacSearchScreen> {
                           onTap: () async {
                             final (file, err) =
                                 await tryDownloadImage(Uri.parse(data[index]));
-
+                    
                             if (err != null) {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(SnackBar(content: Text(err)));
                             }
-
+                    
                             Navigator.pop(context, file!.path);
                           });
                     },
-                  ),
-                );
-              }
-              return Expanded(
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "Oj mój... jak tu pusto",
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                      const SizedBox(
-                        height: 4,
-                      ),
-                      Text(
-                        "pora coś wyszukać, bo ta pustka jest ciut niezręczna",
-                        style: Theme.of(context).textTheme.bodyLarge,
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
+                    childCount: data.length
                   ),
                 ),
               );
-            },
-            // TODO może coś innego? i kiedy to wgl będzie miało error?
-            error: (error, _) => Center(
+            }
+            return SliverToBoxAdapter(
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "Oj mój... jak tu pusto",
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    const SizedBox(
+                      height: 4,
+                    ),
+                    Text(
+                      "pora coś wyszukać, bo ta pustka jest ciut niezręczna",
+                      style: Theme.of(context).textTheme.bodyLarge,
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+          // TODO może coś innego? i kiedy to wgl będzie miało error?
+          error: (error, _) => SliverToBoxAdapter(
+                child: Center(
                   child: Text("$error"),
                 ),
-            loading: () => const Expanded(child: Center(child: CircularProgressIndicator())))
-      ],
-    );
+              ),
+          loading: () => const SliverFillRemaining(
+              child: Center(child: CircularProgressIndicator())))
+    ]);
   }
 }
 
@@ -189,18 +194,12 @@ class ImageCherryPicker extends StatelessWidget {
             )),
         body: const TabBarView(
           children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 27.0, horizontal: 20.0),
-              child: ArasaacSearchScreen(),
-            ),
+            ArasaacSearchScreen(),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 27.0, horizontal: 20.0),
               child: UploadFromDeviceScreen(),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 27.0, horizontal: 20.0),
-              child: UploadImageFromLinkScreen(),
-            )
+            UploadImageFromLinkScreen()
           ],
         ),
       ),
@@ -223,40 +222,45 @@ class _UploadImageFromLinkScreenState extends State<UploadImageFromLinkScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Expanded(
-          child: AacSearchField(
-              controller: controller,
-              errorText: errorText,
-              placeholder: "Wklej link do obrazka",
-              validator: (value) {
-                if (value == null) return null;
-
-                if (!Uri.parse(value).isAbsolute) {
-                  return "Niepoprawny adres url";
-                }
-
-                return null;
-              }),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 27.0, horizontal: 20.0),
+        child: Form(
+          key: _formKey,
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Expanded(
+              child: AacSearchField(
+                  controller: controller,
+                  errorText: errorText,
+                  placeholder: "Wklej link do obrazka",
+                  validator: (value) {
+                    if (value == null) return null;
+        
+                    if (!Uri.parse(value).isAbsolute) {
+                      return "Niepoprawny adres url";
+                    }
+        
+                    return null;
+                  }),
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            SizedBox(
+                height: 48,
+                child: ElevatedButton(
+                    onPressed: tryDownload,
+                    style: ButtonStyle(
+                        backgroundColor:
+                            const WidgetStatePropertyAll(Color(0xFF2A1B3B)),
+                        iconSize: const WidgetStatePropertyAll(24.0),
+                        iconColor: const WidgetStatePropertyAll(Color(0xFFD3CEE3)),
+                        shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.0)))),
+                    child: const Icon(Icons.upload)))
+          ]),
         ),
-        const SizedBox(
-          width: 5,
-        ),
-        SizedBox(
-            height: 48,
-            child: ElevatedButton(
-                onPressed: tryDownload,
-                style: ButtonStyle(
-                    backgroundColor:
-                        const WidgetStatePropertyAll(Color(0xFF2A1B3B)),
-                    iconSize: const WidgetStatePropertyAll(24.0),
-                    iconColor: const WidgetStatePropertyAll(Color(0xFFD3CEE3)),
-                    shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4.0)))),
-                child: const Icon(Icons.upload)))
-      ]),
+      ),
     );
   }
 

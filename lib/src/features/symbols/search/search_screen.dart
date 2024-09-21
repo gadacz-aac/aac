@@ -137,26 +137,36 @@ class NoResultsScreen extends ConsumerWidget {
     final isLoading = ref.watch(searchedSymbolProvider).isLoading;
     final textTheme = Theme.of(context).textTheme;
     if (search.isEmpty || isLoading) return const SizedBox();
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
+    return Expanded(
       child: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/could-not-find-anything-symbol-arrasac.png',
-                width: MediaQuery.sizeOf(context).shortestSide / 2,
-              ),
-              const SizedBox(
-                height: 12.0,
-              ),
-              Text(
-                "Hmm.. nie znaleźliśmy wyników dla \"$search\"",
-                style: textTheme.headlineSmall,
-                textAlign: TextAlign.center,
-              ),
-            ],
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  height: 12.0,
+                ),
+                Image.asset(
+                  'assets/could-not-find-anything-symbol-arrasac.png',
+                  width: 100,
+                ),
+                const SizedBox(
+                  height: 12.0,
+                ),
+                Text(
+                  "Hmm.. nie znaleźliśmy wyników dla \"$search\"",
+                  style: textTheme.headlineSmall,
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  "Spróbuj innego zapytania albo zmień filtry",
+                  style: textTheme.bodyLarge,
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           ),
         ),
       ),
