@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:aac/src/features/arasaac/arasaac_service.dart';
-import 'package:aac/src/features/symbols/search/search_screen.dart';
 import 'package:aac/src/shared/utils/try_download_image.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
@@ -200,10 +199,7 @@ class ImageCherryPicker extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 27.0, horizontal: 20.0),
               child: UploadFromDeviceScreen(),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 27.0, horizontal: 20.0),
-              child: UploadImageFromLinkScreen(),
-            )
+            UploadImageFromLinkScreen()
           ],
         ),
       ),
@@ -226,40 +222,45 @@ class _UploadImageFromLinkScreenState extends State<UploadImageFromLinkScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Expanded(
-          child: AacSearchField(
-              controller: controller,
-              errorText: errorText,
-              placeholder: "Wklej link do obrazka",
-              validator: (value) {
-                if (value == null) return null;
-
-                if (!Uri.parse(value).isAbsolute) {
-                  return "Niepoprawny adres url";
-                }
-
-                return null;
-              }),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 27.0, horizontal: 20.0),
+        child: Form(
+          key: _formKey,
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Expanded(
+              child: AacSearchField(
+                  controller: controller,
+                  errorText: errorText,
+                  placeholder: "Wklej link do obrazka",
+                  validator: (value) {
+                    if (value == null) return null;
+        
+                    if (!Uri.parse(value).isAbsolute) {
+                      return "Niepoprawny adres url";
+                    }
+        
+                    return null;
+                  }),
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            SizedBox(
+                height: 48,
+                child: ElevatedButton(
+                    onPressed: tryDownload,
+                    style: ButtonStyle(
+                        backgroundColor:
+                            const WidgetStatePropertyAll(Color(0xFF2A1B3B)),
+                        iconSize: const WidgetStatePropertyAll(24.0),
+                        iconColor: const WidgetStatePropertyAll(Color(0xFFD3CEE3)),
+                        shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.0)))),
+                    child: const Icon(Icons.upload)))
+          ]),
         ),
-        const SizedBox(
-          width: 5,
-        ),
-        SizedBox(
-            height: 48,
-            child: ElevatedButton(
-                onPressed: tryDownload,
-                style: ButtonStyle(
-                    backgroundColor:
-                        const WidgetStatePropertyAll(Color(0xFF2A1B3B)),
-                    iconSize: const WidgetStatePropertyAll(24.0),
-                    iconColor: const WidgetStatePropertyAll(Color(0xFFD3CEE3)),
-                    shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4.0)))),
-                child: const Icon(Icons.upload)))
-      ]),
+      ),
     );
   }
 
