@@ -10,11 +10,15 @@ class Board {
   Id id;
   int crossAxisCount;
   String name;
-  Board({int? crossAxisCountOrNull, required this.name})
+  Board(
+      {int? crossAxisCountOrNull,
+      required this.name,
+      this.reorderedSymbols = const []})
       : id = Isar.autoIncrement,
         crossAxisCount = crossAxisCountOrNull ?? 3;
 
   final symbols = IsarLinks<CommunicationSymbol>();
+  List<int> reorderedSymbols;
 
   factory Board.fromParams(BoardEditingParams params) {
     final board =

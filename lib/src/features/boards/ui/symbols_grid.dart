@@ -1,5 +1,7 @@
 import 'package:aac/src/features/boards/model/board.dart';
+import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
+import 'package:aac/src/shared/isar_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -59,34 +61,182 @@ final symbolGridScrollControllerProvider =
   return controller;
 });
 
-class SymbolsGrid extends ConsumerWidget {
-  const SymbolsGrid({super.key, required this.board});
+class SymbolsGrid extends ConsumerStatefulWidget {
+  const SymbolsGrid({required this.board, super.key});
 
   final Board board;
+  @override
+  ConsumerState<SymbolsGrid> createState() => _SymbolsGridState();
+}
+
+class _SymbolsGridState extends ConsumerState<SymbolsGrid> {
+  DragItem<CommunicationSymbol>? currentlyDragged;
+  int? desiredIndex;
+  final List<CommunicationSymbol> items = [];
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void initState() {
+    super.initState();
+    if (widget.board.reorderedSymbols.isNotEmpty) {
+      items.addAll(widget.board.reorderedSymbols
+          .map((e) => widget.board.symbols.firstWhere((s) => s.id == e)));
+    } else {
+      items.addAll(widget.board.symbols);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final controller = ref.watch(symbolGridScrollControllerProvider);
+    final crossAxisCount = widget.board.crossAxisCount;
+
     return Expanded(
       child: AlignedGridView.count(
-          crossAxisCount: board.crossAxisCount,
-          crossAxisSpacing: 12.0,
-          mainAxisSpacing: 12.0,
-          itemCount: board.symbols.length,
+          crossAxisCount: crossAxisCount,
+          itemCount: items.length,
           padding: const EdgeInsets.all(12.0),
           controller: controller,
           itemBuilder: (context, index) {
-            final e = board.symbols.elementAt(index);
-            return SymbolCard(
-              symbol: e,
-              onLongPressActions: const [SymbolOnTapAction.select],
-              onTapActions: const [
-                SymbolOnTapAction.speak,
-                SymbolOnTapAction.cd,
-                SymbolOnTapAction.multiselect
-              ],
-            );
+            final e = items[index];
+
+            return DragTarget<DragItem<CommunicationSymbol>>(onMove: (data) {
+              setState(() {
+                desiredIndex = index;
+              });
+            }, onLeave: (data) {
+              setState(() {
+                desiredIndex = null;
+              });
+            }, onAcceptWithDetails: (data) {
+              if (currentlyDragged == null || desiredIndex == null) return;
+
+              setState(() {
+                items.removeAt(currentlyDragged!.index);
+                items.insert(desiredIndex!, currentlyDragged!.data);
+                desiredIndex == null;
+              });
+
+              final isar = ref.read(isarProvider);
+              final reorderedSymbols = [...widget.board.reorderedSymbols];
+              if (reorderedSymbols.isEmpty) {
+                reorderedSymbols.addAll(widget.board.symbols.map((e) => e.id));
+              }
+
+              reorderedSymbols.removeAt(currentlyDragged!.index);
+              reorderedSymbols.insert(desiredIndex!, currentlyDragged!.data.id);
+              print(reorderedSymbols);
+
+              isar.writeTxn(() async {
+                final board = await isar.boards.get(widget.board.id);
+                if (board == null) return;
+
+                board.reorderedSymbols = [...reorderedSymbols];
+                isar.boards.put(board);
+              });
+            }, builder: (context, incoming, __) {
+              return LayoutBuilder(builder: (context, constrains) {
+                final data = DragItem(index: index, data: e);
+
+                final Offset offset;
+
+                final isNotDragging =
+                    currentlyDragged == null || desiredIndex == null;
+
+                if (isNotDragging) {
+                  offset = const Offset(0, 0);
+                } else {
+                  int min = currentlyDragged!.index;
+                  int max = desiredIndex!;
+                  if (min > max) {
+                    final tmp = min;
+                    min = max;
+                    max = tmp;
+                  }
+
+                  final isNotAffected = index < min || index > max;
+                  final isOnSameTile = currentlyDragged?.index == desiredIndex;
+                  final isLastInRow = (index + 1) % crossAxisCount == 0;
+                  final isFirstInRow = (index) % crossAxisCount == 0;
+
+                  if (isNotAffected || isOnSameTile) {
+                    offset = const Offset(0, 0);
+                  } else if (currentlyDragged!.index > desiredIndex!) {
+                    if (isLastInRow) {
+                      offset = Offset(-(crossAxisCount.toDouble() - 1), 1);
+                    } else {
+                      offset = const Offset(1, 0);
+                    }
+                  } else {
+                    if (isFirstInRow) {
+                      offset = Offset((crossAxisCount.toDouble() - 1), -1);
+                    } else {
+                      offset = const Offset(-1, 0);
+                    }
+                  }
+                }
+
+                final child = AnimatedSlide(
+                    duration: currentlyDragged != null
+                        ? const Duration(milliseconds: 3000)
+                        : Duration.zero,
+                    offset: offset,
+                    child: Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: SymbolCard(
+                        symbol: e,
+                        onLongPressActions: const [SymbolOnTapAction.select],
+                        onTapActions: const [
+                          // SymbolOnTapAction.speak,
+                          SymbolOnTapAction.cd,
+                          SymbolOnTapAction.multiselect
+                        ],
+                      ),
+                    ));
+
+                // print("width: ${constrains.maxWidth}");
+                // print("height: ${constrains.maxHeight}");
+
+                return Draggable(
+                  data: data,
+                  onDragStarted: () => setState(() {
+                    currentlyDragged = data;
+                  }),
+                  onDragEnd: (_) => setState(() {
+                    currentlyDragged = null;
+                  }),
+                  feedback: Material(
+                    child: IntrinsicHeight(
+                      child: SizedBox(
+                          width: constrains.maxWidth,
+                          // height: constrains.maxHeight.isInfinite
+                          //     ? constrains.minHeight
+                          //     : constrains.maxHeight,
+                          child: child),
+                    ),
+                  ),
+                  childWhenDragging: currentlyDragged?.index == data.index
+                      ? const SizedBox(
+                          width: 30,
+                          height: 30,
+                        )
+                      : child,
+                  child: child,
+                );
+              });
+            });
           }),
     );
+  }
+}
+
+class DragItem<T> {
+  final int index;
+  final T data;
+
+  DragItem({required this.index, required this.data});
+
+  @override
+  String toString() {
+    return "DragItem $index, $data";
   }
 }
