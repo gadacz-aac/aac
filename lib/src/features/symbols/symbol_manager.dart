@@ -122,6 +122,7 @@ class SymbolManager {
   Future<void> _pinSymbolToBoard(
       CommunicationSymbol symbol, Board board) async {
     board.symbols.add(symbol);
+    board.reorderedSymbols = [...board.reorderedSymbols, symbol.id];
     board.symbols.save();
   }
 
@@ -129,6 +130,8 @@ class SymbolManager {
       List<CommunicationSymbol> symbols, Board board) async {
     await isar.writeTxn(() async {
       board.symbols.addAll(symbols);
+      final symbolsId = symbols.map((e)=>e.id);
+      board.reorderedSymbols = [...board.reorderedSymbols, ...symbolsId];
       await board.symbols.save();
       await isar.boards.put(board);
     });
@@ -140,6 +143,11 @@ class SymbolManager {
       final board = await isar.boards.get(boardId);
 
       if (board == null) return;
+      final symbolsId = symbols.map((e)=>e.id);
+      board.reorderedSymbols = [
+        for (final e in board.reorderedSymbols)
+          if (!symbolsId.contains(e)) e
+      ];
       board.symbols.removeAll(symbols);
       await board.symbols.save();
       await isar.boards.put(board);
@@ -152,6 +160,11 @@ class SymbolManager {
     await isar.writeTxn(() async {
       final board = await isar.boards.get(boardId);
       if (board == null) return;
+      final symbolsId = symbols.map((e)=>e.id);
+      board.reorderedSymbols = [
+        for (final e in board.reorderedSymbols)
+          if (!symbolsId.contains(e)) e
+      ];
       await isar.communicationSymbols.deleteAll(symbolIds);
       await isar.boards.put(board);
     });

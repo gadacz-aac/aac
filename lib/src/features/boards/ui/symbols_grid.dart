@@ -72,16 +72,25 @@ class SymbolsGrid extends ConsumerStatefulWidget {
 class _SymbolsGridState extends ConsumerState<SymbolsGrid> {
   DragItem<CommunicationSymbol>? currentlyDragged;
   int? desiredIndex;
-  final List<CommunicationSymbol> items = [];
+  List<CommunicationSymbol> items = [];
 
   @override
   void initState() {
     super.initState();
-    if (widget.board.reorderedSymbols.isNotEmpty) {
-      items.addAll(widget.board.reorderedSymbols
-          .map((e) => widget.board.symbols.firstWhere((s) => s.id == e)));
-    } else {
-      items.addAll(widget.board.symbols);
+    items = widget.board.reorderedSymbols
+        .map((id) => widget.board.symbols.firstWhere((e) => e.id == id))
+        .toList();
+  }
+
+  @override
+  void didUpdateWidget(covariant SymbolsGrid oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    print(oldWidget.board.reorderedSymbols == widget.board.reorderedSymbols);
+    if (oldWidget.board.reorderedSymbols != widget.board.reorderedSymbols) {
+      items = widget.board.reorderedSymbols
+          .map((id) => widget.board.symbols.firstWhere((e) => e.id == id))
+          .toList();
     }
   }
 
@@ -111,20 +120,15 @@ class _SymbolsGridState extends ConsumerState<SymbolsGrid> {
               if (currentlyDragged == null || desiredIndex == null) return;
 
               setState(() {
-                items.removeAt(currentlyDragged!.index);
-                items.insert(desiredIndex!, currentlyDragged!.data);
                 desiredIndex == null;
+                items.insert(desiredIndex!, currentlyDragged!.data);
+                items.removeAt(currentlyDragged!.index);
               });
 
               final isar = ref.read(isarProvider);
               final reorderedSymbols = [...widget.board.reorderedSymbols];
-              if (reorderedSymbols.isEmpty) {
-                reorderedSymbols.addAll(widget.board.symbols.map((e) => e.id));
-              }
-
               reorderedSymbols.removeAt(currentlyDragged!.index);
               reorderedSymbols.insert(desiredIndex!, currentlyDragged!.data.id);
-              print(reorderedSymbols);
 
               isar.writeTxn(() async {
                 final board = await isar.boards.get(widget.board.id);
@@ -176,8 +180,8 @@ class _SymbolsGridState extends ConsumerState<SymbolsGrid> {
                 }
 
                 final child = AnimatedSlide(
-                    duration: currentlyDragged != null
-                        ? const Duration(milliseconds: 3000)
+                    duration: !isNotDragging
+                        ? const Duration(milliseconds: 200)
                         : Duration.zero,
                     offset: offset,
                     child: Padding(
@@ -186,15 +190,12 @@ class _SymbolsGridState extends ConsumerState<SymbolsGrid> {
                         symbol: e,
                         onLongPressActions: const [SymbolOnTapAction.select],
                         onTapActions: const [
-                          // SymbolOnTapAction.speak,
+                          SymbolOnTapAction.speak,
                           SymbolOnTapAction.cd,
                           SymbolOnTapAction.multiselect
                         ],
                       ),
                     ));
-
-                // print("width: ${constrains.maxWidth}");
-                // print("height: ${constrains.maxHeight}");
 
                 return Draggable(
                   data: data,

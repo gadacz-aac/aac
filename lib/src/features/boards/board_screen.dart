@@ -32,6 +32,7 @@ class BoardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final board = ref.watch(boardProvider(boardId));
+    print(board);
     final isParentMode = ref.watch(isParentModeProvider);
     return board.when(
         error: (error, _) => ErrorScreen(error: error.toString()),

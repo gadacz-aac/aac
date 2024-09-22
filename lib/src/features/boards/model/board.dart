@@ -12,13 +12,12 @@ class Board {
   String name;
   Board(
       {int? crossAxisCountOrNull,
-      required this.name,
-      this.reorderedSymbols = const []})
+      required this.name})
       : id = Isar.autoIncrement,
         crossAxisCount = crossAxisCountOrNull ?? 3;
 
   final symbols = IsarLinks<CommunicationSymbol>();
-  List<int> reorderedSymbols;
+  List<int> reorderedSymbols = List.empty(growable: true);
 
   factory Board.fromParams(BoardEditingParams params) {
     final board =
@@ -31,7 +30,7 @@ class Board {
 
   @override
   String toString() =>
-      "board id: $id, crossAxisCount: $crossAxisCount, name: $name";
+      "board id: $id, crossAxisCount: $crossAxisCount, name: $name, symbols: $symbols, reorderedSymbols: $reorderedSymbols";
 
   @Index(type: IndexType.value, caseSensitive: false)
   List<String> get words => Isar.splitWords(name);
