@@ -1,5 +1,7 @@
+import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
+import 'package:aac/src/features/symbols/search/search_screen.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:aac/src/shared/isar_provider.dart';
 import 'package:flutter/material.dart';
@@ -73,6 +75,8 @@ class _SymbolsGridState extends ConsumerState<SymbolsGrid> {
   DragItem<CommunicationSymbol>? currentlyDragged;
   int? desiredIndex;
   List<CommunicationSymbol> items = [];
+  Offset dragStartPosition = Offset.zero;
+  bool didDraggedSignificantly = false;
 
   @override
   void initState() {
@@ -90,6 +94,12 @@ class _SymbolsGridState extends ConsumerState<SymbolsGrid> {
       items = widget.board.reorderedSymbols
           .map((id) => widget.board.symbols.firstWhere((e) => e.id == id))
           .toList();
+    }
+  }
+
+  void _onLongPress(CommunicationSymbol symbol, WidgetRef ref) {
+    if (ref.read(isParentModeProvider)) {
+      ref.read(selectedSymbolsProvider).toggle(symbol);
     }
   }
 
@@ -187,7 +197,6 @@ class _SymbolsGridState extends ConsumerState<SymbolsGrid> {
                       padding: const EdgeInsets.all(6.0),
                       child: SymbolCard(
                         symbol: e,
-                        onLongPressActions: const [SymbolOnTapAction.select],
                         onTapActions: const [
                           SymbolOnTapAction.speak,
                           SymbolOnTapAction.cd,
@@ -196,30 +205,44 @@ class _SymbolsGridState extends ConsumerState<SymbolsGrid> {
                       ),
                     ));
 
-                return Draggable(
+                return LongPressDraggable(
                   data: data,
-                  onDragStarted: () => setState(() {
-                    currentlyDragged = data;
-                  }),
+                  onDragStarted: () {
+                    _onLongPress(e, ref);
+                    setState(() {
+                      currentlyDragged = data;
+                      dragStartPosition = Offset.zero;
+                    });
+                  },
+                  onDragUpdate: (details) {
+                    if (dragStartPosition == Offset.zero) {
+                      dragStartPosition = details.globalPosition;
+                    } else if (!didDraggedSignificantly &&
+                        (dragStartPosition - details.globalPosition)
+                                .distance
+                                .abs() >
+                            20) {
+                      _onLongPress(e, ref);
+                      didDraggedSignificantly = true;
+                    }
+                  },
                   onDragEnd: (_) => setState(() {
                     currentlyDragged = null;
+                    dragStartPosition = Offset.zero;
+                    didDraggedSignificantly = false;
                   }),
                   feedback: Material(
-                    child: IntrinsicHeight(
-                      child: SizedBox(
-                          width: constrains.maxWidth,
-                          // height: constrains.maxHeight.isInfinite
-                          //     ? constrains.minHeight
-                          //     : constrains.maxHeight,
-                          child: child),
-                    ),
+                    child: SizedBox(
+                        width: constrains.maxWidth,
+                        height: constrains.maxHeight.isInfinite ? null: constrains.maxHeight,
+                        child: SymbolCard(symbol: e, isDragging: true,)),
                   ),
-                  childWhenDragging: currentlyDragged?.index == data.index
-                      ? const SizedBox(
-                          width: 30,
-                          height: 30,
-                        )
-                      : child,
+                  childWhenDragging: Visibility(
+                  maintainSize: true,
+                  maintainAnimation: true,
+                  maintainState: true,
+                      visible: currentlyDragged?.index != data.index,
+                      child: child),
                   child: child,
                 );
               });

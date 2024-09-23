@@ -9,29 +9,39 @@ import 'package:aac/src/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+final isSymbolSelectedProvider = Provider.family.autoDispose<bool, int>((ref, id) {
+    return ref
+        .watch(selectedSymbolsProvider)
+        .state
+        .any((element) => element.id == id);
+});
+
+
 enum SymbolOnTapAction { select, multiselect, speak, speakAndBuildSentence, cd }
 // this ^ gets out of hand already it's bout to get more and more complex
 // someone figure a better way to handle this bs
 // - Piotrek
 
+final selectedBorder = Border.all(
+              color:  AacColors.mainControlBackground,
+              width: 3,
+              strokeAlign: BorderSide.strokeAlignOutside);
+
+
 class SymbolCard extends ConsumerWidget {
   const SymbolCard({
     super.key,
     required this.symbol,
+    this.isDragging = false,
     this.onTapActions = const [],
     this.onLongPressActions = const [],
   });
 
   final CommunicationSymbol symbol;
   final bool imageHasBackground = false;
+  final bool isDragging; 
   final List<SymbolOnTapAction> onTapActions;
   final List<SymbolOnTapAction> onLongPressActions;
-  void _onLongPress(BuildContext context, WidgetRef ref) {
-    if (ref.read(isParentModeProvider) &&
-        onLongPressActions.contains(SymbolOnTapAction.select)) {
-      ref.read(selectedSymbolsProvider).toggle(symbol);
-    }
-  }
 
   void _onTap(BuildContext context, WidgetRef ref) {
     final isParentMode = ref.read(isParentModeProvider);
@@ -68,6 +78,8 @@ class SymbolCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isSelected = ref.watch(isSymbolSelectedProvider(symbol.id));
+
     Color bgColor;
     Color labelBgColor;
     Color textColor;
@@ -90,11 +102,6 @@ class SymbolCard extends ConsumerWidget {
       textColor = Colors.white;
     }
 
-    final isSelected = ref
-        .watch(selectedSymbolsProvider)
-        .state
-        .any((element) => element.id == symbol.id);
-
     final imagePadding = imageHasBackground
         ? const EdgeInsets.all(0)
         : const EdgeInsets.only(top: 6.0, left: 6.0, right: 6.0, bottom: 14.0);
@@ -115,17 +122,13 @@ class SymbolCard extends ConsumerWidget {
           spreadRadius: 1,
         )
       ],
-      border: isSelected
-          ? Border.all(
-              color: AacColors.mainControlBackground,
-              width: 3,
-              strokeAlign: BorderSide.strokeAlignOutside)
+      border: isSelected || isDragging
+          ? selectedBorder
           : null,
       color: bgColor,
     );
 
     return InkWell(
-        onLongPress: () => _onLongPress(context, ref),
         onTap: () => _onTap(context, ref),
         child: IntrinsicHeight(
           child: Container(
