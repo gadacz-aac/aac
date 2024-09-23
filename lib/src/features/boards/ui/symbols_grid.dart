@@ -86,8 +86,7 @@ class _SymbolsGridState extends ConsumerState<SymbolsGrid> {
   void didUpdateWidget(covariant SymbolsGrid oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    print(oldWidget.board.reorderedSymbols == widget.board.reorderedSymbols);
-    if (oldWidget.board.reorderedSymbols != widget.board.reorderedSymbols) {
+    if (oldWidget.board.symbols.length != widget.board.symbols.length) {
       items = widget.board.reorderedSymbols
           .map((id) => widget.board.symbols.firstWhere((e) => e.id == id))
           .toList();
@@ -121,8 +120,8 @@ class _SymbolsGridState extends ConsumerState<SymbolsGrid> {
 
               setState(() {
                 desiredIndex == null;
-                items.insert(desiredIndex!, currentlyDragged!.data);
                 items.removeAt(currentlyDragged!.index);
+                items.insert(desiredIndex!, currentlyDragged!.data);
               });
 
               final isar = ref.read(isarProvider);
