@@ -59,14 +59,19 @@ final symbolGridScrollControllerProvider =
 
 class BaseSymbolsGrid extends ConsumerWidget {
   const BaseSymbolsGrid(
-      {required this.itemBuilder,
+      {super.key,
+      required this.itemBuilder,
       required this.itemCount,
-      super.key,
-      required this.crossAxisCount});
+      required this.crossAxisCount,
+      this.crossAxisSpacing = 0,
+      this.mainAxisSpacing = 0});
 
   final Widget? Function(BuildContext, int) itemBuilder;
   final int itemCount;
   final int crossAxisCount;
+
+  final double crossAxisSpacing;
+  final double mainAxisSpacing;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -75,6 +80,8 @@ class BaseSymbolsGrid extends ConsumerWidget {
     return Expanded(
         child: AlignedGridView.count(
       crossAxisCount: crossAxisCount,
+      crossAxisSpacing: crossAxisSpacing,
+      mainAxisSpacing: mainAxisSpacing,
       itemCount: itemCount,
       padding: const EdgeInsets.all(12.0),
       controller: controller,

@@ -11,11 +11,14 @@ class SymbolsGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseSymbolsGrid(
-        itemBuilder: (context, index) {
-          final e = board.symbols.elementAt(index);
-          return SymbolCard(symbol: e);
-        },
-        itemCount: board.symbols.length,
-        crossAxisCount: board.crossAxisCount);
+      itemBuilder: (context, index) {
+        final e = board.symbols.elementAt(index);
+        return SymbolCard(symbol: e);
+      },
+      itemCount: board.symbols.length,
+      crossAxisCount: board.crossAxisCount,
+      mainAxisSpacing: 12.0,
+      crossAxisSpacing: 12.0,
+    );
   }
 }
