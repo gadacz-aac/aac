@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'symbol_card.dart';
 
 class GridSymbolCard extends SymbolCard {
-  const GridSymbolCard({super.key, required super.symbol, super.onTapActions = const [], super.onLongPressActions = const []}) : super(isListEl: true);
+  const GridSymbolCard({super.key, required super.symbol, super.onTapActions = const [], super.onLongPressActions = const []}) : super(isListEl: false);
 
   @override
   Widget buildChild(BuildContext context, WidgetRef ref, Color bgColor, Color textColor, EdgeInsets imagePadding, {bool isExpanded = false}) {

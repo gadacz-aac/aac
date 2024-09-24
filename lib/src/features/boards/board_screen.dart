@@ -9,11 +9,12 @@ import 'package:aac/src/features/boards/ui/controls/pagination.dart';
 import 'package:aac/src/features/boards/ui/controls/remove_last_word.dart';
 import 'package:aac/src/features/boards/ui/sentence_bar.dart';
 import 'package:aac/src/features/boards/ui/symbols_grid.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 
-final isParentModeProvider = StateProvider<bool>((_) => false);
+final isParentModeProvider = StateProvider<bool>((_) => kDebugMode);
 final boardIdProvider = Provider<Id>((_) => throw UnimplementedError());
 
 class BoardScreen extends ConsumerWidget {
