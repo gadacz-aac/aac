@@ -2,8 +2,6 @@ import 'package:aac/firebase_options.dart';
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/settings/model/settings_entry.dart';
 import 'package:aac/src/features/settings/utils/orientation.dart';
-import 'package:aac/src/features/symbols/model/communication_symbol.dart';
-import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:aac/src/shared/colors.dart';
 import 'package:aac/src/shared/isar_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
