@@ -79,13 +79,13 @@ class BaseSymbolsGrid extends ConsumerWidget {
 
     return Expanded(
         child: AlignedGridView.count(
-      crossAxisCount: crossAxisCount,
-      crossAxisSpacing: crossAxisSpacing,
-      mainAxisSpacing: mainAxisSpacing,
-      itemCount: itemCount,
-      padding: const EdgeInsets.all(12.0),
-      controller: controller,
-      itemBuilder: itemBuilder,
-    ));
+              crossAxisCount: crossAxisCount,
+              crossAxisSpacing: crossAxisSpacing,
+              mainAxisSpacing: mainAxisSpacing,
+              itemCount: itemCount,
+              padding: const EdgeInsets.all(12.0),
+              controller: controller,
+              itemBuilder: itemBuilder,
+            ));
   }
 }

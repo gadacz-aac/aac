@@ -13,7 +13,8 @@ class SymbolsGridWithDrag extends ConsumerStatefulWidget {
 
   final Board board;
   @override
-  ConsumerState<SymbolsGridWithDrag > createState() => _SymbolsGridWithDragState();
+  ConsumerState<SymbolsGridWithDrag> createState() =>
+      _SymbolsGridWithDragState();
 }
 
 class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
@@ -34,7 +35,6 @@ class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
   @override
   void didUpdateWidget(covariant SymbolsGridWithDrag oldWidget) {
     super.didUpdateWidget(oldWidget);
-    print(oldWidget.board.symbols.length != widget.board.symbols.length);
 
     if (oldWidget.board.symbols.length != widget.board.symbols.length) {
       items = widget.board.reorderedSymbols
@@ -58,7 +58,7 @@ class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
         itemCount: items.length,
         itemBuilder: (context, index) {
           final e = items[index];
-    
+
           return DragTarget<DragItem<CommunicationSymbol>>(onMove: (data) {
             setState(() {
               desiredIndex = index;
@@ -69,34 +69,34 @@ class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
             });
           }, onAcceptWithDetails: (data) {
             if (currentlyDragged == null || desiredIndex == null) return;
-    
+
             setState(() {
               desiredIndex == null;
               items.removeAt(currentlyDragged!.index);
               items.insert(desiredIndex!, currentlyDragged!.data);
             });
-    
+
             final isar = ref.read(isarProvider);
             final reorderedSymbols = [...widget.board.reorderedSymbols];
             reorderedSymbols.removeAt(currentlyDragged!.index);
             reorderedSymbols.insert(desiredIndex!, currentlyDragged!.data.id);
-    
+
             isar.writeTxn(() async {
               final board = await isar.boards.get(widget.board.id);
               if (board == null) return;
-    
+
               board.reorderedSymbols = [...reorderedSymbols];
               isar.boards.put(board);
             });
           }, builder: (context, incoming, __) {
             return LayoutBuilder(builder: (context, constrains) {
               final data = DragItem(index: index, data: e);
-    
+
               final Offset offset;
-    
+
               final isNotDragging =
                   currentlyDragged == null || desiredIndex == null;
-    
+
               if (isNotDragging) {
                 offset = const Offset(0, 0);
               } else {
@@ -107,12 +107,12 @@ class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
                   min = max;
                   max = tmp;
                 }
-    
+
                 final isNotAffected = index < min || index > max;
                 final isOnSameTile = currentlyDragged?.index == desiredIndex;
                 final isLastInRow = (index + 1) % crossAxisCount == 0;
                 final isFirstInRow = (index) % crossAxisCount == 0;
-    
+
                 if (isNotAffected || isOnSameTile) {
                   offset = const Offset(0, 0);
                 } else if (currentlyDragged!.index > desiredIndex!) {
@@ -129,7 +129,7 @@ class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
                   }
                 }
               }
-    
+
               final child = AnimatedSlide(
                   duration: !isNotDragging
                       ? const Duration(milliseconds: 200)
@@ -146,10 +146,11 @@ class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
                       ],
                     ),
                   ));
-    
+
               return LongPressDraggable(
                 data: data,
-                maxSimultaneousDrags: ref.watch(areSymbolsSelectedProvider) ? 0 : 1,
+                maxSimultaneousDrags:
+                    ref.watch(areSymbolsSelectedProvider) ? 0 : 1,
                 onDragStarted: () {
                   _onLongPress(e, ref);
                   setState(() {
@@ -177,13 +178,18 @@ class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
                 feedback: Material(
                   child: SizedBox(
                       width: constrains.maxWidth,
-                      height: constrains.maxHeight.isInfinite ? null: constrains.maxHeight,
-                      child: SymbolCard(symbol: e, isDragging: true,)),
+                      height: constrains.maxHeight.isInfinite
+                          ? null
+                          : constrains.maxHeight,
+                      child: SymbolCard(
+                        symbol: e,
+                        isDragging: true,
+                      )),
                 ),
                 childWhenDragging: Visibility(
-                maintainSize: true,
-                maintainAnimation: true,
-                maintainState: true,
+                    maintainSize: true,
+                    maintainAnimation: true,
+                    maintainState: true,
                     visible: currentlyDragged?.index != data.index,
                     child: child),
                 child: child,
