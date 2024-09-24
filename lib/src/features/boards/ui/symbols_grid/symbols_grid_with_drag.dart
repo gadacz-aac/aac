@@ -34,6 +34,7 @@ class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
   @override
   void didUpdateWidget(covariant SymbolsGridWithDrag oldWidget) {
     super.didUpdateWidget(oldWidget);
+    print(oldWidget.board.symbols.length != widget.board.symbols.length);
 
     if (oldWidget.board.symbols.length != widget.board.symbols.length) {
       items = widget.board.reorderedSymbols
@@ -54,7 +55,7 @@ class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
 
     return BaseSymbolsGrid(
         crossAxisCount: widget.board.crossAxisCount,
-        itemCount: widget.board.symbols.length,
+        itemCount: items.length,
         itemBuilder: (context, index) {
           final e = items[index];
     

@@ -127,11 +127,16 @@ class SymbolManager {
   }
 
   Future<void> pinSymbolsToBoard(
-      List<CommunicationSymbol> symbols, Board board) async {
+      List<CommunicationSymbol> symbols, int boardId) async {
     await isar.writeTxn(() async {
-      board.symbols.addAll(symbols);
+      final board = await isar.boards.get(boardId);
+
+      if (board == null) return;
+
       final symbolsId = symbols.map((e)=>e.id);
       board.reorderedSymbols = [...board.reorderedSymbols, ...symbolsId];
+
+      board.symbols.addAll(symbols);
       await board.symbols.save();
       await isar.boards.put(board);
     });
