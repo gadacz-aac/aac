@@ -2,7 +2,6 @@ import 'package:aac/src/features/boards/ui/actions/move_symbol_to_bin_action.dar
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/settings/widgets/cherry_pick_image.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
-import 'package:aac/src/features/symbols/ui/grid_symbol_card.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:aac/src/shared/utils/debounce.dart';
 import 'package:flutter/material.dart';
@@ -110,7 +109,7 @@ class SymbolSearchScreen extends ConsumerWidget {
                     padding: const EdgeInsets.all(12.0),
                     itemBuilder: (context, index) {
                       final e = results[index];
-                      return GridSymbolCard(
+                      return SymbolCard(
                         symbol: e,
                         onTapActions: const [SymbolOnTapAction.select],
                       );

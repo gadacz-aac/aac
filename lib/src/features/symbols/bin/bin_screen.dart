@@ -48,7 +48,7 @@ class BinScreen extends ConsumerWidget {
               // Display folders first
               ...folders.map((folderSymbol) => Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 8.0),
-                    child: ListSymbolCard(
+                    child: SymbolListTile(
                       symbol: folderSymbol,
                       onLongPressActions: const [SymbolOnTapAction.select],
                       onTapActions: const [
@@ -60,7 +60,7 @@ class BinScreen extends ConsumerWidget {
                   )),
               ...nonFolderSymbols.map((symbol) => Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 8.0),
-                    child: ListSymbolCard(
+                    child: SymbolListTile(
                       symbol: symbol,
                       onLongPressActions: const [SymbolOnTapAction.select],
                       onTapActions: const [

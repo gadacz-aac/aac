@@ -1,5 +1,4 @@
 import 'package:aac/src/features/boards/model/board.dart';
-import 'package:aac/src/features/symbols/ui/grid_symbol_card.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -80,7 +79,7 @@ class SymbolsGrid extends ConsumerWidget {
         controller: controller,
         itemBuilder: (context, index) {
           final e = nonDeletedSymbols[index];
-          return GridSymbolCard(
+          return SymbolCard(
             symbol: e,
             onLongPressActions: const [SymbolOnTapAction.select],
             onTapActions: const [

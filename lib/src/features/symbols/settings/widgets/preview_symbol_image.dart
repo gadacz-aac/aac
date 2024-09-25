@@ -2,7 +2,7 @@ import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/settings/screens/image_provider.dart';
 import 'package:aac/src/features/symbols/settings/screens/symbol_settings.dart';
 import 'package:aac/src/features/symbols/settings/widgets/color_picker.dart';
-import 'package:aac/src/features/symbols/ui/grid_symbol_card.dart';
+import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -18,7 +18,7 @@ class PreviewSymbolImage extends ConsumerWidget {
     return FractionallySizedBox(
       widthFactor: 0.55,
       child: Stack(children: [
-        GridSymbolCard(
+        SymbolCard(
             symbol: CommunicationSymbol(
                 label: label, imagePath: image, color: color)),
         Consumer(builder: (context, ref, _) {
