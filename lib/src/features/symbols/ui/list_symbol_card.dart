@@ -18,25 +18,18 @@ class SymbolListTile extends ConsumerStatefulWidget {
 class _SymbolListTileState extends ConsumerState<SymbolListTile> {
   bool _isExpanded = false;
   bool get isExpanded => _isExpanded;
-  late final List<CommunicationSymbol> childSymbols;
+  List<CommunicationSymbol> childSymbols = [];
+
   @override
   void initState() {
     super.initState();
 
     childSymbols = widget.symbol.childBoard.value?.symbols
-        .where((child) =>
-            child.childBoard.value == null &&
-            child.isDeleted == true) // Only load non-folder children
-        .toList() ?? [];
-  }
-
-  bool _hasChildSymbolsInBin() {
-    final childBoard = widget.symbol.childBoard.value;
-    if (childBoard != null) {
-      return childBoard.symbols.any(
-          (child) => child.childBoard.value == null && child.isDeleted == true);
-    }
-    return false;
+            .where((child) =>
+                child.childBoard.value == null &&
+                child.isDeleted == true) // Only load non-folder children
+            .toList() ??
+        [];
   }
 
   void _onLongPress(BuildContext context, WidgetRef ref) {
@@ -50,7 +43,7 @@ class _SymbolListTileState extends ConsumerState<SymbolListTile> {
     }
 
     if (widget.symbol.childBoard.value != null) {
-      if (_hasChildSymbolsInBin()) {
+      if (childSymbols.isNotEmpty) {
         setState(() {
           _isExpanded = !_isExpanded;
         });
@@ -101,76 +94,73 @@ class _SymbolListTileState extends ConsumerState<SymbolListTile> {
       color: Colors.white,
     );
 
-    final mainContent = InkWell(
-      onLongPress: () => _onLongPress(context, ref),
-      onTap: () => _onTap(context, ref),
-      child: Container(
-        decoration: boxDecoration,
-        clipBehavior: Clip.hardEdge,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 40.0),
-              child: Row(
-                children: [
-                  SymbolImage(
-                    widget.symbol.imagePath,
-                    width: 35,
-                    height: 35,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    widget.symbol.label,
-                    style: const TextStyle(color: Colors.black),
-                    maxLines: null,
-                    overflow: TextOverflow.visible,
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              width: 35,
-              height: 35,
-              child: ColoredBox(
-                color: bgColor,
-                child: _hasChildSymbolsInBin()
-                    ? _triangleIcon(isExpanded, textColor)
-                    : null,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        mainContent,
+        InkWell(
+          onLongPress: () => _onLongPress(context, ref),
+          onTap: () => _onTap(context, ref),
+          child: Container(
+            decoration: boxDecoration,
+            clipBehavior: Clip.hardEdge,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Row(
+                    children: [
+                      SymbolImage(
+                        widget.symbol.imagePath,
+                        width: 35,
+                        height: 35,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        widget.symbol.label,
+                        style: const TextStyle(color: Colors.black),
+                        maxLines: null,
+                        overflow: TextOverflow.visible,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  width: 35,
+                  height: 35,
+                  child: ColoredBox(
+                    color: bgColor,
+                    child: childSymbols.isNotEmpty
+                        ? RotatedBox(
+                            quarterTurns: isExpanded ? 1 : 0,
+                            child: Icon(
+                              Icons.play_arrow,
+                              size: 20.0,
+                              color: textColor,
+                            ),
+                          )
+                        : null,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
         if (_isExpanded && childSymbols.isNotEmpty)
           Column(
             children: childSymbols
-                .map((symbol) => Padding(
-                      padding: const EdgeInsets.only(top: 3.0),
-                      child: SymbolListTile(
-                        symbol: symbol,
-                      ),
-                    ))
+                .expand((symbol) => [
+                      const SizedBox(height: 1),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 3.0),
+                        child: SymbolListTile(
+                          symbol: symbol,
+                        ),
+                      )
+                    ])
                 .toList(),
           ),
       ],
-    );
-  }
-
-  Widget _triangleIcon(bool isExpanded, Color textColor) {
-    return RotatedBox(
-      quarterTurns: isExpanded ? 1 : 0,
-      child: Icon(
-        Icons.play_arrow,
-        size: 20.0,
-        color: textColor,
-      ),
     );
   }
 }

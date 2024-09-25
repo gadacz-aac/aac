@@ -1,4 +1,5 @@
 import 'package:aac/src/features/symbols/bin/bin_bar.dart';
+import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:aac/src/features/symbols/ui/list_symbol_card.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,7 @@ class BinScreen extends ConsumerWidget {
               .toList();
           final folderChildBoardIds = folders
               .map((folder) => folder.childBoard.value?.id)
-              .where((id) => id != null)
+              .whereType<int>()
               .toSet();
           final nonFolderSymbols = allSymbols.where((symbol) {
             final isDeletedSymbol = symbol.isDeleted;
@@ -41,24 +42,26 @@ class BinScreen extends ConsumerWidget {
             return isDeletedSymbol && hasNoChildBoard && !isChildOfFolder;
           }).toList();
 
-          return ListView(
-            children: [
-              // Display folders first
-              ...folders.map((folderSymbol) => Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 18.0, vertical: 8.0),
-                    child: SymbolListTile(
-                      symbol: folderSymbol,
-                    ),
-                  )),
-              ...nonFolderSymbols.map((symbol) => Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 18.0, vertical: 8.0),
-                    child: SymbolListTile(
-                      symbol: symbol,
-                    ),
-                  )),
-            ],
+          return ListView.builder(
+            itemBuilder: (context, index) {
+              final CommunicationSymbol symbol;
+              if (index < folders.length) {
+                symbol = folders[index];
+              } else if (index < nonFolderSymbols.length + folders.length) {
+                symbol = nonFolderSymbols[index - folders.length];
+              } else {
+                return null;
+              }
+
+              return Padding(
+                key: ValueKey(symbol.id),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 18.0, vertical: 8.0),
+                child: SymbolListTile(
+                  symbol: symbol,
+                ),
+              );
+            },
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
