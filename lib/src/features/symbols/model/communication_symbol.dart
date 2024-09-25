@@ -48,11 +48,3 @@ class CommunicationSymbol {
   }
 }
 
-// extension CommunicationSymbolCollectionExtension on IsarCollection<CommunicationSymbol> {
-//   Stream<List<CommunicationSymbol>> watchSymbols() {
-//     return watchLazy().asyncMap((_) async {
-//       final results = getAllSync([]);
-//       return results.whereType<CommunicationSymbol>().toList();
-//     });
-//   }
-// }
