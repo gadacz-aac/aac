@@ -190,7 +190,7 @@ class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
                     maintainSize: true,
                     maintainAnimation: true,
                     maintainState: true,
-                    visible: currentlyDragged?.index != data.index,
+                    visible: false,
                     child: child),
                 child: child,
               );

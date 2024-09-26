@@ -13,7 +13,10 @@ class SymbolsGrid extends StatelessWidget {
     return BaseSymbolsGrid(
       itemBuilder: (context, index) {
         final e = board.symbols.elementAt(index);
-        return SymbolCard(symbol: e);
+        return SymbolCard(
+          symbol: e,
+          onTapActions: const [SymbolOnTapAction.cd, SymbolOnTapAction.speak],
+        );
       },
       itemCount: board.symbols.length,
       crossAxisCount: board.crossAxisCount,
