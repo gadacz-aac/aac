@@ -1,10 +1,11 @@
 import 'dart:io';
 
-import 'package:aac/src/shared/utils/get_random_string.dart';
+import 'package:aac/src/features/arasaac/arasaac_service.dart';
+import 'package:aac/src/shared/utils/try_download_image.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 bool isValidImage(ContentType contentType) {
@@ -70,20 +71,98 @@ class AacSearchField extends StatelessWidget {
   }
 }
 
-class ArasaacSearchScreen extends StatelessWidget {
+class ArasaacSearchScreen extends ConsumerStatefulWidget {
   const ArasaacSearchScreen({super.key});
 
   @override
+  ConsumerState<ArasaacSearchScreen> createState() =>
+      _ArasaacSearchScreenState();
+}
+
+class _ArasaacSearchScreenState extends ConsumerState<ArasaacSearchScreen> {
+  String query = "";
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        AacSearchField(
-          controller: TextEditingController(),
-          placeholder: "Szukaj w arrasac",
-          icon: const Icon(Icons.search_outlined),
-        )
-      ],
-    );
+    final symbols = ref.watch(arasaacSearchResultsProvider(query));
+
+    return CustomScrollView(slivers: [
+      SliverToBoxAdapter(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 27.0, horizontal: 20.0),
+          child: AacSearchField(
+            onChanged: (value) => setState(() {
+              query = value;
+            }),
+            placeholder: "Szukaj w arrasac",
+            icon: const Icon(Icons.search_outlined),
+          ),
+        ),
+      ),
+      symbols.when(
+          data: (data) {
+            if (data.isNotEmpty) {
+              return SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 27.0),
+                sliver: SliverGrid(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      mainAxisSpacing: 18,
+                      crossAxisSpacing: 13),
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return InkWell(
+                          child: Image.network(
+                            data[index],
+                          ),
+                          onTap: () async {
+                            final (file, err) =
+                                await tryDownloadImage(Uri.parse(data[index]));
+                    
+                            if (err != null) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(content: Text(err)));
+                            }
+                    
+                            Navigator.pop(context, file!.path);
+                          });
+                    },
+                    childCount: data.length
+                  ),
+                ),
+              );
+            }
+            return SliverToBoxAdapter(
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "Oj mój... jak tu pusto",
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    const SizedBox(
+                      height: 4,
+                    ),
+                    Text(
+                      "pora coś wyszukać, bo ta pustka jest ciut niezręczna",
+                      style: Theme.of(context).textTheme.bodyLarge,
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+          // TODO może coś innego? i kiedy to wgl będzie miało error?
+          error: (error, _) => SliverToBoxAdapter(
+                child: Center(
+                  child: Text("$error"),
+                ),
+              ),
+          loading: () => const SliverFillRemaining(
+              child: Center(child: CircularProgressIndicator())))
+    ]);
   }
 }
 
@@ -115,18 +194,12 @@ class ImageCherryPicker extends StatelessWidget {
             )),
         body: const TabBarView(
           children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 27.0, horizontal: 20.0),
-              child: ArasaacSearchScreen(),
-            ),
+            ArasaacSearchScreen(),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 27.0, horizontal: 20.0),
               child: UploadFromDeviceScreen(),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 27.0, horizontal: 20.0),
-              child: UploadImageFromLinkScreen(),
-            )
+            UploadImageFromLinkScreen()
           ],
         ),
       ),
@@ -149,41 +222,45 @@ class _UploadImageFromLinkScreenState extends State<UploadImageFromLinkScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Expanded(
-          child: AacSearchField(
-              controller: controller,
-              errorText: errorText,
-              placeholder: "Wklej link do obrazka",
-              validator: (value) {
-                if (value == null) return null;
-
-                if (!Uri.parse(value).isAbsolute) {
-                  return "Niepoprawny adres url";
-                }
-
-                return null;
-              }),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 27.0, horizontal: 20.0),
+        child: Form(
+          key: _formKey,
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Expanded(
+              child: AacSearchField(
+                  controller: controller,
+                  errorText: errorText,
+                  placeholder: "Wklej link do obrazka",
+                  validator: (value) {
+                    if (value == null) return null;
+        
+                    if (!Uri.parse(value).isAbsolute) {
+                      return "Niepoprawny adres url";
+                    }
+        
+                    return null;
+                  }),
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            SizedBox(
+                height: 48,
+                child: ElevatedButton(
+                    onPressed: tryDownload,
+                    style: ButtonStyle(
+                        backgroundColor:
+                            const WidgetStatePropertyAll(Color(0xFF2A1B3B)),
+                        iconSize: const WidgetStatePropertyAll(24.0),
+                        iconColor: const WidgetStatePropertyAll(Color(0xFFD3CEE3)),
+                        shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.0)))),
+                    child: const Icon(Icons.upload)))
+          ]),
         ),
-        const SizedBox(
-          width: 5,
-        ),
-        SizedBox(
-            height: 48,
-            child: ElevatedButton(
-                onPressed: tryDownload,
-                style: ButtonStyle(
-                    backgroundColor:
-                        const WidgetStatePropertyAll(Color(0xFF2A1B3B)),
-                    iconSize: const WidgetStatePropertyAll(24.0),
-                    iconColor:
-                        const WidgetStatePropertyAll(Color(0xFFD3CEE3)),
-                    shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4.0)))),
-                child: const Icon(Icons.upload)))
-      ]),
+      ),
     );
   }
 
@@ -201,31 +278,16 @@ class _UploadImageFromLinkScreenState extends State<UploadImageFromLinkScreen> {
     final uri = Uri.parse(controller.text);
     if (!uri.isAbsolute) return;
 
-    // TODO this can i throw for various reasons, one might be url that can't be resolved because Łukasz broke DNS
-    final request = await HttpClient().getUrl(uri);
-    final response = await request.close();
+    final (file, err) = await tryDownloadImage(uri);
 
-    final contentType = response.headers.contentType;
-
-    if (contentType == null || !isValidImage(contentType)) {
+    if (err != null) {
       setState(() {
-        errorText = "Podany url jest obrazkiem";
+        errorText = err;
       });
-      return;
     }
 
-    File file;
-    final tempDir = await getTemporaryDirectory();
-    do {
-      final fileName = getRandomString(8);
-      file = File('${tempDir.path}/$fileName.${contentType.subType}');
-    } while (file.existsSync());
-
-    // TODO handle failed writes
-    await response.pipe(file.openWrite());
-
     if (!mounted) return;
-    Navigator.pop(context, file.path);
+    Navigator.pop(context, file!.path);
   }
 }
 

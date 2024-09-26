@@ -14,7 +14,8 @@ class LinkNewBoardChip extends ConsumerWidget {
       onPressed: () {
         showModalBottomSheet<BoardEditingParams?>(
                 context: context,
-                backgroundColor: Colors.white,
+                isScrollControlled: true,
+                useSafeArea: true,
                 builder: (context) =>
                     const CreateBoardScreen(params: BoardEditingParams()))
             .then((val) {

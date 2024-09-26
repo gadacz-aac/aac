@@ -14,20 +14,17 @@ class CreateBoardScreen extends StatefulWidget {
 }
 
 class _CreateBoardScreenState extends State<CreateBoardScreen> {
-  late bool isUnlimitedRows = widget.params.rowCount == null;
+  final _formKey = GlobalKey<FormState>();
+
   late final TextEditingController nameController;
   late final TextEditingController columnCountController;
-  late final TextEditingController rowCountController;
 
   @override
   void initState() {
     super.initState();
-    isUnlimitedRows = widget.params.rowCount == null;
     nameController = TextEditingController(text: widget.params.name);
     columnCountController =
         TextEditingController(text: "${widget.params.columnCount}");
-    rowCountController =
-        TextEditingController(text: "${widget.params.rowCount}");
   }
 
   @override
@@ -35,81 +32,81 @@ class _CreateBoardScreenState extends State<CreateBoardScreen> {
     super.dispose();
     nameController.dispose();
     columnCountController.dispose();
-    rowCountController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 29.0, vertical: 27.0),
-        child: Column(children: [
-          GenericTextField(controller: nameController, labelText: "Nazwa"),
-          const SizedBox(
-            height: 14,
-          ),
-          Row(
-            children: [
-              Expanded(
-                  child: GenericNumberField(
-                name: "dupa",
-                controller: columnCountController,
-                labelText: "Liczba Kolumn",
-              )),
-              const SizedBox(
-                width: 14,
-              ),
-              const Text("x"),
-              const SizedBox(
-                width: 14,
-              ),
-              Expanded(
-                  child: GenericNumberField(
-                      controller: rowCountController,
-                      enabled: !isUnlimitedRows,
-                      name: "dupa",
-                      labelText: "Liczba wierszy"))
-            ],
-          ),
-          const SizedBox(
-            height: 14,
-          ),
-          ListTile(
-            title: const Text("Nieograniczona liczba wierszy"),
-            trailing: Switch(
-                value: isUnlimitedRows,
-                onChanged: (value) {
-                  setState(() {
-                    isUnlimitedRows = value;
-                  });
-                }),
-          ),
-          const Spacer(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Button(
-                onPressed: Navigator.of(context).pop,
-                type: ButtonType.noBackground,
-                child: const Text("Anuluj"),
-              ),
-              Button(
-                  onPressed: () {
-                    Navigator.pop(
-                        context,
-                        BoardEditingParams(
-                            name: nameController.text,
-                            id: widget.params.id,
-                            columnCount:
-                                int.tryParse(columnCountController.text),
-                            rowCount: isUnlimitedRows
-                                ? null
-                                : int.tryParse(rowCountController.text)));
-                  },
-                  child: const Text("Zapisz"))
-            ],
-          )
-        ]),
+    return ConstrainedBox(
+      constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height*0.5),
+      child: Form(
+        key: _formKey,
+        child: Padding(
+          padding:
+              const EdgeInsets.symmetric(horizontal: 29.0, vertical: 27.0),
+          child: Column(
+          mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    GenericTextField(
+                      controller: nameController,
+                      labelText: "Nazwa",
+                      validator: (val) {
+                        if (val == null || val.isEmpty) {
+                          return "Nazwa nie może być pusta";
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(
+                      height: 14,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                            child: GenericNumberField(
+                          name: "dupa",
+                          controller: columnCountController,
+                          inputFormatters: [positiveDigitsOnly],
+                          validator: (val) {
+                            if (val != null && val.startsWith("0")) {
+                              return "Liczba kolumn powinna być większa od 0";
+                            }
+                            return null;
+                          },
+                          labelText: "Liczba Kolumn",
+                        )),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 28.0,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Button(
+                      onPressed: Navigator.of(context).pop,
+                      type: ButtonType.noBackground,
+                      child: const Text("Anuluj"),
+                    ),
+                    Button(
+                        onPressed: () {
+                          if (!_formKey.currentState!.validate()) return;
+                          Navigator.pop(
+                              context,
+                              BoardEditingParams(
+                                name: nameController.text,
+                                id: widget.params.id,
+                                columnCount:
+                                    int.tryParse(columnCountController.text),
+                              ));
+                        },
+                        child: const Text("Zapisz"))
+                  ],
+                )
+              ]),
+        ),
       ),
     );
   }

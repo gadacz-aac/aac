@@ -24,7 +24,7 @@ class BoardSearch extends ConsumerWidget {
     final query = ref.watch(queryProvider);
     final textTheme = Theme.of(context).textTheme;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 29.0, vertical: 27.0),
+      padding: const EdgeInsets.fromLTRB(29.0, 27.0, 29.0, 0),
       child: Column(
         children: [
           //TODO Standarise with Generic Text Field

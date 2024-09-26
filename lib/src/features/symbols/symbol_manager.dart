@@ -15,21 +15,19 @@ class BoardEditingParams {
   final Id? id;
   final String name;
   final int? columnCount;
-  final int? rowCount;
 
   const BoardEditingParams(
-      {this.id, this.name = "", this.columnCount = 3, this.rowCount});
+      {this.id, this.name = "", this.columnCount = 3});
 
   BoardEditingParams.fromBoard(Board board)
       : this(
             name: board.name,
             id: board.id,
-            columnCount: board.crossAxisCount,
-            rowCount: null);
+            columnCount: board.crossAxisCount,);
 
   @override
   String toString() =>
-      "name: $name id: $id columnCount: $columnCount rowCount: $rowCount";
+      "name: $name id: $id columnCount: $columnCount";
 }
 
 @immutable

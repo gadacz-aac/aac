@@ -71,7 +71,7 @@ class SymbolsGrid extends ConsumerWidget {
 
     return Expanded(
       child: AlignedGridView.count(
-        crossAxisCount: 3,
+          crossAxisCount: board.crossAxisCount,
         crossAxisSpacing: 12.0,
         mainAxisSpacing: 12.0,
         itemCount: nonDeletedSymbols.length,

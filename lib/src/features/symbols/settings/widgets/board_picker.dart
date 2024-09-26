@@ -69,7 +69,8 @@ class LinkedBoardChip extends ConsumerWidget {
         onDeleted: ref.read(boardNotifierProvider.notifier).delete,
         onPressed: () => showModalBottomSheet<BoardEditingParams?>(
                     context: context,
-                    backgroundColor: Colors.white,
+                    isScrollControlled: true,
+                    useSafeArea: true,
                     builder: (context) => CreateBoardScreen(params: childBoard))
                 .then((val) {
               if (val == null) return;

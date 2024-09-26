@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+final TextInputFormatter positiveDigitsOnly = FilteringTextInputFormatter.allow(RegExp(r'^([1-9]\d*)$'));
+
 class GenericNumberField extends StatelessWidget {
   const GenericNumberField(
       {super.key,
@@ -11,6 +13,7 @@ class GenericNumberField extends StatelessWidget {
       required this.labelText,
       this.helperText,
       this.initalValue = 0,
+      this.inputFormatters,
       this.enabled});
 
   final Function(String)? onChanged;
@@ -21,6 +24,7 @@ class GenericNumberField extends StatelessWidget {
   final int initalValue;
   final TextEditingController? controller;
   final String? helperText;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +36,7 @@ class GenericNumberField extends StatelessWidget {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       enabled: enabled,
       keyboardType: TextInputType.number,
-      inputFormatters: <TextInputFormatter>[
+      inputFormatters: inputFormatters ?? <TextInputFormatter>[
         FilteringTextInputFormatter.digitsOnly
       ],
       validator: validator,

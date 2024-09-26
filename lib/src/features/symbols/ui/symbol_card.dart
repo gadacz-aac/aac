@@ -1,6 +1,7 @@
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/search/search_screen.dart';
+import 'package:aac/src/features/symbols/settings/widgets/color_picker.dart';
 import 'package:aac/src/features/symbols/ui/symbol_image.dart';
 import 'package:aac/src/features/text_to_speech/provider.dart';
 import 'package:aac/src/features/text_to_speech/tts_manager.dart';
@@ -63,7 +64,6 @@ class SymbolCard extends ConsumerWidget {
         context,
         MaterialPageRoute(
             builder: (context) => BoardScreen(
-                  title: symbol.label,
                   boardId: symbol.childBoard.value!.id,
                 )),
       );
@@ -73,14 +73,25 @@ class SymbolCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Color bgColor;
+    Color labelBgColor;
     Color textColor;
     EdgeInsets imagePadding;
 
+    if (symbol.childBoard.value == null) {
+      bgColor = Colors.white;
+    } else if (symbol.color == null) {
+      bgColor = const Color(0xFFECECEC);
+    } else {
+      bgColor = Color(colors
+          .firstWhere((e) => e.code == symbol.color)
+          .folderBackgroundCode);
+    }
+
     if (symbol.color == null) {
-      bgColor = AacColors.noColorWhite;
+      labelBgColor = AacColors.noColorWhite;
       textColor = Colors.black;
     } else {
-      bgColor = Color(symbol.color!);
+      labelBgColor = Color(symbol.color!);
       textColor = Colors.white;
     }
 
@@ -88,6 +99,10 @@ class SymbolCard extends ConsumerWidget {
         .watch(selectedSymbolsProvider)
         .state
         .any((element) => element.id == symbol.id);
+
+    final imagePadding = imageHasBackground
+        ? const EdgeInsets.all(0)
+        : const EdgeInsets.only(top: 6.0, left: 6.0, right: 6.0, bottom: 14.0);
 
     final boxDecoration = BoxDecoration(
       borderRadius: BorderRadius.circular(4),
@@ -111,7 +126,7 @@ class SymbolCard extends ConsumerWidget {
               width: 3,
               strokeAlign: BorderSide.strokeAlignOutside)
           : null,
-      color: Colors.white,
+      color: bgColor,
     );
 
     imagePadding = imageHasBackground
@@ -136,7 +151,7 @@ class SymbolCard extends ConsumerWidget {
                     spreadRadius: 4,
                     offset: Offset(0, 4))
               ],
-              color: bgColor,
+              color: labelBgColor,
             ),
             padding:
                 const EdgeInsets.symmetric(horizontal: 18.0, vertical: 6.0),
