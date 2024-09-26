@@ -32,6 +32,18 @@ class _SymbolListTileState extends ConsumerState<SymbolListTile> {
         [];
   }
 
+  @override
+    void didUpdateWidget(covariant SymbolListTile oldWidget) {
+      super.didUpdateWidget(oldWidget);
+
+    childSymbols = widget.symbol.childBoard.value?.symbols
+            .where((child) =>
+                child.childBoard.value == null &&
+                child.isDeleted == true) // Only load non-folder children
+            .toList() ??
+        [];
+    }
+
   void _onLongPress(BuildContext context, WidgetRef ref) {
     ref.read(selectedSymbolsProvider).toggle(widget.symbol);
   }
