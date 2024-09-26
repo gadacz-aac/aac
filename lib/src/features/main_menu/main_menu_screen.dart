@@ -2,6 +2,7 @@ import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/settings/ui/settings_screen.dart';
 import 'package:aac/src/features/settings/utils/protective_mode.dart';
 import 'package:aac/src/features/settings/utils/wakelock.dart';
+import 'package:aac/src/features/symbols/bin/bin_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -73,11 +74,11 @@ class MainMenuScreen extends ConsumerWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const ShopScreen(),
+                        builder: (context) => const BinScreen(),
                       ),
                     );
                   },
-                  child: const Text('Shop'),
+                  child: const Text('Bin'),
                 ),
               ],
             ),

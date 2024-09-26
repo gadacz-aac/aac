@@ -10,7 +10,8 @@ class CommunicationSymbol {
       {required this.label,
       required this.imagePath,
       this.vocalization,
-      this.color})
+      this.color,
+      this.isDeleted = false})
       : id = Isar.autoIncrement;
 
   Id id;
@@ -18,6 +19,7 @@ class CommunicationSymbol {
   String? vocalization;
   String imagePath;
   int? color;
+  bool isDeleted;
 
   @Backlink(to: 'symbols')
   final parentBoard = IsarLinks<Board>();
@@ -28,17 +30,21 @@ class CommunicationSymbol {
   List<String> get words => Isar.splitWords(label);
 
   CommunicationSymbol.fromParams(SymbolEditingParams params)
-      : this(
-            imagePath: params.imagePath ?? "",
-            label: params.label ?? "",
-            color: params.color,
-            vocalization: params.vocalization);
+        : this(
+                  imagePath: params.imagePath ?? "",
+                  label: params.label ?? "",
+                  color: params.color,
+                  vocalization: params.vocalization,
+                  isDeleted: params.isDeleted ?? false
+                );
 
   CommunicationSymbol updateWithParams(SymbolEditingParams params) {
     label = params.label ?? label;
     imagePath = params.imagePath ?? imagePath;
-    color = params.color;
-    vocalization = params.vocalization;
+    color = params.color ?? color;
+    vocalization = params.vocalization ?? vocalization;
+    isDeleted = params.isDeleted ?? isDeleted;
     return this;
   }
 }
+

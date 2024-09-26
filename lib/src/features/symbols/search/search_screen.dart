@@ -1,7 +1,7 @@
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
+import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:aac/src/features/symbols/search/search_app_bar.dart';
 import 'package:aac/src/features/symbols/search/symbol_search_filters.dart';
-import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:aac/src/shared/isar_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,6 +20,7 @@ final searchedSymbolProvider =
       .where()
       .wordsElementStartsWith(query)
       .filter()
+      .isDeletedEqualTo(false)
       .optional(color != null, (q) => q.colorEqualTo(color))
       .optional(onlyPinned, (q) => q.parentBoardIsEmpty())
       .findAll();

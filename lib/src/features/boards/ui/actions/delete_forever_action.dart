@@ -1,4 +1,3 @@
-import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/symbols/search/search_screen.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:flutter/material.dart';
@@ -31,11 +30,10 @@ class DeleteForeverAction extends ConsumerWidget {
                 TextButton(
                   onPressed: () {
                     final symbolManager = ref.watch(symbolManagerProvider);
-                    final boardId = ref.watch(boardIdProvider);
                     // state is mutable
                     final symbols = [...selectedSymbols];
                     ref.read(selectedSymbolsProvider).clear();
-                    symbolManager.deleteSymbol(symbols, boardId);
+                    symbolManager.deleteSymbols(symbols);
                     Navigator.pop(context);
                   },
                   child: const Text('Usuń'),

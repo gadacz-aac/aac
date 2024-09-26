@@ -2,6 +2,7 @@ import 'package:aac/src/features/boards/board_manager.dart';
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/settings/ui/settings_screen.dart';
 import 'package:aac/src/features/settings/utils/protective_mode.dart';
+import 'package:aac/src/features/symbols/bin/bin_screen.dart';
 import 'package:aac/src/features/symbols/settings/screens/create_board_screen.dart';
 import 'package:aac/src/features/symbols/settings/utils/randomise_symbol.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
@@ -31,7 +32,8 @@ class BottomSheetOptions extends StatelessWidget {
             Option(
               icon: const Icon(Icons.delete),
               label: "Kosz",
-              onTap: () {},
+              onTap: () => Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (_) => const BinScreen())),
             )
           ]),
           const SizedBox(
