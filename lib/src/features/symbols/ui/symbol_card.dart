@@ -75,7 +75,6 @@ class SymbolCard extends ConsumerWidget {
     Color bgColor;
     Color labelBgColor;
     Color textColor;
-    EdgeInsets imagePadding;
 
     if (symbol.childBoard.value == null) {
       bgColor = Colors.white;
@@ -128,10 +127,6 @@ class SymbolCard extends ConsumerWidget {
           : null,
       color: bgColor,
     );
-
-    imagePadding = imageHasBackground
-        ? const EdgeInsets.all(0)
-        : const EdgeInsets.only(top: 6.0, left: 6.0, right: 6.0, bottom: 14.0);
 
     final child = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,

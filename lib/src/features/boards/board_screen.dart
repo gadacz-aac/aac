@@ -15,10 +15,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 
-import 'package:aac/src/features/boards/board_manager.dart';
-import 'package:aac/src/features/boards/ui/controls/controls_wrapper.dart';
-import 'package:aac/src/features/boards/ui/sentence_bar.dart';
-
 // in debug mode parent mode default
 // in release mode child mode default
 final isParentModeProvider = StateProvider<bool>((_) => kDebugMode);

@@ -3,7 +3,6 @@ import 'package:aac/src/features/boards/ui/actions/move_symbol_to_bin_action.dar
 import 'package:aac/src/features/boards/ui/actions/unpin_symbol_action.dart';
 import 'package:aac/src/features/symbols/search/app_bar_actions.dart';
 import 'package:aac/src/features/symbols/search/search_screen.dart';
-import 'package:aac/src/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
