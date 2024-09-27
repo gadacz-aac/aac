@@ -120,6 +120,11 @@ class SymbolManager {
     });
   }
 
+  Future<CommunicationSymbol?> findSymbolByLabel(String label) async {
+    final symbol = await isar.communicationSymbols.filter().labelEqualTo(label).findFirst();
+    return symbol;
+  }
+
   Future<void> _linkSymbolToBoard(
       CommunicationSymbol symbol, Board board) async {
     symbol.childBoard.value = board;
@@ -138,11 +143,16 @@ class SymbolManager {
   }
 
   Future<void> pinSymbolsToBoard(
-      List<CommunicationSymbol> symbols, Board board) async {
+      List<CommunicationSymbol> symbols, {Board? board, Id? boardId}) async {
+    if (board == null && boardId != null) {
+      board = await isar.boards.get(boardId);
+    }
+    if (board == null) return;
+    
     await isar.writeTxn(() async {
-      board.symbols.addAll(symbols);
-      await board.symbols.save();
-      await isar.boards.put(board);
+      board?.symbols.addAll(symbols);
+      await board?.symbols.save();
+      await isar.boards.put(board!);
     });
   }
 

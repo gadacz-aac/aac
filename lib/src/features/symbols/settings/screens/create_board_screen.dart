@@ -1,23 +1,28 @@
+import 'package:aac/src/features/boards/board_manager.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:aac/src/shared/form/widgets/number_field.dart';
 import 'package:aac/src/shared/form/widgets/text_field.dart';
 import 'package:aac/src/shared/ui/button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CreateBoardScreen extends StatefulWidget {
+class CreateBoardScreen extends ConsumerStatefulWidget {
   const CreateBoardScreen({super.key, required this.params});
 
   final BoardEditingParams params;
 
   @override
-  State<CreateBoardScreen> createState() => _CreateBoardScreenState();
+  ConsumerState<CreateBoardScreen> createState() => _CreateBoardScreenState();
+
 }
 
-class _CreateBoardScreenState extends State<CreateBoardScreen> {
+class _CreateBoardScreenState extends ConsumerState<CreateBoardScreen> {
   final _formKey = GlobalKey<FormState>();
 
   late final TextEditingController nameController;
   late final TextEditingController columnCountController;
+
+  bool _isNameUnique = true;
 
   @override
   void initState() {
@@ -25,6 +30,8 @@ class _CreateBoardScreenState extends State<CreateBoardScreen> {
     nameController = TextEditingController(text: widget.params.name);
     columnCountController =
         TextEditingController(text: "${widget.params.columnCount}");
+      
+    nameController.addListener(_checkBoardNameExists);
   }
 
   @override
@@ -32,6 +39,36 @@ class _CreateBoardScreenState extends State<CreateBoardScreen> {
     super.dispose();
     nameController.dispose();
     columnCountController.dispose();
+  }
+
+  Future<bool> boardNameExists(String name) async {
+    final boardManager = ref.read(boardManagerProvider);
+    final existingBoard = await boardManager.findBoardByName(name);
+    return existingBoard != null;
+  }
+  
+  Future<void> _checkBoardNameExists() async {
+    final name = nameController.text;
+    
+    if (name != widget.params.name) {
+      final exists = await boardNameExists(name);
+      setState(() {
+        _isNameUnique = !exists;
+      });
+    } else {
+      setState(() {
+        _isNameUnique = true;
+      });
+    }
+  }
+  String? validateBoardName(String? val) {
+    if (val == null || val.isEmpty) {
+      return "Nazwa nie może być pusta";
+    }
+    if (!_isNameUnique) {
+      return "Tablica o takiej nazwie już istnieje";
+    }
+    return null;
   }
 
   @override
@@ -52,12 +89,7 @@ class _CreateBoardScreenState extends State<CreateBoardScreen> {
                     GenericTextField(
                       controller: nameController,
                       labelText: "Nazwa",
-                      validator: (val) {
-                        if (val == null || val.isEmpty) {
-                          return "Nazwa nie może być pusta";
-                        }
-                        return null;
-                      },
+                      validator: validateBoardName,
                     ),
                     const SizedBox(
                       height: 14,

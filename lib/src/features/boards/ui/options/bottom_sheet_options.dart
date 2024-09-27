@@ -115,7 +115,7 @@ class EditBoardOption extends ConsumerWidget {
               }
             : null,
         icon: const Icon(Icons.edit),
-        label: "Edytuj tablice");
+        label: "Edytuj tablicę");
   }
 }
 
