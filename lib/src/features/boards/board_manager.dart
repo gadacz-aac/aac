@@ -37,6 +37,11 @@ class BoardManager {
     return board;
   }
 
+  Future<Board?> findBoardByName(String name) async {
+    final board = await isar.boards.where().filter().nameEqualTo(name).findFirst();
+    return board;
+  }
+
   Stream<Board?> watchBoardById(Id id) async* {
     yield* isar.boards.watchObject(id, fireImmediately: true);
   }

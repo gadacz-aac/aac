@@ -1,9 +1,8 @@
+import 'package:aac/src/features/symbols/settings/screens/symbol_settings.dart';
+import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
-
-import 'package:aac/src/features/symbols/symbol_manager.dart';
-import 'package:aac/src/features/symbols/settings/screens/symbol_settings.dart';
 
 class AddSymbolMenu extends ConsumerStatefulWidget {
   const AddSymbolMenu({
@@ -37,7 +36,7 @@ class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
           SymbolEditingParams(imagePath: widget.imagePath),
         )
       ],
-      child: SymbolSettings(updateSymbolSettings: submit),
+      child: SymbolSettings(updateSymbolSettings: submit, boardId: widget.boardId),
     );
   }
 }
