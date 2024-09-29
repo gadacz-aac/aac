@@ -218,12 +218,17 @@ class SymbolManager {
   Future<void> moveSymbolToBin(
       List<CommunicationSymbol> symbols, bool deleteWithInsideSymbols) async {
     final allSymbols = <CommunicationSymbol>{};
+    final visitedBoard = <int>{};
 
     Future<void> collectAllSymbols(CommunicationSymbol symbol) async {
       allSymbols.add(symbol);
       if (symbol.childBoard.value == null) return;
 
       final childBoardId = symbol.childBoard.value!.id;
+
+      if (visitedBoard.contains(childBoardId)) return;
+
+      visitedBoard.add(childBoardId);
       final childBoard = await isar.boards.get(childBoardId);
       if (childBoard == null) return;
 
