@@ -125,6 +125,7 @@ class SymbolManager {
     final childBoard = Board.fromParams(params);
     await isar.boards.put(childBoard);
     return childBoard;
+  }
   
   Future<CommunicationSymbol?> findSymbolByLabel(String label) async {
     final symbol = await isar.communicationSymbols.filter().labelEqualTo(label).findFirst();
@@ -155,14 +156,15 @@ class SymbolManager {
       if (board == null && boardId != null) {
         board = await isar.boards.get(boardId);
       }
+
       if (board == null) return;
 
       final symbolsId = symbols.map((e) => e.id);
-      board.reorderedSymbols = [...board.reorderedSymbols, ...symbolsId];
+      board!.reorderedSymbols = [...board!.reorderedSymbols, ...symbolsId];
 
-      board.symbols.addAll(symbols);
-      await board.symbols.save();
-      await isar.boards.put(board);
+      board!.symbols.addAll(symbols);
+      await board!.symbols.save();
+      await isar.boards.put(board!);
     });
   }
 
