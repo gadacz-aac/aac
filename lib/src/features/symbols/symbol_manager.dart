@@ -16,14 +16,16 @@ class BoardEditingParams {
   final Id? id;
   final String name;
   final int? columnCount;
+  final List<int> reorderedSymbols;
 
-  const BoardEditingParams({this.id, this.name = "", this.columnCount = 3});
+  const BoardEditingParams({this.id, this.name = "", this.columnCount = 3, this.reorderedSymbols = const []});
 
   BoardEditingParams.fromBoard(Board board)
       : this(
           name: board.name,
           id: board.id,
           columnCount: board.crossAxisCount,
+          reorderedSymbols: board.reorderedSymbols,
         );
 
   @override

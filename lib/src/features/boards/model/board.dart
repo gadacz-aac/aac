@@ -22,6 +22,8 @@ class Board {
     final board =
         Board(crossAxisCountOrNull: params.columnCount, name: params.name);
 
+    board.reorderedSymbols = params.reorderedSymbols;
+
     if (params.id == null) return board;
 
     return board..id = params.id!;
