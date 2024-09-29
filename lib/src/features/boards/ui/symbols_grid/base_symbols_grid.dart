@@ -1,5 +1,3 @@
-import 'package:aac/src/features/boards/model/board.dart';
-import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -59,37 +57,35 @@ final symbolGridScrollControllerProvider =
   return controller;
 });
 
-class SymbolsGrid extends ConsumerWidget {
-  const SymbolsGrid({super.key, required this.board});
+class BaseSymbolsGrid extends ConsumerWidget {
+  const BaseSymbolsGrid(
+      {super.key,
+      required this.itemBuilder,
+      required this.itemCount,
+      required this.crossAxisCount,
+      this.crossAxisSpacing = 0,
+      this.mainAxisSpacing = 0});
 
-  final Board board;
+  final Widget? Function(BuildContext, int) itemBuilder;
+  final int itemCount;
+  final int crossAxisCount;
+
+  final double crossAxisSpacing;
+  final double mainAxisSpacing;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.watch(symbolGridScrollControllerProvider);
-    final nonDeletedSymbols = board.symbols.where((e) => !e.isDeleted).toList();
 
     return Expanded(
-      child: AlignedGridView.count(
-          crossAxisCount: board.crossAxisCount,
-        crossAxisSpacing: 12.0,
-        mainAxisSpacing: 12.0,
-        itemCount: nonDeletedSymbols.length,
-        padding: const EdgeInsets.all(12.0),
-        controller: controller,
-        itemBuilder: (context, index) {
-          final e = nonDeletedSymbols[index];
-          return SymbolCard(
-            symbol: e,
-            onLongPressActions: const [SymbolOnTapAction.select],
-            onTapActions: const [
-              SymbolOnTapAction.speak,
-              SymbolOnTapAction.cd,
-              SymbolOnTapAction.multiselect
-            ],
-          );
-        }
-      ),
-    );
+        child: AlignedGridView.count(
+              crossAxisCount: crossAxisCount,
+              crossAxisSpacing: crossAxisSpacing,
+              mainAxisSpacing: mainAxisSpacing,
+              itemCount: itemCount,
+              padding: const EdgeInsets.all(12.0),
+              controller: controller,
+              itemBuilder: itemBuilder,
+            ));
   }
 }

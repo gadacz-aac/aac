@@ -120,7 +120,7 @@ class SymbolSearchScreen extends ConsumerWidget {
                               final e = results[index];
                               return SymbolCard(
                                 symbol: e,
-                                onTapActions: const [SymbolOnTapAction.select],
+                                onTapActions:  const [SymbolOnTapAction.select],
                               );
                             }),
                       ),

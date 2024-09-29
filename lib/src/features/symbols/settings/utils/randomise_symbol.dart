@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:aac/src/features/boards/board_screen.dart';
+import 'package:aac/src/features/symbols/settings/utils/file_helpers.dart';
+import 'package:aac/src/shared/utils/try_download_image.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -47,11 +49,17 @@ void randomiseSymbol(WidgetRef ref) async {
       final random = Random();
       final symbol = body[random.nextInt(body.length)];
 
+      final uri = getArrasacImageUrl("${symbol["_id"]}");
+      final (file, error) = await tryDownloadImage(Uri.parse(uri));
+
+      if (error != null) return;
+
+      final path = await saveImage(file!.path);
+
       manager.saveSymbol(
         boardId,
         SymbolEditingParams(
-            imagePath: getArrasacImageUrl("${symbol["_id"]}"),
-            label: "${symbol["keywords"][0]["keyword"]}"),
+            imagePath: path, label: "${symbol["keywords"][0]["keyword"]}"),
       );
       return;
     }

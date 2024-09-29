@@ -1,15 +1,15 @@
+import 'package:aac/firebase_options.dart';
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/settings/model/settings_entry.dart';
 import 'package:aac/src/features/settings/utils/orientation.dart';
 import 'package:aac/src/shared/colors.dart';
 import 'package:aac/src/shared/isar_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,6 +58,7 @@ class MainApp extends StatelessWidget {
           dialogTheme:
               const DialogTheme(backgroundColor: AacColors.greyBackground)),
       home: BoardScreen(boardId: 1),
+      // home: Scaffold(body: Column(children: [ SymbolCard(symbol: CommunicationSymbol(label: "Camus", imagePath: "https://media.newyorker.com/photos/5909675d019dfc3494ea0dd0/master/pass/120409_r22060_g2048.jpg")) ],),),
     );
   }
 }

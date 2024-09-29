@@ -8,8 +8,10 @@ import 'package:aac/src/features/boards/ui/controls/create_symbol.dart';
 import 'package:aac/src/features/boards/ui/controls/delete_all.dart';
 import 'package:aac/src/features/boards/ui/controls/pagination.dart';
 import 'package:aac/src/features/boards/ui/controls/remove_last_word.dart';
+import 'package:aac/src/features/boards/ui/symbols_grid/base_symbols_grid.dart';
+import 'package:aac/src/features/boards/ui/symbols_grid/symbols_grid.dart';
+import 'package:aac/src/features/boards/ui/symbols_grid/symbols_grid_with_drag.dart';
 import 'package:aac/src/features/boards/ui/sentence_bar.dart';
-import 'package:aac/src/features/boards/ui/symbols_grid.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,6 +33,7 @@ class BoardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final board = ref.watch(boardProvider(boardId));
+    print(board);
     final isParentMode = ref.watch(isParentModeProvider);
     return board.when(
         error: (error, _) => ErrorScreen(error: error.toString()),
@@ -87,7 +90,7 @@ class BoardScreen extends ConsumerWidget {
                       Expanded(
                         child: Row(
                           children: [
-                            SymbolsGrid(board: data),
+                            isParentMode ? SymbolsGridWithDrag(board: data) : SymbolsGrid(board: data),
                             ControlsWrapper(
                                 direction: Axis.vertical, children: controls)
                           ],
@@ -97,7 +100,7 @@ class BoardScreen extends ConsumerWidget {
                   } else {
                     children = [
                       !isParentMode ? const SentenceBar() : const SizedBox(),
-                      SymbolsGrid(board: data),
+                      isParentMode ? SymbolsGridWithDrag(board: data) : SymbolsGrid(board: data),
                       ControlsWrapper(
                         direction: Axis.horizontal,
                         children: controls,
