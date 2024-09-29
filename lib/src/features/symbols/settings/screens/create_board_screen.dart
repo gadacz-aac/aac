@@ -61,6 +61,7 @@ class _CreateBoardScreenState extends ConsumerState<CreateBoardScreen> {
       });
     }
   }
+
   String? validateBoardName(String? val) {
     if (val == null || val.isEmpty) {
       return "Nazwa nie może być pusta";
@@ -127,7 +128,7 @@ class _CreateBoardScreenState extends ConsumerState<CreateBoardScreen> {
                           if (!_formKey.currentState!.validate()) return;
                           Navigator.pop(
                               context,
-                              BoardEditingParams(
+                              widget.params.copyWith(
                                 name: nameController.text,
                                 id: widget.params.id,
                                 columnCount:

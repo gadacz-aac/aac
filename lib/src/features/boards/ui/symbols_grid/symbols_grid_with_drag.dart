@@ -8,6 +8,11 @@ import 'package:aac/src/shared/isar_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+List<CommunicationSymbol> getReorderSymbols(Iterable<int> reorderedSymbols, Iterable<CommunicationSymbol> symbols) {
+  return reorderedSymbols.map((id) => symbols.firstWhere((e) => e.id == id))
+        .toList();
+}
+
 class SymbolsGridWithDrag extends ConsumerStatefulWidget {
   const SymbolsGridWithDrag({required this.board, super.key});
 
@@ -27,9 +32,7 @@ class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
   @override
   void initState() {
     super.initState();
-    items = widget.board.reorderedSymbols
-        .map((id) => widget.board.symbols.firstWhere((e) => e.id == id))
-        .toList();
+    items = getReorderSymbols(widget.board.reorderedSymbols, widget.board.symbols);
   }
 
   @override
@@ -37,9 +40,7 @@ class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.board.reorderedSymbols.length != widget.board.reorderedSymbols.length) {
-      items = widget.board.reorderedSymbols
-          .map((id) => widget.board.symbols.firstWhere((e) => e.id == id))
-          .toList();
+      items = getReorderSymbols(widget.board.reorderedSymbols, widget.board.symbols);
     }
   }
 

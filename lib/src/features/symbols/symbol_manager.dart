@@ -18,7 +18,11 @@ class BoardEditingParams {
   final int? columnCount;
   final List<int> reorderedSymbols;
 
-  const BoardEditingParams({this.id, this.name = "", this.columnCount = 3, this.reorderedSymbols = const []});
+  const BoardEditingParams(
+      {this.id,
+      this.name = "",
+      this.columnCount = 3,
+      this.reorderedSymbols = const []});
 
   BoardEditingParams.fromBoard(Board board)
       : this(
@@ -27,6 +31,16 @@ class BoardEditingParams {
           columnCount: board.crossAxisCount,
           reorderedSymbols: board.reorderedSymbols,
         );
+
+  BoardEditingParams copyWith(
+      {int? id, String? name, int? columnCount, List<int>? reorderedSymbols}) {
+
+    return BoardEditingParams(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        columnCount: columnCount ?? this.columnCount,
+        reorderedSymbols: reorderedSymbols ?? this.reorderedSymbols);
+  }
 
   @override
   String toString() => "name: $name id: $id columnCount: $columnCount";
@@ -126,9 +140,12 @@ class SymbolManager {
     await isar.boards.put(childBoard);
     return childBoard;
   }
-  
+
   Future<CommunicationSymbol?> findSymbolByLabel(String label) async {
-    final symbol = await isar.communicationSymbols.filter().labelEqualTo(label).findFirst();
+    final symbol = await isar.communicationSymbols
+        .filter()
+        .labelEqualTo(label)
+        .findFirst();
     return symbol;
   }
 
@@ -150,8 +167,8 @@ class SymbolManager {
     board.symbols.save();
   }
 
-  Future<void> pinSymbolsToBoard(
-      List<CommunicationSymbol> symbols, {Board? board, Id? boardId}) async {
+  Future<void> pinSymbolsToBoard(List<CommunicationSymbol> symbols,
+      {Board? board, Id? boardId}) async {
     await isar.writeTxn(() async {
       if (board == null && boardId != null) {
         board = await isar.boards.get(boardId);
