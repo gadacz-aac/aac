@@ -21,7 +21,7 @@ class PinSymbolsAction extends ConsumerWidget {
 
           if (symbols == null) return;
 
-          symbolManager.pinSymbolsToBoard(symbols, board.id);
+          symbolManager.pinSymbolsToBoard(symbols, board:board);
         },
         icon: const Icon(Icons.search));
   }

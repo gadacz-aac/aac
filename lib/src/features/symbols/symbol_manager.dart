@@ -125,6 +125,10 @@ class SymbolManager {
     final childBoard = Board.fromParams(params);
     await isar.boards.put(childBoard);
     return childBoard;
+  
+  Future<CommunicationSymbol?> findSymbolByLabel(String label) async {
+    final symbol = await isar.communicationSymbols.filter().labelEqualTo(label).findFirst();
+    return symbol;
   }
 
   Future<void> _linkSymbolToBoard(
@@ -146,10 +150,11 @@ class SymbolManager {
   }
 
   Future<void> pinSymbolsToBoard(
-      List<CommunicationSymbol> symbols, int boardId) async {
+      List<CommunicationSymbol> symbols, {Board? board, Id? boardId}) async {
     await isar.writeTxn(() async {
-      final board = await isar.boards.get(boardId);
-
+      if (board == null && boardId != null) {
+        board = await isar.boards.get(boardId);
+      }
       if (board == null) return;
 
       final symbolsId = symbols.map((e) => e.id);
