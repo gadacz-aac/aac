@@ -1,10 +1,14 @@
+import 'dart:async';
+
 import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../shared/isar_provider.dart';
+
 part 'symbol_manager.g.dart';
 
 @immutable
@@ -13,18 +17,17 @@ class BoardEditingParams {
   final String name;
   final int? columnCount;
 
-  const BoardEditingParams(
-      {this.id, this.name = "", this.columnCount = 3});
+  const BoardEditingParams({this.id, this.name = "", this.columnCount = 3});
 
   BoardEditingParams.fromBoard(Board board)
       : this(
-            name: board.name,
-            id: board.id,
-            columnCount: board.crossAxisCount,);
+          name: board.name,
+          id: board.id,
+          columnCount: board.crossAxisCount,
+        );
 
   @override
-  String toString() =>
-      "name: $name id: $id columnCount: $columnCount";
+  String toString() => "name: $name id: $id columnCount: $columnCount";
 }
 
 @immutable
@@ -32,22 +35,24 @@ class SymbolEditingParams {
   final String? imagePath;
   final String? label;
   final String? vocalization;
+  final bool? isDeleted;
   final int? color;
   final BoardEditingParams? childBoard;
 
-  const SymbolEditingParams({
-    this.imagePath,
-    this.label,
-    this.color,
-    this.vocalization,
-    this.childBoard,
-  });
+  const SymbolEditingParams(
+      {this.imagePath,
+      this.label,
+      this.vocalization,
+      this.isDeleted,
+      this.color,
+      this.childBoard});
 
   SymbolEditingParams.fromSymbol(CommunicationSymbol symbol)
       : imagePath = symbol.imagePath,
         label = symbol.label,
         color = symbol.color,
         vocalization = symbol.vocalization,
+        isDeleted = symbol.isDeleted,
         childBoard = symbol.childBoard.value != null
             ? BoardEditingParams.fromBoard(symbol.childBoard.value!)
             : null;
@@ -56,12 +61,18 @@ class SymbolEditingParams {
   String toString() => "imagePath: $imagePath label: $label color: $color";
 }
 
+final symbolsProvider =
+    StreamProvider.autoDispose<List<CommunicationSymbol>>((ref) {
+  final symbolManager = ref.watch(symbolManagerProvider);
+  return symbolManager.watchAllSymbols();
+});
+
 class SymbolManager {
+  final Isar isar;
+
   SymbolManager({
     required this.isar,
   });
-
-  final Isar isar;
 
   Future<void> saveSymbol(Id boardId, SymbolEditingParams params) async {
     if (params.label == null) return;
@@ -108,6 +119,12 @@ class SymbolManager {
     });
   }
 
+  Future<Board> _createOrUpdateChildBoard(BoardEditingParams params) async {
+    final childBoard = Board.fromParams(params);
+    await isar.boards.put(childBoard);
+    return childBoard;
+  }
+
   Future<void> _linkSymbolToBoard(
       CommunicationSymbol symbol, Board board) async {
     symbol.childBoard.value = board;
@@ -133,7 +150,7 @@ class SymbolManager {
 
       if (board == null) return;
 
-      final symbolsId = symbols.map((e)=>e.id);
+      final symbolsId = symbols.map((e) => e.id);
       board.reorderedSymbols = [...board.reorderedSymbols, ...symbolsId];
 
       board.symbols.addAll(symbols);
@@ -148,7 +165,7 @@ class SymbolManager {
       final board = await isar.boards.get(boardId);
 
       if (board == null) return;
-      final symbolsId = symbols.map((e)=>e.id);
+      final symbolsId = symbols.map((e) => e.id);
       board.reorderedSymbols = [
         for (final e in board.reorderedSymbols)
           if (!symbolsId.contains(e)) e
@@ -159,26 +176,115 @@ class SymbolManager {
     });
   }
 
-  Future<void> deleteSymbol(
-      List<CommunicationSymbol> symbols, Id boardId) async {
-    final symbolIds = symbols.map((e) => e.id).toList();
+  Future<void> unpinSymbolsFromEveryBoard(
+      List<CommunicationSymbol> symbols) async {
+    await restoreSymbols(symbols);
+    for (var symbol in symbols) {
+      try {
+        await symbol.parentBoard.load();
+
+        await Future.wait(symbol.parentBoard
+            .map((board) => unpinSymbolFromBoard([symbol], board.id)));
+      } catch (e) {
+        print('Błąd podczas odpinania symbolu $symbol: $e');
+      }
+    }
+  }
+
+  Future<Map<int, Set<int>>> _getReorderMap(
+      Iterable<CommunicationSymbol> symbols) async {
+    await Future.wait(symbols.map((e) => e.parentBoard.load()));
+
+    final reorderMap = <int, Set<int>>{};
+    for (final symbol in symbols) {
+      for (final board in symbol.parentBoard) {
+        reorderMap.update(board.id, (e) => e..add(symbol.id),
+            ifAbsent: () => {symbol.id});
+      }
+    }
+
+    return reorderMap;
+  }
+
+  Future<void> moveSymbolToBin(
+      List<CommunicationSymbol> symbols, bool deleteWithInsideSymbols) async {
+    final allSymbols = <CommunicationSymbol>{};
+
+    Future<void> collectAllSymbols(CommunicationSymbol symbol) async {
+      allSymbols.add(symbol);
+      if (symbol.childBoard.value == null) return;
+
+      final childBoardId = symbol.childBoard.value!.id;
+      final childBoard = await isar.boards.get(childBoardId);
+      if (childBoard == null) return;
+
+      await Future.wait(childBoard.symbols.map(collectAllSymbols));
+    }
+
+    if (deleteWithInsideSymbols) {
+      await Future.wait(symbols.map(collectAllSymbols));
+    } else {
+      allSymbols.addAll(symbols);
+    }
+
+    final reorderMap = await _getReorderMap(allSymbols);
+
     await isar.writeTxn(() async {
-      final board = await isar.boards.get(boardId);
-      if (board == null) return;
-      final symbolsId = symbols.map((e)=>e.id);
-      board.reorderedSymbols = [
-        for (final e in board.reorderedSymbols)
-          if (!symbolsId.contains(e)) e
-      ];
-      await isar.communicationSymbols.deleteAll(symbolIds);
-      await isar.boards.put(board);
+      for (final symbol in allSymbols) {
+        await isar.communicationSymbols.put(symbol
+            .updateWithParams(const SymbolEditingParams(isDeleted: true)));
+      }
+
+      for (final entry in reorderMap.entries) {
+        final board = await isar.boards.get(entry.key);
+
+        if (board == null) continue;
+        board.reorderedSymbols = [
+          for (final e in board.reorderedSymbols)
+            if (!entry.value.contains(e)) e
+        ];
+
+        isar.boards.put(board);
+      }
     });
   }
 
-  Future<Board> _createOrUpdateChildBoard(BoardEditingParams params) async {
-    final childBoard = Board.fromParams(params);
-    await isar.boards.put(childBoard);
-    return childBoard;
+  Future<void> restoreSymbols(List<CommunicationSymbol> symbols) async {
+    final reorderMap = await _getReorderMap(symbols);
+
+    await isar.writeTxn(() async {
+      for (var symbol in symbols) {
+        await isar.communicationSymbols.put(symbol
+            .updateWithParams(const SymbolEditingParams(isDeleted: false)));
+      }
+
+      for (final entry in reorderMap.entries) {
+        final board = await isar.boards.get(entry.key);
+
+        if (board == null) continue;
+        board.reorderedSymbols = [...board.reorderedSymbols, ...entry.value];
+
+        isar.boards.put(board);
+      }
+    });
+  }
+
+  Future<void> deleteSymbols(List<CommunicationSymbol> symbols) async {
+    await isar.writeTxn(() async {
+      for (var symbol in symbols) {
+        await isar.communicationSymbols.delete(symbol.id);
+      }
+    });
+  }
+
+  // TODO chyba tylko w śmietniku to można odrazu zwracać symbole usunięte
+  Stream<List<CommunicationSymbol>> watchAllSymbols() async* {
+    yield* isar.communicationSymbols
+        .where()
+        .watch(fireImmediately: true)
+        .asyncMap((_) async => await isar.communicationSymbols
+            .where()
+            .findAll()); // TODO ????????????????
   }
 }
 

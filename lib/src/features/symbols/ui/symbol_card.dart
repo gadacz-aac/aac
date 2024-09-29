@@ -34,14 +34,12 @@ class SymbolCard extends ConsumerWidget {
     required this.symbol,
     this.isDragging = false,
     this.onTapActions = const [],
-    this.onLongPressActions = const [],
   });
 
   final CommunicationSymbol symbol;
   final bool imageHasBackground = false;
   final bool isDragging; 
   final List<SymbolOnTapAction> onTapActions;
-  final List<SymbolOnTapAction> onLongPressActions;
 
   void _onTap(BuildContext context, WidgetRef ref) {
     final isParentMode = ref.read(isParentModeProvider);
@@ -128,53 +126,55 @@ class SymbolCard extends ConsumerWidget {
       color: bgColor,
     );
 
-    return InkWell(
-        onTap: () => _onTap(context, ref),
-        child: IntrinsicHeight(
+    final child = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: imagePadding,
+          child:
+              SymbolImage(symbol.imagePath, height: 80, fit: BoxFit.fitHeight),
+        ),
+        Expanded(
           child: Container(
-            decoration: boxDecoration,
-            clipBehavior: Clip.hardEdge,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Padding(
-                  padding: imagePadding,
-                  child: SymbolImage(symbol.imagePath,
-                      height: 80, fit: BoxFit.fitHeight),
-                ),
-                Expanded(
-                    child: Container(
-                        decoration: BoxDecoration(
-                          boxShadow: const [
-                            BoxShadow(
-                                color: AacColors.labelShadow,
-                                blurRadius: 1,
-                                spreadRadius: 4,
-                                offset: Offset(0, 4))
-                          ],
-                          color: labelBgColor,
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 18.0, vertical: 6.0),
-                        // alignment: Alignment.center,
-                        child: Text(symbol.label,
-                            textAlign: TextAlign.center,
-                            textHeightBehavior: const TextHeightBehavior(
-                                applyHeightToFirstAscent: true,
-                                applyHeightToLastDescent: true,
-                                leadingDistribution:
-                                    TextLeadingDistribution.even),
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall!
-                                .merge(TextStyle(
-                                  // fontSize: 17.0,
-                                  color: textColor,
-                                  height: 1.25,
-                                )))))
+            decoration: BoxDecoration(
+              boxShadow: const [
+                BoxShadow(
+                    color: AacColors.labelShadow,
+                    blurRadius: 1,
+                    spreadRadius: 4,
+                    offset: Offset(0, 4))
               ],
+              color: labelBgColor,
+            ),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 18.0, vertical: 6.0),
+            child: Text(
+              symbol.label,
+              textAlign: TextAlign.center,
+              textHeightBehavior: const TextHeightBehavior(
+                  applyHeightToFirstAscent: true,
+                  applyHeightToLastDescent: true,
+                  leadingDistribution: TextLeadingDistribution.even),
+              style: Theme.of(context).textTheme.bodySmall!.merge(TextStyle(
+                    color: textColor,
+                    height: 1.25,
+                  )),
             ),
           ),
-        ));
+        )
+      ],
+    );
+
+    return InkWell(
+      onTap: () => _onTap(context, ref),
+      child: IntrinsicHeight(
+        child: Container(
+          decoration: boxDecoration,
+          clipBehavior: Clip.hardEdge,
+          child: child,
+        ),
+      ),
+    );
   }
 }
+

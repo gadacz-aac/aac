@@ -36,7 +36,7 @@ class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
   void didUpdateWidget(covariant SymbolsGridWithDrag oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (oldWidget.board.symbols.length != widget.board.symbols.length) {
+    if (oldWidget.board.reorderedSymbols.length != widget.board.reorderedSymbols.length) {
       items = widget.board.reorderedSymbols
           .map((id) => widget.board.symbols.firstWhere((e) => e.id == id))
           .toList();
