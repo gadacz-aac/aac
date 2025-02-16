@@ -2,7 +2,6 @@ import 'package:aac/src/features/symbols/settings/screens/symbol_settings.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:isar/isar.dart';
 
 class AddSymbolMenu extends ConsumerStatefulWidget {
   const AddSymbolMenu({
@@ -12,7 +11,7 @@ class AddSymbolMenu extends ConsumerStatefulWidget {
   });
 
   final String? imagePath;
-  final Id boardId;
+  final int boardId;
 
   @override
   ConsumerState<AddSymbolMenu> createState() => _AddSymbolMenuState();
@@ -36,7 +35,8 @@ class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
           SymbolEditingParams(imagePath: widget.imagePath),
         )
       ],
-      child: SymbolSettings(updateSymbolSettings: submit, boardId: widget.boardId),
+      child:
+          SymbolSettings(updateSymbolSettings: submit, boardId: widget.boardId),
     );
   }
 }

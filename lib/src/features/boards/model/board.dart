@@ -1,26 +1,23 @@
-import 'package:aac/src/features/symbols/model/communication_symbol.dart';
+import 'package:aac/src/database/database.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
-import 'package:isar/isar.dart';
 
-part 'board.g.dart';
-
-@collection
-class Board {
-  Id id;
+class BoardOld {
+  int id;
   int crossAxisCount;
   String name;
-  Board(
-      {int? crossAxisCountOrNull,
-      required this.name})
-      : id = Isar.autoIncrement,
-        crossAxisCount = crossAxisCountOrNull ?? 3;
-
-  final symbols = IsarLinks<CommunicationSymbol>();
+  // final symbols = IsarLinks<CommunicationSymbol>();
+  final symbols = [];
   List<int> reorderedSymbols = List.empty(growable: true);
 
-  factory Board.fromParams(BoardEditingParams params) {
+  BoardOld(
+      {int? crossAxisCountOrNull,
+      required this.name})
+      : crossAxisCount = crossAxisCountOrNull ?? 3,
+        id = 1;
+
+  factory BoardOld.fromParams(BoardEditingParams params) {
     final board =
-        Board(crossAxisCountOrNull: params.columnCount, name: params.name);
+        BoardOld(crossAxisCountOrNull: params.columnCount, name: params.name);
 
     board.reorderedSymbols = params.reorderedSymbols;
 
@@ -29,11 +26,16 @@ class Board {
     return board..id = params.id!;
   }
 
+  BoardOld.fromEntity(BoardEntity entity) : 
+    id = entity.id,
+    crossAxisCount = entity.crossAxisCount,
+    name = entity.name;
+
   @override
   String toString() =>
       "board id: $id, crossAxisCount: $crossAxisCount, name: $name, symbols: $symbols, reorderedSymbols: $reorderedSymbols";
 
-  @Index(type: IndexType.value, caseSensitive: false)
-  List<String> get words => Isar.splitWords(name);
+  // @Index(type: IndexType.value, caseSensitive: false)
+  List<String> get words => [];
 }
 

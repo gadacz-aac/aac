@@ -2,17 +2,16 @@ import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/symbols/settings/widgets/cherry_pick_image.dart';
 import 'package:aac/src/features/symbols/search/search_screen.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
-import 'package:aac/src/shared/isar_provider.dart';
 import 'package:aac/src/shared/utils/debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:isar/isar.dart';
 
-final foundBoards = FutureProvider.autoDispose<List<Board>>((ref) async {
-  final isar = ref.watch(isarProvider);
-  final query = ref.watch(queryProvider);
-
-  return isar.boards.where().wordsElementStartsWith(query).findAll();
+final foundBoards = FutureProvider.autoDispose<List<BoardOld>>((ref) async {
+  // final isar = ref.watch(isarProvider);
+  // final query = ref.watch(queryProvider);
+  //
+  // return isar.boards.where().wordsElementStartsWith(query).findAll();
+  throw UnimplementedError();
 });
 
 class BoardSearch extends ConsumerWidget {

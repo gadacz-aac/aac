@@ -2,7 +2,6 @@ import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/main_menu/overview_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:isar/isar.dart';
 
 class RecentBoards extends ConsumerWidget {
   const RecentBoards({super.key});
@@ -52,7 +51,7 @@ class BoardTile extends StatelessWidget {
 
   final String title;
   final String subtitle;
-  final Id id;
+  final int id;
 
   @override
   Widget build(BuildContext context) {

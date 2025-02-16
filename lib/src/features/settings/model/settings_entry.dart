@@ -1,22 +1,15 @@
-import 'package:isar/isar.dart';
-
-part 'settings_entry.g.dart';
-
-@collection
 class SettingsEntry {
   SettingsEntry({required this.key, dynamic value}) {
     this.value = value;
   }
 
-  Id id = Isar.autoIncrement;
-  @Index(unique: true, caseSensitive: false, type: IndexType.hash)
+  int id = 1;
   final String key;
   String? stringValue;
   int? intValue;
   bool? boolValue;
   double? doubleValue;
 
-  @ignore
   dynamic get value => stringValue ?? boolValue ?? doubleValue ?? intValue;
 
   set value(dynamic value) {

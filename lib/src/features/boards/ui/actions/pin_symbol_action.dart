@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class PinSymbolsAction extends ConsumerWidget {
   const PinSymbolsAction({super.key, required this.board});
 
-  final Board board;
+  final BoardOld board;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

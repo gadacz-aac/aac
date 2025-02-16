@@ -22,9 +22,6 @@ class ImageNotifier extends _$ImageNotifier {
         sourcePath: state,
         compressQuality: 60, //? isn't it too low?
         compressFormat: ImageCompressFormat.png,
-        aspectRatioPresets: [
-          CropAspectRatioPreset.square
-        ],
         uiSettings: [
           AndroidUiSettings(
               toolbarTitle: "Przycinanie zdjęcia",
