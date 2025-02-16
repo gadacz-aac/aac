@@ -2,36 +2,35 @@ import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:aac/src/features/symbols/search/search_app_bar.dart';
 import 'package:aac/src/features/symbols/search/symbol_search_filters.dart';
-import 'package:aac/src/shared/isar_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:isar/isar.dart';
 
 final searchedSymbolProvider =
-    FutureProvider.autoDispose<List<CommunicationSymbol>>((ref) async {
-  final isar = ref.watch(isarProvider);
-  final query = ref.watch(queryProvider);
-  final color = ref.watch(symbolSearchColorFilterProvider)?.code;
-  final onlyPinned = ref.watch(symbolSearchOnlyPinnedFilterProvider);
-
-  return isar.communicationSymbols
-      .where()
-      .wordsElementStartsWith(query)
-      .filter()
-      .isDeletedEqualTo(false)
-      .optional(color != null, (q) => q.colorEqualTo(color))
-      .optional(onlyPinned, (q) => q.parentBoardIsEmpty())
-      .findAll();
+    FutureProvider.autoDispose<List<CommunicationSymbolOld>>((ref) async {
+  // final isar = ref.watch(isarProvider);
+  // final query = ref.watch(queryProvider);
+  // final color = ref.watch(symbolSearchColorFilterProvider)?.code;
+  // final onlyPinned = ref.watch(symbolSearchOnlyPinnedFilterProvider);
+  //
+  // return isar.communicationSymbols
+  //     .where()
+  //     .wordsElementStartsWith(query)
+  //     .filter()
+  //     .isDeletedEqualTo(false)
+  //     .optional(color != null, (q) => q.colorEqualTo(color))
+  //     .optional(onlyPinned, (q) => q.parentBoardIsEmpty())
+  //     .findAll();
+  throw UnimplementedError();
 });
 
 final queryProvider = StateProvider.autoDispose<String>((ref) => "");
 
 class SelectedSymbolNotifier extends ChangeNotifier {
-  final state = <CommunicationSymbol>[];
+  final state = <CommunicationSymbolOld>[];
 
-  void toggle(CommunicationSymbol symbol) {
+  void toggle(CommunicationSymbolOld symbol) {
     final index = state.indexWhere((e) => e.id == symbol.id);
     if (index == -1) {
       state.add(symbol);

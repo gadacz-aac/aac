@@ -1,6 +1,5 @@
 import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/boards/ui/symbols_grid/base_symbols_grid.dart';
-import 'package:aac/src/features/boards/ui/symbols_grid/symbols_grid_with_drag.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:flutter/material.dart';
@@ -8,20 +7,21 @@ import 'package:flutter/material.dart';
 class SymbolsGrid extends StatefulWidget {
   const SymbolsGrid({super.key, required this.board});
 
-  final Board board;
+  final BoardOld board;
 
   @override
   State<SymbolsGrid> createState() => _SymbolsGridState();
 }
 
 class _SymbolsGridState extends State<SymbolsGrid> {
-  late final List<CommunicationSymbol> symbols;
+  late final List<CommunicationSymbolOld> symbols;
 
   @override
   void initState() {
     super.initState();
-    symbols =
-        getReorderSymbols(widget.board.reorderedSymbols, widget.board.symbols);
+    throw UnimplementedError();
+    // symbols =
+    //     getReorderSymbols(widget.board.reorderedSymbols, widget.board.symbols);
   }
 
   @override

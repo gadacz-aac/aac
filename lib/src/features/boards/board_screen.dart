@@ -15,25 +15,23 @@ import 'package:aac/src/features/boards/ui/sentence_bar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:isar/isar.dart';
 
 // in debug mode parent mode default
 // in release mode child mode default
 final isParentModeProvider = StateProvider<bool>((_) => kDebugMode);
-final boardIdProvider = Provider<Id>((_) => throw UnimplementedError());
+final boardIdProvider = Provider<int>((_) => throw UnimplementedError());
 
 class BoardScreen extends ConsumerWidget {
   BoardScreen({super.key, required this.boardId}) {
     _isMainBoard = boardId != 1;
   }
 
-  final Id boardId;
+  final int boardId;
   late final bool _isMainBoard;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final board = ref.watch(boardProvider(boardId));
-    print(board);
     final isParentMode = ref.watch(isParentModeProvider);
     return board.when(
         error: (error, _) => ErrorScreen(error: error.toString()),
@@ -90,7 +88,9 @@ class BoardScreen extends ConsumerWidget {
                       Expanded(
                         child: Row(
                           children: [
-                            isParentMode ? SymbolsGridWithDrag(board: data) : SymbolsGrid(board: data),
+                            isParentMode
+                                ? SymbolsGridWithDrag(board: data)
+                                : SymbolsGrid(board: data),
                             ControlsWrapper(
                                 direction: Axis.vertical, children: controls)
                           ],
@@ -100,7 +100,9 @@ class BoardScreen extends ConsumerWidget {
                   } else {
                     children = [
                       !isParentMode ? const SentenceBar() : const SizedBox(),
-                      isParentMode ? SymbolsGridWithDrag(board: data) : SymbolsGrid(board: data),
+                      isParentMode
+                          ? SymbolsGridWithDrag(board: data)
+                          : SymbolsGrid(board: data),
                       ControlsWrapper(
                         direction: Axis.horizontal,
                         children: controls,

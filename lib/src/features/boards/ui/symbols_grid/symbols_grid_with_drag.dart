@@ -4,11 +4,10 @@ import 'package:aac/src/features/boards/ui/symbols_grid/base_symbols_grid.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/search/search_screen.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
-import 'package:aac/src/shared/isar_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-List<CommunicationSymbol> getReorderSymbols(Iterable<int> reorderedSymbols, Iterable<CommunicationSymbol> symbols) {
+List<CommunicationSymbolOld> getReorderSymbols(Iterable<int> reorderedSymbols, Iterable<CommunicationSymbolOld> symbols) {
   return reorderedSymbols.map((id) => symbols.firstWhere((e) => e.id == id))
         .toList();
 }
@@ -16,23 +15,24 @@ List<CommunicationSymbol> getReorderSymbols(Iterable<int> reorderedSymbols, Iter
 class SymbolsGridWithDrag extends ConsumerStatefulWidget {
   const SymbolsGridWithDrag({required this.board, super.key});
 
-  final Board board;
+  final BoardOld board;
   @override
   ConsumerState<SymbolsGridWithDrag> createState() =>
       _SymbolsGridWithDragState();
 }
 
 class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
-  DragItem<CommunicationSymbol>? currentlyDragged;
+  DragItem<CommunicationSymbolOld>? currentlyDragged;
   int? desiredIndex;
-  List<CommunicationSymbol> items = [];
+  List<CommunicationSymbolOld> items = [];
   Offset dragStartPosition = Offset.zero;
   bool didDraggedSignificantly = false;
 
   @override
   void initState() {
     super.initState();
-    items = getReorderSymbols(widget.board.reorderedSymbols, widget.board.symbols);
+    throw UnimplementedError();
+    // items = getReorderSymbols(widget.board.reorderedSymbols, widget.board.symbols);
   }
 
   @override
@@ -40,11 +40,12 @@ class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.board.reorderedSymbols.length != widget.board.reorderedSymbols.length) {
-      items = getReorderSymbols(widget.board.reorderedSymbols, widget.board.symbols);
+    throw UnimplementedError();
+      // items = getReorderSymbols(widget.board.reorderedSymbols, widget.board.symbols);
     }
   }
 
-  void _onLongPress(CommunicationSymbol symbol, WidgetRef ref) {
+  void _onLongPress(CommunicationSymbolOld symbol, WidgetRef ref) {
     if (ref.read(isParentModeProvider)) {
       ref.read(selectedSymbolsProvider).toggle(symbol);
     }
@@ -60,7 +61,7 @@ class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
         itemBuilder: (context, index) {
           final e = items[index];
 
-          return DragTarget<DragItem<CommunicationSymbol>>(onMove: (data) {
+          return DragTarget<DragItem<CommunicationSymbolOld>>(onMove: (data) {
             setState(() {
               desiredIndex = index;
             });
@@ -77,18 +78,19 @@ class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
               items.insert(desiredIndex!, currentlyDragged!.data);
             });
 
-            final isar = ref.read(isarProvider);
-            final reorderedSymbols = [...widget.board.reorderedSymbols];
-            reorderedSymbols.removeAt(currentlyDragged!.index);
-            reorderedSymbols.insert(desiredIndex!, currentlyDragged!.data.id);
-
-            isar.writeTxn(() async {
-              final board = await isar.boards.get(widget.board.id);
-              if (board == null) return;
-
-              board.reorderedSymbols = [...reorderedSymbols];
-              isar.boards.put(board);
-            });
+            // final isar = ref.read(isarProvider);
+            // final reorderedSymbols = [...widget.board.reorderedSymbols];
+            // reorderedSymbols.removeAt(currentlyDragged!.index);
+            // reorderedSymbols.insert(desiredIndex!, currentlyDragged!.data.id);
+            //
+            // isar.writeTxn(() async {
+            //   final board = await isar.boards.get(widget.board.id);
+            //   if (board == null) return;
+            //
+            //   board.reorderedSymbols = [...reorderedSymbols];
+            //   isar.boards.put(board);
+            // });
+            throw UnimplementedError();
           }, builder: (context, incoming, __) {
             return LayoutBuilder(builder: (context, constrains) {
               final data = DragItem(index: index, data: e);

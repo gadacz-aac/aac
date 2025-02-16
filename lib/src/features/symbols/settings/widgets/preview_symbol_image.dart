@@ -1,4 +1,3 @@
-import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/settings/screens/image_provider.dart';
 import 'package:aac/src/features/symbols/settings/screens/symbol_settings.dart';
@@ -19,14 +18,15 @@ class PreviewSymbolImage extends ConsumerWidget {
 
     final childBoard = ref.watch(boardNotifierProvider);
 
-    final symbol = CommunicationSymbol(
+    final symbol = CommunicationSymbolOld(
       label: label,
       imagePath: image,
       color: color,
     );
 
     if (childBoard != null) {
-      symbol.childBoard.value = Board.fromParams(childBoard);
+      throw UnimplementedError();
+      // symbol.childBoard.value = Board.fromParams(childBoard);
     }
 
     return FractionallySizedBox(

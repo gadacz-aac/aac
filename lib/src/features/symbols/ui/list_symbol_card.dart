@@ -8,7 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class SymbolListTile extends ConsumerStatefulWidget {
   const SymbolListTile({super.key, required this.symbol});
 
-  final CommunicationSymbol symbol;
+  final CommunicationSymbolOld symbol;
   final bool imageHasBackground = false;
 
   @override
@@ -18,30 +18,32 @@ class SymbolListTile extends ConsumerStatefulWidget {
 class _SymbolListTileState extends ConsumerState<SymbolListTile> {
   bool _isExpanded = false;
   bool get isExpanded => _isExpanded;
-  List<CommunicationSymbol> childSymbols = [];
+  List<CommunicationSymbolOld> childSymbols = [];
 
   @override
   void initState() {
     super.initState();
 
-    childSymbols = widget.symbol.childBoard.value?.symbols
-            .where((child) =>
-                child.childBoard.value == null &&
-                child.isDeleted == true) // Only load non-folder children
-            .toList() ??
-        [];
+  throw UnimplementedError();
+    // childSymbols = widget.symbol.childBoard.value?.symbols
+    //         .where((child) =>
+    //             child.childBoard.value == null &&
+    //             child.isDeleted == true) // Only load non-folder children
+    //         .toList() ??
+    //     [];
   }
 
   @override
     void didUpdateWidget(covariant SymbolListTile oldWidget) {
       super.didUpdateWidget(oldWidget);
+      throw UnimplementedError();
 
-    childSymbols = widget.symbol.childBoard.value?.symbols
-            .where((child) =>
-                child.childBoard.value == null &&
-                child.isDeleted == true) // Only load non-folder children
-            .toList() ??
-        [];
+    // childSymbols = widget.symbol.childBoard.value?.symbols
+    //         .where((child) =>
+    //             child.childBoard.value == null &&
+    //             child.isDeleted == true) // Only load non-folder children
+    //         .toList() ??
+    //     [];
     }
 
   void _onLongPress(BuildContext context, WidgetRef ref) {
@@ -54,13 +56,15 @@ class _SymbolListTileState extends ConsumerState<SymbolListTile> {
       return;
     }
 
-    if (widget.symbol.childBoard.value != null) {
-      if (childSymbols.isNotEmpty) {
-        setState(() {
-          _isExpanded = !_isExpanded;
-        });
-      }
-    }
+    throw UnimplementedError();
+
+    // if (widget.symbol.childBoard.value != null) {
+    //   if (childSymbols.isNotEmpty) {
+    //     setState(() {
+    //       _isExpanded = !_isExpanded;
+    //     });
+    //   }
+    // }
   }
 
   @override

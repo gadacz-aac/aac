@@ -11,7 +11,6 @@ import 'package:aac/src/shared/colors.dart';
 import 'package:aac/src/shared/form/widgets/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:isar/isar.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'symbol_settings.g.dart';
@@ -30,7 +29,7 @@ final labelProvider = StateProvider.autoDispose<String>(
 
 class SymbolSettings extends ConsumerStatefulWidget {
   final void Function(SymbolEditingParams) updateSymbolSettings;
-  final Id boardId;
+  final int boardId;
   const SymbolSettings({super.key, required this.updateSymbolSettings, required this.boardId});
 
   @override
@@ -221,8 +220,8 @@ class NoImageSelectedDialog extends StatelessWidget {
 
 class LabelTextField extends ConsumerWidget {
   final String? initialLabel;
-  final Id boardId;
-  final void Function(CommunicationSymbol) onDuplicateFound;
+  final int boardId;
+  final void Function(CommunicationSymbolOld) onDuplicateFound;
   final void Function() onDuplicateResolved;
 
   const LabelTextField({

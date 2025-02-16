@@ -54,7 +54,7 @@ class TtsManager {
     await tts.speak(word);
   }
 
-  Future<void> sayWord(CommunicationSymbol symbol) async {
+  Future<void> sayWord(CommunicationSymbolOld symbol) async {
     await _speak((symbol.vocalization != null && symbol.vocalization!.isNotEmpty) ? symbol.vocalization! : symbol.label);
   }
 

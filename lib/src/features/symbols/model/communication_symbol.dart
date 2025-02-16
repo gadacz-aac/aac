@@ -1,35 +1,29 @@
 import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
-import 'package:isar/isar.dart';
 
-part 'communication_symbol.g.dart';
-
-@collection
-class CommunicationSymbol {
-  CommunicationSymbol(
+class CommunicationSymbolOld {
+  CommunicationSymbolOld(
       {required this.label,
       required this.imagePath,
       this.vocalization,
       this.color,
       this.isDeleted = false})
-      : id = Isar.autoIncrement;
+      : id = 1;
 
-  Id id;
+  int id;
   String label;
   String? vocalization;
   String imagePath;
   int? color;
   bool isDeleted;
 
-  @Backlink(to: 'symbols')
-  final parentBoard = IsarLinks<Board>();
-  final childBoard = IsarLink<Board>();
+  final parentBoard = BoardOld(name: "");
+  final childBoard = BoardOld(name: "");
 
   // full-text search
-  @Index(type: IndexType.value, caseSensitive: false)
-  List<String> get words => Isar.splitWords(label);
+  List<String> get words => [];
 
-  CommunicationSymbol.fromParams(SymbolEditingParams params)
+  CommunicationSymbolOld.fromParams(SymbolEditingParams params)
         : this(
                   imagePath: params.imagePath ?? "",
                   label: params.label ?? "",
@@ -38,7 +32,7 @@ class CommunicationSymbol {
                   isDeleted: params.isDeleted ?? false
                 );
 
-  CommunicationSymbol updateWithParams(SymbolEditingParams params) {
+  CommunicationSymbolOld updateWithParams(SymbolEditingParams params) {
     label = params.label ?? label;
     imagePath = params.imagePath ?? imagePath;
     color = params.color ?? color;
