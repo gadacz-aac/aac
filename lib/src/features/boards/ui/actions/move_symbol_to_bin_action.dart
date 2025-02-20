@@ -8,7 +8,8 @@ class MoveSymbolToBinAction extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    throw UnimplementedError();
+  // TODO
+    return SizedBox();
     // final selectedSymbols = ref.watch(selectedSymbolsProvider).state;
 
     // final hasChildren = selectedSymbols.any((symbol) => symbol.childBoard.value != null);

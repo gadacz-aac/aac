@@ -15,11 +15,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'symbol_settings.g.dart';
 @riverpod
-String defaultImagePath(DefaultImagePathRef ref) =>
+String defaultImagePath(Ref ref) =>
     "assets/default_image_file.png";
 
 @Riverpod(dependencies: [])
-SymbolEditingParams initialValues(InitialValuesRef ref) {
+SymbolEditingParams initialValues(Ref ref) {
   return const SymbolEditingParams();
 }
 

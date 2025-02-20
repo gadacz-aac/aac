@@ -12,8 +12,10 @@ class BoardDao extends DatabaseAccessor<AppDatabase> with _$BoardDaoMixin {
   // of this object.
   BoardDao(super.db);
 
-  Stream<BoardOld> watchById(int id) {
-    return selectById(id).watchSingle().map(BoardOld.fromEntity);
+  Stream<BoardOld?> watchById(int id) {
+    return selectById(id)
+        .watchSingleOrNull()
+        .map((e) => e == null ? null : BoardOld.fromEntity(e));
   }
 }
 

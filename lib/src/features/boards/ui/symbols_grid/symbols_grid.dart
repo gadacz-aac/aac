@@ -1,31 +1,20 @@
 import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/boards/ui/symbols_grid/base_symbols_grid.dart';
-import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SymbolsGrid extends StatefulWidget {
-  const SymbolsGrid({super.key, required this.board});
-
+class SymbolsGrid extends ConsumerWidget {
   final BoardOld board;
 
-  @override
-  State<SymbolsGrid> createState() => _SymbolsGridState();
-}
-
-class _SymbolsGridState extends State<SymbolsGrid> {
-  late final List<CommunicationSymbolOld> symbols;
+  const SymbolsGrid({super.key, required this.board});
 
   @override
-  void initState() {
-    super.initState();
-    throw UnimplementedError();
-    // symbols =
-    //     getReorderSymbols(widget.board.reorderedSymbols, widget.board.symbols);
-  }
+  Widget build(BuildContext context, WidgetRef ref) {
+    final symbols = ref.watch(childSymbolProvider(board.id)).valueOrNull;
 
-  @override
-  Widget build(BuildContext context) {
+    if (symbols == null) return SizedBox();
+
     return BaseSymbolsGrid(
       itemBuilder: (context, index) {
         final e = symbols.elementAt(index);
@@ -35,7 +24,7 @@ class _SymbolsGridState extends State<SymbolsGrid> {
         );
       },
       itemCount: symbols.length,
-      crossAxisCount: widget.board.crossAxisCount,
+      crossAxisCount: board.crossAxisCount,
       mainAxisSpacing: 12.0,
       crossAxisSpacing: 12.0,
     );

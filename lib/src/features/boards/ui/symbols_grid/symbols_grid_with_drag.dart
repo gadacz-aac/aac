@@ -1,3 +1,4 @@
+import 'package:aac/src/database/daos/symbol_dao.dart';
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/boards/ui/symbols_grid/base_symbols_grid.dart';
@@ -24,26 +25,8 @@ class SymbolsGridWithDrag extends ConsumerStatefulWidget {
 class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
   DragItem<CommunicationSymbolOld>? currentlyDragged;
   int? desiredIndex;
-  List<CommunicationSymbolOld> items = [];
   Offset dragStartPosition = Offset.zero;
   bool didDraggedSignificantly = false;
-
-  @override
-  void initState() {
-    super.initState();
-    throw UnimplementedError();
-    // items = getReorderSymbols(widget.board.reorderedSymbols, widget.board.symbols);
-  }
-
-  @override
-  void didUpdateWidget(covariant SymbolsGridWithDrag oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (oldWidget.board.reorderedSymbols.length != widget.board.reorderedSymbols.length) {
-    throw UnimplementedError();
-      // items = getReorderSymbols(widget.board.reorderedSymbols, widget.board.symbols);
-    }
-  }
 
   void _onLongPress(CommunicationSymbolOld symbol, WidgetRef ref) {
     if (ref.read(isParentModeProvider)) {
@@ -53,13 +36,17 @@ class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
 
   @override
   Widget build(BuildContext context) {
+    final symbols = ref.watch(childSymbolProvider(widget.board.id)).valueOrNull;
+
+    if (symbols == null) return SizedBox();
+
     final crossAxisCount = widget.board.crossAxisCount;
 
     return BaseSymbolsGrid(
         crossAxisCount: widget.board.crossAxisCount,
-        itemCount: items.length,
+        itemCount: symbols.length,
         itemBuilder: (context, index) {
-          final e = items[index];
+          final e = symbols[index];
 
           return DragTarget<DragItem<CommunicationSymbolOld>>(onMove: (data) {
             setState(() {
@@ -74,23 +61,11 @@ class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
 
             setState(() {
               desiredIndex == null;
-              items.removeAt(currentlyDragged!.index);
-              items.insert(desiredIndex!, currentlyDragged!.data);
+              symbols.removeAt(currentlyDragged!.index);
+              symbols.insert(desiredIndex!, currentlyDragged!.data);
             });
 
-            // final isar = ref.read(isarProvider);
-            // final reorderedSymbols = [...widget.board.reorderedSymbols];
-            // reorderedSymbols.removeAt(currentlyDragged!.index);
-            // reorderedSymbols.insert(desiredIndex!, currentlyDragged!.data.id);
-            //
-            // isar.writeTxn(() async {
-            //   final board = await isar.boards.get(widget.board.id);
-            //   if (board == null) return;
-            //
-            //   board.reorderedSymbols = [...reorderedSymbols];
-            //   isar.boards.put(board);
-            // });
-            throw UnimplementedError();
+            ref.read(symbolDaoProvider).moveSymbol(currentlyDragged!.index, desiredIndex!,  widget.board.id);
           }, builder: (context, incoming, __) {
             return LayoutBuilder(builder: (context, constrains) {
               final data = DragItem(index: index, data: e);

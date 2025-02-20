@@ -1,6 +1,18 @@
+import 'package:aac/src/database/daos/symbol_dao.dart';
+import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'base_symbols_grid.g.dart';
+
+@riverpod
+Stream<List<CommunicationSymbolOld>> childSymbol(Ref ref, int id) {
+  final dao = ref.watch(symbolDaoProvider);
+
+  return dao.watchByBoardId(id);
+}
 
 @immutable
 class SymbolGridScrollPossibility {

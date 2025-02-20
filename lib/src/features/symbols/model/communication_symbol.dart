@@ -1,3 +1,4 @@
+import 'package:aac/src/database/database.dart';
 import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 
@@ -32,6 +33,14 @@ class CommunicationSymbolOld {
                   isDeleted: params.isDeleted ?? false
                 );
 
+  CommunicationSymbolOld.fromEntity(CommunicationSymbolEntity entity) 
+  : imagePath = entity.imagePath,
+          label = entity.label,
+          color = entity.color,
+          isDeleted =  entity.isDeleted,
+          vocalization = entity.vocalization,
+          id = entity.id;
+
   CommunicationSymbolOld updateWithParams(SymbolEditingParams params) {
     label = params.label ?? label;
     imagePath = params.imagePath ?? imagePath;
@@ -40,5 +49,6 @@ class CommunicationSymbolOld {
     isDeleted = params.isDeleted ?? isDeleted;
     return this;
   }
+
 }
 

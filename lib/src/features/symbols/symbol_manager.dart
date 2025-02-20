@@ -1,9 +1,13 @@
 import 'dart:async';
 
+import 'package:aac/src/database/daos/symbol_dao.dart';
+import 'package:aac/src/database/database.dart';
 import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
+import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'symbol_manager.g.dart';
@@ -31,7 +35,6 @@ class BoardEditingParams {
 
   BoardEditingParams copyWith(
       {int? id, String? name, int? columnCount, List<int>? reorderedSymbols}) {
-
     return BoardEditingParams(
         id: id ?? this.id,
         name: name ?? this.name,
@@ -60,16 +63,15 @@ class SymbolEditingParams {
       this.color,
       this.childBoard});
 
-  SymbolEditingParams.fromSymbol(CommunicationSymbolOld symbol) 
+  SymbolEditingParams.fromSymbol(CommunicationSymbolOld symbol)
       : imagePath = symbol.imagePath,
         label = symbol.label,
         color = symbol.color,
         vocalization = symbol.vocalization,
         isDeleted = symbol.isDeleted,
-        childBoard = null 
-    {
-        throw UnimplementedError();
-    }
+        childBoard = null {
+    throw UnimplementedError();
+  }
 
   @override
   String toString() => "imagePath: $imagePath label: $label color: $color";
@@ -83,33 +85,40 @@ final symbolsProvider =
 });
 
 class SymbolManager {
-  SymbolManager();
+  final AppDatabase db;
+  final SymbolDao symbolDao;
+
+  SymbolManager(this.db, this.symbolDao);
 
   Future<void> saveSymbol(int boardId, SymbolEditingParams params) async {
-    // if (params.label == null) return;
-    // if (params.imagePath == null) return;
-    //
-    // await isar.writeTxn(() async {
-    //   final CommunicationSymbol symbol = CommunicationSymbol.fromParams(params);
-    //
-    //   await isar.communicationSymbols.put(symbol);
-    //
-    //   if (params.childBoard != null) {
-    //     final childBoard = await _createOrUpdateChildBoard(params.childBoard!);
-    //     _linkSymbolToBoard(symbol, childBoard);
-    //   }
-    //
-    //   final board = await isar.boards.get(boardId);
-    //
-    //   if (board == null) return;
-    //
-    //   await _pinSymbolToBoard(symbol, board);
-    //   // is needed to refersh ui
-    //   isar.boards.put(board);
-    // });
+    if (params.label == null) return;
+    if (params.imagePath == null) return;
 
+    await db.transaction(() async {
+      int? childBoardId;
 
-    throw UnimplementedError();
+      if (params.childBoard != null) {
+        childBoardId = await db.managers.board.create(
+            (o) => o(
+                id: Value.absentIfNull(params.childBoard?.id),
+                name: params.childBoard?.name ?? "",
+                crossAxisCount: Value(params.childBoard?.columnCount ?? 3)),
+            mode: InsertMode.replace);
+      }
+
+      final symbolId = await db.managers.communicationSymbol.create((o) => o(
+          label: params.label ?? "",
+          color: Value(params.color),
+          imagePath: params.imagePath ?? "",
+          isDeleted: Value.absentIfNull(params.isDeleted),
+          vocalization: Value.absentIfNull(params.vocalization),
+          childBoardId: Value.absentIfNull(childBoardId)));
+
+      final nextOrder = await symbolDao.findNextOrder(boardId).getSingle();
+
+      await db.managers.childSymbol.create(
+          (o) => o(position: nextOrder, boardId: boardId, symbolId: symbolId));
+    });
   }
 
   Future<void> updateSymbol(
@@ -136,24 +145,11 @@ class SymbolManager {
     throw UnimplementedError();
   }
 
-  Future<BoardOld> _createOrUpdateChildBoard(BoardEditingParams params) async {
-    // final childBoard = Board.fromParams(params);
-    // await isar.boards.put(childBoard);
-    // return childBoard;
-    //
-    //
-    throw UnimplementedError();
-  }
-
-  Future<CommunicationSymbolOld?> findSymbolByLabel(String label) async {
-    // final symbol = await isar.communicationSymbols
-    //     .filter()
-    //     .labelEqualTo(label)
-    //     .findFirst();
-    // return symbol;
-    //
-
-    throw UnimplementedError();
+  Future<CommunicationSymbolOld?> findSymbolByLabel(String label) {
+    return db.managers.communicationSymbol
+        .filter((f) => f.label(label))
+        .map(CommunicationSymbolOld.fromEntity)
+        .getSingleOrNull();
   }
 
   Future<void> _linkSymbolToBoard(
@@ -204,21 +200,8 @@ class SymbolManager {
 
   Future<void> unpinSymbolFromBoard(
       List<CommunicationSymbolOld> symbols, int boardId) async {
-    // await isar.writeTxn(() async {
-    //   final board = await isar.boards.get(boardId);
-    //
-    //   if (board == null) return;
-    //   final symbolsId = symbols.map((e) => e.id);
-    //   board.reorderedSymbols = [
-    //     for (final e in board.reorderedSymbols)
-    //       if (!symbolsId.contains(e)) e
-    //   ];
-    //   board.symbols.removeAll(symbols);
-    //   await board.symbols.save();
-    //   await isar.boards.put(board);
-    // });
-
-    throw UnimplementedError();
+      final symbolIds = symbols.map((e) => e.id);
+      await db.managers.childSymbol.filter((f) => f.boardId.id(boardId) & f.symbolId.id.isIn(symbolIds)).delete();
   }
 
   Future<void> unpinSymbolsFromEveryBoard(
@@ -256,8 +239,8 @@ class SymbolManager {
     throw UnimplementedError();
   }
 
-  Future<void> moveSymbolToBin(
-      List<CommunicationSymbolOld> symbols, bool deleteWithInsideSymbols) async {
+  Future<void> moveSymbolToBin(List<CommunicationSymbolOld> symbols,
+      bool deleteWithInsideSymbols) async {
     throw UnimplementedError();
 
     // final allSymbols = <CommunicationSymbol>{};
@@ -333,7 +316,7 @@ class SymbolManager {
     //     await isar.communicationSymbols.delete(symbol.id);
     //   }
     // });
-  throw UnimplementedError();
+    throw UnimplementedError();
   }
 
   // TODO chyba tylko w śmietniku to można odrazu zwracać symbole usunięte
@@ -350,8 +333,8 @@ class SymbolManager {
 }
 
 @riverpod
-SymbolManager symbolManager(SymbolManagerRef ref) {
-  // final isar = ref.watch(isarProvider);
-  // return SymbolManager(isar: isar);
-  throw UnimplementedError();
+SymbolManager symbolManager(Ref ref) {
+  final db = ref.watch(dbProvider);
+  final symbolDao = ref.watch(symbolDaoProvider);
+  return SymbolManager(db, symbolDao);
 }
