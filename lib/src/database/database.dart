@@ -18,7 +18,7 @@ class CommunicationSymbol extends Table {
   IntColumn get color => integer().nullable()();
   BoolColumn get isDeleted  => boolean().withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime().nullable()();
-  IntColumn get childBoardId => integer().references(Board, #id)();
+  IntColumn get childBoardId => integer().nullable().references(Board, #id)();
 }
 
 @DataClassName("BoardEntity")
@@ -31,6 +31,7 @@ class Board extends Table {
 @DataClassName("ChildSymbolEntity")
 class ChildSymbol extends Table {
   IntColumn get id => integer().autoIncrement()();
+  IntColumn get position => integer()();
   IntColumn get boardId => integer().references(Board, #id)();
   IntColumn get symbolId => integer().references(CommunicationSymbol, #id)();
 }
@@ -42,6 +43,14 @@ class AppDatabase extends _$AppDatabase {
   @override
   int get schemaVersion => 1;
 
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(onCreate: (m) async {
+        await m.createAll();
+        await into(board).insert(BoardCompanion.insert(name: "Główna"));
+    });
+  }
+
   static LazyDatabase _openConnection() {
     return LazyDatabase(() async {
       final dbFolder = await getApplicationDocumentsDirectory();
@@ -52,8 +61,7 @@ class AppDatabase extends _$AppDatabase {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 AppDatabase db(Ref ref) {
-  final db = AppDatabase();
-  return db;
+  throw UnimplementedError();
 }

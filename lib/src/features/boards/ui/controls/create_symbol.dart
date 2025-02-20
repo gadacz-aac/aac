@@ -22,6 +22,8 @@ class CreateSymbol extends ConsumerWidget {
               return;
             }
 
+            if (!context.mounted) return;
+
             Navigator.push(
                 context,
                 MaterialPageRoute(

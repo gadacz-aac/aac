@@ -1,4 +1,5 @@
 import 'package:aac/firebase_options.dart';
+import 'package:aac/src/database/database.dart';
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/shared/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -25,7 +26,9 @@ void main() async {
   }
 
   // changeOrientation(orientation?.value);
-  runApp(const ProviderScope(child: MainApp()));
+  runApp(ProviderScope(
+      overrides: [dbProvider.overrideWithValue(AppDatabase())],
+      child: MainApp()));
 }
 
 class MainApp extends StatelessWidget {

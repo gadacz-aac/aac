@@ -1,0 +1,26 @@
+import '../database.dart';
+
+selectByBoardId: 
+	SELECT s.* from communication_symbol s
+		JOIN child_symbol cs ON cs.symbol_id = s.id
+		WHERE cs.board_id = ?
+		ORDER BY cs.position;
+
+moveSymbol(:start_pos AS INTEGER, :end_pos AS INTEGER, :board_id AS INTEGER):
+	WITH helpers as (
+		SELECT CAST(MIN(:start_pos, :end_pos) AS INTEGER) as min_pos, CAST(MAX(:start_pos, :end_pos) AS INTEGER) as max_pos
+	)
+	UPDATE child_symbol
+		SET position = CASE
+			WHEN position = :start_pos THEN :end_pos
+			WHEN position BETWEEN (SELECT min_pos FROM helpers) AND (SELECT max_pos FROM helpers)
+				THEN position + CASE
+					WHEN :start_pos > :end_pos THEN +1
+					ELSE -1
+			END
+		END
+		WHERE board_id = :board_id AND
+			position BETWEEN (SELECT min_pos FROM helpers) AND (SELECT max_pos FROM helpers);
+
+findNextOrder: 
+	SELECT COALESCE((SELECT MAX(position) as position FROM child_symbol WHERE board_id = ?), -1) + 1;
