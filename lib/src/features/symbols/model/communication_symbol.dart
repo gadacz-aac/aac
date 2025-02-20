@@ -40,15 +40,5 @@ class CommunicationSymbolOld {
           isDeleted =  entity.isDeleted,
           vocalization = entity.vocalization,
           id = entity.id;
-
-  CommunicationSymbolOld updateWithParams(SymbolEditingParams params) {
-    label = params.label ?? label;
-    imagePath = params.imagePath ?? imagePath;
-    color = params.color ?? color;
-    vocalization = params.vocalization ?? vocalization;
-    isDeleted = params.isDeleted ?? isDeleted;
-    return this;
-  }
-
 }
 

@@ -69,9 +69,7 @@ class SymbolEditingParams {
         color = symbol.color,
         vocalization = symbol.vocalization,
         isDeleted = symbol.isDeleted,
-        childBoard = null {
-    throw UnimplementedError();
-  }
+        childBoard = null;
 
   @override
   String toString() => "imagePath: $imagePath label: $label color: $color";
@@ -125,24 +123,14 @@ class SymbolManager {
       {required CommunicationSymbolOld symbol,
       required int parentBoardId,
       required SymbolEditingParams params}) async {
-    // await isar.writeTxn(() async {
-    //   final parentBoard = await isar.boards.get(parentBoardId);
-    //   if (parentBoard == null) return;
-    //
-    //   await isar.communicationSymbols.put(symbol.updateWithParams(params));
-    //
-    //   if (params.childBoard != null) {
-    //     final childBoard = await _createOrUpdateChildBoard(params.childBoard!);
-    //     _linkSymbolToBoard(symbol, childBoard);
-    //   } else {
-    //     _unlinkSymbolFromBoard(symbol);
-    //   }
-    //
-    //   isar.boards.put(parentBoard);
-    // });
-    //
-
-    throw UnimplementedError();
+      await db.managers.communicationSymbol.filter((f) => f.id(symbol.id)).update((f) => f(
+          color: Value.absentIfNull(params.color),
+          label: Value.absentIfNull(params.label),
+          imagePath: Value.absentIfNull(params.imagePath),
+          isDeleted: Value.absentIfNull(params.isDeleted),
+          childBoardId: Value.absentIfNull(params.childBoard?.id),
+          vocalization: Value.absentIfNull(params.vocalization)
+      ));
   }
 
   Future<CommunicationSymbolOld?> findSymbolByLabel(String label) {
