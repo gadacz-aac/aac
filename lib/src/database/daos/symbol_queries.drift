@@ -14,7 +14,7 @@ moveSymbol(:start_pos AS INTEGER, :end_pos AS INTEGER, :board_id AS INTEGER):
 		SET position = CASE
 			WHEN position = :start_pos THEN :end_pos
 			WHEN position BETWEEN (SELECT min_pos FROM helpers) AND (SELECT max_pos FROM helpers)
-				THEN position + CASE
+			THEN position + CASE
 					WHEN :start_pos > :end_pos THEN +1
 					ELSE -1
 			END
@@ -24,3 +24,10 @@ moveSymbol(:start_pos AS INTEGER, :end_pos AS INTEGER, :board_id AS INTEGER):
 
 findNextOrder: 
 	SELECT COALESCE((SELECT MAX(position) as position FROM child_symbol WHERE board_id = ?), -1) + 1;
+
+searchSymbol(:query AS TEXT, :onlyPinned AS BOOLEAN, :color AS INTEGER OR NULL):
+	SELECT s.* FROM communication_symbol s
+		LEFT JOIN child_symbol cs ON cs.symbol_id = s.id
+		WHERE s.label LIKE CONCAT('%', :query, '%')		AND
+			(NOT :onlyPinned OR cs.board_id IS NULL)	AND
+			(:color IS NULL OR s.color = :color);

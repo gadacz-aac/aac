@@ -1,3 +1,4 @@
+import 'package:aac/src/database/daos/symbol_dao.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:aac/src/features/symbols/search/search_app_bar.dart';
@@ -9,20 +10,17 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 final searchedSymbolProvider =
     FutureProvider.autoDispose<List<CommunicationSymbolOld>>((ref) async {
-  // final isar = ref.watch(isarProvider);
-  // final query = ref.watch(queryProvider);
-  // final color = ref.watch(symbolSearchColorFilterProvider)?.code;
-  // final onlyPinned = ref.watch(symbolSearchOnlyPinnedFilterProvider);
-  //
-  // return isar.communicationSymbols
-  //     .where()
-  //     .wordsElementStartsWith(query)
-  //     .filter()
-  //     .isDeletedEqualTo(false)
-  //     .optional(color != null, (q) => q.colorEqualTo(color))
-  //     .optional(onlyPinned, (q) => q.parentBoardIsEmpty())
-  //     .findAll();
-  throw UnimplementedError();
+  final query = ref.watch(queryProvider);
+  final color = ref.watch(symbolSearchColorFilterProvider)?.code;
+  final onlyPinned = ref.watch(symbolSearchOnlyPinnedFilterProvider);
+
+  print(color);
+
+  return ref
+      .read(symbolDaoProvider)
+      .searchSymbol(query, onlyPinned, color)
+      .map(CommunicationSymbolOld.fromEntity)
+      .get();
 });
 
 final queryProvider = StateProvider.autoDispose<String>((ref) => "");
@@ -119,7 +117,7 @@ class SymbolSearchScreen extends ConsumerWidget {
                               final e = results[index];
                               return SymbolCard(
                                 symbol: e,
-                                onTapActions:  const [SymbolOnTapAction.select],
+                                onTapActions: const [SymbolOnTapAction.select],
                               );
                             }),
                       ),
