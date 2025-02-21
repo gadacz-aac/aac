@@ -35,9 +35,10 @@ class TtsManager {
   }
 
   Future<void> setPreferredVoice() async {
-    final voice = await settingsManager.getValue('voice');
-    if (voice == null) return;
-    await setVoice(voice);
+  // TODO set prefered voices from settings
+    // final voice = await settingsManager.getValue('voice');
+    // if (voice == null) return;
+    // await setVoice(voice);
   }
 
   Future<void> setVoice(String name) async {
@@ -64,9 +65,10 @@ class TtsManager {
   }
 
   Future<void> setPreferredSpeechRate() async {
-    final double? savedRate = await settingsManager.getValue('speechRate');
-    if (savedRate == null) return;
-    await tts.setSpeechRate(savedRate);
+  // TODO set preferred speech rate from settigns
+    // final double? savedRate = await settingsManager.getValue('speechRate');
+    // if (savedRate == null) return;
+    // await tts.setSpeechRate(savedRate);
   }
 
   Future<void> setSpeechRate(double rate) async {

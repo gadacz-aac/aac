@@ -19,7 +19,7 @@ class CommunicationSymbolOld {
   bool isDeleted;
 
   final parentBoard = BoardOld(name: "");
-  final childBoard = BoardOld(name: "");
+  int? childBoardId;
 
   // full-text search
   List<String> get words => [];
@@ -39,6 +39,7 @@ class CommunicationSymbolOld {
           color = entity.color,
           isDeleted =  entity.isDeleted,
           vocalization = entity.vocalization,
-          id = entity.id;
+          id = entity.id,
+          childBoardId = entity.childBoardId;
 }
 
