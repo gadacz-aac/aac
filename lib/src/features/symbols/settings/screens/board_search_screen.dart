@@ -1,3 +1,4 @@
+import 'package:aac/src/database/daos/board_dao.dart';
 import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/symbols/settings/widgets/cherry_pick_image.dart';
 import 'package:aac/src/features/symbols/search/search_screen.dart';
@@ -7,11 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final foundBoards = FutureProvider.autoDispose<List<BoardOld>>((ref) async {
-  // final isar = ref.watch(isarProvider);
-  // final query = ref.watch(queryProvider);
-  //
-  // return isar.boards.where().wordsElementStartsWith(query).findAll();
-  throw UnimplementedError();
+  final query = ref.watch(queryProvider);
+
+  return ref
+      .watch(boardDaoProvider)
+      .searchBoard(query)
+      .map(BoardOld.fromEntity)
+      .get();
 });
 
 class BoardSearch extends ConsumerWidget {

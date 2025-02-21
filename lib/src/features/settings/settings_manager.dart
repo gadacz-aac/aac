@@ -1,12 +1,15 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'settings_manager.g.dart';
 
 @riverpod
-SettingsManager settingsManager(SettingsManagerRef ref) {
+SettingsManager settingsManager(Ref ref) {
   // final isar = ref.watch(isarProvider);
   // return SettingsManager(isar: isar);
-  throw UnimplementedError();
+  // throw UnimplementedError();
+
+  return SettingsManager();
 }
 
 class SettingsManager {

@@ -1,3 +1,7 @@
 import '../database.dart';
 
 selectById: SELECT * from board WHERE board.id = ?;
+
+selectByName: SELECT * from board WHERE board.name = ?;
+
+searchBoard(:query AS TEXT): SELECT * FROM board WHERE name LIKE CONCAT('%', :query, '%');

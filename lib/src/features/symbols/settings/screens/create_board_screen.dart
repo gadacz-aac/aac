@@ -1,4 +1,4 @@
-import 'package:aac/src/features/boards/board_manager.dart';
+import 'package:aac/src/database/daos/board_dao.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:aac/src/shared/form/widgets/number_field.dart';
 import 'package:aac/src/shared/form/widgets/text_field.dart';
@@ -13,7 +13,6 @@ class CreateBoardScreen extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<CreateBoardScreen> createState() => _CreateBoardScreenState();
-
 }
 
 class _CreateBoardScreenState extends ConsumerState<CreateBoardScreen> {
@@ -42,9 +41,7 @@ class _CreateBoardScreenState extends ConsumerState<CreateBoardScreen> {
   }
 
   Future<bool> boardNameExists(String name) async {
-    final boardManager = ref.read(boardManagerProvider);
-    final existingBoard = await boardManager.findBoardByName(name);
-    return existingBoard != null;
+    return await ref.read(boardDaoProvider).selectByName(name).getSingleOrNull() != null;
   }
   
   Future<void> _checkBoardNameExists() async {

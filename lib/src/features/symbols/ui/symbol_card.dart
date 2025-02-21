@@ -1,6 +1,7 @@
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/search/search_screen.dart';
+import 'package:aac/src/features/symbols/settings/widgets/color_picker.dart';
 import 'package:aac/src/features/symbols/ui/symbol_image.dart';
 import 'package:aac/src/features/text_to_speech/provider.dart';
 import 'package:aac/src/features/text_to_speech/tts_manager.dart';
@@ -61,17 +62,16 @@ class SymbolCard extends ConsumerWidget {
       }
     }
 
-    throw UnimplementedError();
-    // if (onTapActions.contains(SymbolOnTapAction.cd) &&
-    //     symbol.childBoard.value != null) {
-    //   Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //         builder: (context) => BoardScreen(
-    //               boardId: symbol.childBoard.value!.id,
-    //             )),
-    //   );
-    // }
+    if (onTapActions.contains(SymbolOnTapAction.cd) &&
+        symbol.childBoardId != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => BoardScreen(
+                  boardId: symbol.childBoardId!,
+                )),
+      );
+    }
   }
 
   @override
@@ -82,15 +82,15 @@ class SymbolCard extends ConsumerWidget {
     Color labelBgColor;
     Color textColor;
 
-    // if (symbol.childBoard.value == null) {
+    if (symbol.childBoardId == null) {
       bgColor = Colors.white;
-    // } else if (symbol.color == null) {
-    //   bgColor = const Color(0xFFECECEC);
-    // } else {
-    //   bgColor = Color(colors
-    //       .firstWhere((e) => e.code == symbol.color)
-    //       .folderBackgroundCode);
-    // }
+    } else if (symbol.color == null) {
+      bgColor = const Color(0xFFECECEC);
+    } else {
+      bgColor = Color(colors
+          .firstWhere((e) => e.code == symbol.color)
+          .folderBackgroundCode);
+    }
 
     if (symbol.color == null) {
       labelBgColor = AacColors.noColorWhite;

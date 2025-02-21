@@ -25,8 +25,7 @@ class PreviewSymbolImage extends ConsumerWidget {
     );
 
     if (childBoard != null) {
-      throw UnimplementedError();
-      // symbol.childBoard.value = Board.fromParams(childBoard);
+        symbol.childBoardId = childBoard.id;
     }
 
     return FractionallySizedBox(

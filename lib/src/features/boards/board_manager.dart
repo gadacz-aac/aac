@@ -1,6 +1,8 @@
 import 'package:aac/src/database/daos/board_dao.dart';
+import 'package:aac/src/database/database.dart';
 import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
+import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -14,25 +16,22 @@ final boardProvider =
 
 @riverpod
 BoardManager boardManager(Ref ref) {
-  return BoardManager();
+  final db = ref.watch(dbProvider);
+  return BoardManager(db);
 }
 
 class BoardManager {
-  BoardManager();
-  Future<BoardOld> createOrUpdate(BoardEditingParams params) async {
-    // final board = Board.fromParams(params);
-    // isar.writeTxn(() async {
-    //   await isar.boards.put(board);
-    // });
-    //
-    // return board;
-    throw UnimplementedError();
-  }
+  AppDatabase db;
 
-  Future<BoardOld?> findBoardByName(String name) async {
-    // final board = await isar.boards.where().filter().nameEqualTo(name).findFirst();
-    // return board;
-    throw UnimplementedError();
+  BoardManager(this.db);
+
+  Future<void> createOrUpdate(BoardEditingParams params) async {
+    db.managers.board.create(
+        (f) => f(
+            id: Value.absentIfNull(params.id),
+            name: params.name,
+            crossAxisCount: Value(params.columnCount ?? 3)),
+        mode: InsertMode.replace);
   }
 
   Stream<BoardOld?> watchBoardById(int id) async* {
