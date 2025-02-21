@@ -112,10 +112,7 @@ class SymbolManager {
           vocalization: Value.absentIfNull(params.vocalization),
           childBoardId: Value.absentIfNull(childBoardId)));
 
-      final nextOrder = await symbolDao.findNextOrder(boardId).getSingle();
-
-      await db.managers.childSymbol.create(
-          (o) => o(position: nextOrder, boardId: boardId, symbolId: symbolId));
+      await symbolDao.pinSymbolToBoard(boardId, symbolId);
     });
   }
 
@@ -123,14 +120,14 @@ class SymbolManager {
       {required CommunicationSymbolOld symbol,
       required int parentBoardId,
       required SymbolEditingParams params}) async {
-      await db.managers.communicationSymbol.filter((f) => f.id(symbol.id)).update((f) => f(
-          color: Value.absentIfNull(params.color),
-          label: Value.absentIfNull(params.label),
-          imagePath: Value.absentIfNull(params.imagePath),
-          isDeleted: Value.absentIfNull(params.isDeleted),
-          childBoardId: Value.absentIfNull(params.childBoard?.id),
-          vocalization: Value.absentIfNull(params.vocalization)
-      ));
+    await db.managers.communicationSymbol.filter((f) => f.id(symbol.id)).update(
+        (f) => f(
+            color: Value.absentIfNull(params.color),
+            label: Value.absentIfNull(params.label),
+            imagePath: Value.absentIfNull(params.imagePath),
+            isDeleted: Value.absentIfNull(params.isDeleted),
+            childBoardId: Value.absentIfNull(params.childBoard?.id),
+            vocalization: Value.absentIfNull(params.vocalization)));
   }
 
   Future<CommunicationSymbolOld?> findSymbolByLabel(String label) {
@@ -166,30 +163,21 @@ class SymbolManager {
     throw UnimplementedError();
   }
 
-  Future<void> pinSymbolsToBoard(List<CommunicationSymbolOld> symbols,
-      {BoardOld? board, int? boardId}) async {
-    // await isar.writeTxn(() async {
-    //   if (board == null && boardId != null) {
-    //     board = await isar.boards.get(boardId);
-    //   }
-    //
-    //   if (board == null) return;
-    //
-    //   final symbolsId = symbols.map((e) => e.id);
-    //   board!.reorderedSymbols = [...board!.reorderedSymbols, ...symbolsId];
-    //
-    //   board!.symbols.addAll(symbols);
-    //   await board!.symbols.save();
-    //   await isar.boards.put(board!);
-    // });
-
-    throw UnimplementedError();
+  Future<void> pinSymbolsToBoard(
+      int boardId, List<CommunicationSymbolOld> symbols) async {
+    db.transaction(() async {
+      for (var s in symbols) {
+        await symbolDao.pinSymbolToBoard(boardId, s.id);
+      }
+    });
   }
 
   Future<void> unpinSymbolFromBoard(
       List<CommunicationSymbolOld> symbols, int boardId) async {
-      final symbolIds = symbols.map((e) => e.id);
-      await db.managers.childSymbol.filter((f) => f.boardId.id(boardId) & f.symbolId.id.isIn(symbolIds)).delete();
+    final symbolIds = symbols.map((e) => e.id);
+    await db.managers.childSymbol
+        .filter((f) => f.boardId.id(boardId) & f.symbolId.id.isIn(symbolIds))
+        .delete();
   }
 
   Future<void> unpinSymbolsFromEveryBoard(
