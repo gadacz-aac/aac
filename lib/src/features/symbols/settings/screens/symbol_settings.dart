@@ -92,7 +92,7 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
                           const SizedBox(width: 8),
                           TextButton(
                             onPressed: () {
-                              ref.read(symbolManagerProvider).pinSymbolsToBoard([duplicatedSymbol], boardId: widget.boardId);
+                              ref.read(symbolManagerProvider).pinSymbolsToBoard(widget.boardId, [duplicatedSymbol]);
                               if (!mounted) return;
                               Navigator.pop(context);
                               ScaffoldMessenger.of(context).hideCurrentSnackBar();
