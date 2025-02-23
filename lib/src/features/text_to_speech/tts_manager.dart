@@ -1,13 +1,15 @@
 import 'package:aac/src/features/settings/settings_manager.dart';
+import 'package:aac/src/features/settings/ui/settings_screen.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/text_to_speech/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'tts_manager.g.dart';
 
 @riverpod
-TtsManager ttsManager(TtsManagerRef ref) {
+TtsManager ttsManager(Ref ref) {
   final settingsManger = ref.watch(settingsManagerProvider);
   return TtsManager(settingsManager: settingsManger);
 }
@@ -35,10 +37,9 @@ class TtsManager {
   }
 
   Future<void> setPreferredVoice() async {
-  // TODO set prefered voices from settings
-    // final voice = await settingsManager.getValue('voice');
-    // if (voice == null) return;
-    // await setVoice(voice);
+    final String? voice = await settingsManager.getValue(SettingKey.voice.name);
+    if (voice == null) return;
+    await setVoice(voice);
   }
 
   Future<void> setVoice(String name) async {
@@ -65,10 +66,8 @@ class TtsManager {
   }
 
   Future<void> setPreferredSpeechRate() async {
-  // TODO set preferred speech rate from settigns
-    // final double? savedRate = await settingsManager.getValue('speechRate');
-    // if (savedRate == null) return;
-    // await tts.setSpeechRate(savedRate);
+    final double savedRate = await settingsManager.getValue(SettingKey.speechRate.name);
+    await tts.setSpeechRate(savedRate);
   }
 
   Future<void> setSpeechRate(double rate) async {

@@ -33,9 +33,4 @@ class BoardManager {
             crossAxisCount: Value(params.columnCount ?? 3)),
         mode: InsertMode.replace);
   }
-
-  Stream<BoardOld?> watchBoardById(int id) async* {
-    // yield* isar.boards.watchObject(id, fireImmediately: true);
-    throw UnimplementedError();
-  }
 }

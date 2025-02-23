@@ -1,6 +1,9 @@
 import 'package:aac/firebase_options.dart';
 import 'package:aac/src/database/database.dart';
 import 'package:aac/src/features/boards/board_screen.dart';
+import 'package:aac/src/features/settings/settings_manager.dart';
+import 'package:aac/src/features/settings/ui/settings_screen.dart';
+import 'package:aac/src/features/settings/utils/orientation.dart';
 import 'package:aac/src/shared/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -11,7 +14,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // final orientation = await isar.settingsEntrys.getByKey('orientation');
+  final db = AppDatabase();
+  final orientation = SettingsManager(db).getValue<String>(SettingKey.orientation.name);
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -25,9 +29,9 @@ void main() async {
     };
   }
 
-  // changeOrientation(orientation?.value);
+  changeOrientation(orientation);
   runApp(ProviderScope(
-      overrides: [dbProvider.overrideWithValue(AppDatabase())],
+      overrides: [dbProvider.overrideWithValue(db)],
       child: MainApp()));
 }
 

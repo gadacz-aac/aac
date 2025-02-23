@@ -9,6 +9,8 @@ import '../utils/orientation.dart';
 import '../utils/tts.dart';
 import 'dropdown.dart';
 
+enum SettingKey { orientation, kiosk, wakelock, speechRate, voice }
+
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 
@@ -27,42 +29,39 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         children: [
           PersistentGroup(isFirst: true, children: [
             PersistentDropdownButton(
-              "orientation",
+              SettingKey.orientation.name,
               title: const Text("Orientacja"),
-              subtitle: const Text("change orientation for board screen"),
-              defaultValue: OrientationOption.portrait.name,
               onChanged: changeOrientation,
               items: [
                 PersistentDropdownItem(
                   value: OrientationOption.portrait.name,
-                  child: const Text('Portrait'),
+                  child: const Text('Pionowa'),
                 ),
                 PersistentDropdownItem(
                   value: OrientationOption.landscape.name,
-                  child: const Text('Landscape'),
+                  child: const Text('Pozioma'),
                 ),
                 PersistentDropdownItem(
                   value: OrientationOption.auto.name,
-                  child: const Text('Auto'),
+                  child: const Text('Autoobracanie ekranu'),
                 ),
               ],
             ),
-            const PersistentSwitch(
-              "kiosk",
-              title: Text("Protective mode"),
-              subtitle: Text("Prevent your child from closing the app"),
+            PersistentSwitch(
+              SettingKey.kiosk.name,
+              title: Text("Blokuj wyłączanie aplikacji"),
+              subtitle: Text("Nie pozwala na opuszczenie aplikacji w trybie mowy"),
             ),
-            const PersistentSwitch(
-              "wakelock",
-              title: Text("Do you want to have your eyes burned?"),
-              subtitle: Text("Prevent your battery from lasting too long"),
+            PersistentSwitch(
+              SettingKey.wakelock.name,
+              title: Text("Nie wygaszaj ekranu"),
+              subtitle: Text("Wyłącza automatyczne wygaszanie ekranu"),
             ),
             PersistentSlider(
-              "speechRate",
+              SettingKey.speechRate.name,
               titlePrefix: "Prędkość mowy",
               min: 0.1,
-              max: 2.0,
-              defaultValue: 1.0,
+              max: 1.0,
               writeOnChange: false,
               onChanged: (value) {
                 ref.read(ttsManagerProvider).setSpeechRate(value);
@@ -88,9 +87,8 @@ class VoiceDropdown extends ConsumerWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             final data = snapshot.data!;
-            return PersistentDropdownButton('voice',
-                title: const Text("Voice"),
-                defaultValue: data.first, onChanged: (value) {
+            return PersistentDropdownButton(SettingKey.voice.name,
+                title: const Text("Głos syntezatora"), onChanged: (value) {
               if (value != null) {
                 ref.read(ttsManagerProvider).setVoice(value);
               }
@@ -101,8 +99,8 @@ class VoiceDropdown extends ConsumerWidget {
                     .toList());
           }
           return const ListTile(
-              title: Text('Voice'),
-              subtitle: Text('not available'),
+              title: Text('Głos'),
+              subtitle: Text('W tej chwili nie możesz zmienić domyślengo głosu'),
               enabled: false);
         });
   }
