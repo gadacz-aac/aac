@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:aac/src/features/settings/settings_manager.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,8 +20,12 @@ class AppDatabase extends _$AppDatabase {
   @override
   MigrationStrategy get migration {
     return MigrationStrategy(onCreate: (m) async {
-        await m.createAll();
-        await into(board).insert(BoardCompanion.insert(name: "Główna"));
+      await m.createAll();
+
+      await into(board).insert(BoardCompanion.insert(name: "Główna"));
+
+      SettingsManager(this).insertDefaultSettings();
+
     });
   }
 

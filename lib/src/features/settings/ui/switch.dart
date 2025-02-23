@@ -24,44 +24,33 @@ class PersistentSwitch extends ConsumerStatefulWidget {
 }
 
 class _PersistentSwitch<T> extends ConsumerState<PersistentSwitch> {
-  late bool _value;
-
-  @override
-  void initState() {
-    super.initState();
-
-    final settingsManager = ref.read(settingsManagerProvider);
-    _value = settingsManager.getValueSync(widget.settingsEntryKey) ??
-        widget.defaultValue;
-  }
-
   void _onChanged(bool newValue) {
-    setState(() {
-      _value = newValue;
-    });
-
-    _putValue(newValue);
+    ref
+        .read(settingsManagerProvider)
+        .putValue(widget.settingsEntryKey, newValue);
 
     if (widget.onChanged != null) widget.onChanged!(newValue);
   }
 
-  void _putValue(bool newValue) {
-    final settingsManager = ref.read(settingsManagerProvider);
-    settingsManager.putValue(widget.settingsEntryKey, newValue);
-  }
-
   @override
   Widget build(BuildContext context) {
-    return SwitchListTile(
-      title: widget.title,
-      subtitle: widget.subtitle,
-      value: _value,
-      onChanged: (newValue) {
-        setState(() {
-          _value = newValue;
+    final Stream<bool> stream =
+        ref.watch(settingsManagerProvider).watchValue(widget.settingsEntryKey);
+
+    return StreamBuilder<bool>(
+        stream: stream,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return SizedBox();
+          }
+
+          final disabled = snapshot.connectionState != ConnectionState.active || snapshot.data == null;
+        
+          return SwitchListTile(
+              title: widget.title,
+              subtitle: widget.subtitle,
+              value: snapshot.data ?? false,
+              onChanged: disabled ? null : _onChanged);
         });
-        _onChanged(newValue);
-      },
-    );
   }
 }

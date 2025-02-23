@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS "board" (
 	"id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	"cross_axis_count" INTEGER NOT NULL DEFAULT 3,
 	"name" TEXT NOT NULL
-) AS "BoardEntity";
+) STRICT AS "BoardEntity";
 
 CREATE TABLE IF NOT EXISTS "communication_symbol" (
 	"id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS "communication_symbol" (
 	"is_deleted" BOOLEAN NOT NULL DEFAULT false,
 	"created_at" INTEGER NULL,
 	"child_board_id" INTEGER NULL REFERENCES board (id)
-) AS "CommunicationSymbolEntity";
+) STRICT AS "CommunicationSymbolEntity";
 
 CREATE TABLE IF NOT EXISTS "child_symbol" (
 	"position" INTEGER NOT NULL,
@@ -21,5 +21,10 @@ CREATE TABLE IF NOT EXISTS "child_symbol" (
 	"symbol_id" INTEGER NOT NULL REFERENCES communication_symbol (id),
 
 	PRIMARY KEY ("board_id", "symbol_id")
-) AS "ChildSymbolEntity";
+) STRICT AS "ChildSymbolEntity";
+
+CREATE TABLE IF NOT EXISTS "setting" (
+	"key"	TEXT NOT NULL PRIMARY KEY,
+	"value"	TEXT NOT NULL,
+) STRICT AS "SettingEntity"
 

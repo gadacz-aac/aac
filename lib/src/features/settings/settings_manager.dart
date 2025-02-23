@@ -1,3 +1,9 @@
+import 'dart:convert';
+
+import 'package:aac/src/database/database.dart';
+import 'package:aac/src/features/settings/ui/settings_screen.dart';
+import 'package:aac/src/features/settings/utils/orientation.dart';
+import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -5,49 +11,46 @@ part 'settings_manager.g.dart';
 
 @riverpod
 SettingsManager settingsManager(Ref ref) {
-  // final isar = ref.watch(isarProvider);
-  // return SettingsManager(isar: isar);
-  // throw UnimplementedError();
+  final db = ref.watch(dbProvider);
 
-  return SettingsManager();
+  return SettingsManager(db);
 }
 
 class SettingsManager {
-  SettingsManager();
+  AppDatabase db;
 
-  Future<dynamic> getValue(String key) async {
-    // final entry = await isar.settingsEntrys.getByKey(key);
-    // return entry?.value;
+  SettingsManager(this.db);
 
-    throw UnimplementedError();
+  Selectable<T> _get<T>(String key) {
+    return db.managers.setting
+        .filter((f) => f.key(key))
+        .map((e) => jsonDecode(e.value) as T);
   }
 
-  dynamic getValueSync(String key) {
-    // final entry = isar.settingsEntrys.getByKeySync(key);
-    // return entry?.value;
-    throw UnimplementedError();
+  Future<T> getValue<T>(String key) async {
+    return _get<T>(key).getSingle();
+  }
+
+  Stream<T> watchValue<T>(String key) {
+    return _get<T>(key).watchSingle();
   }
 
   Future<void> putValue(String key, dynamic value) async {
-    // await isar.writeTxn(() async {
-    //   final entry = await isar.settingsEntrys.getByKey(key);
-    //   if (entry != null) {
-    //     return await isar.settingsEntrys.put(entry..value = value);
-    //   }
-    //   await isar.settingsEntrys.put(SettingsEntry(key: key, value: value));
-    // });
-
-    throw UnimplementedError();
+    await db.managers.setting.create(
+        (f) => f(key: key, value: jsonEncode(value)),
+        mode: InsertMode.replace);
   }
 
-  void putValueSync(String key, dynamic value) {
-    // isar.writeTxnSync(() {
-    //   final entry = isar.settingsEntrys.getByKeySync(key);
-    //   if (entry != null) {
-    //     return isar.settingsEntrys.putSync(entry..value = value);
-    //   }
-    //   isar.settingsEntrys.putSync(SettingsEntry(key: key, value: value));
-    // });
-    throw UnimplementedError();
+  Future<void> insertDefaultSettings() async {
+    await db.transaction(() async {
+      // accessability
+      await putValue(SettingKey.orientation.name, OrientationOption.auto.name);
+      await putValue(SettingKey.kiosk.name, false);
+      await putValue(SettingKey.wakelock.name, false);
+
+      // tts settings
+      await putValue(SettingKey.speechRate.name, 0.5);
+      await putValue(SettingKey.voice.name, null);
+    });
   }
 }

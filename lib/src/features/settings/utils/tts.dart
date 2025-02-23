@@ -5,9 +5,7 @@ Future<List<String>> getVoicesNames() async {
   final voices = await tts.getVoices;
   List<String> polishVoices = [];
   for (Map voice in voices) {
-    final [name, locale] = voice.values.toList();
-
-    if (locale == 'pl-PL') polishVoices.add(name);
+    if (voice["locale"] == 'pl-PL') polishVoices.add(voice["name"]);
   }
 
   return polishVoices;

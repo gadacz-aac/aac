@@ -3,20 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../settings_manager.dart';
 
-class PersistentSlider extends ConsumerStatefulWidget {
+class PersistentSlider extends ConsumerWidget {
   final Icon? icon;
-
   final String titlePrefix;
-
   final double min;
   final double max;
-
-  final double defaultValue;
-
   final String settingsEntryKey;
-
   final ValueChanged<double>? onChanged;
-
   final bool writeOnChange;
 
   const PersistentSlider(
@@ -28,53 +21,53 @@ class PersistentSlider extends ConsumerStatefulWidget {
     this.max = 1.0,
     this.onChanged,
     this.writeOnChange = false,
-    required this.defaultValue,
   });
 
-  @override
-  ConsumerState<PersistentSlider> createState() => _PersistentSliderState();
-}
+  void _onChanged(double newValue, WidgetRef ref, setValue) {
+    if (writeOnChange) _putValue(newValue, ref, setValue);
 
-class _PersistentSliderState extends ConsumerState<PersistentSlider> {
-  late double _value;
+    if (onChanged != null) onChanged!(newValue);
 
-  @override
-  void initState() {
-    super.initState();
+    setValue(newValue);
+  }
 
+  void _putValue(double newValue, WidgetRef ref, setValue) {
     final settingsManager = ref.read(settingsManagerProvider);
-    _value = settingsManager.getValueSync(widget.settingsEntryKey) ??
-        widget.defaultValue;
-  }
+    settingsManager.putValue(settingsEntryKey, newValue);
 
-  void _onChanged(double newValue) {
-    setState(() {
-      _value = newValue;
-    });
-
-    if (widget.writeOnChange) _putValue(newValue);
-
-    if (widget.onChanged != null) widget.onChanged!(newValue);
-  }
-
-  void _putValue(double newValue) {
-    final settingsManager = ref.read(settingsManagerProvider);
-    settingsManager.putValue(widget.settingsEntryKey, newValue);
+    setValue(newValue);
   }
 
   @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      titleAlignment: ListTileTitleAlignment.top,
-      leading: widget.icon,
-      title: Text("${widget.titlePrefix}: ${_value.toStringAsFixed(2)}"),
-      subtitle: Slider(
-        min: widget.min,
-        max: widget.max,
-        value: _value,
-        onChanged: _onChanged,
-        onChangeEnd: widget.writeOnChange ? null : _putValue,
-      ),
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final Future<double> future =
+        ref.watch(settingsManagerProvider).getValue(settingsEntryKey);
+
+    return FutureBuilder(
+        future: future,
+        builder: (context, snapshot) {
+            double value = snapshot.data ?? min;
+          return StatefulBuilder(builder: (context, setState) {
+            void setValue(double newValue) {
+              setState(() {
+                value = newValue;
+              });
+            }
+
+            return ListTile(
+              titleAlignment: ListTileTitleAlignment.top,
+              enabled: snapshot.hasData,
+              leading: icon,
+              title: Text("$titlePrefix: ${value.toStringAsFixed(2)}"),
+              subtitle: Slider(
+                min: min,
+                max: max,
+                value: value,
+                onChanged: (val) => _onChanged(val, ref, setValue),
+                onChangeEnd: writeOnChange ? null : (val) => _putValue(val, ref, setValue),
+              ),
+            );
+          });
+        });
   }
 }

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -8,18 +7,14 @@ class PersistentDropdownButton<T> extends ConsumerStatefulWidget {
   const PersistentDropdownButton(
     this.settingsEntryKey, {
     super.key,
-    required this.defaultValue,
     required this.items,
     this.title,
-    this.subtitle,
     this.onChanged,
   });
 
-  final T defaultValue;
   final List<PersistentDropdownItem<T>> items;
   final ValueChanged<T?>? onChanged;
   final String settingsEntryKey;
-  final Widget? subtitle;
   final Widget? title;
 
   @override
@@ -29,28 +24,7 @@ class PersistentDropdownButton<T> extends ConsumerStatefulWidget {
 
 class _PersistentDropdownState<T>
     extends ConsumerState<PersistentDropdownButton<T>> {
-  late T _value;
-
-  @override
-  void initState() {
-    super.initState();
-
-    final settingsManager = ref.read(settingsManagerProvider);
-    final settingsValue = settingsManager.getValueSync(widget.settingsEntryKey);
-
-    if (settingsValue != null &&
-        widget.items.any((e) => e.value == settingsValue)) {
-      _value = settingsValue;
-    } else {
-      _value = widget.defaultValue;
-    }
-  }
-
   void _onChanged(T? newValue) {
-    setState(() {
-      if (newValue != null) _value = newValue;
-    });
-
     _putValue(newValue);
 
     if (widget.onChanged != null) widget.onChanged!(newValue);
@@ -61,7 +35,7 @@ class _PersistentDropdownState<T>
     settingsManager.putValue(widget.settingsEntryKey, newValue);
   }
 
-  Future<T?> _buildDialog(BuildContext context) {
+  Future<T?> _buildDialog(BuildContext context, T? value) {
     return showDialog<T>(
       context: context,
       builder: (context) {
@@ -69,7 +43,7 @@ class _PersistentDropdownState<T>
             title: widget.title,
             children: widget.items
                 .map((e) => RadioListTile(
-                      groupValue: _value,
+                      groupValue: value,
                       title: e.child,
                       value: e.value,
                       onChanged: (value) => Navigator.pop(context, e.value),
@@ -80,20 +54,24 @@ class _PersistentDropdownState<T>
   }
 
   @override
-  void didUpdateWidget(covariant PersistentDropdownButton<T> oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (listEquals(oldWidget.items, widget.items)) return;
-    if (widget.items.any((e) => e.value == _value)) return;
-    _value = widget.defaultValue;
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final subtitle = widget.items.firstWhere((e) => e.value == _value).child;
-    return ListTile(
-        title: widget.title,
-        subtitle: subtitle,
-        onTap: () => _buildDialog(context).then(_onChanged));
+    final Stream<T?> stream =
+        ref.watch(settingsManagerProvider).watchValue(widget.settingsEntryKey);
+
+    return StreamBuilder(
+        stream: stream,
+        builder: (context, snapshot) {
+          final subtitle = snapshot.data == null
+              ? Text("Domyślny")
+              : widget.items.firstWhere((e) => e.value == snapshot.data).child;
+
+          return ListTile(
+              title: widget.title,
+              subtitle: subtitle,
+              onTap: !snapshot.hasError
+                  ? () => _buildDialog(context, snapshot.data).then(_onChanged)
+                  : null);
+        });
   }
 }
 
