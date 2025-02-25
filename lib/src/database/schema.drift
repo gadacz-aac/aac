@@ -25,6 +25,6 @@ CREATE TABLE IF NOT EXISTS "child_symbol" (
 
 CREATE TABLE IF NOT EXISTS "setting" (
 	"key"	TEXT NOT NULL PRIMARY KEY,
-	"value"	TEXT NOT NULL,
-) STRICT AS "SettingEntity"
+	"value"	TEXT NOT NULL
+) STRICT AS "SettingEntity";
 
