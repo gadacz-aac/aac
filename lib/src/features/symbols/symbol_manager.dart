@@ -17,29 +17,17 @@ class BoardEditingParams {
   final int? id;
   final String name;
   final int? columnCount;
-  final List<int> reorderedSymbols;
 
-  const BoardEditingParams(
-      {this.id,
-      this.name = "",
-      this.columnCount = 3,
-      this.reorderedSymbols = const []});
+  const BoardEditingParams({this.id, this.name = "", this.columnCount = 3});
 
   BoardEditingParams.fromBoard(BoardOld board)
-      : this(
-          name: board.name,
-          id: board.id,
-          columnCount: board.crossAxisCount,
-          reorderedSymbols: board.reorderedSymbols,
-        );
+      : this(name: board.name, id: board.id, columnCount: board.crossAxisCount);
 
-  BoardEditingParams copyWith(
-      {int? id, String? name, int? columnCount, List<int>? reorderedSymbols}) {
+  BoardEditingParams copyWith({int? id, String? name, int? columnCount}) {
     return BoardEditingParams(
         id: id ?? this.id,
         name: name ?? this.name,
-        columnCount: columnCount ?? this.columnCount,
-        reorderedSymbols: reorderedSymbols ?? this.reorderedSymbols);
+        columnCount: columnCount ?? this.columnCount);
   }
 
   @override
@@ -53,7 +41,8 @@ class SymbolEditingParams {
   final String? vocalization;
   final bool? isDeleted;
   final int? color;
-  final BoardEditingParams? childBoard;
+  final int? childBoardId;
+  final int? id;
 
   const SymbolEditingParams(
       {this.imagePath,
@@ -61,7 +50,8 @@ class SymbolEditingParams {
       this.vocalization,
       this.isDeleted,
       this.color,
-      this.childBoard});
+      this.childBoardId,
+      this.id});
 
   SymbolEditingParams.fromSymbol(CommunicationSymbolOld symbol)
       : imagePath = symbol.imagePath,
@@ -69,7 +59,8 @@ class SymbolEditingParams {
         color = symbol.color,
         vocalization = symbol.vocalization,
         isDeleted = symbol.isDeleted,
-        childBoard = null;
+        childBoardId = symbol.childBoardId,
+        id = symbol.id;
 
   @override
   String toString() => "imagePath: $imagePath label: $label color: $color";
@@ -88,20 +79,16 @@ class SymbolManager {
 
   SymbolManager(this.db, this.symbolDao);
 
-  Future<void> saveSymbol(int boardId, SymbolEditingParams params) async {
+  Future<void> saveSymbol(int boardId, SymbolEditingParams params,
+      [BoardEditingParams? boardParams]) async {
     if (params.label == null) return;
     if (params.imagePath == null) return;
 
     await db.transaction(() async {
       int? childBoardId;
 
-      if (params.childBoard != null) {
-        childBoardId = await db.managers.board.create(
-            (o) => o(
-                id: Value.absentIfNull(params.childBoard?.id),
-                name: params.childBoard?.name ?? "",
-                crossAxisCount: Value(params.childBoard?.columnCount ?? 3)),
-            mode: InsertMode.replace);
+      if (boardParams != null) {
+        childBoardId = await createOrUpdateChildBoard(boardParams);
       }
 
       final symbolId = await db.managers.communicationSymbol.create((o) => o(
@@ -116,18 +103,38 @@ class SymbolManager {
     });
   }
 
-  Future<void> updateSymbol(
-      {required CommunicationSymbolOld symbol,
-      required int parentBoardId,
-      required SymbolEditingParams params}) async {
-    await db.managers.communicationSymbol.filter((f) => f.id(symbol.id)).update(
-        (f) => f(
-            color: Value.absentIfNull(params.color),
-            label: Value.absentIfNull(params.label),
-            imagePath: Value.absentIfNull(params.imagePath),
-            isDeleted: Value.absentIfNull(params.isDeleted),
-            childBoardId: Value.absentIfNull(params.childBoard?.id),
-            vocalization: Value.absentIfNull(params.vocalization)));
+  Future<void> updateSymbol(int parentBoardId, SymbolEditingParams params,
+      [BoardEditingParams? boardParams]) async {
+    await db.transaction(() async {
+      int? childBoardId = boardParams?.id;
+
+      if (boardParams != null) {
+        childBoardId = await createOrUpdateChildBoard(boardParams);
+      }
+
+      var cs = await db.managers.communicationSymbol
+          .filter((f) => f.id(params.id))
+          .getSingle();
+
+      cs = cs.copyWithCompanion(CommunicationSymbolCompanion(
+          color: Value.absentIfNull(params.color),
+          label: Value.absentIfNull(params.label),
+          imagePath: Value.absentIfNull(params.imagePath),
+          isDeleted: Value.absentIfNull(params.isDeleted),
+          childBoardId: Value(childBoardId),
+          vocalization: Value.absentIfNull(params.vocalization)));
+
+      await db.managers.communicationSymbol.replace(cs);
+    });
+  }
+
+  Future<int> createOrUpdateChildBoard(BoardEditingParams boardParams) {
+    return db.managers.board.create(
+        (o) => o(
+            id: Value.absentIfNull(boardParams.id),
+            name: boardParams.name,
+            crossAxisCount: Value(boardParams.columnCount ?? 3)),
+        mode: InsertMode.replace);
   }
 
   Future<CommunicationSymbolOld?> findSymbolByLabel(String label) {
@@ -217,26 +224,22 @@ class SymbolManager {
 
   Future<void> moveSymbolToBin(List<CommunicationSymbolOld> symbols,
       bool deleteWithInsideSymbols) async {
-    throw UnimplementedError();
-
-    // final allSymbols = <CommunicationSymbol>{};
+    // final allSymbols = <int>{};
     // final visitedBoard = <int>{};
     //
-    // Future<void> collectAllSymbols(CommunicationSymbol symbol) async {
-    //   allSymbols.add(symbol);
-    //   if (symbol.childBoard.value == null) return;
+    // Future<void> collectAllSymbols(int symbolId) async {
+    //   allSymbols.add(symbolId);
+    //   final boardId = await symbolDao.findChildBoard(symbolId).getSingle();
+    //   if (boardId == null) return;
+    //   if (visitedBoard.contains(boardId)) return;
     //
-    //   final childBoardId = symbol.childBoard.value!.id;
+    //   visitedBoard.add(boardId);
+    //   final childSymbols =
+    //       await symbolDao.findChildSymbolsByChildBoard(boardId).get();
     //
-    //   if (visitedBoard.contains(childBoardId)) return;
-    //
-    //   visitedBoard.add(childBoardId);
-    //   final childBoard = await isar.boards.get(childBoardId);
-    //   if (childBoard == null) return;
-    //
-    //   await Future.wait(childBoard.symbols.map(collectAllSymbols));
+    //   await Future.wait(childSymbols.map(collectAllSymbols));
     // }
-    //
+
     // if (deleteWithInsideSymbols) {
     //   await Future.wait(symbols.map(collectAllSymbols));
     // } else {

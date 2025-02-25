@@ -27,8 +27,8 @@ class RecentBoards extends ConsumerWidget {
               itemBuilder: (context, index) {
                 final e = boards[index];
                 String title = e.name;
-                String subtitle = "${e.symbols.length} symboli";
-                return BoardTile(title: title, subtitle: subtitle, id: e.id);
+                // String subtitle = "${e.symbols.length} symboli";
+                return BoardTile(title: title, subtitle: "NOT IMPLEMENTED", id: e.id);
               },
               separatorBuilder: (context, _) => const DecoratedBox(
                   decoration: BoxDecoration(
