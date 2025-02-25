@@ -3,24 +3,25 @@ import '../schema.drift';
 selectByBoardId: 
 	SELECT s.* from communication_symbol s
 		JOIN child_symbol cs ON cs.symbol_id = s.id
-		WHERE cs.board_id = ?
+		WHERE cs.board_id = ? 
+		AND s.is_deleted = false
 		ORDER BY cs.position;
 
 --- i didn't write so i don't trust it, but it seems to work. I guess i won't surive ai take over, it was good while it lasted. Maybe i should go into politics? Or maybe start actually working on that cult with Witkor. What else is there? Investing time into becoming good at poetry or writing in general doesn't seem like a valiablepath. Anyway better stop whinning at get back to work. And what about all those crazy functions? I feel like i don't know sql, Fucking Jaro you're really zgrzany. Or maybe i should sleep? hmm... nah but i gonna to something else, because this is bringing me down
 moveSymbol(:old_pos AS INTEGER, :new_pos AS INTEGER, :board_id AS INTEGER):
-    SELECT id, RANK() OVER (ORDER BY 
-               CASE 
-                   WHEN position = :old_pos THEN :new_pos
-                   WHEN position BETWEEN LEAST(:old_pos, :new_pos) AND GREATEST(:old_pos, :new_pos) 
-                        THEN position + CASE WHEN :old_pos > :new_pos THEN 1 ELSE -1 END
-                   ELSE position 
-               END
-           ) AS new_position
+WITH ordered AS (
+	SELECT symbol_id, board_id, RANK() OVER (ORDER BY 
+	       CASE 
+		   WHEN position = :old_pos THEN :new_pos
+		   WHEN position BETWEEN MIN(:old_pos, :new_pos) AND MAX(:old_pos, :new_pos) 
+			THEN position + CASE WHEN :old_pos > :new_pos THEN 1 ELSE -1 END
+		   ELSE position 
+	       END
+	   ) AS new_position
     FROM child_symbol
-    WHERE board_id = :board_id
-)
+    WHERE board_id = :board_id)
 UPDATE child_symbol
-SET position = (SELECT new_position FROM ordered WHERE ordered.id = child_symbol.id)
+SET position = (SELECT new_position FROM ordered WHERE ordered.symbol_id = child_symbol.symbol_id AND ordered.board_id = child_symbol.board_id)
 WHERE board_id = :board_id;
 
 pinSymbolToBoard(:board_id AS INTEGER, :symbol_id AS INTEGER):
@@ -37,3 +38,16 @@ searchSymbol(:query AS TEXT, :onlyPinned AS BOOLEAN, :color AS INTEGER OR NULL):
 			(NOT :onlyPinned OR cs.board_id IS NULL)	AND
 			(:color IS NULL OR s.color = :color);
 
+findChildBoard:
+	SELECT child_board_id from communication_symbol cs where cs.id = ?;
+
+findChildSymbolsByChildBoard:
+	SELECT symbol_id from child_symbol where board_id = ?;
+
+markAsDeleted:
+	UPDATE communication_symbol
+	SET is_deleted = true
+	WHERE id = ?;
+
+findDeleted:
+	SELECT * from communication_symbol where is_deleted = true;
