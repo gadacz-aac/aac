@@ -28,7 +28,7 @@ final labelProvider = StateProvider.autoDispose<String>(
     dependencies: [initialValuesProvider]);
 
 class SymbolSettings extends ConsumerStatefulWidget {
-  final void Function(SymbolEditingParams) updateSymbolSettings;
+  final void Function(SymbolEditingParams, [BoardEditingParams?]) updateSymbolSettings;
   final int boardId;
   const SymbolSettings({super.key, required this.updateSymbolSettings, required this.boardId});
 
@@ -167,11 +167,13 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
 
     final imagePath = ref.read(imageNotifierProvider);
     final params = SymbolEditingParams(
+        id: ref.read(initialValuesProvider).id,
         imagePath: await saveImage(imagePath),
         label: ref.read(labelProvider),
         color: ref.read(colorProvider),
-        vocalization: vocalizationController.text,
-        childBoard: ref.read(boardNotifierProvider));
+        vocalization: vocalizationController.text);
+
+    final boardParams = await ref.read(boardNotifierProvider.future);
 
     if (imagePath.isEmpty || !File(imagePath).existsSync()) {
       if (!mounted) return;
@@ -194,7 +196,7 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
       return;
     }
 
-    widget.updateSymbolSettings(params);
+    widget.updateSymbolSettings(params, boardParams);
   }
 }
 

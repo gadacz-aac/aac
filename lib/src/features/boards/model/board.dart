@@ -5,9 +5,6 @@ class BoardOld {
   int id;
   int crossAxisCount;
   String name;
-  // final symbols = IsarLinks<CommunicationSymbol>();
-  final symbols = [];
-  List<int> reorderedSymbols = List.empty(growable: true);
 
   BoardOld(
       {int? crossAxisCountOrNull,
@@ -18,8 +15,6 @@ class BoardOld {
   factory BoardOld.fromParams(BoardEditingParams params) {
     final board =
         BoardOld(crossAxisCountOrNull: params.columnCount, name: params.name);
-
-    board.reorderedSymbols = params.reorderedSymbols;
 
     if (params.id == null) return board;
 
@@ -33,7 +28,7 @@ class BoardOld {
 
   @override
   String toString() =>
-      "board id: $id, crossAxisCount: $crossAxisCount, name: $name, symbols: $symbols, reorderedSymbols: $reorderedSymbols";
+      "board id: $id, crossAxisCount: $crossAxisCount, name: $name";
 
   // @Index(type: IndexType.value, caseSensitive: false)
   List<String> get words => [];

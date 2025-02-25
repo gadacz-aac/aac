@@ -18,9 +18,9 @@ class AddSymbolMenu extends ConsumerStatefulWidget {
 }
 
 class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
-  void submit(SymbolEditingParams params) async {
+  void submit(SymbolEditingParams params, [BoardEditingParams? boardParams]) async {
     final manager = ref.read(symbolManagerProvider);
-    manager.saveSymbol(widget.boardId, params);
+    manager.saveSymbol(widget.boardId, params, boardParams);
 
     if (context.mounted) {
       Navigator.pop(context);

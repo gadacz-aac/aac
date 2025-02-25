@@ -16,7 +16,7 @@ class PreviewSymbolImage extends ConsumerWidget {
     final label = ref.watch(labelProvider);
     final image = ref.watch(imageNotifierProvider);
 
-    final childBoard = ref.watch(boardNotifierProvider);
+    final childBoard = ref.watch(boardNotifierProvider).valueOrNull;
 
     final symbol = CommunicationSymbolOld(
       label: label,
@@ -25,7 +25,7 @@ class PreviewSymbolImage extends ConsumerWidget {
     );
 
     if (childBoard != null) {
-        symbol.childBoardId = childBoard.id;
+      symbol.childBoardId = childBoard.id ?? -1;
     }
 
     return FractionallySizedBox(

@@ -1,3 +1,4 @@
+import 'package:aac/src/database/daos/board_dao.dart';
 import 'package:aac/src/features/symbols/settings/screens/create_board_screen.dart';
 import 'package:aac/src/features/symbols/settings/screens/symbol_settings.dart';
 import 'package:aac/src/features/symbols/settings/widgets/link_existing_board_chip.dart';
@@ -12,16 +13,25 @@ part 'board_picker.g.dart';
 @Riverpod(dependencies: [initialValues])
 class BoardNotifier extends _$BoardNotifier {
   @override
-  BoardEditingParams? build() {
-    return ref.watch(initialValuesProvider).childBoard;
+  Future<BoardEditingParams?> build() {
+    final id = ref.watch(initialValuesProvider).childBoardId;
+
+    if (id == null) return Future.value(null);
+
+    return ref
+        .watch(boardDaoProvider)
+        .selectById(id)
+        .map((e) => BoardEditingParams(
+            name: e.name, columnCount: e.crossAxisCount, id: e.id))
+        .getSingle();
   }
 
   void delete() {
-    state = null;
+    state = AsyncValue.data(null);
   }
 
   void set(BoardEditingParams? board) {
-    state = board;
+    state = AsyncValue.data(board);
   }
 }
 
@@ -33,7 +43,7 @@ class BoardPicker extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final List<Widget> chips;
-    final childBoard = ref.watch(boardNotifierProvider);
+    final childBoard = ref.watch(boardNotifierProvider).valueOrNull;
 
     if (childBoard == null) {
       chips = [const LinkNewBoardChip(), const LinkExistingBoardChip()];
@@ -61,7 +71,8 @@ class LinkedBoardChip extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final childBoard = ref.watch(boardNotifierProvider);
+    final childBoard = ref.watch(boardNotifierProvider).valueOrNull;
+
     if (childBoard == null) return const SizedBox();
 
     return InputChip(

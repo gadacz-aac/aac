@@ -19,11 +19,11 @@ class EditSymbolScreen extends ConsumerStatefulWidget {
 }
 
 class _EditSymbolScreenState extends ConsumerState<EditSymbolScreen> {
-  Future<void> save(SymbolEditingParams params) async {
+  Future<void> save(SymbolEditingParams params,
+      [BoardEditingParams? boardParams]) async {
     final manager = ref.read(symbolManagerProvider);
 
-    manager.updateSymbol(
-        symbol: widget.symbol, parentBoardId: widget.boardId, params: params);
+    manager.updateSymbol(widget.boardId, params, boardParams);
     if (context.mounted) {
       Navigator.pop(context);
     }
