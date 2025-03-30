@@ -8,11 +8,6 @@ import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-List<CommunicationSymbolOld> getReorderSymbols(Iterable<int> reorderedSymbols, Iterable<CommunicationSymbolOld> symbols) {
-  return reorderedSymbols.map((id) => symbols.firstWhere((e) => e.id == id))
-        .toList();
-}
-
 class SymbolsGridWithDrag extends ConsumerStatefulWidget {
   const SymbolsGridWithDrag({required this.board, super.key});
 
@@ -65,7 +60,7 @@ class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
               symbols.insert(desiredIndex!, currentlyDragged!.data);
             });
 
-            ref.read(symbolDaoProvider).moveSymbol(currentlyDragged!.index, desiredIndex!,  widget.board.id);
+            ref.read(symbolDaoProvider).moveSymbol( desiredIndex!, currentlyDragged!.index, widget.board.id);
           }, builder: (context, incoming, __) {
             return LayoutBuilder(builder: (context, constrains) {
               final data = DragItem(index: index, data: e);

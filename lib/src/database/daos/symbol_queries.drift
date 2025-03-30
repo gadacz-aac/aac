@@ -7,22 +7,21 @@ selectByBoardId:
 		AND s.is_deleted = false
 		ORDER BY cs.position;
 
---- i didn't write so i don't trust it, but it seems to work. I guess i won't surive ai take over, it was good while it lasted. Maybe i should go into politics? Or maybe start actually working on that cult with Witkor. What else is there? Investing time into becoming good at poetry or writing in general doesn't seem like a valiablepath. Anyway better stop whinning at get back to work. And what about all those crazy functions? I feel like i don't know sql, Fucking Jaro you're really zgrzany. Or maybe i should sleep? hmm... nah but i gonna to something else, because this is bringing me down
 moveSymbol(:old_pos AS INTEGER, :new_pos AS INTEGER, :board_id AS INTEGER):
-WITH ordered AS (
-	SELECT symbol_id, board_id, RANK() OVER (ORDER BY 
-	       CASE 
-		   WHEN position = :old_pos THEN :new_pos
-		   WHEN position BETWEEN MIN(:old_pos, :new_pos) AND MAX(:old_pos, :new_pos) 
-			THEN position + CASE WHEN :old_pos > :new_pos THEN 1 ELSE -1 END
-		   ELSE position 
-	       END
-	   ) AS new_position
-    FROM child_symbol
-    WHERE board_id = :board_id)
-UPDATE child_symbol
-SET position = (SELECT new_position FROM ordered WHERE ordered.symbol_id = child_symbol.symbol_id AND ordered.board_id = child_symbol.board_id)
-WHERE board_id = :board_id;
+	WITH ordered AS (
+		SELECT :new_pos, :old_pos, position as old_position, (
+			CASE 
+				WHEN position = :old_pos THEN :new_pos
+				WHEN :new_pos < :old_pos  AND position >= :new_pos AND position < :old_pos THEN position + 1
+				WHEN :new_pos > :old_pos  AND position > :old_pos AND position <= :new_pos THEN position - 1
+				ELSE position END
+			) AS new_position
+		FROM child_symbol 
+		WHERE board_id = :board_id
+	)
+	UPDATE child_symbol 
+	SET position = (SELECT new_position FROM ordered WHERE old_position = position)
+	WHERE board_id = :board_id;
 
 pinSymbolToBoard(:board_id AS INTEGER, :symbol_id AS INTEGER):
 	WITH helpers as (
