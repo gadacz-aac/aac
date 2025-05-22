@@ -35,18 +35,17 @@ searchSymbol(:query AS TEXT, :onlyPinned AS BOOLEAN, :color AS INTEGER OR NULL):
 		LEFT JOIN child_symbol cs ON cs.symbol_id = s.id
 		WHERE s.label LIKE CONCAT('%', :query, '%')		AND
 			(NOT :onlyPinned OR cs.board_id IS NULL)	AND
-			(:color IS NULL OR s.color = :color);
-
-findChildBoard:
-	SELECT child_board_id from communication_symbol cs where cs.id = ?;
-
-findChildSymbolsByChildBoard:
-	SELECT symbol_id from child_symbol where board_id = ?;
+			(:color IS NULL OR s.color = :color)		AND
+			is_deleted = false;
 
 markAsDeleted:
 	UPDATE communication_symbol
 	SET is_deleted = true
 	WHERE id = ?;
 
-findDeleted:
+deletePermanently:
+	DELETE FROM communication_symbol where id = ?; 
+
+selectDeleted:
 	SELECT * from communication_symbol where is_deleted = true;
+

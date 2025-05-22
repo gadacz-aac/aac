@@ -25,7 +25,8 @@ class AppDatabase extends _$AppDatabase {
       await into(board).insert(BoardCompanion.insert(name: "Główna"));
 
       SettingsManager(this).insertDefaultSettings();
-
+    }, beforeOpen: (details) async {
+      await customStatement('PRAGMA foreign_keys = ON');
     });
   }
 

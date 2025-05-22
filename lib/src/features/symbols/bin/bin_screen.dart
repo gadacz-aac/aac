@@ -1,70 +1,57 @@
+import 'package:aac/src/database/daos/symbol_dao.dart';
+import 'package:aac/src/features/boards/ui/symbols_grid/base_symbols_grid.dart';
+import 'package:aac/src/features/symbols/bin/bin_bar.dart';
+import 'package:aac/src/features/symbols/model/communication_symbol.dart';
+import 'package:aac/src/features/symbols/ui/symbol_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-//MOZE BUILD JESLI SYMBOL MA DZIECI - TAK SAMO W SEARCH TRZRBA BUDOWAC NA NOWO
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-//TODO fix grid display
-//TODO permanently delete after 30 days
-//TODOpo pierwszym włączeniu nie można nic zaznaczac w koszu (dopiero po wejsciu w boards i powrocie do kosza)
+part 'bin_screen.g.dart';
+
+@riverpod
+Stream<List<CommunicationSymbolOld>> deletedSymbols(Ref ref) {
+  return ref.watch(symbolDaoProvider).watchDeleted();
+}
 
 class BinScreen extends ConsumerWidget {
   const BinScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    throw UnimplementedError();
+    final deletedSymbols = ref.watch(deletedSymbolsProvider);
 
-    // final allSymbolsAsync = ref.watch(symbolsProvider);
-    // return Scaffold(
-    //   appBar: const BinAppBar(
-    //     title: 'Kosz',
-    //   ),
-    //   body: allSymbolsAsync.when(
-    //     data: (allSymbols) {
-    //       final folders = allSymbols
-    //           .where((symbol) =>
-    //               symbol.isDeleted && symbol.childBoard.value != null)
-    //           .toList();
-    //       final folderChildBoardIds = folders
-    //           .map((folder) => folder.childBoard.value?.id)
-    //           .whereType<int>()
-    //           .toSet();
-    //       final nonFolderSymbols = allSymbols.where((symbol) {
-    //         final isDeletedSymbol = symbol.isDeleted;
-    //         final hasNoChildBoard = symbol.childBoard.value == null;
-    //
-    //         final isChildOfFolder = symbol.parentBoard.any((parentBoardLink) {
-    //           //check if any parent is a folder
-    //           final parentBoardId = parentBoardLink.id;
-    //           return folderChildBoardIds.contains(parentBoardId);
-    //         });
-    //         return isDeletedSymbol && hasNoChildBoard && !isChildOfFolder;
-    //       }).toList();
-    //
-    //       return ListView.builder(
-    //         itemBuilder: (context, index) {
-    //           final CommunicationSymbol symbol;
-    //           if (index < folders.length) {
-    //             symbol = folders[index];
-    //           } else if (index < nonFolderSymbols.length + folders.length) {
-    //             symbol = nonFolderSymbols[index - folders.length];
-    //           } else {
-    //             return null;
-    //           }
-    //
-    //           return Padding(
-    //             key: ValueKey(symbol.id),
-    //             padding:
-    //                 const EdgeInsets.symmetric(horizontal: 18.0, vertical: 8.0),
-    //             child: SymbolListTile(
-    //               symbol: symbol,
-    //             ),
-    //           );
-    //         },
-    //       );
-    //     },
-    //     loading: () => const Center(child: CircularProgressIndicator()),
-    //     error: (error, stack) => Center(child: Text('Error: $error')),
-    //   ),
-    // );
+    return Scaffold(
+      appBar: const BinAppBar(
+        title: 'Kosz',
+      ),
+      body: Column(
+        children: [
+          deletedSymbols.when(
+            data: (data) {
+              return BaseSymbolsGrid(
+                itemBuilder: (context, index) {
+                  final e = data.elementAt(index);
+                  return SymbolCard(
+                    symbol: e,
+                    onTapActions: [
+                      SymbolOnTapAction.speak,
+                      SymbolOnTapAction.select,
+                      SymbolOnTapAction.multiselect
+                    ],
+                  );
+                },
+                itemCount: data.length,
+                crossAxisCount: 4,
+                mainAxisSpacing: 12.0,
+                crossAxisSpacing: 12.0,
+              );
+            },
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (error, stack) => Center(child: Text('Error: $error')),
+          ),
+        ],
+      ),
+    );
   }
 }
