@@ -1,4 +1,5 @@
 import 'package:aac/src/features/boards/ui/actions/delete_forever_action.dart';
+import 'package:aac/src/features/boards/ui/actions/move_symbol_to_bin_action.dart';
 import 'package:aac/src/features/symbols/search/app_bar_actions.dart';
 import 'package:aac/src/features/symbols/search/search_screen.dart';
 import 'package:aac/src/features/symbols/settings/widgets/cherry_pick_image.dart';
@@ -56,7 +57,7 @@ class _SearchAppBarState extends ConsumerState<SearchAppBar> {
     }
 
     if (areSelected) {
-      actions = [const PinSelectedSymbolAction(), const DeleteForeverAction()];
+      actions = [const PinSelectedSymbolAction(), const MoveSymbolToBinAction()];
     } else {
       title = Hero(
         tag: "search",

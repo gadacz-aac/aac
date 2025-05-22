@@ -222,50 +222,10 @@ class SymbolManager {
     throw UnimplementedError();
   }
 
-  Future<void> moveSymbolToBin(List<CommunicationSymbolOld> symbols,
-      bool deleteWithInsideSymbols) async {
-    // final allSymbols = <int>{};
-    // final visitedBoard = <int>{};
-    //
-    // Future<void> collectAllSymbols(int symbolId) async {
-    //   allSymbols.add(symbolId);
-    //   final boardId = await symbolDao.findChildBoard(symbolId).getSingle();
-    //   if (boardId == null) return;
-    //   if (visitedBoard.contains(boardId)) return;
-    //
-    //   visitedBoard.add(boardId);
-    //   final childSymbols =
-    //       await symbolDao.findChildSymbolsByChildBoard(boardId).get();
-    //
-    //   await Future.wait(childSymbols.map(collectAllSymbols));
-    // }
-
-    // if (deleteWithInsideSymbols) {
-    //   await Future.wait(symbols.map(collectAllSymbols));
-    // } else {
-    //   allSymbols.addAll(symbols);
-    // }
-    //
-    // final reorderMap = await _getReorderMap(allSymbols);
-    //
-    // await isar.writeTxn(() async {
-    //   for (final symbol in allSymbols) {
-    //     await isar.communicationSymbols.put(symbol
-    //         .updateWithParams(const SymbolEditingParams(isDeleted: true)));
-    //   }
-    //
-    //   for (final entry in reorderMap.entries) {
-    //     final board = await isar.boards.get(entry.key);
-    //
-    //     if (board == null) continue;
-    //     board.reorderedSymbols = [
-    //       for (final e in board.reorderedSymbols)
-    //         if (!entry.value.contains(e)) e
-    //     ];
-    //
-    //     isar.boards.put(board);
-    //   }
-    // });
+  Future<void> moveSymbolToBin(List<CommunicationSymbolOld> symbols) async {
+    return db.transaction(() async {
+      await Future.wait(symbols.map((e) => e.id).map(symbolDao.markAsDeleted));
+    });
   }
 
   Future<void> restoreSymbols(List<CommunicationSymbolOld> symbols) async {
@@ -290,12 +250,9 @@ class SymbolManager {
   }
 
   Future<void> deleteSymbols(List<CommunicationSymbolOld> symbols) async {
-    // await isar.writeTxn(() async {
-    //   for (var symbol in symbols) {
-    //     await isar.communicationSymbols.delete(symbol.id);
-    //   }
-    // });
-    throw UnimplementedError();
+    return db.transaction(() async {
+      await Future.wait(symbols.map((e) => e.id).map(symbolDao.deletePermanently));
+    });
   }
 
   // TODO chyba tylko w śmietniku to można odrazu zwracać symbole usunięte

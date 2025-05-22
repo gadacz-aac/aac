@@ -45,7 +45,7 @@ mixin _$SymbolDaoMixin on DatabaseAccessor<AppDatabase> {
   Selectable<CommunicationSymbolEntity> searchSymbol(
       String query, bool onlyPinned, int? color) {
     return customSelect(
-        'SELECT s.* FROM communication_symbol AS s LEFT JOIN child_symbol AS cs ON cs.symbol_id = s.id WHERE s.label LIKE CONCAT(\'%\', ?1, \'%\') AND(NOT ?2 OR cs.board_id IS NULL)AND(?3 IS NULL OR s.color = ?3)',
+        'SELECT s.* FROM communication_symbol AS s LEFT JOIN child_symbol AS cs ON cs.symbol_id = s.id WHERE s.label LIKE CONCAT(\'%\', ?1, \'%\') AND(NOT ?2 OR cs.board_id IS NULL)AND(?3 IS NULL OR s.color = ?3)AND is_deleted = FALSE',
         variables: [
           Variable<String>(query),
           Variable<bool>(onlyPinned),
@@ -57,28 +57,6 @@ mixin _$SymbolDaoMixin on DatabaseAccessor<AppDatabase> {
         }).asyncMap(communicationSymbol.mapFromRow);
   }
 
-  Selectable<int?> findChildBoard(int var1) {
-    return customSelect(
-        'SELECT child_board_id FROM communication_symbol AS cs WHERE cs.id = ?1',
-        variables: [
-          Variable<int>(var1)
-        ],
-        readsFrom: {
-          communicationSymbol,
-        }).map((QueryRow row) => row.readNullable<int>('child_board_id'));
-  }
-
-  Selectable<int> findChildSymbolsByChildBoard(int var1) {
-    return customSelect(
-        'SELECT symbol_id FROM child_symbol WHERE board_id = ?1',
-        variables: [
-          Variable<int>(var1)
-        ],
-        readsFrom: {
-          childSymbol,
-        }).map((QueryRow row) => row.read<int>('symbol_id'));
-  }
-
   Future<int> markAsDeleted(int var1) {
     return customUpdate(
       'UPDATE communication_symbol SET is_deleted = TRUE WHERE id = ?1',
@@ -88,7 +66,16 @@ mixin _$SymbolDaoMixin on DatabaseAccessor<AppDatabase> {
     );
   }
 
-  Selectable<CommunicationSymbolEntity> findDeleted() {
+  Future<int> deletePermanently(int var1) {
+    return customUpdate(
+      'DELETE FROM communication_symbol WHERE id = ?1',
+      variables: [Variable<int>(var1)],
+      updates: {communicationSymbol},
+      updateKind: UpdateKind.delete,
+    );
+  }
+
+  Selectable<CommunicationSymbolEntity> selectDeleted() {
     return customSelect(
         'SELECT * FROM communication_symbol WHERE is_deleted = TRUE',
         variables: [],

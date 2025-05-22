@@ -10,14 +10,10 @@ class BinAppBar extends ConsumerWidget implements PreferredSizeWidget {
   const BinAppBar({
     super.key,
     required this.title,
-    // required this.isParentMode,
-    // required this.isMainBoard,
     this.actions = const [],
   });
 
   final String title;
-  // final bool isParentMode;
-  // final bool isMainBoard;
   final List<Widget> actions;
 
   @override
@@ -33,7 +29,6 @@ class BinAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
     return AppBar(
       title: areSymbolSelected ? null : Text(title),
-      // automaticallyImplyLeading: isParentMode || isMainBoard,
       leading: areSymbolSelected ? const CancelAction() : null,
       actions: areSymbolSelected ? actionsSelected : actions,
       backgroundColor: AacColors.sentenceBarGrey,

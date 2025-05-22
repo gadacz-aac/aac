@@ -15,6 +15,10 @@ class SymbolDao extends DatabaseAccessor<AppDatabase> with _$SymbolDaoMixin {
         .map(CommunicationSymbolOld.fromEntity)
         .watch();
   }
+
+  Stream<List<CommunicationSymbolOld>> watchDeleted() {
+    return selectDeleted().map(CommunicationSymbolOld.fromEntity).watch();
+  }
 }
 
 @riverpod
