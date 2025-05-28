@@ -57,7 +57,7 @@ class MainApp extends StatelessWidget {
             backgroundColor: AacColors.greyBackground,
           ),
           dialogTheme:
-              const DialogTheme(backgroundColor: AacColors.greyBackground)),
+              const DialogThemeData(backgroundColor: AacColors.greyBackground)),
       home: BoardScreen(boardId: 1),
     );
   }
