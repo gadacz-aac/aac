@@ -22,7 +22,7 @@ class AppDatabase extends _$AppDatabase {
     return MigrationStrategy(onCreate: (m) async {
       await m.createAll();
 
-      await into(board).insert(BoardCompanion.insert(name: "Główna"));
+      await into(boardTb).insert(BoardTbCompanion.insert(name: "Główna"));
 
       SettingsManager(this).insertDefaultSettings();
     }, beforeOpen: (details) async {

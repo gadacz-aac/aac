@@ -6,6 +6,7 @@ import 'package:aac/src/features/symbols/settings/utils/file_helpers.dart';
 import 'package:aac/src/features/symbols/settings/widgets/board_picker.dart';
 import 'package:aac/src/features/symbols/settings/widgets/color_picker.dart';
 import 'package:aac/src/features/symbols/settings/widgets/preview_symbol_image.dart';
+import 'package:aac/src/features/symbols/symbol_board_association_manager.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:aac/src/shared/colors.dart';
 import 'package:aac/src/shared/form/widgets/text_field.dart';
@@ -14,13 +15,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'symbol_settings.g.dart';
+
 @riverpod
-String defaultImagePath(Ref ref) =>
-    "assets/default_image_file.png";
+String defaultImagePath(Ref ref) => "assets/default_image_file.png";
 
 @Riverpod(dependencies: [])
-SymbolEditingParams initialValues(Ref ref) {
-  return const SymbolEditingParams();
+SymbolEditModel initialValues(Ref ref) {
+  return const SymbolEditModel();
 }
 
 final labelProvider = StateProvider.autoDispose<String>(
@@ -28,9 +29,10 @@ final labelProvider = StateProvider.autoDispose<String>(
     dependencies: [initialValuesProvider]);
 
 class SymbolSettings extends ConsumerStatefulWidget {
-  final void Function(SymbolEditingParams, [BoardEditingParams?]) updateSymbolSettings;
+  final void Function(SymbolEditModel, [BoardEditModel?]) updateSymbolSettings;
   final int boardId;
-  const SymbolSettings({super.key, required this.updateSymbolSettings, required this.boardId});
+  const SymbolSettings(
+      {super.key, required this.updateSymbolSettings, required this.boardId});
 
   @override
   ConsumerState<SymbolSettings> createState() => _SymbolSettingsState();
@@ -92,14 +94,18 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
                           const SizedBox(width: 8),
                           TextButton(
                             onPressed: () {
-                              ref.read(symbolManagerProvider).pinSymbolsToBoard(widget.boardId, [duplicatedSymbol]);
+                              ref
+                                  .read(symbolBoardAssociationManagerProvider)
+                                  .pin(widget.boardId, [duplicatedSymbol]);
                               if (!mounted) return;
                               Navigator.pop(context);
-                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
                             },
                             style: TextButton.styleFrom(
                               backgroundColor: AacColors.mainControlBackground,
-                              padding: const EdgeInsets.symmetric(horizontal:20.0, vertical: 12.0),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20.0, vertical: 12.0),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(4.0),
                               ),
@@ -111,13 +117,11 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
                           ),
                           const SizedBox(width: 8),
                           IconButton(
-                            icon: const Icon(
-                              Icons.close,
-                              color: Colors.white
-                            ),
+                            icon: const Icon(Icons.close, color: Colors.white),
                             padding: EdgeInsets.zero,
                             onPressed: () {
-                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                              ScaffoldMessenger.of(context)
+                                  .hideCurrentSnackBar();
                             },
                           ),
                         ],
@@ -166,7 +170,7 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
     }
 
     final imagePath = ref.read(imageNotifierProvider);
-    final params = SymbolEditingParams(
+    final params = SymbolEditModel(
         id: ref.read(initialValuesProvider).id,
         imagePath: await saveImage(imagePath),
         label: ref.read(labelProvider),
@@ -223,7 +227,7 @@ class NoImageSelectedDialog extends StatelessWidget {
 class LabelTextField extends ConsumerWidget {
   final String? initialLabel;
   final int boardId;
-  final void Function(CommunicationSymbolOld) onDuplicateFound;
+  final void Function(CommunicationSymbol) onDuplicateFound;
   final void Function() onDuplicateResolved;
 
   const LabelTextField({
@@ -277,30 +281,29 @@ class SymbolSettingsAppBar extends StatelessWidget
     return AppBar(
         automaticallyImplyLeading: false,
         flexibleSpace: SafeArea(
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                AppBarTextAction(
-                  onTap: () {
-                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text(
-                    "Anuluj",
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                ),
-                AppBarTextAction(
-                  onTap: () {
-                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    submit();
-                  },
-                  child: const Text(
-                    "Zapisz",
-                    style: TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                )
-              ]),
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            AppBarTextAction(
+              onTap: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                "Anuluj",
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
+            ),
+            AppBarTextAction(
+              onTap: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                submit();
+              },
+              child: const Text(
+                "Zapisz",
+                style: TextStyle(fontWeight: FontWeight.w500),
+              ),
+            )
+          ]),
         ));
   }
 }

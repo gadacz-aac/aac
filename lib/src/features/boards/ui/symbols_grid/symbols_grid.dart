@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SymbolsGrid extends ConsumerWidget {
-  final BoardOld board;
+  final Board board;
 
   const SymbolsGrid({super.key, required this.board});
 

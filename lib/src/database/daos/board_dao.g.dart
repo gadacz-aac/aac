@@ -4,38 +4,40 @@ part of 'board_dao.dart';
 
 // ignore_for_file: type=lint
 mixin _$BoardDaoMixin on DatabaseAccessor<AppDatabase> {
-  Board get board => attachedDatabase.board;
-  CommunicationSymbol get communicationSymbol =>
-      attachedDatabase.communicationSymbol;
-  ChildSymbol get childSymbol => attachedDatabase.childSymbol;
-  Setting get setting => attachedDatabase.setting;
+  BoardTb get boardTb => attachedDatabase.boardTb;
+  CommunicationSymbolTb get communicationSymbolTb =>
+      attachedDatabase.communicationSymbolTb;
+  ChildSymbolTb get childSymbolTb => attachedDatabase.childSymbolTb;
+  SettingTb get settingTb => attachedDatabase.settingTb;
   Selectable<BoardEntity> selectById(int var1) {
-    return customSelect('SELECT * FROM board WHERE board.id = ?1', variables: [
-      Variable<int>(var1)
-    ], readsFrom: {
-      board,
-    }).asyncMap(board.mapFromRow);
+    return customSelect('SELECT * FROM board_tb WHERE board_tb.id = ?1',
+        variables: [
+          Variable<int>(var1)
+        ],
+        readsFrom: {
+          boardTb,
+        }).asyncMap(boardTb.mapFromRow);
   }
 
   Selectable<BoardEntity> selectByName(String var1) {
-    return customSelect('SELECT * FROM board WHERE board.name = ?1',
+    return customSelect('SELECT * FROM board_tb WHERE board_tb.name = ?1',
         variables: [
           Variable<String>(var1)
         ],
         readsFrom: {
-          board,
-        }).asyncMap(board.mapFromRow);
+          boardTb,
+        }).asyncMap(boardTb.mapFromRow);
   }
 
   Selectable<BoardEntity> searchBoard(String query) {
     return customSelect(
-        'SELECT * FROM board WHERE name LIKE CONCAT(\'%\', ?1, \'%\')',
+        'SELECT * FROM board_tb WHERE name LIKE CONCAT(\'%\', ?1, \'%\')',
         variables: [
           Variable<String>(query)
         ],
         readsFrom: {
-          board,
-        }).asyncMap(board.mapFromRow);
+          boardTb,
+        }).asyncMap(boardTb.mapFromRow);
   }
 }
 

@@ -4,7 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 @immutable
 class CommunicationSymbolDto {
-  const CommunicationSymbolDto({required this.label, required this.imagePath, this.vocalization});
+  const CommunicationSymbolDto(
+      {required this.label, required this.imagePath, this.vocalization});
 
   final String label;
   final String imagePath;
@@ -17,9 +18,11 @@ class SentenceNotifier extends Notifier<List<CommunicationSymbolDto>> {
     return [];
   }
 
-  void addWord(CommunicationSymbolOld word) {
-    final dto =
-        CommunicationSymbolDto(label: word.label, imagePath: word.imagePath, vocalization: word.vocalization);
+  void addWord(CommunicationSymbol word) {
+    final dto = CommunicationSymbolDto(
+        label: word.label,
+        imagePath: word.imagePath,
+        vocalization: word.vocalization);
     state = [...state, dto];
   }
 

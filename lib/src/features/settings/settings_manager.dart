@@ -22,7 +22,7 @@ class SettingsManager {
   SettingsManager(this.db);
 
   Selectable<T> _get<T>(String key) {
-    return db.managers.setting
+    return db.managers.settingTb
         .filter((f) => f.key(key))
         .map((e) => jsonDecode(e.value) as T);
   }
@@ -36,7 +36,7 @@ class SettingsManager {
   }
 
   Future<void> putValue(String key, dynamic value) async {
-    await db.managers.setting.create(
+    await db.managers.settingTb.create(
         (f) => f(key: key, value: jsonEncode(value)),
         mode: InsertMode.replace);
   }

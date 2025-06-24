@@ -9,26 +9,24 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 final searchedSymbolProvider =
-    FutureProvider.autoDispose<List<CommunicationSymbolOld>>((ref) async {
+    FutureProvider.autoDispose<List<CommunicationSymbol>>((ref) async {
   final query = ref.watch(queryProvider);
   final color = ref.watch(symbolSearchColorFilterProvider)?.code;
   final onlyPinned = ref.watch(symbolSearchOnlyPinnedFilterProvider);
 
-  print(color);
-
   return ref
       .read(symbolDaoProvider)
       .searchSymbol(query, onlyPinned, color)
-      .map(CommunicationSymbolOld.fromEntity)
+      .map(CommunicationSymbol.fromEntity)
       .get();
 });
 
 final queryProvider = StateProvider.autoDispose<String>((ref) => "");
 
 class SelectedSymbolNotifier extends ChangeNotifier {
-  final state = <CommunicationSymbolOld>[];
+  final state = <CommunicationSymbol>[];
 
-  void toggle(CommunicationSymbolOld symbol) {
+  void toggle(CommunicationSymbol symbol) {
     final index = state.indexWhere((e) => e.id == symbol.id);
     if (index == -1) {
       state.add(symbol);

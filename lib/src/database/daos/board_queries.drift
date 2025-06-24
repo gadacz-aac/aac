@@ -1,7 +1,7 @@
 import '../schema.drift';
 
-selectById: SELECT * from board WHERE board.id = ?;
+selectById: SELECT * from board_tb WHERE board_tb.id = ?;
 
-selectByName: SELECT * from board WHERE board.name = ?;
+selectByName: SELECT * from board_tb WHERE board_tb.name = ?;
 
-searchBoard(:query AS TEXT): SELECT * FROM board WHERE name LIKE CONCAT('%', :query, '%');
+searchBoard(:query AS TEXT): SELECT * FROM board_tb WHERE name LIKE CONCAT('%', :query, '%');

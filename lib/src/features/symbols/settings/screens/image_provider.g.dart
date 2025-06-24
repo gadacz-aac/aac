@@ -26,7 +26,7 @@ final isDefaultImageProvider = AutoDisposeProvider<bool>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef IsDefaultImageRef = AutoDisposeProviderRef<bool>;
-String _$imageNotifierHash() => r'71baf68092b30b41619adf92011a5176d837958c';
+String _$imageNotifierHash() => r'8e24c8d60be7f5ca90a4256e8900d3e1888a3f74';
 
 /// See also [ImageNotifier].
 @ProviderFor(ImageNotifier)

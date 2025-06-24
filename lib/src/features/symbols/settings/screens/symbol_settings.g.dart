@@ -23,11 +23,11 @@ final defaultImagePathProvider = AutoDisposeProvider<String>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef DefaultImagePathRef = AutoDisposeProviderRef<String>;
-String _$initialValuesHash() => r'cacae42d953603d5a393c8fa191f13d21499616c';
+String _$initialValuesHash() => r'b8639f88ce4cb8bfe651db984499cdc3d7409c08';
 
 /// See also [initialValues].
 @ProviderFor(initialValues)
-final initialValuesProvider = AutoDisposeProvider<SymbolEditingParams>.internal(
+final initialValuesProvider = AutoDisposeProvider<SymbolEditModel>.internal(
   initialValues,
   name: r'initialValuesProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -39,6 +39,6 @@ final initialValuesProvider = AutoDisposeProvider<SymbolEditingParams>.internal(
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef InitialValuesRef = AutoDisposeProviderRef<SymbolEditingParams>;
+typedef InitialValuesRef = AutoDisposeProviderRef<SymbolEditModel>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

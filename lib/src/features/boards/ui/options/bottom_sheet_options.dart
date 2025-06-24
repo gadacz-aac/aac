@@ -106,7 +106,7 @@ class EditBoardOption extends ConsumerWidget {
                     useSafeArea: true,
                     builder: (modalContext) {
                       return CreateBoardScreen(
-                          params: BoardEditingParams.fromBoard(board));
+                          params: BoardEditModel.fromBoard(board));
                     });
 
                 if (editingParams != null) {

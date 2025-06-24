@@ -18,7 +18,7 @@ class AddSymbolMenu extends ConsumerStatefulWidget {
 }
 
 class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
-  void submit(SymbolEditingParams params, [BoardEditingParams? boardParams]) async {
+  void submit(SymbolEditModel params, [BoardEditModel? boardParams]) async {
     final manager = ref.read(symbolManagerProvider);
     manager.saveSymbol(widget.boardId, params, boardParams);
 
@@ -32,7 +32,7 @@ class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
     return ProviderScope(
       overrides: [
         initialValuesProvider.overrideWithValue(
-          SymbolEditingParams(imagePath: widget.imagePath),
+          SymbolEditModel(imagePath: widget.imagePath),
         )
       ],
       child:

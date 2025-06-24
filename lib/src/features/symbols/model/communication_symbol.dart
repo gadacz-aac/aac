@@ -1,45 +1,29 @@
 import 'package:aac/src/database/database.dart';
-import 'package:aac/src/features/boards/model/board.dart';
-import 'package:aac/src/features/symbols/symbol_manager.dart';
 
-class CommunicationSymbolOld {
-  CommunicationSymbolOld(
-      {required this.label,
+class CommunicationSymbol {
+  CommunicationSymbol(
+      {required this.id,
+      required this.label,
       required this.imagePath,
       this.vocalization,
       this.color,
-      this.isDeleted = false})
-      : id = 1;
+      this.isDeleted = false});
 
-  int id;
   String label;
+  int id;
   String? vocalization;
   String imagePath;
   int? color;
   bool isDeleted;
 
-  final parentBoard = BoardOld(name: "");
   int? childBoardId;
 
-  // full-text search
-  List<String> get words => [];
-
-  CommunicationSymbolOld.fromParams(SymbolEditingParams params)
-        : this(
-                  imagePath: params.imagePath ?? "",
-                  label: params.label ?? "",
-                  color: params.color,
-                  vocalization: params.vocalization,
-                  isDeleted: params.isDeleted ?? false
-                );
-
-  CommunicationSymbolOld.fromEntity(CommunicationSymbolEntity entity) 
-  : imagePath = entity.imagePath,
-          label = entity.label,
-          color = entity.color,
-          isDeleted =  entity.isDeleted,
-          vocalization = entity.vocalization,
-          id = entity.id,
-          childBoardId = entity.childBoardId;
+  CommunicationSymbol.fromEntity(CommunicationSymbolEntity entity)
+      : imagePath = entity.imagePath,
+        label = entity.label,
+        color = entity.color,
+        isDeleted = entity.isDeleted,
+        vocalization = entity.vocalization,
+        id = entity.id,
+        childBoardId = entity.childBoardId;
 }
-

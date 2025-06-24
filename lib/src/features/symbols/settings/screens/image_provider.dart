@@ -50,7 +50,6 @@ class ImageNotifier extends _$ImageNotifier {
         MaterialPageRoute(builder: (context) => const ImageCherryPicker()));
 
     if (imagePath == null) return;
-    print(imagePath);
 
     state = imagePath;
   }

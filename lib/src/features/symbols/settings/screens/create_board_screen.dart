@@ -9,7 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class CreateBoardScreen extends ConsumerStatefulWidget {
   const CreateBoardScreen({super.key, required this.params});
 
-  final BoardEditingParams params;
+  final BoardEditModel params;
 
   @override
   ConsumerState<CreateBoardScreen> createState() => _CreateBoardScreenState();
@@ -29,7 +29,7 @@ class _CreateBoardScreenState extends ConsumerState<CreateBoardScreen> {
     nameController = TextEditingController(text: widget.params.name);
     columnCountController =
         TextEditingController(text: "${widget.params.columnCount}");
-      
+
     nameController.addListener(_checkBoardNameExists);
   }
 
@@ -41,12 +41,16 @@ class _CreateBoardScreenState extends ConsumerState<CreateBoardScreen> {
   }
 
   Future<bool> boardNameExists(String name) async {
-    return await ref.read(boardDaoProvider).selectByName(name).getSingleOrNull() != null;
+    return await ref
+            .read(boardDaoProvider)
+            .selectByName(name)
+            .getSingleOrNull() !=
+        null;
   }
-  
+
   Future<void> _checkBoardNameExists() async {
     final name = nameController.text;
-    
+
     if (name != widget.params.name) {
       final exists = await boardNameExists(name);
       setState(() {
@@ -72,14 +76,14 @@ class _CreateBoardScreenState extends ConsumerState<CreateBoardScreen> {
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
-      constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height*0.5),
+      constraints:
+          BoxConstraints(minHeight: MediaQuery.of(context).size.height * 0.5),
       child: Form(
         key: _formKey,
         child: Padding(
-          padding:
-              const EdgeInsets.symmetric(horizontal: 29.0, vertical: 27.0),
+          padding: const EdgeInsets.symmetric(horizontal: 29.0, vertical: 27.0),
           child: Column(
-          mainAxisSize: MainAxisSize.min,
+              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
@@ -111,7 +115,9 @@ class _CreateBoardScreenState extends ConsumerState<CreateBoardScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 28.0,),
+                const SizedBox(
+                  height: 28.0,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [

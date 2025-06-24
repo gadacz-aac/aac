@@ -1,4 +1,5 @@
 import 'package:aac/src/features/symbols/search/search_screen.dart';
+import 'package:aac/src/features/symbols/symbol_board_association_manager.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -49,14 +50,19 @@ class RestoreSymbolAction extends ConsumerWidget {
                     TextButton(
                       onPressed: () async {
                         final symbolManager = ref.read(symbolManagerProvider);
-                        final selectedSymbols = [...ref.read(selectedSymbolsProvider).state];
+                        final selectedSymbols = [
+                          ...ref.read(selectedSymbolsProvider).state
+                        ];
                         ref.read(selectedSymbolsProvider).clear();
 
                         if (unpinSymbols) {
-                          await symbolManager.unpinSymbolsFromEveryBoard(selectedSymbols);
+                          ref
+                              .read(symbolBoardAssociationManagerProvider)
+                              .unpin(selectedSymbols, null);
                         } else {
                           await symbolManager.restoreSymbols(selectedSymbols);
                         }
+
                         if (context.mounted) {
                           Navigator.pop(context);
                         }
@@ -73,5 +79,3 @@ class RestoreSymbolAction extends ConsumerWidget {
     );
   }
 }
-
-

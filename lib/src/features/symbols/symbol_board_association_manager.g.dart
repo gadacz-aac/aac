@@ -1,29 +1,30 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'bin_screen.dart';
+part of 'symbol_board_association_manager.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$deletedSymbolsHash() => r'eeeb4b9d6b48fc8173e97a650b5098f0e2172ad2';
+String _$symbolBoardAssociationManagerHash() =>
+    r'40818ea9e9b0200a1d8aa7cf82cc3da6a329540f';
 
-/// See also [deletedSymbols].
-@ProviderFor(deletedSymbols)
-final deletedSymbolsProvider =
-    AutoDisposeStreamProvider<List<CommunicationSymbol>>.internal(
-  deletedSymbols,
-  name: r'deletedSymbolsProvider',
+/// See also [symbolBoardAssociationManager].
+@ProviderFor(symbolBoardAssociationManager)
+final symbolBoardAssociationManagerProvider =
+    AutoDisposeProvider<SymbolBoardAssociationManager>.internal(
+  symbolBoardAssociationManager,
+  name: r'symbolBoardAssociationManagerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$deletedSymbolsHash,
+      : _$symbolBoardAssociationManagerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef DeletedSymbolsRef
-    = AutoDisposeStreamProviderRef<List<CommunicationSymbol>>;
+typedef SymbolBoardAssociationManagerRef
+    = AutoDisposeProviderRef<SymbolBoardAssociationManager>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

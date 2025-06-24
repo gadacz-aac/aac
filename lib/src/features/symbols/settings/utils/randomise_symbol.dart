@@ -39,6 +39,7 @@ String getRandomSearch() {
 void randomiseSymbol(WidgetRef ref) async {
   final manager = ref.read(symbolManagerProvider);
   final boardId = ref.read(boardIdProvider);
+
   for (int i = 0; i < 30; i++) {
     final search = getRandomSearch();
     final res = await http.get(
@@ -58,7 +59,7 @@ void randomiseSymbol(WidgetRef ref) async {
 
       manager.saveSymbol(
         boardId,
-        SymbolEditingParams(
+        SymbolEditModel(
             imagePath: path, label: "${symbol["keywords"][0]["keyword"]}"),
       );
       return;
@@ -68,7 +69,7 @@ void randomiseSymbol(WidgetRef ref) async {
   final wordGenerator = WordGenerator();
   manager.saveSymbol(
       boardId,
-      SymbolEditingParams(
+      SymbolEditModel(
           imagePath: "assets/default_image_file.png",
           label: wordGenerator.randomNoun()));
 }

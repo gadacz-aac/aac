@@ -1,8 +1,8 @@
 import '../schema.drift';
 
 selectByBoardId: 
-	SELECT s.* from communication_symbol s
-		JOIN child_symbol cs ON cs.symbol_id = s.id
+	SELECT s.* from communication_symbol_tb s
+		JOIN child_symbol_tb cs ON cs.symbol_id = s.id
 		WHERE cs.board_id = ? 
 		AND s.is_deleted = false
 		ORDER BY cs.position;
@@ -16,36 +16,41 @@ moveSymbol(:old_pos AS INTEGER, :new_pos AS INTEGER, :board_id AS INTEGER):
 				WHEN :new_pos > :old_pos  AND position > :old_pos AND position <= :new_pos THEN position - 1
 				ELSE position END
 			) AS new_position
-		FROM child_symbol 
+		FROM child_symbol_tb 
 		WHERE board_id = :board_id
 	)
-	UPDATE child_symbol 
+	UPDATE child_symbol_tb 
 	SET position = (SELECT new_position FROM ordered WHERE old_position = position)
 	WHERE board_id = :board_id;
 
 pinSymbolToBoard(:board_id AS INTEGER, :symbol_id AS INTEGER):
 	WITH helpers as (
-		SELECT (COALESCE((SELECT MAX(position) FROM child_symbol WHERE board_id = :board_id), -1) + 1) as position
+		SELECT (COALESCE((SELECT MAX(position) FROM child_symbol_tb WHERE board_id = :board_id), -1) + 1) as position
 	)
-	INSERT OR REPLACE INTO child_symbol (board_id, symbol_id, position)
+	INSERT OR REPLACE INTO child_symbol_tb (board_id, symbol_id, position)
 		VALUES (:board_id, :symbol_id, (SELECT position FROM helpers));
 
 searchSymbol(:query AS TEXT, :onlyPinned AS BOOLEAN, :color AS INTEGER OR NULL):
-	SELECT s.* FROM communication_symbol s
-		LEFT JOIN child_symbol cs ON cs.symbol_id = s.id
+	SELECT s.* FROM communication_symbol_tb s
+		LEFT JOIN child_symbol_tb cs ON cs.symbol_id = s.id
 		WHERE s.label LIKE CONCAT('%', :query, '%')		AND
 			(NOT :onlyPinned OR cs.board_id IS NULL)	AND
 			(:color IS NULL OR s.color = :color)		AND
 			is_deleted = false;
 
 markAsDeleted:
-	UPDATE communication_symbol
+	UPDATE communication_symbol_tb
 	SET is_deleted = true
 	WHERE id = ?;
 
+restoreSymbol:
+	UPDATE communication_symbol_tb
+	SET is_deleted = false
+	WHERE id = ?;
+
 deletePermanently:
-	DELETE FROM communication_symbol where id = ?; 
+	DELETE FROM communication_symbol_tb where id = ?; 
 
 selectDeleted:
-	SELECT * from communication_symbol where is_deleted = true;
+	SELECT * from communication_symbol_tb where is_deleted = true;
 

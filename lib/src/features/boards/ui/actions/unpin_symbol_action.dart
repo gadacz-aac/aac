@@ -1,6 +1,6 @@
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/symbols/search/search_screen.dart';
-import 'package:aac/src/features/symbols/symbol_manager.dart';
+import 'package:aac/src/features/symbols/symbol_board_association_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -21,8 +21,8 @@ class UnpinSymbolAction extends ConsumerWidget {
 
           ref.read(selectedSymbolsProvider).clear();
           ref
-              .read(symbolManagerProvider)
-              .unpinSymbolFromBoard(selectedSymbol, boardId);
+              .read(symbolBoardAssociationManagerProvider)
+              .unpin(selectedSymbol, boardId);
         });
   }
 }
