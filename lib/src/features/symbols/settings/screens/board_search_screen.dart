@@ -7,13 +7,13 @@ import 'package:aac/src/shared/utils/debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final foundBoards = FutureProvider.autoDispose<List<BoardOld>>((ref) async {
+final foundBoards = FutureProvider.autoDispose<List<Board>>((ref) async {
   final query = ref.watch(queryProvider);
 
   return ref
       .watch(boardDaoProvider)
       .searchBoard(query)
-      .map(BoardOld.fromEntity)
+      .map(Board.fromEntity)
       .get();
 });
 
@@ -55,7 +55,7 @@ class BoardSearch extends ConsumerWidget {
                     final board = results[index];
                     return ListTile(
                       onTap: () => Navigator.pop(
-                          context, BoardEditingParams.fromBoard(board)),
+                          context, BoardEditModel.fromBoard(board)),
                       title: Text(
                         board.name,
                       ),

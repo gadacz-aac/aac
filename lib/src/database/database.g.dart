@@ -3,11 +3,11 @@
 part of 'database.dart';
 
 // ignore_for_file: type=lint
-class Board extends Table with TableInfo<Board, BoardEntity> {
+class BoardTb extends Table with TableInfo<BoardTb, BoardEntity> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  Board(this.attachedDatabase, [this._alias]);
+  BoardTb(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
@@ -35,7 +35,7 @@ class Board extends Table with TableInfo<Board, BoardEntity> {
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'board';
+  static const String $name = 'board_tb';
   @override
   VerificationContext validateIntegrity(Insertable<BoardEntity> instance,
       {bool isInserting = false}) {
@@ -75,8 +75,8 @@ class Board extends Table with TableInfo<Board, BoardEntity> {
   }
 
   @override
-  Board createAlias(String alias) {
-    return Board(attachedDatabase, alias);
+  BoardTb createAlias(String alias) {
+    return BoardTb(attachedDatabase, alias);
   }
 
   @override
@@ -100,8 +100,8 @@ class BoardEntity extends DataClass implements Insertable<BoardEntity> {
     return map;
   }
 
-  BoardCompanion toCompanion(bool nullToAbsent) {
-    return BoardCompanion(
+  BoardTbCompanion toCompanion(bool nullToAbsent) {
+    return BoardTbCompanion(
       id: Value(id),
       crossAxisCount: Value(crossAxisCount),
       name: Value(name),
@@ -133,7 +133,7 @@ class BoardEntity extends DataClass implements Insertable<BoardEntity> {
         crossAxisCount: crossAxisCount ?? this.crossAxisCount,
         name: name ?? this.name,
       );
-  BoardEntity copyWithCompanion(BoardCompanion data) {
+  BoardEntity copyWithCompanion(BoardTbCompanion data) {
     return BoardEntity(
       id: data.id.present ? data.id.value : this.id,
       crossAxisCount: data.crossAxisCount.present
@@ -164,16 +164,16 @@ class BoardEntity extends DataClass implements Insertable<BoardEntity> {
           other.name == this.name);
 }
 
-class BoardCompanion extends UpdateCompanion<BoardEntity> {
+class BoardTbCompanion extends UpdateCompanion<BoardEntity> {
   final Value<int> id;
   final Value<int> crossAxisCount;
   final Value<String> name;
-  const BoardCompanion({
+  const BoardTbCompanion({
     this.id = const Value.absent(),
     this.crossAxisCount = const Value.absent(),
     this.name = const Value.absent(),
   });
-  BoardCompanion.insert({
+  BoardTbCompanion.insert({
     this.id = const Value.absent(),
     this.crossAxisCount = const Value.absent(),
     required String name,
@@ -190,9 +190,9 @@ class BoardCompanion extends UpdateCompanion<BoardEntity> {
     });
   }
 
-  BoardCompanion copyWith(
+  BoardTbCompanion copyWith(
       {Value<int>? id, Value<int>? crossAxisCount, Value<String>? name}) {
-    return BoardCompanion(
+    return BoardTbCompanion(
       id: id ?? this.id,
       crossAxisCount: crossAxisCount ?? this.crossAxisCount,
       name: name ?? this.name,
@@ -216,7 +216,7 @@ class BoardCompanion extends UpdateCompanion<BoardEntity> {
 
   @override
   String toString() {
-    return (StringBuffer('BoardCompanion(')
+    return (StringBuffer('BoardTbCompanion(')
           ..write('id: $id, ')
           ..write('crossAxisCount: $crossAxisCount, ')
           ..write('name: $name')
@@ -225,12 +225,12 @@ class BoardCompanion extends UpdateCompanion<BoardEntity> {
   }
 }
 
-class CommunicationSymbol extends Table
-    with TableInfo<CommunicationSymbol, CommunicationSymbolEntity> {
+class CommunicationSymbolTb extends Table
+    with TableInfo<CommunicationSymbolTb, CommunicationSymbolEntity> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  CommunicationSymbol(this.attachedDatabase, [this._alias]);
+  CommunicationSymbolTb(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
@@ -285,7 +285,7 @@ class CommunicationSymbol extends Table
       'child_board_id', aliasedName, true,
       type: DriftSqlType.int,
       requiredDuringInsert: false,
-      $customConstraints: 'NULL REFERENCES board(id)');
+      $customConstraints: 'NULL REFERENCES board_tb(id)');
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -301,7 +301,7 @@ class CommunicationSymbol extends Table
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'communication_symbol';
+  static const String $name = 'communication_symbol_tb';
   @override
   VerificationContext validateIntegrity(
       Insertable<CommunicationSymbolEntity> instance,
@@ -377,8 +377,8 @@ class CommunicationSymbol extends Table
   }
 
   @override
-  CommunicationSymbol createAlias(String alias) {
-    return CommunicationSymbol(attachedDatabase, alias);
+  CommunicationSymbolTb createAlias(String alias) {
+    return CommunicationSymbolTb(attachedDatabase, alias);
   }
 
   @override
@@ -428,8 +428,8 @@ class CommunicationSymbolEntity extends DataClass
     return map;
   }
 
-  CommunicationSymbolCompanion toCompanion(bool nullToAbsent) {
-    return CommunicationSymbolCompanion(
+  CommunicationSymbolTbCompanion toCompanion(bool nullToAbsent) {
+    return CommunicationSymbolTbCompanion(
       id: Value(id),
       label: Value(label),
       imagePath: Value(imagePath),
@@ -499,7 +499,7 @@ class CommunicationSymbolEntity extends DataClass
             childBoardId.present ? childBoardId.value : this.childBoardId,
       );
   CommunicationSymbolEntity copyWithCompanion(
-      CommunicationSymbolCompanion data) {
+      CommunicationSymbolTbCompanion data) {
     return CommunicationSymbolEntity(
       id: data.id.present ? data.id.value : this.id,
       label: data.label.present ? data.label.value : this.label,
@@ -548,7 +548,7 @@ class CommunicationSymbolEntity extends DataClass
           other.childBoardId == this.childBoardId);
 }
 
-class CommunicationSymbolCompanion
+class CommunicationSymbolTbCompanion
     extends UpdateCompanion<CommunicationSymbolEntity> {
   final Value<int> id;
   final Value<String> label;
@@ -558,7 +558,7 @@ class CommunicationSymbolCompanion
   final Value<bool> isDeleted;
   final Value<int?> createdAt;
   final Value<int?> childBoardId;
-  const CommunicationSymbolCompanion({
+  const CommunicationSymbolTbCompanion({
     this.id = const Value.absent(),
     this.label = const Value.absent(),
     this.imagePath = const Value.absent(),
@@ -568,7 +568,7 @@ class CommunicationSymbolCompanion
     this.createdAt = const Value.absent(),
     this.childBoardId = const Value.absent(),
   });
-  CommunicationSymbolCompanion.insert({
+  CommunicationSymbolTbCompanion.insert({
     this.id = const Value.absent(),
     required String label,
     required String imagePath,
@@ -601,7 +601,7 @@ class CommunicationSymbolCompanion
     });
   }
 
-  CommunicationSymbolCompanion copyWith(
+  CommunicationSymbolTbCompanion copyWith(
       {Value<int>? id,
       Value<String>? label,
       Value<String>? imagePath,
@@ -610,7 +610,7 @@ class CommunicationSymbolCompanion
       Value<bool>? isDeleted,
       Value<int?>? createdAt,
       Value<int?>? childBoardId}) {
-    return CommunicationSymbolCompanion(
+    return CommunicationSymbolTbCompanion(
       id: id ?? this.id,
       label: label ?? this.label,
       imagePath: imagePath ?? this.imagePath,
@@ -654,7 +654,7 @@ class CommunicationSymbolCompanion
 
   @override
   String toString() {
-    return (StringBuffer('CommunicationSymbolCompanion(')
+    return (StringBuffer('CommunicationSymbolTbCompanion(')
           ..write('id: $id, ')
           ..write('label: $label, ')
           ..write('imagePath: $imagePath, ')
@@ -668,11 +668,12 @@ class CommunicationSymbolCompanion
   }
 }
 
-class ChildSymbol extends Table with TableInfo<ChildSymbol, ChildSymbolEntity> {
+class ChildSymbolTb extends Table
+    with TableInfo<ChildSymbolTb, ChildSymbolEntity> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  ChildSymbol(this.attachedDatabase, [this._alias]);
+  ChildSymbolTb(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _positionMeta =
       const VerificationMeta('position');
   late final GeneratedColumn<int> position = GeneratedColumn<int>(
@@ -686,21 +687,21 @@ class ChildSymbol extends Table with TableInfo<ChildSymbol, ChildSymbolEntity> {
       'board_id', aliasedName, false,
       type: DriftSqlType.int,
       requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL REFERENCES board(id)');
+      $customConstraints: 'NOT NULL REFERENCES board_tb(id)');
   static const VerificationMeta _symbolIdMeta =
       const VerificationMeta('symbolId');
   late final GeneratedColumn<int> symbolId = GeneratedColumn<int>(
       'symbol_id', aliasedName, false,
       type: DriftSqlType.int,
       requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL REFERENCES communication_symbol(id)');
+      $customConstraints: 'NOT NULL REFERENCES communication_symbol_tb(id)');
   @override
   List<GeneratedColumn> get $columns => [position, boardId, symbolId];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'child_symbol';
+  static const String $name = 'child_symbol_tb';
   @override
   VerificationContext validateIntegrity(Insertable<ChildSymbolEntity> instance,
       {bool isInserting = false}) {
@@ -743,8 +744,8 @@ class ChildSymbol extends Table with TableInfo<ChildSymbol, ChildSymbolEntity> {
   }
 
   @override
-  ChildSymbol createAlias(String alias) {
-    return ChildSymbol(attachedDatabase, alias);
+  ChildSymbolTb createAlias(String alias) {
+    return ChildSymbolTb(attachedDatabase, alias);
   }
 
   @override
@@ -772,8 +773,8 @@ class ChildSymbolEntity extends DataClass
     return map;
   }
 
-  ChildSymbolCompanion toCompanion(bool nullToAbsent) {
-    return ChildSymbolCompanion(
+  ChildSymbolTbCompanion toCompanion(bool nullToAbsent) {
+    return ChildSymbolTbCompanion(
       position: Value(position),
       boardId: Value(boardId),
       symbolId: Value(symbolId),
@@ -805,7 +806,7 @@ class ChildSymbolEntity extends DataClass
         boardId: boardId ?? this.boardId,
         symbolId: symbolId ?? this.symbolId,
       );
-  ChildSymbolEntity copyWithCompanion(ChildSymbolCompanion data) {
+  ChildSymbolEntity copyWithCompanion(ChildSymbolTbCompanion data) {
     return ChildSymbolEntity(
       position: data.position.present ? data.position.value : this.position,
       boardId: data.boardId.present ? data.boardId.value : this.boardId,
@@ -834,18 +835,18 @@ class ChildSymbolEntity extends DataClass
           other.symbolId == this.symbolId);
 }
 
-class ChildSymbolCompanion extends UpdateCompanion<ChildSymbolEntity> {
+class ChildSymbolTbCompanion extends UpdateCompanion<ChildSymbolEntity> {
   final Value<int> position;
   final Value<int> boardId;
   final Value<int> symbolId;
   final Value<int> rowid;
-  const ChildSymbolCompanion({
+  const ChildSymbolTbCompanion({
     this.position = const Value.absent(),
     this.boardId = const Value.absent(),
     this.symbolId = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  ChildSymbolCompanion.insert({
+  ChildSymbolTbCompanion.insert({
     required int position,
     required int boardId,
     required int symbolId,
@@ -867,12 +868,12 @@ class ChildSymbolCompanion extends UpdateCompanion<ChildSymbolEntity> {
     });
   }
 
-  ChildSymbolCompanion copyWith(
+  ChildSymbolTbCompanion copyWith(
       {Value<int>? position,
       Value<int>? boardId,
       Value<int>? symbolId,
       Value<int>? rowid}) {
-    return ChildSymbolCompanion(
+    return ChildSymbolTbCompanion(
       position: position ?? this.position,
       boardId: boardId ?? this.boardId,
       symbolId: symbolId ?? this.symbolId,
@@ -900,7 +901,7 @@ class ChildSymbolCompanion extends UpdateCompanion<ChildSymbolEntity> {
 
   @override
   String toString() {
-    return (StringBuffer('ChildSymbolCompanion(')
+    return (StringBuffer('ChildSymbolTbCompanion(')
           ..write('position: $position, ')
           ..write('boardId: $boardId, ')
           ..write('symbolId: $symbolId, ')
@@ -910,11 +911,11 @@ class ChildSymbolCompanion extends UpdateCompanion<ChildSymbolEntity> {
   }
 }
 
-class Setting extends Table with TableInfo<Setting, SettingEntity> {
+class SettingTb extends Table with TableInfo<SettingTb, SettingEntity> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  Setting(this.attachedDatabase, [this._alias]);
+  SettingTb(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _keyMeta = const VerificationMeta('key');
   late final GeneratedColumn<String> key = GeneratedColumn<String>(
       'key', aliasedName, false,
@@ -933,7 +934,7 @@ class Setting extends Table with TableInfo<Setting, SettingEntity> {
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'setting';
+  static const String $name = 'setting_tb';
   @override
   VerificationContext validateIntegrity(Insertable<SettingEntity> instance,
       {bool isInserting = false}) {
@@ -968,8 +969,8 @@ class Setting extends Table with TableInfo<Setting, SettingEntity> {
   }
 
   @override
-  Setting createAlias(String alias) {
-    return Setting(attachedDatabase, alias);
+  SettingTb createAlias(String alias) {
+    return SettingTb(attachedDatabase, alias);
   }
 
   @override
@@ -990,8 +991,8 @@ class SettingEntity extends DataClass implements Insertable<SettingEntity> {
     return map;
   }
 
-  SettingCompanion toCompanion(bool nullToAbsent) {
-    return SettingCompanion(
+  SettingTbCompanion toCompanion(bool nullToAbsent) {
+    return SettingTbCompanion(
       key: Value(key),
       value: Value(value),
     );
@@ -1018,7 +1019,7 @@ class SettingEntity extends DataClass implements Insertable<SettingEntity> {
         key: key ?? this.key,
         value: value ?? this.value,
       );
-  SettingEntity copyWithCompanion(SettingCompanion data) {
+  SettingEntity copyWithCompanion(SettingTbCompanion data) {
     return SettingEntity(
       key: data.key.present ? data.key.value : this.key,
       value: data.value.present ? data.value.value : this.value,
@@ -1044,16 +1045,16 @@ class SettingEntity extends DataClass implements Insertable<SettingEntity> {
           other.value == this.value);
 }
 
-class SettingCompanion extends UpdateCompanion<SettingEntity> {
+class SettingTbCompanion extends UpdateCompanion<SettingEntity> {
   final Value<String> key;
   final Value<String> value;
   final Value<int> rowid;
-  const SettingCompanion({
+  const SettingTbCompanion({
     this.key = const Value.absent(),
     this.value = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  SettingCompanion.insert({
+  SettingTbCompanion.insert({
     required String key,
     required String value,
     this.rowid = const Value.absent(),
@@ -1071,9 +1072,9 @@ class SettingCompanion extends UpdateCompanion<SettingEntity> {
     });
   }
 
-  SettingCompanion copyWith(
+  SettingTbCompanion copyWith(
       {Value<String>? key, Value<String>? value, Value<int>? rowid}) {
-    return SettingCompanion(
+    return SettingTbCompanion(
       key: key ?? this.key,
       value: value ?? this.value,
       rowid: rowid ?? this.rowid,
@@ -1097,7 +1098,7 @@ class SettingCompanion extends UpdateCompanion<SettingEntity> {
 
   @override
   String toString() {
-    return (StringBuffer('SettingCompanion(')
+    return (StringBuffer('SettingTbCompanion(')
           ..write('key: $key, ')
           ..write('value: $value, ')
           ..write('rowid: $rowid')
@@ -1109,69 +1110,70 @@ class SettingCompanion extends UpdateCompanion<SettingEntity> {
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
-  late final Board board = Board(this);
-  late final CommunicationSymbol communicationSymbol =
-      CommunicationSymbol(this);
-  late final ChildSymbol childSymbol = ChildSymbol(this);
-  late final Setting setting = Setting(this);
+  late final BoardTb boardTb = BoardTb(this);
+  late final CommunicationSymbolTb communicationSymbolTb =
+      CommunicationSymbolTb(this);
+  late final ChildSymbolTb childSymbolTb = ChildSymbolTb(this);
+  late final SettingTb settingTb = SettingTb(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [board, communicationSymbol, childSymbol, setting];
+      [boardTb, communicationSymbolTb, childSymbolTb, settingTb];
 }
 
-typedef $BoardCreateCompanionBuilder = BoardCompanion Function({
+typedef $BoardTbCreateCompanionBuilder = BoardTbCompanion Function({
   Value<int> id,
   Value<int> crossAxisCount,
   required String name,
 });
-typedef $BoardUpdateCompanionBuilder = BoardCompanion Function({
+typedef $BoardTbUpdateCompanionBuilder = BoardTbCompanion Function({
   Value<int> id,
   Value<int> crossAxisCount,
   Value<String> name,
 });
 
-final class $BoardReferences
-    extends BaseReferences<_$AppDatabase, Board, BoardEntity> {
-  $BoardReferences(super.$_db, super.$_table, super.$_typedResult);
+final class $BoardTbReferences
+    extends BaseReferences<_$AppDatabase, BoardTb, BoardEntity> {
+  $BoardTbReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static MultiTypedResultKey<CommunicationSymbol,
-      List<CommunicationSymbolEntity>> _communicationSymbolRefsTable(
+  static MultiTypedResultKey<CommunicationSymbolTb,
+      List<CommunicationSymbolEntity>> _communicationSymbolTbRefsTable(
           _$AppDatabase db) =>
-      MultiTypedResultKey.fromTable(db.communicationSymbol,
+      MultiTypedResultKey.fromTable(db.communicationSymbolTb,
           aliasName: $_aliasNameGenerator(
-              db.board.id, db.communicationSymbol.childBoardId));
+              db.boardTb.id, db.communicationSymbolTb.childBoardId));
 
-  $CommunicationSymbolProcessedTableManager get communicationSymbolRefs {
-    final manager = $CommunicationSymbolTableManager(
-            $_db, $_db.communicationSymbol)
+  $CommunicationSymbolTbProcessedTableManager get communicationSymbolTbRefs {
+    final manager = $CommunicationSymbolTbTableManager(
+            $_db, $_db.communicationSymbolTb)
         .filter((f) => f.childBoardId.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache =
-        $_typedResult.readTableOrNull(_communicationSymbolRefsTable($_db));
+        $_typedResult.readTableOrNull(_communicationSymbolTbRefsTable($_db));
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: cache));
   }
 
-  static MultiTypedResultKey<ChildSymbol, List<ChildSymbolEntity>>
-      _childSymbolRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
-          db.childSymbol,
-          aliasName: $_aliasNameGenerator(db.board.id, db.childSymbol.boardId));
+  static MultiTypedResultKey<ChildSymbolTb, List<ChildSymbolEntity>>
+      _childSymbolTbRefsTable(_$AppDatabase db) =>
+          MultiTypedResultKey.fromTable(db.childSymbolTb,
+              aliasName: $_aliasNameGenerator(
+                  db.boardTb.id, db.childSymbolTb.boardId));
 
-  $ChildSymbolProcessedTableManager get childSymbolRefs {
-    final manager = $ChildSymbolTableManager($_db, $_db.childSymbol)
+  $ChildSymbolTbProcessedTableManager get childSymbolTbRefs {
+    final manager = $ChildSymbolTbTableManager($_db, $_db.childSymbolTb)
         .filter((f) => f.boardId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_childSymbolRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_childSymbolTbRefsTable($_db));
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: cache));
   }
 }
 
-class $BoardFilterComposer extends Composer<_$AppDatabase, Board> {
-  $BoardFilterComposer({
+class $BoardTbFilterComposer extends Composer<_$AppDatabase, BoardTb> {
+  $BoardTbFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1188,19 +1190,19 @@ class $BoardFilterComposer extends Composer<_$AppDatabase, Board> {
   ColumnFilters<String> get name => $composableBuilder(
       column: $table.name, builder: (column) => ColumnFilters(column));
 
-  Expression<bool> communicationSymbolRefs(
-      Expression<bool> Function($CommunicationSymbolFilterComposer f) f) {
-    final $CommunicationSymbolFilterComposer composer = $composerBuilder(
+  Expression<bool> communicationSymbolTbRefs(
+      Expression<bool> Function($CommunicationSymbolTbFilterComposer f) f) {
+    final $CommunicationSymbolTbFilterComposer composer = $composerBuilder(
         composer: this,
         getCurrentColumn: (t) => t.id,
-        referencedTable: $db.communicationSymbol,
+        referencedTable: $db.communicationSymbolTb,
         getReferencedColumn: (t) => t.childBoardId,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
-            $CommunicationSymbolFilterComposer(
+            $CommunicationSymbolTbFilterComposer(
               $db: $db,
-              $table: $db.communicationSymbol,
+              $table: $db.communicationSymbolTb,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -1209,19 +1211,19 @@ class $BoardFilterComposer extends Composer<_$AppDatabase, Board> {
     return f(composer);
   }
 
-  Expression<bool> childSymbolRefs(
-      Expression<bool> Function($ChildSymbolFilterComposer f) f) {
-    final $ChildSymbolFilterComposer composer = $composerBuilder(
+  Expression<bool> childSymbolTbRefs(
+      Expression<bool> Function($ChildSymbolTbFilterComposer f) f) {
+    final $ChildSymbolTbFilterComposer composer = $composerBuilder(
         composer: this,
         getCurrentColumn: (t) => t.id,
-        referencedTable: $db.childSymbol,
+        referencedTable: $db.childSymbolTb,
         getReferencedColumn: (t) => t.boardId,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
-            $ChildSymbolFilterComposer(
+            $ChildSymbolTbFilterComposer(
               $db: $db,
-              $table: $db.childSymbol,
+              $table: $db.childSymbolTb,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -1231,8 +1233,8 @@ class $BoardFilterComposer extends Composer<_$AppDatabase, Board> {
   }
 }
 
-class $BoardOrderingComposer extends Composer<_$AppDatabase, Board> {
-  $BoardOrderingComposer({
+class $BoardTbOrderingComposer extends Composer<_$AppDatabase, BoardTb> {
+  $BoardTbOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1250,8 +1252,8 @@ class $BoardOrderingComposer extends Composer<_$AppDatabase, Board> {
       column: $table.name, builder: (column) => ColumnOrderings(column));
 }
 
-class $BoardAnnotationComposer extends Composer<_$AppDatabase, Board> {
-  $BoardAnnotationComposer({
+class $BoardTbAnnotationComposer extends Composer<_$AppDatabase, BoardTb> {
+  $BoardTbAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1267,19 +1269,19 @@ class $BoardAnnotationComposer extends Composer<_$AppDatabase, Board> {
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
-  Expression<T> communicationSymbolRefs<T extends Object>(
-      Expression<T> Function($CommunicationSymbolAnnotationComposer a) f) {
-    final $CommunicationSymbolAnnotationComposer composer = $composerBuilder(
+  Expression<T> communicationSymbolTbRefs<T extends Object>(
+      Expression<T> Function($CommunicationSymbolTbAnnotationComposer a) f) {
+    final $CommunicationSymbolTbAnnotationComposer composer = $composerBuilder(
         composer: this,
         getCurrentColumn: (t) => t.id,
-        referencedTable: $db.communicationSymbol,
+        referencedTable: $db.communicationSymbolTb,
         getReferencedColumn: (t) => t.childBoardId,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
-            $CommunicationSymbolAnnotationComposer(
+            $CommunicationSymbolTbAnnotationComposer(
               $db: $db,
-              $table: $db.communicationSymbol,
+              $table: $db.communicationSymbolTb,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -1288,19 +1290,19 @@ class $BoardAnnotationComposer extends Composer<_$AppDatabase, Board> {
     return f(composer);
   }
 
-  Expression<T> childSymbolRefs<T extends Object>(
-      Expression<T> Function($ChildSymbolAnnotationComposer a) f) {
-    final $ChildSymbolAnnotationComposer composer = $composerBuilder(
+  Expression<T> childSymbolTbRefs<T extends Object>(
+      Expression<T> Function($ChildSymbolTbAnnotationComposer a) f) {
+    final $ChildSymbolTbAnnotationComposer composer = $composerBuilder(
         composer: this,
         getCurrentColumn: (t) => t.id,
-        referencedTable: $db.childSymbol,
+        referencedTable: $db.childSymbolTb,
         getReferencedColumn: (t) => t.boardId,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
-            $ChildSymbolAnnotationComposer(
+            $ChildSymbolTbAnnotationComposer(
               $db: $db,
-              $table: $db.childSymbol,
+              $table: $db.childSymbolTb,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -1310,35 +1312,35 @@ class $BoardAnnotationComposer extends Composer<_$AppDatabase, Board> {
   }
 }
 
-class $BoardTableManager extends RootTableManager<
+class $BoardTbTableManager extends RootTableManager<
     _$AppDatabase,
-    Board,
+    BoardTb,
     BoardEntity,
-    $BoardFilterComposer,
-    $BoardOrderingComposer,
-    $BoardAnnotationComposer,
-    $BoardCreateCompanionBuilder,
-    $BoardUpdateCompanionBuilder,
-    (BoardEntity, $BoardReferences),
+    $BoardTbFilterComposer,
+    $BoardTbOrderingComposer,
+    $BoardTbAnnotationComposer,
+    $BoardTbCreateCompanionBuilder,
+    $BoardTbUpdateCompanionBuilder,
+    (BoardEntity, $BoardTbReferences),
     BoardEntity,
     PrefetchHooks Function(
-        {bool communicationSymbolRefs, bool childSymbolRefs})> {
-  $BoardTableManager(_$AppDatabase db, Board table)
+        {bool communicationSymbolTbRefs, bool childSymbolTbRefs})> {
+  $BoardTbTableManager(_$AppDatabase db, BoardTb table)
       : super(TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $BoardFilterComposer($db: db, $table: table),
+              $BoardTbFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $BoardOrderingComposer($db: db, $table: table),
+              $BoardTbOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $BoardAnnotationComposer($db: db, $table: table),
+              $BoardTbAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<int> id = const Value.absent(),
             Value<int> crossAxisCount = const Value.absent(),
             Value<String> name = const Value.absent(),
           }) =>
-              BoardCompanion(
+              BoardTbCompanion(
             id: id,
             crossAxisCount: crossAxisCount,
             name: name,
@@ -1348,46 +1350,47 @@ class $BoardTableManager extends RootTableManager<
             Value<int> crossAxisCount = const Value.absent(),
             required String name,
           }) =>
-              BoardCompanion.insert(
+              BoardTbCompanion.insert(
             id: id,
             crossAxisCount: crossAxisCount,
             name: name,
           ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), $BoardReferences(db, table, e)))
+              .map(
+                  (e) => (e.readTable(table), $BoardTbReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: (
-              {communicationSymbolRefs = false, childSymbolRefs = false}) {
+              {communicationSymbolTbRefs = false, childSymbolTbRefs = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
-                if (communicationSymbolRefs) db.communicationSymbol,
-                if (childSymbolRefs) db.childSymbol
+                if (communicationSymbolTbRefs) db.communicationSymbolTb,
+                if (childSymbolTbRefs) db.childSymbolTb
               ],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
                 return [
-                  if (communicationSymbolRefs)
-                    await $_getPrefetchedData<BoardEntity, Board,
+                  if (communicationSymbolTbRefs)
+                    await $_getPrefetchedData<BoardEntity, BoardTb,
                             CommunicationSymbolEntity>(
                         currentTable: table,
-                        referencedTable:
-                            $BoardReferences._communicationSymbolRefsTable(db),
+                        referencedTable: $BoardTbReferences
+                            ._communicationSymbolTbRefsTable(db),
                         managerFromTypedResult: (p0) =>
-                            $BoardReferences(db, table, p0)
-                                .communicationSymbolRefs,
+                            $BoardTbReferences(db, table, p0)
+                                .communicationSymbolTbRefs,
                         referencedItemsForCurrentItem:
                             (item, referencedItems) => referencedItems
                                 .where((e) => e.childBoardId == item.id),
                         typedResults: items),
-                  if (childSymbolRefs)
-                    await $_getPrefetchedData<BoardEntity, Board,
+                  if (childSymbolTbRefs)
+                    await $_getPrefetchedData<BoardEntity, BoardTb,
                             ChildSymbolEntity>(
                         currentTable: table,
                         referencedTable:
-                            $BoardReferences._childSymbolRefsTable(db),
+                            $BoardTbReferences._childSymbolTbRefsTable(db),
                         managerFromTypedResult: (p0) =>
-                            $BoardReferences(db, table, p0).childSymbolRefs,
+                            $BoardTbReferences(db, table, p0).childSymbolTbRefs,
                         referencedItemsForCurrentItem: (item,
                                 referencedItems) =>
                             referencedItems.where((e) => e.boardId == item.id),
@@ -1399,21 +1402,21 @@ class $BoardTableManager extends RootTableManager<
         ));
 }
 
-typedef $BoardProcessedTableManager = ProcessedTableManager<
+typedef $BoardTbProcessedTableManager = ProcessedTableManager<
     _$AppDatabase,
-    Board,
+    BoardTb,
     BoardEntity,
-    $BoardFilterComposer,
-    $BoardOrderingComposer,
-    $BoardAnnotationComposer,
-    $BoardCreateCompanionBuilder,
-    $BoardUpdateCompanionBuilder,
-    (BoardEntity, $BoardReferences),
+    $BoardTbFilterComposer,
+    $BoardTbOrderingComposer,
+    $BoardTbAnnotationComposer,
+    $BoardTbCreateCompanionBuilder,
+    $BoardTbUpdateCompanionBuilder,
+    (BoardEntity, $BoardTbReferences),
     BoardEntity,
     PrefetchHooks Function(
-        {bool communicationSymbolRefs, bool childSymbolRefs})>;
-typedef $CommunicationSymbolCreateCompanionBuilder
-    = CommunicationSymbolCompanion Function({
+        {bool communicationSymbolTbRefs, bool childSymbolTbRefs})>;
+typedef $CommunicationSymbolTbCreateCompanionBuilder
+    = CommunicationSymbolTbCompanion Function({
   Value<int> id,
   required String label,
   required String imagePath,
@@ -1423,8 +1426,8 @@ typedef $CommunicationSymbolCreateCompanionBuilder
   Value<int?> createdAt,
   Value<int?> childBoardId,
 });
-typedef $CommunicationSymbolUpdateCompanionBuilder
-    = CommunicationSymbolCompanion Function({
+typedef $CommunicationSymbolTbUpdateCompanionBuilder
+    = CommunicationSymbolTbCompanion Function({
   Value<int> id,
   Value<String> label,
   Value<String> imagePath,
@@ -1435,18 +1438,19 @@ typedef $CommunicationSymbolUpdateCompanionBuilder
   Value<int?> childBoardId,
 });
 
-final class $CommunicationSymbolReferences extends BaseReferences<_$AppDatabase,
-    CommunicationSymbol, CommunicationSymbolEntity> {
-  $CommunicationSymbolReferences(
+final class $CommunicationSymbolTbReferences extends BaseReferences<
+    _$AppDatabase, CommunicationSymbolTb, CommunicationSymbolEntity> {
+  $CommunicationSymbolTbReferences(
       super.$_db, super.$_table, super.$_typedResult);
 
-  static Board _childBoardIdTable(_$AppDatabase db) => db.board.createAlias(
-      $_aliasNameGenerator(db.communicationSymbol.childBoardId, db.board.id));
+  static BoardTb _childBoardIdTable(_$AppDatabase db) =>
+      db.boardTb.createAlias($_aliasNameGenerator(
+          db.communicationSymbolTb.childBoardId, db.boardTb.id));
 
-  $BoardProcessedTableManager? get childBoardId {
+  $BoardTbProcessedTableManager? get childBoardId {
     final $_column = $_itemColumn<int>('child_board_id');
     if ($_column == null) return null;
-    final manager = $BoardTableManager($_db, $_db.board)
+    final manager = $BoardTbTableManager($_db, $_db.boardTb)
         .filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_childBoardIdTable($_db));
     if (item == null) return manager;
@@ -1454,25 +1458,25 @@ final class $CommunicationSymbolReferences extends BaseReferences<_$AppDatabase,
         manager.$state.copyWith(prefetchedData: [item]));
   }
 
-  static MultiTypedResultKey<ChildSymbol, List<ChildSymbolEntity>>
-      _childSymbolRefsTable(_$AppDatabase db) =>
-          MultiTypedResultKey.fromTable(db.childSymbol,
+  static MultiTypedResultKey<ChildSymbolTb, List<ChildSymbolEntity>>
+      _childSymbolTbRefsTable(_$AppDatabase db) =>
+          MultiTypedResultKey.fromTable(db.childSymbolTb,
               aliasName: $_aliasNameGenerator(
-                  db.communicationSymbol.id, db.childSymbol.symbolId));
+                  db.communicationSymbolTb.id, db.childSymbolTb.symbolId));
 
-  $ChildSymbolProcessedTableManager get childSymbolRefs {
-    final manager = $ChildSymbolTableManager($_db, $_db.childSymbol)
+  $ChildSymbolTbProcessedTableManager get childSymbolTbRefs {
+    final manager = $ChildSymbolTbTableManager($_db, $_db.childSymbolTb)
         .filter((f) => f.symbolId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_childSymbolRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_childSymbolTbRefsTable($_db));
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: cache));
   }
 }
 
-class $CommunicationSymbolFilterComposer
-    extends Composer<_$AppDatabase, CommunicationSymbol> {
-  $CommunicationSymbolFilterComposer({
+class $CommunicationSymbolTbFilterComposer
+    extends Composer<_$AppDatabase, CommunicationSymbolTb> {
+  $CommunicationSymbolTbFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1500,18 +1504,18 @@ class $CommunicationSymbolFilterComposer
   ColumnFilters<int> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnFilters(column));
 
-  $BoardFilterComposer get childBoardId {
-    final $BoardFilterComposer composer = $composerBuilder(
+  $BoardTbFilterComposer get childBoardId {
+    final $BoardTbFilterComposer composer = $composerBuilder(
         composer: this,
         getCurrentColumn: (t) => t.childBoardId,
-        referencedTable: $db.board,
+        referencedTable: $db.boardTb,
         getReferencedColumn: (t) => t.id,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
-            $BoardFilterComposer(
+            $BoardTbFilterComposer(
               $db: $db,
-              $table: $db.board,
+              $table: $db.boardTb,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -1520,19 +1524,19 @@ class $CommunicationSymbolFilterComposer
     return composer;
   }
 
-  Expression<bool> childSymbolRefs(
-      Expression<bool> Function($ChildSymbolFilterComposer f) f) {
-    final $ChildSymbolFilterComposer composer = $composerBuilder(
+  Expression<bool> childSymbolTbRefs(
+      Expression<bool> Function($ChildSymbolTbFilterComposer f) f) {
+    final $ChildSymbolTbFilterComposer composer = $composerBuilder(
         composer: this,
         getCurrentColumn: (t) => t.id,
-        referencedTable: $db.childSymbol,
+        referencedTable: $db.childSymbolTb,
         getReferencedColumn: (t) => t.symbolId,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
-            $ChildSymbolFilterComposer(
+            $ChildSymbolTbFilterComposer(
               $db: $db,
-              $table: $db.childSymbol,
+              $table: $db.childSymbolTb,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -1542,9 +1546,9 @@ class $CommunicationSymbolFilterComposer
   }
 }
 
-class $CommunicationSymbolOrderingComposer
-    extends Composer<_$AppDatabase, CommunicationSymbol> {
-  $CommunicationSymbolOrderingComposer({
+class $CommunicationSymbolTbOrderingComposer
+    extends Composer<_$AppDatabase, CommunicationSymbolTb> {
+  $CommunicationSymbolTbOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1573,18 +1577,18 @@ class $CommunicationSymbolOrderingComposer
   ColumnOrderings<int> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnOrderings(column));
 
-  $BoardOrderingComposer get childBoardId {
-    final $BoardOrderingComposer composer = $composerBuilder(
+  $BoardTbOrderingComposer get childBoardId {
+    final $BoardTbOrderingComposer composer = $composerBuilder(
         composer: this,
         getCurrentColumn: (t) => t.childBoardId,
-        referencedTable: $db.board,
+        referencedTable: $db.boardTb,
         getReferencedColumn: (t) => t.id,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
-            $BoardOrderingComposer(
+            $BoardTbOrderingComposer(
               $db: $db,
-              $table: $db.board,
+              $table: $db.boardTb,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -1594,9 +1598,9 @@ class $CommunicationSymbolOrderingComposer
   }
 }
 
-class $CommunicationSymbolAnnotationComposer
-    extends Composer<_$AppDatabase, CommunicationSymbol> {
-  $CommunicationSymbolAnnotationComposer({
+class $CommunicationSymbolTbAnnotationComposer
+    extends Composer<_$AppDatabase, CommunicationSymbolTb> {
+  $CommunicationSymbolTbAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1624,18 +1628,18 @@ class $CommunicationSymbolAnnotationComposer
   GeneratedColumn<int> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
-  $BoardAnnotationComposer get childBoardId {
-    final $BoardAnnotationComposer composer = $composerBuilder(
+  $BoardTbAnnotationComposer get childBoardId {
+    final $BoardTbAnnotationComposer composer = $composerBuilder(
         composer: this,
         getCurrentColumn: (t) => t.childBoardId,
-        referencedTable: $db.board,
+        referencedTable: $db.boardTb,
         getReferencedColumn: (t) => t.id,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
-            $BoardAnnotationComposer(
+            $BoardTbAnnotationComposer(
               $db: $db,
-              $table: $db.board,
+              $table: $db.boardTb,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -1644,19 +1648,19 @@ class $CommunicationSymbolAnnotationComposer
     return composer;
   }
 
-  Expression<T> childSymbolRefs<T extends Object>(
-      Expression<T> Function($ChildSymbolAnnotationComposer a) f) {
-    final $ChildSymbolAnnotationComposer composer = $composerBuilder(
+  Expression<T> childSymbolTbRefs<T extends Object>(
+      Expression<T> Function($ChildSymbolTbAnnotationComposer a) f) {
+    final $ChildSymbolTbAnnotationComposer composer = $composerBuilder(
         composer: this,
         getCurrentColumn: (t) => t.id,
-        referencedTable: $db.childSymbol,
+        referencedTable: $db.childSymbolTb,
         getReferencedColumn: (t) => t.symbolId,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
-            $ChildSymbolAnnotationComposer(
+            $ChildSymbolTbAnnotationComposer(
               $db: $db,
-              $table: $db.childSymbol,
+              $table: $db.childSymbolTb,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -1666,28 +1670,29 @@ class $CommunicationSymbolAnnotationComposer
   }
 }
 
-class $CommunicationSymbolTableManager extends RootTableManager<
+class $CommunicationSymbolTbTableManager extends RootTableManager<
     _$AppDatabase,
-    CommunicationSymbol,
+    CommunicationSymbolTb,
     CommunicationSymbolEntity,
-    $CommunicationSymbolFilterComposer,
-    $CommunicationSymbolOrderingComposer,
-    $CommunicationSymbolAnnotationComposer,
-    $CommunicationSymbolCreateCompanionBuilder,
-    $CommunicationSymbolUpdateCompanionBuilder,
-    (CommunicationSymbolEntity, $CommunicationSymbolReferences),
+    $CommunicationSymbolTbFilterComposer,
+    $CommunicationSymbolTbOrderingComposer,
+    $CommunicationSymbolTbAnnotationComposer,
+    $CommunicationSymbolTbCreateCompanionBuilder,
+    $CommunicationSymbolTbUpdateCompanionBuilder,
+    (CommunicationSymbolEntity, $CommunicationSymbolTbReferences),
     CommunicationSymbolEntity,
-    PrefetchHooks Function({bool childBoardId, bool childSymbolRefs})> {
-  $CommunicationSymbolTableManager(_$AppDatabase db, CommunicationSymbol table)
+    PrefetchHooks Function({bool childBoardId, bool childSymbolTbRefs})> {
+  $CommunicationSymbolTbTableManager(
+      _$AppDatabase db, CommunicationSymbolTb table)
       : super(TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $CommunicationSymbolFilterComposer($db: db, $table: table),
+              $CommunicationSymbolTbFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $CommunicationSymbolOrderingComposer($db: db, $table: table),
+              $CommunicationSymbolTbOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $CommunicationSymbolAnnotationComposer($db: db, $table: table),
+              $CommunicationSymbolTbAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<int> id = const Value.absent(),
             Value<String> label = const Value.absent(),
@@ -1698,7 +1703,7 @@ class $CommunicationSymbolTableManager extends RootTableManager<
             Value<int?> createdAt = const Value.absent(),
             Value<int?> childBoardId = const Value.absent(),
           }) =>
-              CommunicationSymbolCompanion(
+              CommunicationSymbolTbCompanion(
             id: id,
             label: label,
             imagePath: imagePath,
@@ -1718,7 +1723,7 @@ class $CommunicationSymbolTableManager extends RootTableManager<
             Value<int?> createdAt = const Value.absent(),
             Value<int?> childBoardId = const Value.absent(),
           }) =>
-              CommunicationSymbolCompanion.insert(
+              CommunicationSymbolTbCompanion.insert(
             id: id,
             label: label,
             imagePath: imagePath,
@@ -1731,14 +1736,16 @@ class $CommunicationSymbolTableManager extends RootTableManager<
           withReferenceMapper: (p0) => p0
               .map((e) => (
                     e.readTable(table),
-                    $CommunicationSymbolReferences(db, table, e)
+                    $CommunicationSymbolTbReferences(db, table, e)
                   ))
               .toList(),
           prefetchHooksCallback: (
-              {childBoardId = false, childSymbolRefs = false}) {
+              {childBoardId = false, childSymbolTbRefs = false}) {
             return PrefetchHooks(
               db: db,
-              explicitlyWatchedTables: [if (childSymbolRefs) db.childSymbol],
+              explicitlyWatchedTables: [
+                if (childSymbolTbRefs) db.childSymbolTb
+              ],
               addJoins: <
                   T extends TableManagerState<
                       dynamic,
@@ -1757,8 +1764,8 @@ class $CommunicationSymbolTableManager extends RootTableManager<
                     currentTable: table,
                     currentColumn: table.childBoardId,
                     referencedTable:
-                        $CommunicationSymbolReferences._childBoardIdTable(db),
-                    referencedColumn: $CommunicationSymbolReferences
+                        $CommunicationSymbolTbReferences._childBoardIdTable(db),
+                    referencedColumn: $CommunicationSymbolTbReferences
                         ._childBoardIdTable(db)
                         .id,
                   ) as T;
@@ -1768,15 +1775,15 @@ class $CommunicationSymbolTableManager extends RootTableManager<
               },
               getPrefetchedDataCallback: (items) async {
                 return [
-                  if (childSymbolRefs)
+                  if (childSymbolTbRefs)
                     await $_getPrefetchedData<CommunicationSymbolEntity,
-                            CommunicationSymbol, ChildSymbolEntity>(
+                            CommunicationSymbolTb, ChildSymbolEntity>(
                         currentTable: table,
-                        referencedTable: $CommunicationSymbolReferences
-                            ._childSymbolRefsTable(db),
+                        referencedTable: $CommunicationSymbolTbReferences
+                            ._childSymbolTbRefsTable(db),
                         managerFromTypedResult: (p0) =>
-                            $CommunicationSymbolReferences(db, table, p0)
-                                .childSymbolRefs,
+                            $CommunicationSymbolTbReferences(db, table, p0)
+                                .childSymbolTbRefs,
                         referencedItemsForCurrentItem: (item,
                                 referencedItems) =>
                             referencedItems.where((e) => e.symbolId == item.id),
@@ -1788,42 +1795,42 @@ class $CommunicationSymbolTableManager extends RootTableManager<
         ));
 }
 
-typedef $CommunicationSymbolProcessedTableManager = ProcessedTableManager<
+typedef $CommunicationSymbolTbProcessedTableManager = ProcessedTableManager<
     _$AppDatabase,
-    CommunicationSymbol,
+    CommunicationSymbolTb,
     CommunicationSymbolEntity,
-    $CommunicationSymbolFilterComposer,
-    $CommunicationSymbolOrderingComposer,
-    $CommunicationSymbolAnnotationComposer,
-    $CommunicationSymbolCreateCompanionBuilder,
-    $CommunicationSymbolUpdateCompanionBuilder,
-    (CommunicationSymbolEntity, $CommunicationSymbolReferences),
+    $CommunicationSymbolTbFilterComposer,
+    $CommunicationSymbolTbOrderingComposer,
+    $CommunicationSymbolTbAnnotationComposer,
+    $CommunicationSymbolTbCreateCompanionBuilder,
+    $CommunicationSymbolTbUpdateCompanionBuilder,
+    (CommunicationSymbolEntity, $CommunicationSymbolTbReferences),
     CommunicationSymbolEntity,
-    PrefetchHooks Function({bool childBoardId, bool childSymbolRefs})>;
-typedef $ChildSymbolCreateCompanionBuilder = ChildSymbolCompanion Function({
+    PrefetchHooks Function({bool childBoardId, bool childSymbolTbRefs})>;
+typedef $ChildSymbolTbCreateCompanionBuilder = ChildSymbolTbCompanion Function({
   required int position,
   required int boardId,
   required int symbolId,
   Value<int> rowid,
 });
-typedef $ChildSymbolUpdateCompanionBuilder = ChildSymbolCompanion Function({
+typedef $ChildSymbolTbUpdateCompanionBuilder = ChildSymbolTbCompanion Function({
   Value<int> position,
   Value<int> boardId,
   Value<int> symbolId,
   Value<int> rowid,
 });
 
-final class $ChildSymbolReferences
-    extends BaseReferences<_$AppDatabase, ChildSymbol, ChildSymbolEntity> {
-  $ChildSymbolReferences(super.$_db, super.$_table, super.$_typedResult);
+final class $ChildSymbolTbReferences
+    extends BaseReferences<_$AppDatabase, ChildSymbolTb, ChildSymbolEntity> {
+  $ChildSymbolTbReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static Board _boardIdTable(_$AppDatabase db) => db.board
-      .createAlias($_aliasNameGenerator(db.childSymbol.boardId, db.board.id));
+  static BoardTb _boardIdTable(_$AppDatabase db) => db.boardTb.createAlias(
+      $_aliasNameGenerator(db.childSymbolTb.boardId, db.boardTb.id));
 
-  $BoardProcessedTableManager get boardId {
+  $BoardTbProcessedTableManager get boardId {
     final $_column = $_itemColumn<int>('board_id')!;
 
-    final manager = $BoardTableManager($_db, $_db.board)
+    final manager = $BoardTbTableManager($_db, $_db.boardTb)
         .filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_boardIdTable($_db));
     if (item == null) return manager;
@@ -1831,15 +1838,15 @@ final class $ChildSymbolReferences
         manager.$state.copyWith(prefetchedData: [item]));
   }
 
-  static CommunicationSymbol _symbolIdTable(_$AppDatabase db) =>
-      db.communicationSymbol.createAlias($_aliasNameGenerator(
-          db.childSymbol.symbolId, db.communicationSymbol.id));
+  static CommunicationSymbolTb _symbolIdTable(_$AppDatabase db) =>
+      db.communicationSymbolTb.createAlias($_aliasNameGenerator(
+          db.childSymbolTb.symbolId, db.communicationSymbolTb.id));
 
-  $CommunicationSymbolProcessedTableManager get symbolId {
+  $CommunicationSymbolTbProcessedTableManager get symbolId {
     final $_column = $_itemColumn<int>('symbol_id')!;
 
     final manager =
-        $CommunicationSymbolTableManager($_db, $_db.communicationSymbol)
+        $CommunicationSymbolTbTableManager($_db, $_db.communicationSymbolTb)
             .filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_symbolIdTable($_db));
     if (item == null) return manager;
@@ -1848,8 +1855,9 @@ final class $ChildSymbolReferences
   }
 }
 
-class $ChildSymbolFilterComposer extends Composer<_$AppDatabase, ChildSymbol> {
-  $ChildSymbolFilterComposer({
+class $ChildSymbolTbFilterComposer
+    extends Composer<_$AppDatabase, ChildSymbolTb> {
+  $ChildSymbolTbFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1859,18 +1867,18 @@ class $ChildSymbolFilterComposer extends Composer<_$AppDatabase, ChildSymbol> {
   ColumnFilters<int> get position => $composableBuilder(
       column: $table.position, builder: (column) => ColumnFilters(column));
 
-  $BoardFilterComposer get boardId {
-    final $BoardFilterComposer composer = $composerBuilder(
+  $BoardTbFilterComposer get boardId {
+    final $BoardTbFilterComposer composer = $composerBuilder(
         composer: this,
         getCurrentColumn: (t) => t.boardId,
-        referencedTable: $db.board,
+        referencedTable: $db.boardTb,
         getReferencedColumn: (t) => t.id,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
-            $BoardFilterComposer(
+            $BoardTbFilterComposer(
               $db: $db,
-              $table: $db.board,
+              $table: $db.boardTb,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -1879,18 +1887,18 @@ class $ChildSymbolFilterComposer extends Composer<_$AppDatabase, ChildSymbol> {
     return composer;
   }
 
-  $CommunicationSymbolFilterComposer get symbolId {
-    final $CommunicationSymbolFilterComposer composer = $composerBuilder(
+  $CommunicationSymbolTbFilterComposer get symbolId {
+    final $CommunicationSymbolTbFilterComposer composer = $composerBuilder(
         composer: this,
         getCurrentColumn: (t) => t.symbolId,
-        referencedTable: $db.communicationSymbol,
+        referencedTable: $db.communicationSymbolTb,
         getReferencedColumn: (t) => t.id,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
-            $CommunicationSymbolFilterComposer(
+            $CommunicationSymbolTbFilterComposer(
               $db: $db,
-              $table: $db.communicationSymbol,
+              $table: $db.communicationSymbolTb,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -1900,9 +1908,9 @@ class $ChildSymbolFilterComposer extends Composer<_$AppDatabase, ChildSymbol> {
   }
 }
 
-class $ChildSymbolOrderingComposer
-    extends Composer<_$AppDatabase, ChildSymbol> {
-  $ChildSymbolOrderingComposer({
+class $ChildSymbolTbOrderingComposer
+    extends Composer<_$AppDatabase, ChildSymbolTb> {
+  $ChildSymbolTbOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1912,18 +1920,18 @@ class $ChildSymbolOrderingComposer
   ColumnOrderings<int> get position => $composableBuilder(
       column: $table.position, builder: (column) => ColumnOrderings(column));
 
-  $BoardOrderingComposer get boardId {
-    final $BoardOrderingComposer composer = $composerBuilder(
+  $BoardTbOrderingComposer get boardId {
+    final $BoardTbOrderingComposer composer = $composerBuilder(
         composer: this,
         getCurrentColumn: (t) => t.boardId,
-        referencedTable: $db.board,
+        referencedTable: $db.boardTb,
         getReferencedColumn: (t) => t.id,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
-            $BoardOrderingComposer(
+            $BoardTbOrderingComposer(
               $db: $db,
-              $table: $db.board,
+              $table: $db.boardTb,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -1932,18 +1940,18 @@ class $ChildSymbolOrderingComposer
     return composer;
   }
 
-  $CommunicationSymbolOrderingComposer get symbolId {
-    final $CommunicationSymbolOrderingComposer composer = $composerBuilder(
+  $CommunicationSymbolTbOrderingComposer get symbolId {
+    final $CommunicationSymbolTbOrderingComposer composer = $composerBuilder(
         composer: this,
         getCurrentColumn: (t) => t.symbolId,
-        referencedTable: $db.communicationSymbol,
+        referencedTable: $db.communicationSymbolTb,
         getReferencedColumn: (t) => t.id,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
-            $CommunicationSymbolOrderingComposer(
+            $CommunicationSymbolTbOrderingComposer(
               $db: $db,
-              $table: $db.communicationSymbol,
+              $table: $db.communicationSymbolTb,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -1953,9 +1961,9 @@ class $ChildSymbolOrderingComposer
   }
 }
 
-class $ChildSymbolAnnotationComposer
-    extends Composer<_$AppDatabase, ChildSymbol> {
-  $ChildSymbolAnnotationComposer({
+class $ChildSymbolTbAnnotationComposer
+    extends Composer<_$AppDatabase, ChildSymbolTb> {
+  $ChildSymbolTbAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1965,18 +1973,18 @@ class $ChildSymbolAnnotationComposer
   GeneratedColumn<int> get position =>
       $composableBuilder(column: $table.position, builder: (column) => column);
 
-  $BoardAnnotationComposer get boardId {
-    final $BoardAnnotationComposer composer = $composerBuilder(
+  $BoardTbAnnotationComposer get boardId {
+    final $BoardTbAnnotationComposer composer = $composerBuilder(
         composer: this,
         getCurrentColumn: (t) => t.boardId,
-        referencedTable: $db.board,
+        referencedTable: $db.boardTb,
         getReferencedColumn: (t) => t.id,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
-            $BoardAnnotationComposer(
+            $BoardTbAnnotationComposer(
               $db: $db,
-              $table: $db.board,
+              $table: $db.boardTb,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -1985,18 +1993,18 @@ class $ChildSymbolAnnotationComposer
     return composer;
   }
 
-  $CommunicationSymbolAnnotationComposer get symbolId {
-    final $CommunicationSymbolAnnotationComposer composer = $composerBuilder(
+  $CommunicationSymbolTbAnnotationComposer get symbolId {
+    final $CommunicationSymbolTbAnnotationComposer composer = $composerBuilder(
         composer: this,
         getCurrentColumn: (t) => t.symbolId,
-        referencedTable: $db.communicationSymbol,
+        referencedTable: $db.communicationSymbolTb,
         getReferencedColumn: (t) => t.id,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
-            $CommunicationSymbolAnnotationComposer(
+            $CommunicationSymbolTbAnnotationComposer(
               $db: $db,
-              $table: $db.communicationSymbol,
+              $table: $db.communicationSymbolTb,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -2006,35 +2014,35 @@ class $ChildSymbolAnnotationComposer
   }
 }
 
-class $ChildSymbolTableManager extends RootTableManager<
+class $ChildSymbolTbTableManager extends RootTableManager<
     _$AppDatabase,
-    ChildSymbol,
+    ChildSymbolTb,
     ChildSymbolEntity,
-    $ChildSymbolFilterComposer,
-    $ChildSymbolOrderingComposer,
-    $ChildSymbolAnnotationComposer,
-    $ChildSymbolCreateCompanionBuilder,
-    $ChildSymbolUpdateCompanionBuilder,
-    (ChildSymbolEntity, $ChildSymbolReferences),
+    $ChildSymbolTbFilterComposer,
+    $ChildSymbolTbOrderingComposer,
+    $ChildSymbolTbAnnotationComposer,
+    $ChildSymbolTbCreateCompanionBuilder,
+    $ChildSymbolTbUpdateCompanionBuilder,
+    (ChildSymbolEntity, $ChildSymbolTbReferences),
     ChildSymbolEntity,
     PrefetchHooks Function({bool boardId, bool symbolId})> {
-  $ChildSymbolTableManager(_$AppDatabase db, ChildSymbol table)
+  $ChildSymbolTbTableManager(_$AppDatabase db, ChildSymbolTb table)
       : super(TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $ChildSymbolFilterComposer($db: db, $table: table),
+              $ChildSymbolTbFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $ChildSymbolOrderingComposer($db: db, $table: table),
+              $ChildSymbolTbOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $ChildSymbolAnnotationComposer($db: db, $table: table),
+              $ChildSymbolTbAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<int> position = const Value.absent(),
             Value<int> boardId = const Value.absent(),
             Value<int> symbolId = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
-              ChildSymbolCompanion(
+              ChildSymbolTbCompanion(
             position: position,
             boardId: boardId,
             symbolId: symbolId,
@@ -2046,7 +2054,7 @@ class $ChildSymbolTableManager extends RootTableManager<
             required int symbolId,
             Value<int> rowid = const Value.absent(),
           }) =>
-              ChildSymbolCompanion.insert(
+              ChildSymbolTbCompanion.insert(
             position: position,
             boardId: boardId,
             symbolId: symbolId,
@@ -2054,7 +2062,7 @@ class $ChildSymbolTableManager extends RootTableManager<
           ),
           withReferenceMapper: (p0) => p0
               .map((e) =>
-                  (e.readTable(table), $ChildSymbolReferences(db, table, e)))
+                  (e.readTable(table), $ChildSymbolTbReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: ({boardId = false, symbolId = false}) {
             return PrefetchHooks(
@@ -2077,18 +2085,19 @@ class $ChildSymbolTableManager extends RootTableManager<
                   state = state.withJoin(
                     currentTable: table,
                     currentColumn: table.boardId,
-                    referencedTable: $ChildSymbolReferences._boardIdTable(db),
+                    referencedTable: $ChildSymbolTbReferences._boardIdTable(db),
                     referencedColumn:
-                        $ChildSymbolReferences._boardIdTable(db).id,
+                        $ChildSymbolTbReferences._boardIdTable(db).id,
                   ) as T;
                 }
                 if (symbolId) {
                   state = state.withJoin(
                     currentTable: table,
                     currentColumn: table.symbolId,
-                    referencedTable: $ChildSymbolReferences._symbolIdTable(db),
+                    referencedTable:
+                        $ChildSymbolTbReferences._symbolIdTable(db),
                     referencedColumn:
-                        $ChildSymbolReferences._symbolIdTable(db).id,
+                        $ChildSymbolTbReferences._symbolIdTable(db).id,
                   ) as T;
                 }
 
@@ -2102,31 +2111,31 @@ class $ChildSymbolTableManager extends RootTableManager<
         ));
 }
 
-typedef $ChildSymbolProcessedTableManager = ProcessedTableManager<
+typedef $ChildSymbolTbProcessedTableManager = ProcessedTableManager<
     _$AppDatabase,
-    ChildSymbol,
+    ChildSymbolTb,
     ChildSymbolEntity,
-    $ChildSymbolFilterComposer,
-    $ChildSymbolOrderingComposer,
-    $ChildSymbolAnnotationComposer,
-    $ChildSymbolCreateCompanionBuilder,
-    $ChildSymbolUpdateCompanionBuilder,
-    (ChildSymbolEntity, $ChildSymbolReferences),
+    $ChildSymbolTbFilterComposer,
+    $ChildSymbolTbOrderingComposer,
+    $ChildSymbolTbAnnotationComposer,
+    $ChildSymbolTbCreateCompanionBuilder,
+    $ChildSymbolTbUpdateCompanionBuilder,
+    (ChildSymbolEntity, $ChildSymbolTbReferences),
     ChildSymbolEntity,
     PrefetchHooks Function({bool boardId, bool symbolId})>;
-typedef $SettingCreateCompanionBuilder = SettingCompanion Function({
+typedef $SettingTbCreateCompanionBuilder = SettingTbCompanion Function({
   required String key,
   required String value,
   Value<int> rowid,
 });
-typedef $SettingUpdateCompanionBuilder = SettingCompanion Function({
+typedef $SettingTbUpdateCompanionBuilder = SettingTbCompanion Function({
   Value<String> key,
   Value<String> value,
   Value<int> rowid,
 });
 
-class $SettingFilterComposer extends Composer<_$AppDatabase, Setting> {
-  $SettingFilterComposer({
+class $SettingTbFilterComposer extends Composer<_$AppDatabase, SettingTb> {
+  $SettingTbFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -2140,8 +2149,8 @@ class $SettingFilterComposer extends Composer<_$AppDatabase, Setting> {
       column: $table.value, builder: (column) => ColumnFilters(column));
 }
 
-class $SettingOrderingComposer extends Composer<_$AppDatabase, Setting> {
-  $SettingOrderingComposer({
+class $SettingTbOrderingComposer extends Composer<_$AppDatabase, SettingTb> {
+  $SettingTbOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -2155,8 +2164,8 @@ class $SettingOrderingComposer extends Composer<_$AppDatabase, Setting> {
       column: $table.value, builder: (column) => ColumnOrderings(column));
 }
 
-class $SettingAnnotationComposer extends Composer<_$AppDatabase, Setting> {
-  $SettingAnnotationComposer({
+class $SettingTbAnnotationComposer extends Composer<_$AppDatabase, SettingTb> {
+  $SettingTbAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -2170,34 +2179,34 @@ class $SettingAnnotationComposer extends Composer<_$AppDatabase, Setting> {
       $composableBuilder(column: $table.value, builder: (column) => column);
 }
 
-class $SettingTableManager extends RootTableManager<
+class $SettingTbTableManager extends RootTableManager<
     _$AppDatabase,
-    Setting,
+    SettingTb,
     SettingEntity,
-    $SettingFilterComposer,
-    $SettingOrderingComposer,
-    $SettingAnnotationComposer,
-    $SettingCreateCompanionBuilder,
-    $SettingUpdateCompanionBuilder,
-    (SettingEntity, BaseReferences<_$AppDatabase, Setting, SettingEntity>),
+    $SettingTbFilterComposer,
+    $SettingTbOrderingComposer,
+    $SettingTbAnnotationComposer,
+    $SettingTbCreateCompanionBuilder,
+    $SettingTbUpdateCompanionBuilder,
+    (SettingEntity, BaseReferences<_$AppDatabase, SettingTb, SettingEntity>),
     SettingEntity,
     PrefetchHooks Function()> {
-  $SettingTableManager(_$AppDatabase db, Setting table)
+  $SettingTbTableManager(_$AppDatabase db, SettingTb table)
       : super(TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $SettingFilterComposer($db: db, $table: table),
+              $SettingTbFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $SettingOrderingComposer($db: db, $table: table),
+              $SettingTbOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $SettingAnnotationComposer($db: db, $table: table),
+              $SettingTbAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<String> key = const Value.absent(),
             Value<String> value = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
-              SettingCompanion(
+              SettingTbCompanion(
             key: key,
             value: value,
             rowid: rowid,
@@ -2207,7 +2216,7 @@ class $SettingTableManager extends RootTableManager<
             required String value,
             Value<int> rowid = const Value.absent(),
           }) =>
-              SettingCompanion.insert(
+              SettingTbCompanion.insert(
             key: key,
             value: value,
             rowid: rowid,
@@ -2219,28 +2228,29 @@ class $SettingTableManager extends RootTableManager<
         ));
 }
 
-typedef $SettingProcessedTableManager = ProcessedTableManager<
+typedef $SettingTbProcessedTableManager = ProcessedTableManager<
     _$AppDatabase,
-    Setting,
+    SettingTb,
     SettingEntity,
-    $SettingFilterComposer,
-    $SettingOrderingComposer,
-    $SettingAnnotationComposer,
-    $SettingCreateCompanionBuilder,
-    $SettingUpdateCompanionBuilder,
-    (SettingEntity, BaseReferences<_$AppDatabase, Setting, SettingEntity>),
+    $SettingTbFilterComposer,
+    $SettingTbOrderingComposer,
+    $SettingTbAnnotationComposer,
+    $SettingTbCreateCompanionBuilder,
+    $SettingTbUpdateCompanionBuilder,
+    (SettingEntity, BaseReferences<_$AppDatabase, SettingTb, SettingEntity>),
     SettingEntity,
     PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
   $AppDatabaseManager(this._db);
-  $BoardTableManager get board => $BoardTableManager(_db, _db.board);
-  $CommunicationSymbolTableManager get communicationSymbol =>
-      $CommunicationSymbolTableManager(_db, _db.communicationSymbol);
-  $ChildSymbolTableManager get childSymbol =>
-      $ChildSymbolTableManager(_db, _db.childSymbol);
-  $SettingTableManager get setting => $SettingTableManager(_db, _db.setting);
+  $BoardTbTableManager get boardTb => $BoardTbTableManager(_db, _db.boardTb);
+  $CommunicationSymbolTbTableManager get communicationSymbolTb =>
+      $CommunicationSymbolTbTableManager(_db, _db.communicationSymbolTb);
+  $ChildSymbolTbTableManager get childSymbolTb =>
+      $ChildSymbolTbTableManager(_db, _db.childSymbolTb);
+  $SettingTbTableManager get settingTb =>
+      $SettingTbTableManager(_db, _db.settingTb);
 }
 
 // **************************************************************************

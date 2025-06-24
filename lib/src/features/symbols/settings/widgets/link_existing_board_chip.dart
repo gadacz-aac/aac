@@ -14,7 +14,7 @@ class LinkExistingBoardChip extends ConsumerWidget {
     return ActionChip(
         avatar: const Icon(Icons.search_outlined),
         onPressed: () {
-          showModalBottomSheet<BoardEditingParams?>(
+          showModalBottomSheet<BoardEditModel?>(
                   context: context,
                   isDismissible: true,
                   builder: (context) => const BoardSearch())

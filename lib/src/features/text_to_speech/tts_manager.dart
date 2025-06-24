@@ -56,17 +56,24 @@ class TtsManager {
     await tts.speak(word);
   }
 
-  Future<void> sayWord(CommunicationSymbolOld symbol) async {
-    await _speak((symbol.vocalization != null && symbol.vocalization!.isNotEmpty) ? symbol.vocalization! : symbol.label);
+  Future<void> sayWord(CommunicationSymbol symbol) async {
+    await _speak(
+        (symbol.vocalization != null && symbol.vocalization!.isNotEmpty)
+            ? symbol.vocalization!
+            : symbol.label);
   }
 
   Future<void> saySentence(List<CommunicationSymbolDto> sentence) async {
-    final words = sentence.map((e) => (e.vocalization != null && e.vocalization!.isNotEmpty) ? e.vocalization! : e.label);
+    final words = sentence.map((e) =>
+        (e.vocalization != null && e.vocalization!.isNotEmpty)
+            ? e.vocalization!
+            : e.label);
     await _speak(words.join(' '));
   }
 
   Future<void> setPreferredSpeechRate() async {
-    final double savedRate = await settingsManager.getValue(SettingKey.speechRate.name);
+    final double savedRate =
+        await settingsManager.getValue(SettingKey.speechRate.name);
     await tts.setSpeechRate(savedRate);
   }
 

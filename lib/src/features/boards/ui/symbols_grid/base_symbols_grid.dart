@@ -8,7 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'base_symbols_grid.g.dart';
 
 @riverpod
-Stream<List<CommunicationSymbolOld>> childSymbol(Ref ref, int id) {
+Stream<List<CommunicationSymbol>> childSymbol(Ref ref, int id) {
   final dao = ref.watch(symbolDaoProvider);
 
   return dao.watchByBoardId(id);
@@ -91,13 +91,13 @@ class BaseSymbolsGrid extends ConsumerWidget {
 
     return Expanded(
         child: AlignedGridView.count(
-              crossAxisCount: crossAxisCount,
-              crossAxisSpacing: crossAxisSpacing,
-              mainAxisSpacing: mainAxisSpacing,
-              itemCount: itemCount,
-              padding: const EdgeInsets.all(12.0),
-              controller: controller,
-              itemBuilder: itemBuilder,
-            ));
+      crossAxisCount: crossAxisCount,
+      crossAxisSpacing: crossAxisSpacing,
+      mainAxisSpacing: mainAxisSpacing,
+      itemCount: itemCount,
+      padding: const EdgeInsets.all(12.0),
+      controller: controller,
+      itemBuilder: itemBuilder,
+    ));
   }
 }

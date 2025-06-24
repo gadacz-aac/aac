@@ -11,7 +11,7 @@ class EditSymbolScreen extends ConsumerStatefulWidget {
   const EditSymbolScreen(
       {super.key, required this.symbol, required this.boardId});
 
-  final CommunicationSymbolOld symbol;
+  final CommunicationSymbol symbol;
   final int boardId;
 
   @override
@@ -19,8 +19,8 @@ class EditSymbolScreen extends ConsumerStatefulWidget {
 }
 
 class _EditSymbolScreenState extends ConsumerState<EditSymbolScreen> {
-  Future<void> save(SymbolEditingParams params,
-      [BoardEditingParams? boardParams]) async {
+  Future<void> save(SymbolEditModel params,
+      [BoardEditModel? boardParams]) async {
     final manager = ref.read(symbolManagerProvider);
 
     manager.updateSymbol(widget.boardId, params, boardParams);
@@ -34,7 +34,7 @@ class _EditSymbolScreenState extends ConsumerState<EditSymbolScreen> {
     return ProviderScope(
       overrides: [
         initialValuesProvider
-            .overrideWithValue(SymbolEditingParams.fromSymbol(widget.symbol))
+            .overrideWithValue(SymbolEditModel.fromSymbol(widget.symbol))
       ],
       child: SymbolSettings(
         updateSymbolSettings: save,

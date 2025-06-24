@@ -9,13 +9,13 @@ import 'package:aac/src/features/symbols/search/search_screen.dart';
 import 'package:aac/src/features/symbols/settings/widgets/cherry_pick_image.dart';
 import 'package:aac/src/shared/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'overview_screen.g.dart';
 
 @riverpod
-Stream<List<CommunicationSymbolOld>> recentlyEditedSymbols(
-    RecentlyEditedSymbolsRef ref) {
+Stream<List<CommunicationSymbol>> recentlyEditedSymbols(Ref ref) {
   // final isar = ref.watch(isarProvider);
   //
   // // TODO sort by a last edited date
@@ -29,7 +29,7 @@ Stream<List<CommunicationSymbolOld>> recentlyEditedSymbols(
 }
 
 @riverpod
-Stream<List<BoardOld>> recentylEditedBoard(RecentylEditedBoardRef ref) {
+Stream<List<Board>> recentylEditedBoard(Ref ref) {
   // final isar = ref.watch(isarProvider);
   //
   // // TODO sort by a last edited date

@@ -12,13 +12,12 @@ class LinkNewBoardChip extends ConsumerWidget {
     return ActionChip(
       avatar: const Icon(Icons.add),
       onPressed: () {
-        showModalBottomSheet<BoardEditingParams?>(
-                context: context,
-                isScrollControlled: true,
-                useSafeArea: true,
-                builder: (context) =>
-                    const CreateBoardScreen(params: BoardEditingParams()))
-            .then((val) {
+        showModalBottomSheet<BoardEditModel?>(
+            context: context,
+            isScrollControlled: true,
+            useSafeArea: true,
+            builder: (context) =>
+                const CreateBoardScreen(params: BoardEditModel())).then((val) {
           if (val == null) return;
           ref.read(boardNotifierProvider.notifier).set(val);
         });

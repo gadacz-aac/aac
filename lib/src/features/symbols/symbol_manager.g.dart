@@ -6,7 +6,7 @@ part of 'symbol_manager.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$symbolManagerHash() => r'a71403c577af6d42604ccc1af7d16348676c8c83';
+String _$symbolManagerHash() => r'e1efa52c55580f0c367d8ffc611bede89f2274d5';
 
 /// See also [symbolManager].
 @ProviderFor(symbolManager)

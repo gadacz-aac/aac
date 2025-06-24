@@ -13,7 +13,7 @@ part 'board_picker.g.dart';
 @Riverpod(dependencies: [initialValues])
 class BoardNotifier extends _$BoardNotifier {
   @override
-  Future<BoardEditingParams?> build() {
+  Future<BoardEditModel?> build() {
     final id = ref.watch(initialValuesProvider).childBoardId;
 
     if (id == null) return Future.value(null);
@@ -21,7 +21,7 @@ class BoardNotifier extends _$BoardNotifier {
     return ref
         .watch(boardDaoProvider)
         .selectById(id)
-        .map((e) => BoardEditingParams(
+        .map((e) => BoardEditModel(
             name: e.name, columnCount: e.crossAxisCount, id: e.id))
         .getSingle();
   }
@@ -30,7 +30,7 @@ class BoardNotifier extends _$BoardNotifier {
     state = AsyncValue.data(null);
   }
 
-  void set(BoardEditingParams? board) {
+  void set(BoardEditModel? board) {
     state = AsyncValue.data(board);
   }
 }
@@ -78,7 +78,7 @@ class LinkedBoardChip extends ConsumerWidget {
     return InputChip(
         label: Text(childBoard.name),
         onDeleted: ref.read(boardNotifierProvider.notifier).delete,
-        onPressed: () => showModalBottomSheet<BoardEditingParams?>(
+        onPressed: () => showModalBottomSheet<BoardEditModel?>(
                     context: context,
                     isScrollControlled: true,
                     useSafeArea: true,

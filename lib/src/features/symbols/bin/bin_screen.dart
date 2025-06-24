@@ -10,7 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'bin_screen.g.dart';
 
 @riverpod
-Stream<List<CommunicationSymbolOld>> deletedSymbols(Ref ref) {
+Stream<List<CommunicationSymbol>> deletedSymbols(Ref ref) {
   return ref.watch(symbolDaoProvider).watchDeleted();
 }
 

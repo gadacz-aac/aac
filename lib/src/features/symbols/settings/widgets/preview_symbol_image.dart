@@ -18,7 +18,8 @@ class PreviewSymbolImage extends ConsumerWidget {
 
     final childBoard = ref.watch(boardNotifierProvider).valueOrNull;
 
-    final symbol = CommunicationSymbolOld(
+    final symbol = CommunicationSymbol(
+      id: -1, // -1 is a placeholder for preview
       label: label,
       imagePath: image,
       color: color,

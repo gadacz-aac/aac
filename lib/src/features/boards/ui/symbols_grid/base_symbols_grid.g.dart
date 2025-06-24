@@ -6,7 +6,7 @@ part of 'base_symbols_grid.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$childSymbolHash() => r'deb69d0ef3bb5f857a61cba6194634ad513baae5';
+String _$childSymbolHash() => r'308815decb0c9aba5a9674a1b4e3a4893d63e689';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -34,8 +34,7 @@ class _SystemHash {
 const childSymbolProvider = ChildSymbolFamily();
 
 /// See also [childSymbol].
-class ChildSymbolFamily
-    extends Family<AsyncValue<List<CommunicationSymbolOld>>> {
+class ChildSymbolFamily extends Family<AsyncValue<List<CommunicationSymbol>>> {
   /// See also [childSymbol].
   const ChildSymbolFamily();
 
@@ -74,7 +73,7 @@ class ChildSymbolFamily
 
 /// See also [childSymbol].
 class ChildSymbolProvider
-    extends AutoDisposeStreamProvider<List<CommunicationSymbolOld>> {
+    extends AutoDisposeStreamProvider<List<CommunicationSymbol>> {
   /// See also [childSymbol].
   ChildSymbolProvider(
     int id,
@@ -109,8 +108,7 @@ class ChildSymbolProvider
 
   @override
   Override overrideWith(
-    Stream<List<CommunicationSymbolOld>> Function(ChildSymbolRef provider)
-        create,
+    Stream<List<CommunicationSymbol>> Function(ChildSymbolRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -127,8 +125,7 @@ class ChildSymbolProvider
   }
 
   @override
-  AutoDisposeStreamProviderElement<List<CommunicationSymbolOld>>
-      createElement() {
+  AutoDisposeStreamProviderElement<List<CommunicationSymbol>> createElement() {
     return _ChildSymbolProviderElement(this);
   }
 
@@ -149,13 +146,13 @@ class ChildSymbolProvider
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 mixin ChildSymbolRef
-    on AutoDisposeStreamProviderRef<List<CommunicationSymbolOld>> {
+    on AutoDisposeStreamProviderRef<List<CommunicationSymbol>> {
   /// The parameter `id` of this provider.
   int get id;
 }
 
 class _ChildSymbolProviderElement
-    extends AutoDisposeStreamProviderElement<List<CommunicationSymbolOld>>
+    extends AutoDisposeStreamProviderElement<List<CommunicationSymbol>>
     with ChildSymbolRef {
   _ChildSymbolProviderElement(super.provider);
 

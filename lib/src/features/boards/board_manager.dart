@@ -9,7 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'board_manager.g.dart';
 
 final boardProvider =
-    StreamProvider.autoDispose.family<BoardOld?, int>((ref, id) async* {
+    StreamProvider.autoDispose.family<Board?, int>((ref, id) async* {
   final dao = ref.watch(boardDaoProvider);
   yield* dao.watchById(id);
 });
@@ -25,8 +25,8 @@ class BoardManager {
 
   BoardManager(this.db);
 
-  Future<void> createOrUpdate(BoardEditingParams params) async {
-    db.managers.board.create(
+  Future<void> createOrUpdate(BoardEditModel params) async {
+    db.managers.boardTb.create(
         (f) => f(
             id: Value.absentIfNull(params.id),
             name: params.name,

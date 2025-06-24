@@ -11,19 +11,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class SymbolsGridWithDrag extends ConsumerStatefulWidget {
   const SymbolsGridWithDrag({required this.board, super.key});
 
-  final BoardOld board;
+  final Board board;
   @override
   ConsumerState<SymbolsGridWithDrag> createState() =>
       _SymbolsGridWithDragState();
 }
 
 class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
-  DragItem<CommunicationSymbolOld>? currentlyDragged;
+  DragItem<CommunicationSymbol>? currentlyDragged;
   int? desiredIndex;
   Offset dragStartPosition = Offset.zero;
   bool didDraggedSignificantly = false;
 
-  void _onLongPress(CommunicationSymbolOld symbol, WidgetRef ref) {
+  void _onLongPress(CommunicationSymbol symbol, WidgetRef ref) {
     if (ref.read(isParentModeProvider)) {
       ref.read(selectedSymbolsProvider).toggle(symbol);
     }
@@ -43,7 +43,7 @@ class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
         itemBuilder: (context, index) {
           final e = symbols[index];
 
-          return DragTarget<DragItem<CommunicationSymbolOld>>(onMove: (data) {
+          return DragTarget<DragItem<CommunicationSymbol>>(onMove: (data) {
             setState(() {
               desiredIndex = index;
             });
@@ -60,7 +60,8 @@ class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
               symbols.insert(desiredIndex!, currentlyDragged!.data);
             });
 
-            ref.read(symbolDaoProvider).moveSymbol( desiredIndex!, currentlyDragged!.index, widget.board.id);
+            ref.read(symbolDaoProvider).moveSymbol(
+                desiredIndex!, currentlyDragged!.index, widget.board.id);
           }, builder: (context, incoming, __) {
             return LayoutBuilder(builder: (context, constrains) {
               final data = DragItem(index: index, data: e);

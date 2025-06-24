@@ -9,13 +9,13 @@ import 'package:aac/src/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final isSymbolSelectedProvider = Provider.family.autoDispose<bool, int>((ref, id) {
-    return ref
-        .watch(selectedSymbolsProvider)
-        .state
-        .any((element) => element.id == id);
+final isSymbolSelectedProvider =
+    Provider.family.autoDispose<bool, int>((ref, id) {
+  return ref
+      .watch(selectedSymbolsProvider)
+      .state
+      .any((element) => element.id == id);
 });
-
 
 enum SymbolOnTapAction { select, multiselect, speak, speakAndBuildSentence, cd }
 // this ^ gets out of hand already it's bout to get more and more complex
@@ -23,10 +23,9 @@ enum SymbolOnTapAction { select, multiselect, speak, speakAndBuildSentence, cd }
 // - Piotrek
 
 final selectedBorder = Border.all(
-              color:  AacColors.mainControlBackground,
-              width: 3,
-              strokeAlign: BorderSide.strokeAlignOutside);
-
+    color: AacColors.mainControlBackground,
+    width: 3,
+    strokeAlign: BorderSide.strokeAlignOutside);
 
 class SymbolCard extends ConsumerWidget {
   const SymbolCard({
@@ -36,9 +35,9 @@ class SymbolCard extends ConsumerWidget {
     this.onTapActions = const [],
   });
 
-  final CommunicationSymbolOld symbol;
+  final CommunicationSymbol symbol;
   final bool imageHasBackground = false;
-  final bool isDragging; 
+  final bool isDragging;
   final List<SymbolOnTapAction> onTapActions;
 
   void _onTap(BuildContext context, WidgetRef ref) {
@@ -120,9 +119,7 @@ class SymbolCard extends ConsumerWidget {
           spreadRadius: 1,
         )
       ],
-      border: isSelected || isDragging
-          ? selectedBorder
-          : null,
+      border: isSelected || isDragging ? selectedBorder : null,
       color: bgColor,
     );
 
@@ -177,4 +174,3 @@ class SymbolCard extends ConsumerWidget {
     );
   }
 }
-
