@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 
 enum OrientationOption { portrait, landscape, auto }
 
-void changeOrientation(FutureOr<String>? orientation) async {
+void changeOrientation(FutureOr<String?> orientation) async {
   orientation = await orientation;
 
   if (orientation == null) return;

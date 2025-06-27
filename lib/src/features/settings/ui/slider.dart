@@ -40,34 +40,31 @@ class PersistentSlider extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Future<double> future =
+    final future =
         ref.watch(settingsManagerProvider).getValue(settingsEntryKey);
 
-    return FutureBuilder(
-        future: future,
-        builder: (context, snapshot) {
-            double value = snapshot.data ?? min;
-          return StatefulBuilder(builder: (context, setState) {
-            void setValue(double newValue) {
-              setState(() {
-                value = newValue;
-              });
-            }
+    return StatefulBuilder(builder: (context, setState) {
+      double value = future;
 
-            return ListTile(
-              titleAlignment: ListTileTitleAlignment.top,
-              enabled: snapshot.hasData,
-              leading: icon,
-              title: Text("$titlePrefix: ${value.toStringAsFixed(2)}"),
-              subtitle: Slider(
-                min: min,
-                max: max,
-                value: value,
-                onChanged: (val) => _onChanged(val, ref, setValue),
-                onChangeEnd: writeOnChange ? null : (val) => _putValue(val, ref, setValue),
-              ),
-            );
-          });
+      void setValue(double newValue) {
+        setState(() {
+          value = newValue;
         });
+      }
+
+      return ListTile(
+        titleAlignment: ListTileTitleAlignment.top,
+        leading: icon,
+        title: Text("$titlePrefix: ${value.toStringAsFixed(2)}"),
+        subtitle: Slider(
+          min: min,
+          max: max,
+          value: value,
+          onChanged: (val) => _onChanged(val, ref, setValue),
+          onChangeEnd:
+              writeOnChange ? null : (val) => _putValue(val, ref, setValue),
+        ),
+      );
+    });
   }
 }
