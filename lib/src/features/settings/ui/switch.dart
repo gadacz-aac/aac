@@ -7,13 +7,11 @@ class PersistentSwitch extends ConsumerStatefulWidget {
   const PersistentSwitch(
     this.settingsEntryKey, {
     super.key,
-    this.defaultValue = false,
     this.title,
     this.subtitle,
     this.onChanged,
   });
 
-  final bool? defaultValue;
   final ValueChanged<bool>? onChanged;
   final String settingsEntryKey;
   final Widget? subtitle;
@@ -34,23 +32,20 @@ class _PersistentSwitch<T> extends ConsumerState<PersistentSwitch> {
 
   @override
   Widget build(BuildContext context) {
-    final Stream<bool> stream =
-        ref.watch(settingsManagerProvider).watchValue(widget.settingsEntryKey);
+    final settings = ref.watch(settingsManagerProvider);
+
+    final stream = settings.watchValue<bool>(widget.settingsEntryKey);
 
     return StreamBuilder<bool>(
         stream: stream,
+        // there's a split second before the stream is fully loaded where null is provided - default behaviour
+        initialData: settings.getValue(widget.settingsEntryKey),
         builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return SizedBox();
-          }
-
-          final disabled = snapshot.connectionState != ConnectionState.active || snapshot.data == null;
-        
           return SwitchListTile(
               title: widget.title,
               subtitle: widget.subtitle,
               value: snapshot.data ?? false,
-              onChanged: disabled ? null : _onChanged);
+              onChanged: snapshot.hasError ? null : _onChanged);
         });
   }
 }

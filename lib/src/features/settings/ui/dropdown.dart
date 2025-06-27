@@ -55,12 +55,14 @@ class _PersistentDropdownState<T>
 
   @override
   Widget build(BuildContext context) {
-    final Stream<T?> stream =
-        ref.watch(settingsManagerProvider).watchValue(widget.settingsEntryKey);
+    final settings = ref.watch(settingsManagerProvider);
+    final stream = settings.watchValue<T?>(widget.settingsEntryKey);
 
     return StreamBuilder(
         stream: stream,
+        initialData: settings.getValue<T?>(widget.settingsEntryKey),
         builder: (context, snapshot) {
+          // the default bit is here because sometimes we don't control the default value like in the case of tts voice
           final subtitle = snapshot.data == null
               ? Text("Domyślny")
               : widget.items.firstWhere((e) => e.value == snapshot.data).child;
@@ -68,9 +70,10 @@ class _PersistentDropdownState<T>
           return ListTile(
               title: widget.title,
               subtitle: subtitle,
-              onTap: !snapshot.hasError
-                  ? () => _buildDialog(context, snapshot.data).then(_onChanged)
-                  : null);
+              onTap: snapshot.hasError
+                  ? null
+                  : () =>
+                      _buildDialog(context, snapshot.data).then(_onChanged));
         });
   }
 }

@@ -15,7 +15,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final db = AppDatabase();
-  final orientation = SettingsManager(db).getValue<String>(SettingKey.orientation.name);
+  final settings = SettingsManager(db);
+  await settings.initializeStore();
+  final orientation = settings.getValue<String>(SettingKey.orientation.name);
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -30,9 +32,10 @@ void main() async {
   }
 
   changeOrientation(orientation);
-  runApp(ProviderScope(
-      overrides: [dbProvider.overrideWithValue(db)],
-      child: MainApp()));
+  runApp(ProviderScope(overrides: [
+    dbProvider.overrideWithValue(db),
+    settingsManagerProvider.overrideWithValue(settings)
+  ], child: MainApp()));
 }
 
 class MainApp extends StatelessWidget {
