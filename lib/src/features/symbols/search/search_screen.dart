@@ -1,6 +1,7 @@
 import 'package:aac/src/database/daos/symbol_dao.dart';
+import 'package:aac/src/features/symbols/card/symbol_tap_actions.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
-import 'package:aac/src/features/symbols/ui/symbol_card.dart';
+import 'package:aac/src/features/symbols/card/symbol_card.dart';
 import 'package:aac/src/features/symbols/search/search_app_bar.dart';
 import 'package:aac/src/features/symbols/search/symbol_search_filters.dart';
 import 'package:flutter/material.dart';
@@ -113,9 +114,10 @@ class SymbolSearchScreen extends ConsumerWidget {
                             itemCount: results.length,
                             itemBuilder: (context, index) {
                               final e = results[index];
+
                               return SymbolCard(
                                 symbol: e,
-                                onTapActions: const [SymbolOnTapAction.select],
+                                onTapActions: [SymbolSelectAction()],
                               );
                             }),
                       ),

@@ -681,6 +681,13 @@ class ChildSymbolTb extends Table
       type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
+  static const VerificationMeta _hiddenMeta = const VerificationMeta('hidden');
+  late final GeneratedColumn<bool> hidden = GeneratedColumn<bool>(
+      'hidden', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      $customConstraints: 'NOT NULL DEFAULT FALSE',
+      defaultValue: const CustomExpression('FALSE'));
   static const VerificationMeta _boardIdMeta =
       const VerificationMeta('boardId');
   late final GeneratedColumn<int> boardId = GeneratedColumn<int>(
@@ -696,7 +703,7 @@ class ChildSymbolTb extends Table
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL REFERENCES communication_symbol_tb(id)');
   @override
-  List<GeneratedColumn> get $columns => [position, boardId, symbolId];
+  List<GeneratedColumn> get $columns => [position, hidden, boardId, symbolId];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -712,6 +719,10 @@ class ChildSymbolTb extends Table
           position.isAcceptableOrUnknown(data['position']!, _positionMeta));
     } else if (isInserting) {
       context.missing(_positionMeta);
+    }
+    if (data.containsKey('hidden')) {
+      context.handle(_hiddenMeta,
+          hidden.isAcceptableOrUnknown(data['hidden']!, _hiddenMeta));
     }
     if (data.containsKey('board_id')) {
       context.handle(_boardIdMeta,
@@ -736,6 +747,8 @@ class ChildSymbolTb extends Table
     return ChildSymbolEntity(
       position: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}position'])!,
+      hidden: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}hidden'])!,
       boardId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}board_id'])!,
       symbolId: attachedDatabase.typeMapping
@@ -760,14 +773,19 @@ class ChildSymbolTb extends Table
 class ChildSymbolEntity extends DataClass
     implements Insertable<ChildSymbolEntity> {
   final int position;
+  final bool hidden;
   final int boardId;
   final int symbolId;
   const ChildSymbolEntity(
-      {required this.position, required this.boardId, required this.symbolId});
+      {required this.position,
+      required this.hidden,
+      required this.boardId,
+      required this.symbolId});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['position'] = Variable<int>(position);
+    map['hidden'] = Variable<bool>(hidden);
     map['board_id'] = Variable<int>(boardId);
     map['symbol_id'] = Variable<int>(symbolId);
     return map;
@@ -776,6 +794,7 @@ class ChildSymbolEntity extends DataClass
   ChildSymbolTbCompanion toCompanion(bool nullToAbsent) {
     return ChildSymbolTbCompanion(
       position: Value(position),
+      hidden: Value(hidden),
       boardId: Value(boardId),
       symbolId: Value(symbolId),
     );
@@ -786,6 +805,7 @@ class ChildSymbolEntity extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ChildSymbolEntity(
       position: serializer.fromJson<int>(json['position']),
+      hidden: serializer.fromJson<bool>(json['hidden']),
       boardId: serializer.fromJson<int>(json['board_id']),
       symbolId: serializer.fromJson<int>(json['symbol_id']),
     );
@@ -795,20 +815,24 @@ class ChildSymbolEntity extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'position': serializer.toJson<int>(position),
+      'hidden': serializer.toJson<bool>(hidden),
       'board_id': serializer.toJson<int>(boardId),
       'symbol_id': serializer.toJson<int>(symbolId),
     };
   }
 
-  ChildSymbolEntity copyWith({int? position, int? boardId, int? symbolId}) =>
+  ChildSymbolEntity copyWith(
+          {int? position, bool? hidden, int? boardId, int? symbolId}) =>
       ChildSymbolEntity(
         position: position ?? this.position,
+        hidden: hidden ?? this.hidden,
         boardId: boardId ?? this.boardId,
         symbolId: symbolId ?? this.symbolId,
       );
   ChildSymbolEntity copyWithCompanion(ChildSymbolTbCompanion data) {
     return ChildSymbolEntity(
       position: data.position.present ? data.position.value : this.position,
+      hidden: data.hidden.present ? data.hidden.value : this.hidden,
       boardId: data.boardId.present ? data.boardId.value : this.boardId,
       symbolId: data.symbolId.present ? data.symbolId.value : this.symbolId,
     );
@@ -818,6 +842,7 @@ class ChildSymbolEntity extends DataClass
   String toString() {
     return (StringBuffer('ChildSymbolEntity(')
           ..write('position: $position, ')
+          ..write('hidden: $hidden, ')
           ..write('boardId: $boardId, ')
           ..write('symbolId: $symbolId')
           ..write(')'))
@@ -825,29 +850,33 @@ class ChildSymbolEntity extends DataClass
   }
 
   @override
-  int get hashCode => Object.hash(position, boardId, symbolId);
+  int get hashCode => Object.hash(position, hidden, boardId, symbolId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is ChildSymbolEntity &&
           other.position == this.position &&
+          other.hidden == this.hidden &&
           other.boardId == this.boardId &&
           other.symbolId == this.symbolId);
 }
 
 class ChildSymbolTbCompanion extends UpdateCompanion<ChildSymbolEntity> {
   final Value<int> position;
+  final Value<bool> hidden;
   final Value<int> boardId;
   final Value<int> symbolId;
   final Value<int> rowid;
   const ChildSymbolTbCompanion({
     this.position = const Value.absent(),
+    this.hidden = const Value.absent(),
     this.boardId = const Value.absent(),
     this.symbolId = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   ChildSymbolTbCompanion.insert({
     required int position,
+    this.hidden = const Value.absent(),
     required int boardId,
     required int symbolId,
     this.rowid = const Value.absent(),
@@ -856,12 +885,14 @@ class ChildSymbolTbCompanion extends UpdateCompanion<ChildSymbolEntity> {
         symbolId = Value(symbolId);
   static Insertable<ChildSymbolEntity> custom({
     Expression<int>? position,
+    Expression<bool>? hidden,
     Expression<int>? boardId,
     Expression<int>? symbolId,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (position != null) 'position': position,
+      if (hidden != null) 'hidden': hidden,
       if (boardId != null) 'board_id': boardId,
       if (symbolId != null) 'symbol_id': symbolId,
       if (rowid != null) 'rowid': rowid,
@@ -870,11 +901,13 @@ class ChildSymbolTbCompanion extends UpdateCompanion<ChildSymbolEntity> {
 
   ChildSymbolTbCompanion copyWith(
       {Value<int>? position,
+      Value<bool>? hidden,
       Value<int>? boardId,
       Value<int>? symbolId,
       Value<int>? rowid}) {
     return ChildSymbolTbCompanion(
       position: position ?? this.position,
+      hidden: hidden ?? this.hidden,
       boardId: boardId ?? this.boardId,
       symbolId: symbolId ?? this.symbolId,
       rowid: rowid ?? this.rowid,
@@ -886,6 +919,9 @@ class ChildSymbolTbCompanion extends UpdateCompanion<ChildSymbolEntity> {
     final map = <String, Expression>{};
     if (position.present) {
       map['position'] = Variable<int>(position.value);
+    }
+    if (hidden.present) {
+      map['hidden'] = Variable<bool>(hidden.value);
     }
     if (boardId.present) {
       map['board_id'] = Variable<int>(boardId.value);
@@ -903,6 +939,7 @@ class ChildSymbolTbCompanion extends UpdateCompanion<ChildSymbolEntity> {
   String toString() {
     return (StringBuffer('ChildSymbolTbCompanion(')
           ..write('position: $position, ')
+          ..write('hidden: $hidden, ')
           ..write('boardId: $boardId, ')
           ..write('symbolId: $symbolId, ')
           ..write('rowid: $rowid')
@@ -1809,12 +1846,14 @@ typedef $CommunicationSymbolTbProcessedTableManager = ProcessedTableManager<
     PrefetchHooks Function({bool childBoardId, bool childSymbolTbRefs})>;
 typedef $ChildSymbolTbCreateCompanionBuilder = ChildSymbolTbCompanion Function({
   required int position,
+  Value<bool> hidden,
   required int boardId,
   required int symbolId,
   Value<int> rowid,
 });
 typedef $ChildSymbolTbUpdateCompanionBuilder = ChildSymbolTbCompanion Function({
   Value<int> position,
+  Value<bool> hidden,
   Value<int> boardId,
   Value<int> symbolId,
   Value<int> rowid,
@@ -1866,6 +1905,9 @@ class $ChildSymbolTbFilterComposer
   });
   ColumnFilters<int> get position => $composableBuilder(
       column: $table.position, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get hidden => $composableBuilder(
+      column: $table.hidden, builder: (column) => ColumnFilters(column));
 
   $BoardTbFilterComposer get boardId {
     final $BoardTbFilterComposer composer = $composerBuilder(
@@ -1920,6 +1962,9 @@ class $ChildSymbolTbOrderingComposer
   ColumnOrderings<int> get position => $composableBuilder(
       column: $table.position, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<bool> get hidden => $composableBuilder(
+      column: $table.hidden, builder: (column) => ColumnOrderings(column));
+
   $BoardTbOrderingComposer get boardId {
     final $BoardTbOrderingComposer composer = $composerBuilder(
         composer: this,
@@ -1972,6 +2017,9 @@ class $ChildSymbolTbAnnotationComposer
   });
   GeneratedColumn<int> get position =>
       $composableBuilder(column: $table.position, builder: (column) => column);
+
+  GeneratedColumn<bool> get hidden =>
+      $composableBuilder(column: $table.hidden, builder: (column) => column);
 
   $BoardTbAnnotationComposer get boardId {
     final $BoardTbAnnotationComposer composer = $composerBuilder(
@@ -2038,24 +2086,28 @@ class $ChildSymbolTbTableManager extends RootTableManager<
               $ChildSymbolTbAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<int> position = const Value.absent(),
+            Value<bool> hidden = const Value.absent(),
             Value<int> boardId = const Value.absent(),
             Value<int> symbolId = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               ChildSymbolTbCompanion(
             position: position,
+            hidden: hidden,
             boardId: boardId,
             symbolId: symbolId,
             rowid: rowid,
           ),
           createCompanionCallback: ({
             required int position,
+            Value<bool> hidden = const Value.absent(),
             required int boardId,
             required int symbolId,
             Value<int> rowid = const Value.absent(),
           }) =>
               ChildSymbolTbCompanion.insert(
             position: position,
+            hidden: hidden,
             boardId: boardId,
             symbolId: symbolId,
             rowid: rowid,

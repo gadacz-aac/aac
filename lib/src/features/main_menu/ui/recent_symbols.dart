@@ -1,5 +1,5 @@
 import 'package:aac/src/features/main_menu/overview_screen.dart';
-import 'package:aac/src/features/symbols/ui/symbol_card.dart';
+import 'package:aac/src/features/symbols/card/symbol_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

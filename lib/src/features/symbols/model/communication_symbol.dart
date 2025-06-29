@@ -7,6 +7,7 @@ class CommunicationSymbol {
       required this.imagePath,
       this.vocalization,
       this.color,
+      this.childBoardId,
       this.isDeleted = false});
 
   String label;

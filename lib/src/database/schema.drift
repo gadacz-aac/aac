@@ -16,8 +16,9 @@ CREATE TABLE IF NOT EXISTS "communication_symbol_tb" (
 ) STRICT AS "CommunicationSymbolEntity";
 
 CREATE TABLE IF NOT EXISTS "child_symbol_tb" (
-	"position" INTEGER NOT NULL,
-	"board_id" INTEGER NOT NULL REFERENCES board_tb (id),
+	"position"  INTEGER NOT NULL,
+	"hidden"    BOOLEAN NOT NULL DEFAULT false,
+	"board_id"  INTEGER NOT NULL REFERENCES board_tb (id),
 	"symbol_id" INTEGER NOT NULL REFERENCES communication_symbol_tb (id),
 
 	PRIMARY KEY ("board_id", "symbol_id")

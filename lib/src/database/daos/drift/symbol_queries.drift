@@ -1,11 +1,4 @@
-import '../schema.drift';
-
-selectByBoardId: 
-	SELECT s.* from communication_symbol_tb s
-		JOIN child_symbol_tb cs ON cs.symbol_id = s.id
-		WHERE cs.board_id = ? 
-		AND s.is_deleted = false
-		ORDER BY cs.position;
+import '../../schema.drift';
 
 moveSymbol(:old_pos AS INTEGER, :new_pos AS INTEGER, :board_id AS INTEGER):
 	WITH ordered AS (

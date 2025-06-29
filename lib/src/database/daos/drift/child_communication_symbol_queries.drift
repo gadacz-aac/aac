@@ -1,0 +1,13 @@
+import '../../schema.drift';
+
+selectByBoardId: 
+	SELECT * from communication_symbol_tb s
+		JOIN child_symbol_tb cs ON cs.symbol_id = s.id
+		WHERE cs.board_id = ? 
+		AND s.is_deleted = false
+		ORDER BY cs.position;
+
+toggleVisibility(:board_id AS INTEGER, :symbol_id AS INTEGER):
+	UPDATE child_symbol_tb
+	SET hidden = true
+	WHERE board_id = :board_id AND symbol_id = :symbol_id;

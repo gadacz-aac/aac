@@ -1,34 +1,11 @@
-import 'package:aac/src/database/daos/symbol_dao.dart';
-import 'package:aac/src/features/symbols/model/communication_symbol.dart';
+import 'package:aac/src/database/daos/child_communication_symbol_dao.dart';
+import 'package:aac/src/features/symbols/model/child_communication_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'base_symbols_grid.g.dart';
-
-@riverpod
-Stream<List<CommunicationSymbol>> childSymbol(Ref ref, int id) {
-  final dao = ref.watch(symbolDaoProvider);
-
-  return dao.watchByBoardId(id);
-}
-
-@immutable
-class SymbolGridScrollPossibility {
-  final bool canScrollUp;
-  final bool canScrollDown;
-
-  const SymbolGridScrollPossibility(this.canScrollUp, this.canScrollDown);
-  const SymbolGridScrollPossibility.none() : this(false, false);
-  const SymbolGridScrollPossibility.onlyUp() : this(true, false);
-  const SymbolGridScrollPossibility.onlyDown() : this(false, true);
-  const SymbolGridScrollPossibility.both() : this(true, true);
-}
-
-final symbolGridScrollPossibilityProvider =
-    StateProvider<SymbolGridScrollPossibility>(
-        (ref) => const SymbolGridScrollPossibility.none());
 
 final symbolGridScrollControllerProvider =
     Provider.autoDispose<ScrollController>((ref) {
@@ -69,7 +46,25 @@ final symbolGridScrollControllerProvider =
   return controller;
 });
 
+final symbolGridScrollPossibilityProvider =
+    StateProvider<SymbolGridScrollPossibility>(
+        (ref) => const SymbolGridScrollPossibility.none());
+
+@riverpod
+Stream<List<ChildCommunicationSymbol>> childSymbol(Ref ref, int id) {
+  final dao = ref.watch(childSymbolDaoProvider);
+
+  return dao.watchByBoardId(id);
+}
+
 class BaseSymbolsGrid extends ConsumerWidget {
+  final Widget? Function(BuildContext, int) itemBuilder;
+
+  final int itemCount;
+  final int crossAxisCount;
+  final double crossAxisSpacing;
+
+  final double mainAxisSpacing;
   const BaseSymbolsGrid(
       {super.key,
       required this.itemBuilder,
@@ -77,13 +72,6 @@ class BaseSymbolsGrid extends ConsumerWidget {
       required this.crossAxisCount,
       this.crossAxisSpacing = 0,
       this.mainAxisSpacing = 0});
-
-  final Widget? Function(BuildContext, int) itemBuilder;
-  final int itemCount;
-  final int crossAxisCount;
-
-  final double crossAxisSpacing;
-  final double mainAxisSpacing;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -100,4 +88,16 @@ class BaseSymbolsGrid extends ConsumerWidget {
       itemBuilder: itemBuilder,
     ));
   }
+}
+
+@immutable
+class SymbolGridScrollPossibility {
+  final bool canScrollUp;
+  final bool canScrollDown;
+
+  const SymbolGridScrollPossibility(this.canScrollUp, this.canScrollDown);
+  const SymbolGridScrollPossibility.both() : this(true, true);
+  const SymbolGridScrollPossibility.none() : this(false, false);
+  const SymbolGridScrollPossibility.onlyDown() : this(false, true);
+  const SymbolGridScrollPossibility.onlyUp() : this(true, false);
 }

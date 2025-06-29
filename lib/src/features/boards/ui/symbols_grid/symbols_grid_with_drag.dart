@@ -2,9 +2,12 @@ import 'package:aac/src/database/daos/symbol_dao.dart';
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/boards/ui/symbols_grid/base_symbols_grid.dart';
+import 'package:aac/src/features/symbols/card/symbol_tap_actions.dart';
+import 'package:aac/src/features/symbols/model/child_communication_symbol.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/search/search_screen.dart';
-import 'package:aac/src/features/symbols/ui/symbol_card.dart';
+import 'package:aac/src/features/symbols/card/child_symbol_card.dart';
+import 'package:aac/src/features/symbols/card/symbol_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -18,7 +21,7 @@ class SymbolsGridWithDrag extends ConsumerStatefulWidget {
 }
 
 class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
-  DragItem<CommunicationSymbol>? currentlyDragged;
+  DragItem<ChildCommunicationSymbol>? currentlyDragged;
   int? desiredIndex;
   Offset dragStartPosition = Offset.zero;
   bool didDraggedSignificantly = false;
@@ -111,14 +114,15 @@ class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
                   offset: offset,
                   child: Padding(
                     padding: const EdgeInsets.all(6.0),
-                    child: SymbolCard(
-                      symbol: e,
-                      onTapActions: const [
-                        SymbolOnTapAction.speak,
-                        SymbolOnTapAction.cd,
-                        SymbolOnTapAction.multiselect
-                      ],
-                    ),
+                    child: SymbolVisiblityWrapper(
+                        hidden: e.hidden,
+                        child: SymbolCard(
+                            symbol: e..label = e.hidden.toString(),
+                            onTapActions: [
+                              SpeakAction(),
+                              NavigateToChildBoardAction(),
+                              MultiSelectAction(),
+                            ])),
                   ));
 
               return LongPressDraggable(

@@ -9,18 +9,6 @@ mixin _$SymbolDaoMixin on DatabaseAccessor<AppDatabase> {
       attachedDatabase.communicationSymbolTb;
   ChildSymbolTb get childSymbolTb => attachedDatabase.childSymbolTb;
   SettingTb get settingTb => attachedDatabase.settingTb;
-  Selectable<CommunicationSymbolEntity> selectByBoardId(int var1) {
-    return customSelect(
-        'SELECT s.* FROM communication_symbol_tb AS s JOIN child_symbol_tb AS cs ON cs.symbol_id = s.id WHERE cs.board_id = ?1 AND s.is_deleted = FALSE ORDER BY cs.position',
-        variables: [
-          Variable<int>(var1)
-        ],
-        readsFrom: {
-          communicationSymbolTb,
-          childSymbolTb,
-        }).asyncMap(communicationSymbolTb.mapFromRow);
-  }
-
   Future<int> moveSymbol(int newPos, int oldPos, int boardId) {
     return customUpdate(
       'WITH ordered AS (SELECT ?1, ?2, position AS old_position,(CASE WHEN position = ?2 THEN ?1 WHEN ?1 < ?2 AND position >= ?1 AND position < ?2 THEN position + 1 WHEN ?1 > ?2 AND position > ?2 AND position <= ?1 THEN position - 1 ELSE position END)AS new_position FROM child_symbol_tb WHERE board_id = ?3) UPDATE child_symbol_tb SET position = (SELECT new_position FROM ordered WHERE old_position = position) WHERE board_id = ?3',

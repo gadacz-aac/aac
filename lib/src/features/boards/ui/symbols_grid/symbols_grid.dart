@@ -1,6 +1,8 @@
 import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/boards/ui/symbols_grid/base_symbols_grid.dart';
-import 'package:aac/src/features/symbols/ui/symbol_card.dart';
+import 'package:aac/src/features/symbols/card/child_symbol_card.dart';
+import 'package:aac/src/features/symbols/card/symbol_card.dart';
+import 'package:aac/src/features/symbols/card/symbol_tap_actions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -18,9 +20,12 @@ class SymbolsGrid extends ConsumerWidget {
     return BaseSymbolsGrid(
       itemBuilder: (context, index) {
         final e = symbols.elementAt(index);
-        return SymbolCard(
-          symbol: e,
-          onTapActions: const [SymbolOnTapAction.cd, SymbolOnTapAction.speak],
+        return SymbolVisiblityWrapper(
+          hidden: e.hidden,
+          child: SymbolCard(
+            symbol: e..label = e.hidden.toString(),
+            onTapActions: [NavigateToChildBoardAction(), SpeakAction()],
+          ),
         );
       },
       itemCount: symbols.length,

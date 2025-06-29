@@ -13,7 +13,7 @@ BoardDao boardDao(Ref ref) {
   return BoardDao(db);
 }
 
-@DriftAccessor(include: {"board_queries.drift"})
+@DriftAccessor(include: {"drift/board_queries.drift"})
 class BoardDao extends DatabaseAccessor<AppDatabase> with _$BoardDaoMixin {
   // this constructor is required so that the main database can create an instance
   // of this object.

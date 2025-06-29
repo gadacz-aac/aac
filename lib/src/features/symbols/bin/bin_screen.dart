@@ -1,9 +1,10 @@
 import 'package:aac/src/database/daos/symbol_dao.dart';
 import 'package:aac/src/features/boards/ui/symbols_grid/base_symbols_grid.dart';
 import 'package:aac/src/features/symbols/bin/bin_bar.dart';
+import 'package:aac/src/features/symbols/card/symbol_tap_actions.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
-import 'package:aac/src/features/symbols/ui/symbol_card.dart';
-import 'package:flutter/material.dart';
+import 'package:aac/src/features/symbols/card/symbol_card.dart';
+import 'package:flutter/material.dart' hide SelectAction;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -35,9 +36,9 @@ class BinScreen extends ConsumerWidget {
                   return SymbolCard(
                     symbol: e,
                     onTapActions: [
-                      SymbolOnTapAction.speak,
-                      SymbolOnTapAction.select,
-                      SymbolOnTapAction.multiselect
+                      SpeakAction(),
+                      SymbolSelectAction(),
+                      MultiSelectAction(),
                     ],
                   );
                 },

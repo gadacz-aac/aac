@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:aac/src/features/settings/settings_manager.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

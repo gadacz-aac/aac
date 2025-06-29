@@ -7,7 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'symbol_dao.g.dart';
 
-@DriftAccessor(include: {"symbol_queries.drift"})
+@DriftAccessor(include: {"drift/symbol_queries.drift"})
 class SymbolDao extends DatabaseAccessor<AppDatabase> with _$SymbolDaoMixin {
   SymbolDao(super.db);
 
@@ -69,10 +69,6 @@ class SymbolDao extends DatabaseAccessor<AppDatabase> with _$SymbolDaoMixin {
             f.boardId.id(boardId) & f.symbolId.id.isIn(symbolIds);
 
     await this.db.managers.childSymbolTb.filter(filter).delete();
-  }
-
-  Stream<List<CommunicationSymbol>> watchByBoardId(int id) {
-    return selectByBoardId(id).map(CommunicationSymbol.fromEntity).watch();
   }
 
   Stream<List<CommunicationSymbol>> watchDeleted() {

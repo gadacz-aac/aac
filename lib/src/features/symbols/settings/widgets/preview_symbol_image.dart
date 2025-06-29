@@ -3,7 +3,7 @@ import 'package:aac/src/features/symbols/settings/screens/image_provider.dart';
 import 'package:aac/src/features/symbols/settings/screens/symbol_settings.dart';
 import 'package:aac/src/features/symbols/settings/widgets/board_picker.dart';
 import 'package:aac/src/features/symbols/settings/widgets/color_picker.dart';
-import 'package:aac/src/features/symbols/ui/symbol_card.dart';
+import 'package:aac/src/features/symbols/card/symbol_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

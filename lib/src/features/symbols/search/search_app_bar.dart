@@ -1,4 +1,3 @@
-import 'package:aac/src/features/boards/ui/actions/delete_forever_action.dart';
 import 'package:aac/src/features/boards/ui/actions/move_symbol_to_bin_action.dart';
 import 'package:aac/src/features/symbols/search/app_bar_actions.dart';
 import 'package:aac/src/features/symbols/search/search_screen.dart';
@@ -28,7 +27,8 @@ class _SearchAppBarState extends ConsumerState<SearchAppBar> {
   @override
   void initState() {
     super.initState();
-    controller.addListener(() => ref.read(queryProvider.notifier).state = controller.text);
+    controller.addListener(
+        () => ref.read(queryProvider.notifier).state = controller.text);
     focusNode.requestFocus();
   }
 
@@ -57,7 +57,10 @@ class _SearchAppBarState extends ConsumerState<SearchAppBar> {
     }
 
     if (areSelected) {
-      actions = [const PinSelectedSymbolAction(), const MoveSymbolToBinAction()];
+      actions = [
+        const PinSelectedSymbolAction(),
+        const MoveSymbolToBinAction()
+      ];
     } else {
       title = Hero(
         tag: "search",

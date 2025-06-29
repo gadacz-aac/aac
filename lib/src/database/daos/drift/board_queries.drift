@@ -1,4 +1,4 @@
-import '../schema.drift';
+import '../../schema.drift';
 
 selectById: SELECT * from board_tb WHERE board_tb.id = ?;
 

@@ -7,7 +7,7 @@ part of 'symbol_board_association_manager.dart';
 // **************************************************************************
 
 String _$symbolBoardAssociationManagerHash() =>
-    r'40818ea9e9b0200a1d8aa7cf82cc3da6a329540f';
+    r'99890a70cc5bf015312b9d4e2d2d688d6314f381';
 
 /// See also [symbolBoardAssociationManager].
 @ProviderFor(symbolBoardAssociationManager)
