@@ -21,4 +21,4 @@ final required = FormValidator(
           String s => s.trim().isEmpty,
           _ => false,
         },
-    errorMessage: "dupa");
+    errorMessage: "Wartość jest wymagana");

@@ -1,9 +1,9 @@
 import 'dart:io';
 
+import 'package:aac/src/shared/utils/get_app_directory.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -29,7 +29,7 @@ class AppDatabase extends _$AppDatabase {
 
   static LazyDatabase _openConnection() {
     return LazyDatabase(() async {
-      final dbFolder = await getApplicationDocumentsDirectory();
+      final dbFolder = await getGadaczDirectory();
       final file = File(p.join(dbFolder.path, 'db.sqlite'));
 
       return NativeDatabase.createInBackground(file);
@@ -39,5 +39,8 @@ class AppDatabase extends _$AppDatabase {
 
 @Riverpod(keepAlive: true)
 AppDatabase db(Ref ref) {
-  throw UnimplementedError();
+  final database = AppDatabase();
+  ref.onDispose(database.close);
+
+  return database;
 }

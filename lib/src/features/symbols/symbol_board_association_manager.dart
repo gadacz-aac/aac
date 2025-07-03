@@ -29,9 +29,6 @@ class SymbolBoardAssociationManager {
   }
 
   Future<void> toggleVisiblity(int symbolId, int boardId) {
-    print(symbolId);
-    print(boardId);
-
     return childSymbolDao.toggleVisibility(symbolId, boardId);
   }
 }

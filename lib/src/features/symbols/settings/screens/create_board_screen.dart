@@ -100,7 +100,7 @@ class _CreateBoardScreenState extends ConsumerState<CreateBoardScreen> {
                       children: [
                         Expanded(
                             child: GenericNumberField(
-                          name: "dupa",
+                          name: "columnCount",
                           controller: columnCountController,
                           inputFormatters: [positiveDigitsOnly],
                           validator: (val) {
@@ -121,12 +121,12 @@ class _CreateBoardScreenState extends ConsumerState<CreateBoardScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Button(
+                    AacButton(
                       onPressed: Navigator.of(context).pop,
                       type: ButtonType.noBackground,
                       child: const Text("Anuluj"),
                     ),
-                    Button(
+                    AacButton(
                         onPressed: () {
                           if (!_formKey.currentState!.validate()) return;
                           Navigator.pop(

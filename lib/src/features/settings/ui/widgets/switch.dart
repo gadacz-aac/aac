@@ -1,7 +1,7 @@
+import 'package:aac/src/features/settings/settings_manager.dart';
+import 'package:aac/src/features/settings/ui/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../settings_manager.dart';
 
 class PersistentSwitch extends ConsumerStatefulWidget {
   const PersistentSwitch(
@@ -13,7 +13,7 @@ class PersistentSwitch extends ConsumerStatefulWidget {
   });
 
   final ValueChanged<bool>? onChanged;
-  final String settingsEntryKey;
+  final SettingKey settingsEntryKey;
   final Widget? subtitle;
   final Widget? title;
 

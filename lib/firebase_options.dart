@@ -27,10 +27,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -49,7 +46,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '826800469394',
     projectId: 'gadacz-2a486',
     authDomain: 'gadacz-2a486.firebaseapp.com',
-    storageBucket: 'gadacz-2a486.appspot.com',
+    storageBucket: 'gadacz-2a486.firebasestorage.app',
     measurementId: 'G-71W6HQEM3C',
   );
 
@@ -58,7 +55,7 @@ class DefaultFirebaseOptions {
     appId: '1:826800469394:android:bad39aa8e14c6f874e7d4b',
     messagingSenderId: '826800469394',
     projectId: 'gadacz-2a486',
-    storageBucket: 'gadacz-2a486.appspot.com',
+    storageBucket: 'gadacz-2a486.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -66,16 +63,27 @@ class DefaultFirebaseOptions {
     appId: '1:826800469394:ios:27896feb45c59ee84e7d4b',
     messagingSenderId: '826800469394',
     projectId: 'gadacz-2a486',
-    storageBucket: 'gadacz-2a486.appspot.com',
+    storageBucket: 'gadacz-2a486.firebasestorage.app',
     iosBundleId: 'com.example.aac',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyC0EtFU81EibH30lV0zQBnZUTfkI6EjwUg',
-    appId: '1:826800469394:ios:d8aabf0a787de2ad4e7d4b',
+    appId: '1:826800469394:ios:27896feb45c59ee84e7d4b',
     messagingSenderId: '826800469394',
     projectId: 'gadacz-2a486',
-    storageBucket: 'gadacz-2a486.appspot.com',
-    iosBundleId: 'com.example.aac.RunnerTests',
+    storageBucket: 'gadacz-2a486.firebasestorage.app',
+    iosBundleId: 'com.example.aac',
   );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyCy-JOA3eTvWVh8JBXKj6xbL6kJKSYbVSI',
+    appId: '1:826800469394:web:ffb2270157a0bb5d4e7d4b',
+    messagingSenderId: '826800469394',
+    projectId: 'gadacz-2a486',
+    authDomain: 'gadacz-2a486.firebaseapp.com',
+    storageBucket: 'gadacz-2a486.firebasestorage.app',
+    measurementId: 'G-KRD4EYP7S8',
+  );
+
 }

@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:kiosk_mode/kiosk_mode.dart';
 
 Future<void> startProtectiveModeIfEnabled(ref) async {
-  final isEnabled = await ref.watch(settingsManagerProvider).getValue("kiosk");
+  final isEnabled = await ref.read(settingsManagerProvider).getValue("kiosk");
 
   if (kIsWeb) return;
   if (!Platform.isAndroid) return;

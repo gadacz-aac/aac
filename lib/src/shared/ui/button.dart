@@ -9,8 +9,8 @@ enum ButtonType {
   noBackground,
 }
 
-class Button extends StatelessWidget {
-  const Button({
+class AacButton extends StatelessWidget {
+  const AacButton({
     super.key,
     this.onPressed,
     required this.child,
