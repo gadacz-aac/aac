@@ -88,7 +88,7 @@ class SymbolSearchScreen extends ConsumerWidget {
     return Theme(
         data: appBarTheme,
         child: PopScope(
-            onPopInvoked: (didPop) {
+            onPopInvokedWithResult: (didPop, _) {
               if (didPop) {
                 ref.read(selectedSymbolsProvider).clear();
               }
