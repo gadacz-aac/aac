@@ -6,7 +6,7 @@ part of 'arasaac_service.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$arasaacServiceHash() => r'be3947c3562f058ba21493b8f1866a158fa49f39';
+String _$arasaacServiceHash() => r'65d25f00794e06c424e5d66adc919042e4af86db';
 
 /// See also [arasaacService].
 @ProviderFor(arasaacService)
@@ -24,7 +24,7 @@ final arasaacServiceProvider = AutoDisposeProvider<ArasaacService>.internal(
 // ignore: unused_element
 typedef ArasaacServiceRef = AutoDisposeProviderRef<ArasaacService>;
 String _$arasaacSearchResultsHash() =>
-    r'f2d18ac4fc7c0ab90850363c6d4d871a656eeb46';
+    r'a73071593ccacb084bda73c4c429902186065e2c';
 
 /// Copied from Dart SDK
 class _SystemHash {

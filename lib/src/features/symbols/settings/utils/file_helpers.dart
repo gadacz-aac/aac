@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:path_provider/path_provider.dart';
+import 'package:aac/src/shared/utils/get_app_directory.dart';
 import 'package:path/path.dart' as path;
 
 const String defaultImagePath = "assets/default_image_file.png";
@@ -13,7 +13,7 @@ Future<String> saveImage(String imagePath, [String? label]) async {
 
   final imageFile = File(imagePath);
 
-  final appDir = await getApplicationDocumentsDirectory();
+  final appDir = await getGadaczDirectory();
   final newFileName = label != null
       ? transformToFileName(label)
       : path.basename(imageFile.path);

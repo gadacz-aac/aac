@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:aac/src/features/symbols/settings/utils/randomise_symbol.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:http/http.dart' as http;
@@ -46,14 +47,13 @@ class ArasaacService {
 }
 
 @riverpod
-ArasaacService arasaacService(ArasaacServiceRef ref) {
+ArasaacService arasaacService(Ref ref) {
   final client = http.Client();
   return ArasaacService(client: client);
 }
 
 @riverpod
-Future<List<String>> arasaacSearchResults(
-    ArasaacSearchResultsRef ref, String query) async {
+Future<List<String>> arasaacSearchResults(Ref ref, String query) async {
   var didDispose = false;
   ref.onDispose(() => didDispose = true);
 

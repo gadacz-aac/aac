@@ -1,7 +1,9 @@
+import 'dart:async';
+
+import 'package:aac/src/features/settings/settings_manager.dart';
+import 'package:aac/src/features/settings/ui/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../settings_manager.dart';
 
 class PersistentDropdownButton<T> extends ConsumerStatefulWidget {
   const PersistentDropdownButton(
@@ -13,8 +15,8 @@ class PersistentDropdownButton<T> extends ConsumerStatefulWidget {
   });
 
   final List<PersistentDropdownItem<T>> items;
-  final ValueChanged<T?>? onChanged;
-  final String settingsEntryKey;
+  final ValueChanged<T>? onChanged;
+  final SettingKey settingsEntryKey;
   final Widget? title;
 
   @override
@@ -25,12 +27,14 @@ class PersistentDropdownButton<T> extends ConsumerStatefulWidget {
 class _PersistentDropdownState<T>
     extends ConsumerState<PersistentDropdownButton<T>> {
   void _onChanged(T? newValue) {
+    if (newValue == null) return;
+
     _putValue(newValue);
 
     if (widget.onChanged != null) widget.onChanged!(newValue);
   }
 
-  void _putValue(T? newValue) {
+  void _putValue(T newValue) {
     final settingsManager = ref.read(settingsManagerProvider);
     settingsManager.putValue(widget.settingsEntryKey, newValue);
   }

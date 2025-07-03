@@ -6,53 +6,39 @@ import 'package:aac/src/features/symbols/bin/bin_screen.dart';
 import 'package:aac/src/features/symbols/settings/screens/create_board_screen.dart';
 import 'package:aac/src/features/symbols/settings/utils/randomise_symbol.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
+import 'package:aac/src/shared/ui/bottom_sheet_options.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class BottomSheetOptions extends StatelessWidget {
-  const BottomSheetOptions({super.key});
+class BoardBottomSheetOptions extends StatelessWidget {
+  const BoardBottomSheetOptions({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(26.0),
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          const OptionGroup(
-            options: [
-              LockOption(),
-            ],
-          ),
-          const SizedBox(
-            height: 24,
-          ),
-          OptionGroup(options: [
-            const OpenSettingsOption(),
-            Option(
-              icon: const Icon(Icons.delete),
-              label: "Kosz",
-              onTap: () => Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (_) => const BinScreen())),
-            )
-          ]),
-          const SizedBox(
-            height: 24,
-          ),
-          const OptionGroup(options: [
-            EditBoardOption(),
-          ]),
-          if (kDebugMode) ...[
-            const SizedBox(
-              height: 24,
-            ),
-            const OptionGroup(
-              options: [CreateRandomSymbol()],
-            )
-          ]
-        ]),
+    return BottomSheetOptions(children: [
+      const OptionGroup(
+        options: [
+          LockOption(),
+        ],
       ),
-    );
+      OptionGroup(options: [
+        const OpenSettingsOption(),
+        Option(
+          icon: const Icon(Icons.delete),
+          label: "Kosz",
+          onTap: () => Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (_) => const BinScreen())),
+        )
+      ]),
+      const OptionGroup(isLast: true, options: [
+        EditBoardOption(),
+      ]),
+      if (kDebugMode)
+        const OptionGroup(
+          options: [CreateRandomSymbol()],
+        )
+    ]);
   }
 }
 
@@ -148,7 +134,7 @@ class OpenSettingsOption extends StatelessWidget {
       icon: const Icon(Icons.settings),
       label: "Ustawienia",
       onTap: () => Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => const SettingsScreen())),
+          MaterialPageRoute(builder: (context) => const MainSettingsScreen())),
     );
   }
 }
@@ -192,9 +178,11 @@ class Option extends StatelessWidget {
 
 class OptionGroup extends StatelessWidget {
   final List<Widget> options;
+  final bool isLast;
 
   const OptionGroup({
     required this.options,
+    this.isLast = false,
     super.key,
   });
 
@@ -202,22 +190,24 @@ class OptionGroup extends StatelessWidget {
   Widget build(BuildContext context) {
     const borderColor = Color(0xFFE9E9E9);
 
-    return DecoratedBox(
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: const BorderRadius.all(Radius.circular(5)),
-            border: Border.all(width: 1, color: borderColor)),
-        child: Column(
-          children: options
-              .expand((e) => [
-                    e,
-                    const Divider(
-                      color: borderColor,
-                      height: 1,
-                    )
-                  ])
-              .toList()
-            ..removeLast(),
-        ));
+    return Padding(
+      padding: EdgeInsets.only(bottom: isLast ? 0 : 24.0),
+      child: DecoratedBox(
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: const BorderRadius.all(Radius.circular(5)),
+              border: Border.all(width: 1, color: borderColor)),
+          child: Column(
+              children: options
+                  .expand((e) => [
+                        e,
+                        const Divider(
+                          color: borderColor,
+                          height: 1,
+                        )
+                      ])
+                  .toList()
+                ..removeLast())),
+    );
   }
 }

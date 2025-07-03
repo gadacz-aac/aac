@@ -18,7 +18,7 @@ class ShowMoreOptions extends ConsumerWidget {
               builder: (context) {
                 return ProviderScope(
                     overrides: [boardIdProvider.overrideWithValue(boardId)],
-                    child: const BottomSheetOptions());
+                    child: const BoardBottomSheetOptions());
               },
             ),
         icon: const Icon(Icons.more_vert));

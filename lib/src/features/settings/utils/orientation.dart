@@ -1,31 +1,35 @@
-import 'dart:async';
-
 import 'package:flutter/services.dart';
 
-enum OrientationOption { portrait, landscape, auto }
+enum OrientationOption {
+  portrait,
+  landscape,
+  auto;
 
-void changeOrientation(FutureOr<String?> orientation) async {
-  orientation = await orientation;
-
-  if (orientation == null) return;
-  List<DeviceOrientation> preferredOrientations = [];
-  if (orientation == OrientationOption.portrait.name) {
-    preferredOrientations = [
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ];
-  } else if (orientation == OrientationOption.landscape.name) {
-    preferredOrientations = [
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-    ];
-  } else if (orientation == OrientationOption.auto.name) {
-    preferredOrientations = [
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-    ];
+  static OrientationOption fromKey(String key) {
+    return OrientationOption.values.firstWhere(
+      (e) => e.name == key,
+      orElse: () => throw ArgumentError('Invalid SettingKey: $key'),
+    );
   }
-  SystemChrome.setPreferredOrientations(preferredOrientations);
+}
+
+void changeOrientation(String orientation) async {
+  final orientationOption = OrientationOption.fromKey(orientation);
+
+  SystemChrome.setPreferredOrientations(switch (orientationOption) {
+    OrientationOption.portrait => [
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ],
+    OrientationOption.landscape => [
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ],
+    OrientationOption.auto => [
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]
+  });
 }

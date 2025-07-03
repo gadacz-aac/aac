@@ -52,7 +52,7 @@ class MainMenuScreen extends ConsumerWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const SettingsScreen(),
+                        builder: (context) => const MainSettingsScreen(),
                       ),
                     );
                   },
