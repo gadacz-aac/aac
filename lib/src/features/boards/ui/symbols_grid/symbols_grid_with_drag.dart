@@ -64,7 +64,9 @@ class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
             });
 
             ref.read(symbolDaoProvider).moveSymbol(
-                desiredIndex!, currentlyDragged!.index, widget.board.id);
+                newPos: desiredIndex!,
+                oldPos: currentlyDragged!.index,
+                boardId: widget.board.id);
           }, builder: (context, incoming, __) {
             return LayoutBuilder(builder: (context, constrains) {
               final data = DragItem(index: index, data: e);

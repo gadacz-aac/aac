@@ -17,7 +17,7 @@ final searchedSymbolProvider =
 
   return ref
       .read(symbolDaoProvider)
-      .searchSymbol(query, onlyPinned, color)
+      .searchSymbol(query: query, onlyPinned: onlyPinned, color: color)
       .map(CommunicationSymbol.fromEntity)
       .get();
 });

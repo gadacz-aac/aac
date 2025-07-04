@@ -19,7 +19,7 @@ class SymbolBoardAssociationManager {
   Future<void> pin(int boardId, List<CommunicationSymbol> symbols) async {
     db.transaction(() async {
       for (var s in symbols) {
-        await symbolDao.pinSymbolToBoard(boardId, s.id);
+        await symbolDao.pinSymbolToBoard(boardId: boardId, symbolId: s.id);
       }
     });
   }
@@ -29,7 +29,8 @@ class SymbolBoardAssociationManager {
   }
 
   Future<void> toggleVisiblity(int symbolId, int boardId) {
-    return childSymbolDao.toggleVisibility(symbolId, boardId);
+    return childSymbolDao.toggleVisibility(
+        symbolId: symbolId, boardId: boardId);
   }
 }
 

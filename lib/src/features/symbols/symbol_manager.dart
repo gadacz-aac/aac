@@ -75,11 +75,11 @@ class SymbolManager {
 
   Future<int> saveSymbol(int boardId, SymbolEditModel params,
       [BoardEditModel? childBoard]) async {
-    if (params.label != null) {
+    if (params.label == null) {
       throw ArgumentError.notNull("Label must not be null");
     }
 
-    if (params.imagePath != null) {
+    if (params.imagePath == null) {
       throw ArgumentError.notNull("Image path must not be null");
     }
 
@@ -92,7 +92,7 @@ class SymbolManager {
 
       final symbolId = await symbolDao.create(params, childBoardId);
 
-      await symbolDao.pinSymbolToBoard(boardId, symbolId);
+      await symbolDao.pinSymbolToBoard(boardId: boardId, symbolId: symbolId);
 
       return symbolId;
     });

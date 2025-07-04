@@ -41,7 +41,7 @@ class SymbolDao extends DatabaseAccessor<AppDatabase> with _$SymbolDaoMixin {
   }
 
   Future<void> updateWith(SymbolEditModel params, int? childBoardId) async {
-    if (params.id != null) {
+    if (params.id == null) {
       ArgumentError.notNull("ID must not be null for update");
     }
 

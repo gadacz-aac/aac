@@ -15,12 +15,12 @@ class HideSymbolAction extends ConsumerWidget {
     return IconButton(
         onPressed: () async {
           // mutable state is the real devil, and i called them crazy
-          final symbol = ref.read(selectedSymbolsProvider).state.first;
+          final symbolId = ref.read(selectedSymbolsProvider).state.first.id;
           final boardId = ref.read(boardIdProvider);
 
           await ref
               .read(symbolBoardAssociationManagerProvider)
-              .toggleVisiblity(symbol.id, boardId);
+              .toggleVisiblity(symbolId, boardId);
 
           ref.read(selectedSymbolsProvider).clear();
         },

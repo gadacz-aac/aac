@@ -12,7 +12,7 @@ final foundBoards = FutureProvider.autoDispose<List<Board>>((ref) async {
 
   return ref
       .watch(boardDaoProvider)
-      .searchBoard(query)
+      .searchBoard(query: query)
       .map(Board.fromEntity)
       .get();
 });
