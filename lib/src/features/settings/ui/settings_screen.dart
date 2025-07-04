@@ -10,7 +10,8 @@ enum SettingKey {
   kiosk,
   wakelock,
   speechRate,
-  voice;
+  voice,
+  speechPitch;
 
   static SettingKey fromKey(String key) {
     return SettingKey.values.firstWhere(
