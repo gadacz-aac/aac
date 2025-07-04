@@ -32,7 +32,8 @@ class TtsManager {
       tts.setQueueMode(1),
       tts.awaitSpeakCompletion(true),
       setPreferredVoice(),
-      setPreferredSpeechRate()
+      setPreferredSpeechRate(),
+      setPreferredPitch()
     ]);
   }
 
@@ -74,10 +75,20 @@ class TtsManager {
   Future<void> setPreferredSpeechRate() async {
     final double savedRate =
         await settingsManager.getValue(SettingKey.speechRate);
-    await tts.setSpeechRate(savedRate);
+    await setSpeechRate(savedRate);
+  }
+
+  Future<void> setPreferredPitch() async {
+    final double saved = await settingsManager.getValue(SettingKey.speechPitch);
+
+    await setPitch(saved);
   }
 
   Future<void> setSpeechRate(double rate) async {
     await tts.setSpeechRate(rate);
+  }
+
+  Future<void> setPitch(double value) async {
+    await tts.setPitch(value);
   }
 }

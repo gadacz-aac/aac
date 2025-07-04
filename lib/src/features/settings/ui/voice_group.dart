@@ -11,7 +11,23 @@ class VoiceGroup extends PersistentGroup {
   const VoiceGroup(
       {super.key,
       super.title = const Text("Ustawienia mowy"),
-      super.children = const [TtsSpeedRate(), VoiceDropdown()]});
+      super.children = const [TtsSpeedRate(), TtsPitch(), VoiceDropdown()]});
+}
+
+class TtsPitch extends ConsumerWidget {
+  const TtsPitch({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return PersistentSlider(
+      SettingKey.speechPitch,
+      titlePrefix: "Wysokość głosu",
+      min: 0.5,
+      max: 2.0,
+      writeOnChange: false,
+      onChanged: ref.read(ttsManagerProvider).setPitch,
+    );
+  }
 }
 
 class TtsSpeedRate extends ConsumerWidget {
@@ -27,9 +43,7 @@ class TtsSpeedRate extends ConsumerWidget {
       min: 0.1,
       max: 1.0,
       writeOnChange: false,
-      onChanged: (value) {
-        ref.read(ttsManagerProvider).setSpeechRate(value);
-      },
+      onChanged: ref.read(ttsManagerProvider).setSpeechRate,
     );
   }
 }

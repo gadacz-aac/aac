@@ -34,9 +34,14 @@ class SettingsCache {
     SettingKey.wakelock: false,
     SettingKey.speechRate: 0.5,
     SettingKey.voice: null,
+    SettingKey.speechPitch: 1,
   };
 
   Future<void> initializeStore(AppDatabase db) async {
+    if (SettingKey.values.length != _defaults.length) {
+      throw Exception("Missing default values for some settings");
+    }
+
     if (_initilized.isCompleted) {
       _initilized = Completer();
     }
