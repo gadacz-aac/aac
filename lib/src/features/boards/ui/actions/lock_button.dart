@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:aac/src/features/boards/board_screen.dart';
-import 'package:aac/src/features/settings/utils/protective_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -29,8 +28,7 @@ class _LockButtonState extends ConsumerState<LockButton> {
           _tapLeft -= 1;
 
           if (_tapLeft == 0) {
-            ref.read(isParentModeProvider.notifier).state = true;
-            stopProtectiveMode();
+            ref.read(isParentModeProvider.notifier).enable();
 
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
           } else {

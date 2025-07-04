@@ -23,7 +23,7 @@ class MainMenuScreen extends ConsumerWidget {
               children: <Widget>[
                 ElevatedButton(
                   onPressed: () {
-                    ref.read(isParentModeProvider.notifier).state = true;
+                    ref.read(isParentModeProvider.notifier).enable();
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -35,9 +35,7 @@ class MainMenuScreen extends ConsumerWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    ref.read(isParentModeProvider.notifier).state = false;
-                    startWakelock(ref);
-                    startProtectiveModeIfEnabled(ref);
+                    ref.read(isParentModeProvider.notifier).disable();
                     Navigator.push(
                       context,
                       MaterialPageRoute(

@@ -28,7 +28,8 @@ class RecentBoards extends ConsumerWidget {
                 final e = boards[index];
                 String title = e.name;
                 // String subtitle = "${e.symbols.length} symboli";
-                return BoardTile(title: title, subtitle: "NOT IMPLEMENTED", id: e.id);
+                return BoardTile(
+                    title: title, subtitle: "NOT IMPLEMENTED", id: e.id);
               },
               separatorBuilder: (context, _) => const DecoratedBox(
                   decoration: BoxDecoration(
@@ -56,21 +57,9 @@ class BoardTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-        onTap: () => openBoard(context),
         title: Text(title),
         subtitle: Text(subtitle),
         trailing:
             const RotatedBox(quarterTurns: -1, child: Icon(Icons.expand_more)));
-  }
-
-  void openBoard(BuildContext context) {
-    if (!context.mounted) return;
-
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ProviderScope(
-                overrides: [isParentModeProvider.overrideWith((ref) => true)],
-                child: BoardScreen(boardId: id))));
   }
 }

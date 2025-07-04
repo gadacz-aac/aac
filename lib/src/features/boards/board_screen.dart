@@ -12,13 +12,43 @@ import 'package:aac/src/features/boards/ui/symbols_grid/base_symbols_grid.dart';
 import 'package:aac/src/features/boards/ui/symbols_grid/symbols_grid.dart';
 import 'package:aac/src/features/boards/ui/symbols_grid/symbols_grid_with_drag.dart';
 import 'package:aac/src/features/boards/ui/sentence_bar.dart';
+import 'package:aac/src/features/settings/utils/protective_mode.dart';
+import 'package:aac/src/features/settings/utils/wakelock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-// in debug mode parent mode default
-// in release mode child mode default
-final isParentModeProvider = StateProvider<bool>((_) => kDebugMode);
+part 'board_screen.g.dart';
+
+@riverpod
+class IsParentMode extends _$IsParentMode {
+  @override
+  bool build() {
+    // in debug mode parent mode default
+    // in release mode child mode default
+    return kDebugMode;
+  }
+
+  void enable() {
+    if (state == true) return;
+
+    state = true;
+
+    stopProtectiveMode();
+    stopWakelock();
+  }
+
+  void disable() {
+    if (state == false) return;
+
+    state = false;
+
+    startProtectiveModeIfEnabled(ref);
+    startWakelockIfEnabled(ref);
+  }
+}
+
 final boardIdProvider = Provider<int>((_) => throw UnimplementedError());
 
 class BoardScreen extends ConsumerWidget {
