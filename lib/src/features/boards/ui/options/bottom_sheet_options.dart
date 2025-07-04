@@ -116,8 +116,7 @@ class LockOption extends ConsumerWidget {
         icon: const Icon(Icons.lock),
         label: "Zablokuj",
         onTap: () async {
-          ref.read(isParentModeProvider.notifier).state = false;
-          startProtectiveModeIfEnabled(ref);
+          ref.read(isParentModeProvider.notifier).disable();
           Navigator.pop(context);
         });
   }
