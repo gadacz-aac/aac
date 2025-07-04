@@ -118,13 +118,11 @@ class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
                     padding: const EdgeInsets.all(6.0),
                     child: SymbolVisiblityWrapper(
                         hidden: e.hidden,
-                        child: SymbolCard(
-                            symbol: e..label = e.hidden.toString(),
-                            onTapActions: [
-                              SpeakAction(),
-                              NavigateToChildBoardAction(),
-                              MultiSelectAction(),
-                            ])),
+                        child: SymbolCard(symbol: e, onTapActions: [
+                          SpeakAction(),
+                          NavigateToChildBoardAction(),
+                          MultiSelectAction(),
+                        ])),
                   ));
 
               return LongPressDraggable(

@@ -23,7 +23,7 @@ class SymbolsGrid extends ConsumerWidget {
         return SymbolVisiblityWrapper(
           hidden: e.hidden,
           child: SymbolCard(
-            symbol: e..label = e.hidden.toString(),
+            symbol: e,
             onTapActions: [NavigateToChildBoardAction(), SpeakAction()],
           ),
         );
