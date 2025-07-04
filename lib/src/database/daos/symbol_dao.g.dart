@@ -9,7 +9,8 @@ mixin _$SymbolDaoMixin on DatabaseAccessor<AppDatabase> {
       attachedDatabase.communicationSymbolTb;
   ChildSymbolTb get childSymbolTb => attachedDatabase.childSymbolTb;
   SettingTb get settingTb => attachedDatabase.settingTb;
-  Future<int> moveSymbol(int newPos, int oldPos, int boardId) {
+  Future<int> moveSymbol(
+      {required int newPos, required int oldPos, required int boardId}) {
     return customUpdate(
       'WITH ordered AS (SELECT ?1, ?2, position AS old_position,(CASE WHEN position = ?2 THEN ?1 WHEN ?1 < ?2 AND position >= ?1 AND position < ?2 THEN position + 1 WHEN ?1 > ?2 AND position > ?2 AND position <= ?1 THEN position - 1 ELSE position END)AS new_position FROM child_symbol_tb WHERE board_id = ?3) UPDATE child_symbol_tb SET position = (SELECT new_position FROM ordered WHERE old_position = position) WHERE board_id = ?3',
       variables: [
@@ -22,7 +23,7 @@ mixin _$SymbolDaoMixin on DatabaseAccessor<AppDatabase> {
     );
   }
 
-  Future<int> pinSymbolToBoard(int boardId, int symbolId) {
+  Future<int> pinSymbolToBoard({required int boardId, required int symbolId}) {
     return customInsert(
       'WITH helpers AS (SELECT(COALESCE((SELECT MAX(position) FROM child_symbol_tb WHERE board_id = ?1), -1) + 1)AS position) INSERT OR REPLACE INTO child_symbol_tb (board_id, symbol_id, position) VALUES (?1, ?2, (SELECT position FROM helpers))',
       variables: [Variable<int>(boardId), Variable<int>(symbolId)],
@@ -31,7 +32,7 @@ mixin _$SymbolDaoMixin on DatabaseAccessor<AppDatabase> {
   }
 
   Selectable<CommunicationSymbolEntity> searchSymbol(
-      String query, bool onlyPinned, int? color) {
+      {required String query, required bool onlyPinned, int? color}) {
     return customSelect(
         'SELECT s.* FROM communication_symbol_tb AS s LEFT JOIN child_symbol_tb AS cs ON cs.symbol_id = s.id WHERE s.label LIKE CONCAT(\'%\', ?1, \'%\') AND(NOT ?2 OR cs.board_id IS NULL)AND(?3 IS NULL OR s.color = ?3)AND is_deleted = FALSE',
         variables: [

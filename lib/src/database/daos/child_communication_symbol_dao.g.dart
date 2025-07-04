@@ -34,9 +34,9 @@ mixin _$ChildSymbolDaoMixin on DatabaseAccessor<AppDatabase> {
         ));
   }
 
-  Future<int> toggleVisibility(int boardId, int symbolId) {
+  Future<int> toggleVisibility({required int boardId, required int symbolId}) {
     return customUpdate(
-      'UPDATE child_symbol_tb SET hidden = TRUE WHERE board_id = ?1 AND symbol_id = ?2',
+      'UPDATE child_symbol_tb SET hidden = NOT hidden WHERE board_id = ?1 AND symbol_id = ?2',
       variables: [Variable<int>(boardId), Variable<int>(symbolId)],
       updates: {childSymbolTb},
       updateKind: UpdateKind.update,

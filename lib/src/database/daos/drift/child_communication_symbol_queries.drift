@@ -7,7 +7,7 @@ selectByBoardId:
 		AND s.is_deleted = false
 		ORDER BY cs.position;
 
-toggleVisibility(:board_id AS INTEGER, :symbol_id AS INTEGER):
+toggleVisibility(:symbol_id AS INTEGER, :board_id AS INTEGER):
 	UPDATE child_symbol_tb
-	SET hidden = true
+	SET hidden = NOT hidden
 	WHERE board_id = :board_id AND symbol_id = :symbol_id;

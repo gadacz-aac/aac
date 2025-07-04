@@ -29,7 +29,7 @@ mixin _$BoardDaoMixin on DatabaseAccessor<AppDatabase> {
         }).asyncMap(boardTb.mapFromRow);
   }
 
-  Selectable<BoardEntity> searchBoard(String query) {
+  Selectable<BoardEntity> searchBoard({required String query}) {
     return customSelect(
         'SELECT * FROM board_tb WHERE name LIKE CONCAT(\'%\', ?1, \'%\')',
         variables: [
