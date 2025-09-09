@@ -2,14 +2,15 @@ import 'package:aac/src/database/daos/symbol_dao.dart';
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/boards/ui/symbols_grid/base_symbols_grid.dart';
-import 'package:aac/src/features/symbols/card/symbol_tap_actions.dart';
-import 'package:aac/src/features/symbols/model/child_communication_symbol.dart';
-import 'package:aac/src/features/symbols/model/communication_symbol.dart';
-import 'package:aac/src/features/symbols/search/search_screen.dart';
 import 'package:aac/src/features/symbols/card/child_symbol_card.dart';
 import 'package:aac/src/features/symbols/card/symbol_card.dart';
+import 'package:aac/src/features/symbols/card/symbol_tap_actions.dart';
+import 'package:aac/src/features/symbols/model/child_communication_symbol.dart';
+import 'package:aac/src/features/symbols/search/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../symbols/model/communication_symbol.dart';
 
 class SymbolsGridWithDrag extends ConsumerStatefulWidget {
   const SymbolsGridWithDrag({required this.board, super.key});

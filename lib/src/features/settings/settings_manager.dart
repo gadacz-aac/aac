@@ -34,7 +34,7 @@ class SettingsCache {
     SettingKey.wakelock: false,
     SettingKey.speechRate: 0.5,
     SettingKey.voice: null,
-    SettingKey.speechPitch: 1,
+    SettingKey.speechPitch: 1.0,
   };
 
   Future<void> initializeStore(AppDatabase db) async {
