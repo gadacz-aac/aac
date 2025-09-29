@@ -9,7 +9,8 @@ class BottomSheetOptions extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(26.0),
+        padding: EdgeInsets.fromLTRB(
+            26, 26, 26, MediaQuery.of(context).padding.bottom),
         child: Column(mainAxisSize: MainAxisSize.min, children: children),
       ),
     );

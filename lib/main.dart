@@ -6,10 +6,10 @@ import 'package:aac/src/features/settings/ui/settings_screen.dart';
 import 'package:aac/src/features/settings/utils/orientation.dart';
 import 'package:aac/src/shared/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
@@ -34,6 +34,12 @@ void main() async {
   }
 
   changeOrientation(orientation);
+
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: [
+    SystemUiOverlay.top,
+    SystemUiOverlay.bottom,
+  ]);
+
   runApp(ProviderScope(
       overrides: [settingsCacheProvider.overrideWithValue(settingsStore)],
       child: MainApp()));
@@ -45,24 +51,23 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-          useMaterial3: true,
-          scaffoldBackgroundColor: Colors.white,
-          appBarTheme: const AppBarTheme(
-              backgroundColor: AacColors.sentenceBarGrey,
-              elevation: 0,
-              scrolledUnderElevation: 0,
-              iconTheme: IconThemeData(color: AacColors.iconsGrey),
-              titleTextStyle: TextStyle(
-                  color: AacColors.iconsGrey,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold)),
-          bottomSheetTheme: const BottomSheetThemeData(
-            backgroundColor: AacColors.greyBackground,
-          ),
-          dialogTheme:
-              const DialogThemeData(backgroundColor: AacColors.greyBackground)),
-      home: BoardScreen(boardId: 1),
-    );
+        theme: ThemeData(
+            useMaterial3: true,
+            scaffoldBackgroundColor: Colors.white,
+            appBarTheme: const AppBarTheme(
+                backgroundColor: AacColors.sentenceBarGrey,
+                elevation: 0,
+                scrolledUnderElevation: 0,
+                iconTheme: IconThemeData(color: AacColors.iconsGrey),
+                titleTextStyle: TextStyle(
+                    color: AacColors.iconsGrey,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold)),
+            bottomSheetTheme: const BottomSheetThemeData(
+              backgroundColor: AacColors.greyBackground,
+            ),
+            dialogTheme: const DialogThemeData(
+                backgroundColor: AacColors.greyBackground)),
+        home: BoardScreen(boardId: 1));
   }
 }

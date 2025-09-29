@@ -13,7 +13,6 @@ class ShowMoreOptions extends ConsumerWidget {
     return IconButton(
         onPressed: () => showModalBottomSheet(
               isScrollControlled: true,
-              useSafeArea: true,
               context: context,
               builder: (context) {
                 return ProviderScope(

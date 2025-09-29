@@ -109,44 +109,46 @@ class BoardScreen extends ConsumerWidget {
                   isMainBoard: _isMainBoard,
                   actions: actions),
               floatingActionButton: isParentMode ? const CreateSymbol() : null,
-              body: OrientationBuilder(
-                builder: (context, orientation) {
-                  final List<Widget> children;
-                  if (orientation == Orientation.landscape) {
-                    children = [
-                      !isParentMode ? const SentenceBar() : const SizedBox(),
-                      Expanded(
-                        child: Row(
-                          children: [
-                            isParentMode
-                                ? SymbolsGridWithDrag(board: data)
-                                : SymbolsGrid(board: data),
-                            ControlsWrapper(
-                                direction: Axis.vertical, children: controls)
-                          ],
-                        ),
-                      )
-                    ];
-                  } else {
-                    children = [
-                      !isParentMode ? const SentenceBar() : const SizedBox(),
-                      isParentMode
-                          ? SymbolsGridWithDrag(board: data)
-                          : SymbolsGrid(board: data),
-                      ControlsWrapper(
-                        direction: Axis.horizontal,
-                        children: controls,
-                      )
-                    ];
-                  }
-                  return ProviderScope(
-                    overrides: [
-                      symbolGridScrollControllerProvider,
-                      symbolGridScrollPossibilityProvider
-                    ],
-                    child: Column(children: children),
-                  );
-                },
+              body: SafeArea(
+                child: OrientationBuilder(
+                  builder: (context, orientation) {
+                    final List<Widget> children;
+                    if (orientation == Orientation.landscape) {
+                      children = [
+                        !isParentMode ? const SentenceBar() : const SizedBox(),
+                        Expanded(
+                          child: Row(
+                            children: [
+                              isParentMode
+                                  ? SymbolsGridWithDrag(board: data)
+                                  : SymbolsGrid(board: data),
+                              ControlsWrapper(
+                                  direction: Axis.vertical, children: controls)
+                            ],
+                          ),
+                        )
+                      ];
+                    } else {
+                      children = [
+                        !isParentMode ? const SentenceBar() : const SizedBox(),
+                        isParentMode
+                            ? SymbolsGridWithDrag(board: data)
+                            : SymbolsGrid(board: data),
+                        ControlsWrapper(
+                          direction: Axis.horizontal,
+                          children: controls,
+                        )
+                      ];
+                    }
+                    return ProviderScope(
+                      overrides: [
+                        symbolGridScrollControllerProvider,
+                        symbolGridScrollPossibilityProvider
+                      ],
+                      child: Column(children: children),
+                    );
+                  },
+                ),
               ),
             ),
           );

@@ -36,7 +36,7 @@ class BoardBottomSheetOptions extends StatelessWidget {
       if (kDebugMode)
         const OptionGroup(
           options: [CreateRandomSymbol()],
-        )
+        ),
     ]);
   }
 }
