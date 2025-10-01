@@ -12,18 +12,29 @@ class HideSymbolAction extends ConsumerWidget {
     final areSelectedSymbol = ref.watch(areMultipleSymbolsSelected);
     if (areSelectedSymbol) return const SizedBox();
 
+    final symbolId = ref.watch(selectedSymbolsProvider).state.first.id;
+    final boardId = ref.watch(boardIdProvider);
+    final isVisible = ref
+        .watch(symbolBoardAssociationManagerProvider)
+        .watchIsVisible(symbolId, boardId);
+
     return IconButton(
         onPressed: () async {
-          // mutable state is the real devil, and i called them crazy
-          final symbolId = ref.read(selectedSymbolsProvider).state.first.id;
-          final boardId = ref.read(boardIdProvider);
-
           await ref
               .read(symbolBoardAssociationManagerProvider)
               .toggleVisiblity(symbolId, boardId);
 
           ref.read(selectedSymbolsProvider).clear();
         },
-        icon: const Icon(Icons.visibility_rounded));
+        icon: StreamBuilder(
+            initialData: false,
+            stream: isVisible,
+            builder: (context, snapshot) {
+              final showIsVisible = snapshot.hasData && snapshot.data!;
+
+              return Icon(showIsVisible
+                  ? Icons.visibility_rounded
+                  : Icons.visibility_off_rounded);
+            }));
   }
 }

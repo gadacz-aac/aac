@@ -9,6 +9,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
+import '../../../shared/ui/scaffold.dart';
+
 final searchedSymbolProvider =
     FutureProvider.autoDispose<List<CommunicationSymbol>>((ref) async {
   final query = ref.watch(queryProvider);
@@ -69,12 +71,7 @@ class SymbolSearchScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final appBarTheme = theme.copyWith(
       appBarTheme: AppBarTheme(
-        systemOverlayStyle: theme.colorScheme.brightness == Brightness.dark
-            ? SystemUiOverlayStyle.light
-            : SystemUiOverlayStyle.dark,
-        backgroundColor: theme.colorScheme.brightness == Brightness.dark
-            ? Colors.grey[900]
-            : Colors.white,
+        backgroundColor: Colors.white,
         iconTheme: theme.primaryIconTheme.copyWith(color: Colors.grey),
         titleTextStyle: theme.textTheme.titleLarge,
         toolbarTextStyle: theme.textTheme.bodyMedium,
@@ -93,7 +90,7 @@ class SymbolSearchScreen extends ConsumerWidget {
                 ref.read(selectedSymbolsProvider).clear();
               }
             },
-            child: Scaffold(
+            child: AacScaffold(
                 appBar: const SearchAppBar(),
                 body: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

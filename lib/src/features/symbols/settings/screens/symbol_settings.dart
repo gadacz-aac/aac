@@ -10,6 +10,7 @@ import 'package:aac/src/features/symbols/symbol_board_association_manager.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:aac/src/shared/colors.dart';
 import 'package:aac/src/shared/form/widgets/text_field.dart';
+import 'package:aac/src/shared/ui/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -60,7 +61,7 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AacScaffold(
       appBar: SymbolSettingsAppBar(
         submit: submit,
       ),

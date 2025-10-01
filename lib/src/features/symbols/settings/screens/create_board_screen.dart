@@ -78,70 +78,72 @@ class _CreateBoardScreenState extends ConsumerState<CreateBoardScreen> {
     return ConstrainedBox(
       constraints:
           BoxConstraints(minHeight: MediaQuery.of(context).size.height * 0.5),
-      child: Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 29.0, vertical: 27.0),
-          child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  children: [
-                    GenericTextField(
-                      controller: nameController,
-                      labelText: "Nazwa",
-                      validator: validateBoardName,
-                    ),
-                    const SizedBox(
-                      height: 14,
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                            child: GenericNumberField(
-                          name: "columnCount",
-                          controller: columnCountController,
-                          inputFormatters: [positiveDigitsOnly],
-                          validator: (val) {
-                            if (val != null && val.startsWith("0")) {
-                              return "Liczba kolumn powinna być większa od 0";
-                            }
-                            return null;
+      child: SafeArea(
+        child: Form(
+          key: _formKey,
+          child: Padding(
+            padding: const EdgeInsets.all(26.0),
+            child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    children: [
+                      GenericTextField(
+                        controller: nameController,
+                        labelText: "Nazwa",
+                        validator: validateBoardName,
+                      ),
+                      const SizedBox(
+                        height: 14,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                              child: GenericNumberField(
+                            name: "columnCount",
+                            controller: columnCountController,
+                            inputFormatters: [positiveDigitsOnly],
+                            validator: (val) {
+                              if (val != null && val.startsWith("0")) {
+                                return "Liczba kolumn powinna być większa od 0";
+                              }
+                              return null;
+                            },
+                            labelText: "Liczba Kolumn",
+                          )),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 28.0,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      AacButton(
+                        onPressed: Navigator.of(context).pop,
+                        type: ButtonType.noBackground,
+                        child: const Text("Anuluj"),
+                      ),
+                      AacButton(
+                          onPressed: () {
+                            if (!_formKey.currentState!.validate()) return;
+                            Navigator.pop(
+                                context,
+                                widget.params.copyWith(
+                                  name: nameController.text,
+                                  id: widget.params.id,
+                                  columnCount:
+                                      int.tryParse(columnCountController.text),
+                                ));
                           },
-                          labelText: "Liczba Kolumn",
-                        )),
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 28.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    AacButton(
-                      onPressed: Navigator.of(context).pop,
-                      type: ButtonType.noBackground,
-                      child: const Text("Anuluj"),
-                    ),
-                    AacButton(
-                        onPressed: () {
-                          if (!_formKey.currentState!.validate()) return;
-                          Navigator.pop(
-                              context,
-                              widget.params.copyWith(
-                                name: nameController.text,
-                                id: widget.params.id,
-                                columnCount:
-                                    int.tryParse(columnCountController.text),
-                              ));
-                        },
-                        child: const Text("Zapisz"))
-                  ],
-                )
-              ]),
+                          child: const Text("Zapisz"))
+                    ],
+                  )
+                ]),
+          ),
         ),
       ),
     );

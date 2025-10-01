@@ -6,6 +6,8 @@ import 'package:aac/src/shared/ui/list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../shared/ui/scaffold.dart';
+
 class BackupGroup extends PersistentGroup {
   const BackupGroup({
     super.key,
@@ -49,7 +51,7 @@ class BackupScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final backups = ref.watch(backupManagerProvider).getBackupList();
 
-    return Scaffold(
+    return AacScaffold(
         appBar: AppBar(
           title: Text("Eksport i import"),
         ),

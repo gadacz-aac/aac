@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:aac/src/features/symbols/settings/widgets/cherry_pick_image.dart';
+import 'package:aac/src/shared/colors.dart' show AacColors;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:aac/src/features/symbols/settings/screens/symbol_settings.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'image_provider.g.dart';
@@ -17,26 +19,26 @@ class ImageNotifier extends _$ImageNotifier {
     return initialImage ?? defaultImage;
   }
 
-  cropImage() async {
-    // final croppedFile = await ImageCropper().cropImage(
-    //     sourcePath: state,
-    //     compressQuality: 60, //? isn't it too low?
-    //     compressFormat: ImageCompressFormat.png,
-    //     uiSettings: [
-    //       AndroidUiSettings(
-    //           toolbarTitle: "Przycinanie zdjęcia",
-    //           initAspectRatio: CropAspectRatioPreset.square,
-    //           lockAspectRatio: true),
-    //       IOSUiSettings(
-    //         title:
-    //             "Przycinanie zdjęcia", //TODO: lockAspectRatio for IOS also!!!
-    //       )
-    //     ]);
-    //
-    // if (croppedFile == null) return;
-    // imageCache.clear(); // TODO co to?
-    // log('image cropped, path: ${croppedFile.path}');
-    // state = croppedFile.path;
+  Future<void> cropImage() async {
+    final croppedFile = await ImageCropper().cropImage(
+        sourcePath: state,
+        compressQuality: 60, //? isn't it too low?
+        compressFormat: ImageCompressFormat.png,
+        uiSettings: [
+          AndroidUiSettings(
+            toolbarTitle: "Przycinanie zdjęcia",
+            initAspectRatio: CropAspectRatioPreset.square,
+          ),
+          IOSUiSettings(
+            title:
+                "Przycinanie zdjęcia", //TODO: lockAspectRatio for IOS also!!!
+          )
+        ]);
+
+    if (croppedFile == null) return;
+    imageCache.clear(); // TODO co to?
+    log('image cropped, path: ${croppedFile.path}');
+    state = croppedFile.path;
   }
 
   Future<void> cherryPick(BuildContext context,

@@ -35,10 +35,11 @@ void main() async {
 
   changeOrientation(orientation);
 
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: [
-    SystemUiOverlay.top,
-    SystemUiOverlay.bottom,
-  ]);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(systemNavigationBarIconBrightness: Brightness.light),
+  );
 
   runApp(ProviderScope(
       overrides: [settingsCacheProvider.overrideWithValue(settingsStore)],
@@ -59,6 +60,9 @@ class MainApp extends StatelessWidget {
                 elevation: 0,
                 scrolledUnderElevation: 0,
                 iconTheme: IconThemeData(color: AacColors.iconsGrey),
+                systemOverlayStyle: SystemUiOverlayStyle(
+                    systemNavigationBarColor: AacColors.sentenceBarGrey,
+                    systemNavigationBarIconBrightness: Brightness.dark),
                 titleTextStyle: TextStyle(
                     color: AacColors.iconsGrey,
                     fontSize: 16,
@@ -66,6 +70,7 @@ class MainApp extends StatelessWidget {
             bottomSheetTheme: const BottomSheetThemeData(
               backgroundColor: AacColors.greyBackground,
             ),
+            brightness: Brightness.light,
             dialogTheme: const DialogThemeData(
                 backgroundColor: AacColors.greyBackground)),
         home: BoardScreen(boardId: 1));

@@ -4,6 +4,7 @@ import 'package:aac/src/database/daos/child_communication_symbol_dao.dart';
 import 'package:aac/src/database/daos/symbol_dao.dart';
 import 'package:aac/src/database/database.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
+import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -26,6 +27,14 @@ class SymbolBoardAssociationManager {
 
   Future<void> unpin(List<CommunicationSymbol> symbols, int? boardId) async {
     return symbolDao.unpinSymbols(symbols, boardId);
+  }
+
+  Stream<bool> watchIsVisible(int symbolId, int boardId) {
+    return db.managers.childSymbolTb
+        .filter((f) =>
+            f.symbolId.id(symbolId) & f.boardId.id(boardId) & f.hidden(false))
+        .watchSingleOrNull()
+        .map((e) => e != null);
   }
 
   Future<void> toggleVisiblity(int symbolId, int boardId) {

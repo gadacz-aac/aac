@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/settings/screens/image_provider.dart';
 import 'package:aac/src/features/symbols/settings/screens/symbol_settings.dart';
@@ -84,8 +86,11 @@ class ImageOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final viewPadding = MediaQuery.paddingOf(context);
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 25.0),
+      padding:
+          EdgeInsets.fromLTRB(26.0, 26.0, 26.0, max(viewPadding.bottom, 26)),
       child: Wrap(
         children: [
           ChangeImage(ref: ref),

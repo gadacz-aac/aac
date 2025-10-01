@@ -8,56 +8,30 @@ import 'package:aac/src/features/boards/ui/controls/create_symbol.dart';
 import 'package:aac/src/features/boards/ui/controls/delete_all.dart';
 import 'package:aac/src/features/boards/ui/controls/pagination.dart';
 import 'package:aac/src/features/boards/ui/controls/remove_last_word.dart';
+import 'package:aac/src/features/boards/ui/sentence_bar.dart';
 import 'package:aac/src/features/boards/ui/symbols_grid/base_symbols_grid.dart';
 import 'package:aac/src/features/boards/ui/symbols_grid/symbols_grid.dart';
 import 'package:aac/src/features/boards/ui/symbols_grid/symbols_grid_with_drag.dart';
-import 'package:aac/src/features/boards/ui/sentence_bar.dart';
 import 'package:aac/src/features/settings/utils/protective_mode.dart';
 import 'package:aac/src/features/settings/utils/wakelock.dart';
+import 'package:aac/src/shared/ui/scaffold.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'board_screen.g.dart';
 
-@riverpod
-class IsParentMode extends _$IsParentMode {
-  @override
-  bool build() {
-    // in debug mode parent mode default
-    // in release mode child mode default
-    return kDebugMode;
-  }
-
-  void enable() {
-    if (state == true) return;
-
-    state = true;
-
-    stopProtectiveMode();
-    stopWakelock();
-  }
-
-  void disable() {
-    if (state == false) return;
-
-    state = false;
-
-    startProtectiveModeIfEnabled(ref);
-    startWakelockIfEnabled(ref);
-  }
-}
-
 final boardIdProvider = Provider<int>((_) => throw UnimplementedError());
 
 class BoardScreen extends ConsumerWidget {
+  final int boardId;
+
+  late final bool _isMainBoard;
   BoardScreen({super.key, required this.boardId}) {
     _isMainBoard = boardId != 1;
   }
-
-  final int boardId;
-  late final bool _isMainBoard;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -102,53 +76,51 @@ class BoardScreen extends ConsumerWidget {
 
           return ProviderScope(
             overrides: [boardIdProvider.overrideWithValue(boardId)],
-            child: Scaffold(
+            child: AacScaffold(
               appBar: BoardAppBar(
                   title: data.name,
                   isParentMode: isParentMode,
                   isMainBoard: _isMainBoard,
                   actions: actions),
               floatingActionButton: isParentMode ? const CreateSymbol() : null,
-              body: SafeArea(
-                child: OrientationBuilder(
-                  builder: (context, orientation) {
-                    final List<Widget> children;
-                    if (orientation == Orientation.landscape) {
-                      children = [
-                        !isParentMode ? const SentenceBar() : const SizedBox(),
-                        Expanded(
-                          child: Row(
-                            children: [
-                              isParentMode
-                                  ? SymbolsGridWithDrag(board: data)
-                                  : SymbolsGrid(board: data),
-                              ControlsWrapper(
-                                  direction: Axis.vertical, children: controls)
-                            ],
-                          ),
-                        )
-                      ];
-                    } else {
-                      children = [
-                        !isParentMode ? const SentenceBar() : const SizedBox(),
-                        isParentMode
-                            ? SymbolsGridWithDrag(board: data)
-                            : SymbolsGrid(board: data),
-                        ControlsWrapper(
-                          direction: Axis.horizontal,
-                          children: controls,
-                        )
-                      ];
-                    }
-                    return ProviderScope(
-                      overrides: [
-                        symbolGridScrollControllerProvider,
-                        symbolGridScrollPossibilityProvider
-                      ],
-                      child: Column(children: children),
-                    );
-                  },
-                ),
+              body: OrientationBuilder(
+                builder: (context, orientation) {
+                  final List<Widget> children;
+                  if (orientation == Orientation.landscape) {
+                    children = [
+                      !isParentMode ? const SentenceBar() : const SizedBox(),
+                      Expanded(
+                        child: Row(
+                          children: [
+                            isParentMode
+                                ? SymbolsGridWithDrag(board: data)
+                                : SymbolsGrid(board: data),
+                            ControlsWrapper(
+                                direction: Axis.vertical, children: controls)
+                          ],
+                        ),
+                      )
+                    ];
+                  } else {
+                    children = [
+                      !isParentMode ? const SentenceBar() : const SizedBox(),
+                      isParentMode
+                          ? SymbolsGridWithDrag(board: data)
+                          : SymbolsGrid(board: data),
+                      ControlsWrapper(
+                        direction: Axis.horizontal,
+                        children: controls,
+                      )
+                    ];
+                  }
+                  return ProviderScope(
+                    overrides: [
+                      symbolGridScrollControllerProvider,
+                      symbolGridScrollPossibilityProvider
+                    ],
+                    child: Column(children: children),
+                  );
+                },
               ),
             ),
           );
@@ -157,16 +129,16 @@ class BoardScreen extends ConsumerWidget {
 }
 
 class ErrorScreen extends StatelessWidget {
+  final String error;
+
   const ErrorScreen({
     super.key,
     required this.error,
   });
 
-  final String error;
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AacScaffold(
       appBar: AppBar(title: const Text('Oops..')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -184,5 +156,37 @@ class ErrorScreen extends StatelessWidget {
         ]),
       ),
     );
+  }
+}
+
+@riverpod
+class IsParentMode extends _$IsParentMode {
+  @override
+  bool build() {
+    // in debug mode parent mode default
+    // in release mode child mode default
+    return kDebugMode;
+  }
+
+  void disable() {
+    if (state == false) return;
+
+    state = false;
+
+    startProtectiveModeIfEnabled(ref);
+    startWakelockIfEnabled(ref);
+
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+  }
+
+  void enable() {
+    if (state == true) return;
+
+    state = true;
+
+    stopProtectiveMode();
+    stopWakelock();
+
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   }
 }

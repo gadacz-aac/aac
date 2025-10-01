@@ -4,6 +4,7 @@ import 'package:aac/src/features/symbols/bin/bin_bar.dart';
 import 'package:aac/src/features/symbols/card/symbol_tap_actions.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/card/symbol_card.dart';
+import 'package:aac/src/shared/ui/scaffold.dart';
 import 'package:flutter/material.dart' hide SelectAction;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -22,7 +23,7 @@ class BinScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final deletedSymbols = ref.watch(deletedSymbolsProvider);
 
-    return Scaffold(
+    return AacScaffold(
       appBar: const BinAppBar(
         title: 'Kosz',
       ),

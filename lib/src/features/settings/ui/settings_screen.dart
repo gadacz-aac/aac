@@ -5,6 +5,8 @@ import 'package:aac/src/features/settings/ui/widgets/group.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../shared/ui/scaffold.dart';
+
 enum SettingKey {
   orientation,
   kiosk,
@@ -30,7 +32,7 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
+    return AacScaffold(
         appBar: AppBar(
           title: Text(title),
         ),

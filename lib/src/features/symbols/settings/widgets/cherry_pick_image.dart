@@ -8,6 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../../shared/ui/scaffold.dart';
+
 bool isValidImage(ContentType contentType) {
   final imageTypes = [
     "image/gif",
@@ -130,7 +132,8 @@ class _ArasaacSearchScreenState extends ConsumerState<ArasaacSearchScreen> {
               );
             }
             return SliverToBoxAdapter(
-              child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -142,7 +145,7 @@ class _ArasaacSearchScreenState extends ConsumerState<ArasaacSearchScreen> {
                       height: 4,
                     ),
                     Text(
-                      "pora coś wyszukać, bo ta pustka jest ciut niezręczna",
+                      "Pora coś wyszukać, bo ta pustka jest ciut niezręczna",
                       style: Theme.of(context).textTheme.bodyLarge,
                       textAlign: TextAlign.center,
                     ),
@@ -171,7 +174,7 @@ class ImageCherryPicker extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       animationDuration: Duration.zero,
-      child: Scaffold(
+      child: AacScaffold(
         appBar: AppBar(
             automaticallyImplyLeading: false,
             flexibleSpace: const SafeArea(
@@ -278,11 +281,15 @@ class _UploadImageFromLinkScreenState extends State<UploadImageFromLinkScreen> {
     if (!uri.isAbsolute) return;
 
     final (file, err) = await tryDownloadImage(uri);
+    print(file);
+    print(err);
 
     if (err != null) {
       setState(() {
         errorText = err;
       });
+
+      return;
     }
 
     if (!mounted) return;
