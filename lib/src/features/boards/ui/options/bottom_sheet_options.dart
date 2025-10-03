@@ -6,6 +6,7 @@ import 'package:aac/src/features/symbols/settings/screens/create_board_screen.da
 import 'package:aac/src/features/symbols/settings/utils/randomise_symbol.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:aac/src/shared/ui/bottom_sheet_options.dart';
+import 'package:aac/src/shared/utils/dev_mode.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,10 +34,15 @@ class BoardBottomSheetOptions extends StatelessWidget {
       const OptionGroup(isLast: true, options: [
         EditBoardOption(),
       ]),
-      if (kDebugMode)
-        const OptionGroup(
-          options: [CreateRandomSymbol()],
-        ),
+      Consumer(builder: (context, ref, _) {
+        final isDev = ref.watch(isDevModeProvider);
+        if (isDev) {
+          return OptionGroup(
+            options: [CreateRandomSymbol()],
+          );
+        }
+        return SizedBox();
+      })
     ]);
   }
 }

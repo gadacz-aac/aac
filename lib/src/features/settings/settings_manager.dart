@@ -5,6 +5,7 @@ import 'package:aac/src/database/database.dart';
 import 'package:aac/src/features/settings/ui/settings_screen.dart';
 import 'package:aac/src/features/settings/utils/orientation.dart';
 import 'package:drift/drift.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -51,7 +52,13 @@ class SettingsCache {
     final settings = await db.managers.settingTb.get();
 
     for (var e in settings) {
-      _store[SettingKey.fromKey(e.key)] = jsonDecode(e.value);
+      try {
+        final key = SettingKey.fromKey(e.key);
+
+        _store[key] = jsonDecode(e.value);
+      } catch (err) {
+        FirebaseCrashlytics.instance.log(err.toString());
+      }
     }
 
     _initilized.complete();

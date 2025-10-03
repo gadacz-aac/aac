@@ -24,7 +24,7 @@ while true; do
 		flutter build apk
 		
 		name=$(cat pubspec.yaml | head -1 | cut -f 2 -d " ")
-		tmpFile="/tmp/$name-$number.apk"
+		tmpFile="/tmp/gadacz-aac.apk"
 
 		mv "build/app/outputs/flutter-apk/app-release.apk" "$tmpFile"
 

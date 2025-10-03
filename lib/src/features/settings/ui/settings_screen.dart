@@ -2,6 +2,7 @@ import 'package:aac/src/features/settings/ui/backup_screen.dart';
 import 'package:aac/src/features/settings/ui/preference_group.dart';
 import 'package:aac/src/features/settings/ui/voice_group.dart';
 import 'package:aac/src/features/settings/ui/widgets/group.dart';
+import 'package:aac/src/shared/utils/dev_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -33,9 +34,14 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AacScaffold(
-        appBar: AppBar(
-          title: Text(title),
-        ),
+        appBar: AppBar(title: Text(title), actions: [
+          GestureDetector(
+              child: Icon(
+                Icons.developer_mode,
+                color: Colors.transparent,
+              ),
+              onLongPress: () => showDevModeToggleDialog(context, ref))
+        ]),
         body: ListView(children: children));
   }
 }

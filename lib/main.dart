@@ -5,6 +5,7 @@ import 'package:aac/src/features/settings/settings_manager.dart';
 import 'package:aac/src/features/settings/ui/settings_screen.dart';
 import 'package:aac/src/features/settings/utils/orientation.dart';
 import 'package:aac/src/shared/colors.dart';
+import 'package:drift/drift.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -14,12 +15,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  final db = AppDatabase();
-  final settingsStore = SettingsCache();
-  await settingsStore.initializeStore(db);
-  await db.close();
-  final orientation = settingsStore.get<String>(SettingKey.orientation);
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -33,13 +28,18 @@ void main() async {
     };
   }
 
+  final db = AppDatabase();
+  final settingsStore = SettingsCache();
+  await settingsStore.initializeStore(db);
+
+  await db.managers.settingTb
+      .create((f) => f(key: "dupa", value: "dupa"), mode: InsertMode.replace);
+  await db.close();
+  final orientation = settingsStore.get<String>(SettingKey.orientation);
+
   changeOrientation(orientation);
 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-
-  SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle(systemNavigationBarIconBrightness: Brightness.light),
-  );
 
   runApp(ProviderScope(
       overrides: [settingsCacheProvider.overrideWithValue(settingsStore)],

@@ -12,7 +12,7 @@ class PaginationControl extends ConsumerWidget {
 
   final SymbolGridScrollDirection direction;
 
-  void _onPressed(ref) {
+  void _onPressed(WidgetRef ref) {
     final controller = ref.read(symbolGridScrollControllerProvider);
 
     final offsetMultiplier =
