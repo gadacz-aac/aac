@@ -1,7 +1,8 @@
-## Flutter Version
-Na najnowszej wersji 3.29 jest problem z czymś do renderowania (chyba) i nie da się tego odpalić.
-3.27.1 to najnowsza działająca wersja z której probowałem korzystać aplikacje.
-Update zrobi się jak poprawią co popsuli.
+# Gadacz?
+
+It's an AAC app. And what's AAC, you ask? It stands for Aletnative Augmentive Communication and it's a set of tools that can be used for people with speech impediments to communicate with others. Apps like this aren't their only choice and it might not be the best fit for everyone ...but for ones it works for it's a life saver - or at least a huge help in day to day life. 
+
+For primary english speaking people reading this. Don't worry about prouncing the name. You won't.
 
 ## Why there're so many errors? I've just cloned this repo!!
 
