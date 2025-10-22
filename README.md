@@ -1,6 +1,10 @@
-# Gadacz?
+# What's Gadacz?
 
-It's an AAC app. And what's AAC, you ask? It stands for Aletnative Augmentive Communication and it's a set of tools that can be used for people with speech impediments to communicate with others. Apps like this aren't their only choice and it might not be the best fit for everyone ...but for ones it works for it's a life saver - or at least a huge help in day to day life. 
+It's an AAC app. 
+And what's AAC, you ask? It stands for Aletnative Augmentive Communication and it's a set of tools that can be used for people with speech impediments to communicate with others.
+
+Apps like this aren't their only choice and it might not be the best fit for everyone
+...but for ones it works for it's a life saver - or at least a huge help in day to day life. 
 
 For primary english speaking people reading this. Don't worry about prouncing the name. You won't.
 
