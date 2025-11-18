@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:aac/src/features/symbols/model/communication_color.dart';
+
 abstract final class AacColors {
   static const Color nounOrange = Color(0xfffbaf3c);
   static const Color verbGreen = Color(0xff9adf7d);
@@ -26,3 +28,16 @@ abstract final class AacColors {
 
   static const Color greyBackground = Color(0xFFF9F9F7);
 }
+
+final colors = [
+  CommunicationColor(
+      label: "Rzeczownik", code: 0xFFFBAF3C, folderBackgroundCode: 0xFFFFE0B1),
+  CommunicationColor(
+      label: "Przymiotnik", code: 0xFF66C4FB, folderBackgroundCode: 0xFFC2E9FF),
+  CommunicationColor(
+      label: "Czasownik", code: 0xFF9ADF7D, folderBackgroundCode: 0xFFE4FFD9),
+  CommunicationColor(
+      label: "Barbie", code: 0xFFFB88CF, folderBackgroundCode: 0xFFFFC6E9),
+  CommunicationColor(
+      label: "Lucy", code: 0xFFFB4C4C, folderBackgroundCode: 0xFFFFB6B6),
+];

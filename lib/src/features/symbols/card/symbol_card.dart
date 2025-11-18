@@ -3,7 +3,6 @@ import 'package:aac/src/features/symbols/card/symbol_image.dart';
 import 'package:aac/src/features/symbols/card/symbol_tap_actions.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/search/search_screen.dart';
-import 'package:aac/src/features/symbols/settings/widgets/color_picker.dart';
 import 'package:aac/src/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

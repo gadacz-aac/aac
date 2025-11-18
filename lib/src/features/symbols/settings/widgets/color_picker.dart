@@ -1,24 +1,10 @@
 import 'package:aac/src/features/symbols/model/communication_color.dart';
 import 'package:aac/src/features/symbols/settings/screens/symbol_settings.dart';
+import 'package:aac/src/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:riverpod_annotation/experimental/scope.dart';
-
-//TODO Move to constants
-
-final colors = [
-  CommunicationColor(
-      label: "Rzeczownik", code: 0xFFFBAF3C, folderBackgroundCode: 0xFFFFE0B1),
-  CommunicationColor(
-      label: "Przymiotnik", code: 0xFF66C4FB, folderBackgroundCode: 0xFFC2E9FF),
-  CommunicationColor(
-      label: "Czasownik", code: 0xFF9ADF7D, folderBackgroundCode: 0xFFE4FFD9),
-  CommunicationColor(
-      label: "Barbie", code: 0xFFFB88CF, folderBackgroundCode: 0xFFFFC6E9),
-  CommunicationColor(
-      label: "Lucy", code: 0xFFFB4C4C, folderBackgroundCode: 0xFFFFB6B6),
-];
 
 @Dependencies([initialValues])
 final colorProvider = StateProvider.autoDispose(

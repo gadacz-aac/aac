@@ -154,7 +154,6 @@ class _ArasaacSearchScreenState extends ConsumerState<ArasaacSearchScreen> {
               ),
             );
           },
-          // TODO może coś innego? i kiedy to wgl będzie miało error?
           error: (error, _) => SliverToBoxAdapter(
                 child: Center(
                   child: Text("$error"),
@@ -281,8 +280,6 @@ class _UploadImageFromLinkScreenState extends State<UploadImageFromLinkScreen> {
     if (!uri.isAbsolute) return;
 
     final (file, err) = await tryDownloadImage(uri);
-    print(file);
-    print(err);
 
     if (err != null) {
       setState(() {

@@ -43,16 +43,18 @@ class _PersistentDropdownState<T>
     return showDialog<T>(
       context: context,
       builder: (context) {
-        return SimpleDialog(
-            title: widget.title,
-            children: widget.items
-                .map((e) => RadioListTile(
-                      groupValue: value,
-                      title: e.child,
-                      value: e.value,
-                      onChanged: (value) => Navigator.pop(context, e.value),
-                    ))
-                .toList());
+        return RadioGroup(
+          groupValue: value,
+          onChanged: (value) => Navigator.pop(context, value),
+          child: SimpleDialog(
+              title: widget.title,
+              children: widget.items
+                  .map((e) => RadioListTile(
+                        title: e.child,
+                        value: e.value,
+                      ))
+                  .toList()),
+        );
       },
     );
   }

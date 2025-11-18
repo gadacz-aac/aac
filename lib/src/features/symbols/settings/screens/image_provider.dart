@@ -28,13 +28,12 @@ class ImageNotifier extends _$ImageNotifier {
             initAspectRatio: CropAspectRatioPreset.square,
           ),
           IOSUiSettings(
-            title:
-                "Przycinanie zdjęcia", //TODO: lockAspectRatio for IOS also!!!
+            title: "Przycinanie zdjęcia",
           )
         ]);
 
     if (croppedFile == null) return;
-    imageCache.clear(); // TODO co to?
+    imageCache.clear();
     log('image cropped, path: ${croppedFile.path}');
     state = croppedFile.path;
   }
