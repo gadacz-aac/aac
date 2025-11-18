@@ -13,6 +13,7 @@ import 'package:aac/src/shared/form/widgets/text_field.dart';
 import 'package:aac/src/shared/ui/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'symbol_settings.g.dart';
@@ -170,7 +171,7 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
       return;
     }
 
-    final imagePath = ref.read(imageNotifierProvider);
+    final imagePath = ref.read(imageProvider);
     final params = SymbolEditModel(
         id: ref.read(initialValuesProvider).id,
         imagePath: await saveImage(imagePath),
@@ -178,7 +179,7 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
         color: ref.read(colorProvider),
         vocalization: vocalizationController.text);
 
-    final boardParams = await ref.read(boardNotifierProvider.future);
+    final boardParams = await ref.read(boardProvider.future);
 
     if (imagePath.isEmpty || !File(imagePath).existsSync()) {
       if (!mounted) return;
@@ -192,9 +193,8 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
                     widget.updateSymbolSettings(params);
                     Navigator.pop(context);
                   },
-                  onAccepted: () => ref
-                      .read(imageNotifierProvider.notifier)
-                      .cherryPick(context),
+                  onAccepted: () =>
+                      ref.read(imageProvider.notifier).cherryPick(context),
                 );
               }));
 

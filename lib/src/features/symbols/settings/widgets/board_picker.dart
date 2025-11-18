@@ -43,7 +43,7 @@ class BoardPicker extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final List<Widget> chips;
-    final childBoard = ref.watch(boardNotifierProvider).valueOrNull;
+    final childBoard = ref.watch(boardProvider).value;
 
     if (childBoard == null) {
       chips = [const LinkNewBoardChip(), const LinkExistingBoardChip()];
@@ -71,13 +71,13 @@ class LinkedBoardChip extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final childBoard = ref.watch(boardNotifierProvider).valueOrNull;
+    final childBoard = ref.watch(boardProvider).value;
 
     if (childBoard == null) return const SizedBox();
 
     return InputChip(
         label: Text(childBoard.name),
-        onDeleted: ref.read(boardNotifierProvider.notifier).delete,
+        onDeleted: ref.read(boardProvider.notifier).delete,
         onPressed: () => showModalBottomSheet<BoardEditModel?>(
                     context: context,
                     isScrollControlled: true,
@@ -85,7 +85,7 @@ class LinkedBoardChip extends ConsumerWidget {
                     builder: (context) => CreateBoardScreen(params: childBoard))
                 .then((val) {
               if (val == null) return;
-              ref.read(boardNotifierProvider.notifier).set(val);
+              ref.read(boardProvider.notifier).set(val);
             }));
   }
 }

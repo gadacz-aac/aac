@@ -35,7 +35,7 @@ class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
 
   @override
   Widget build(BuildContext context) {
-    final symbols = ref.watch(childSymbolProvider(widget.board.id)).valueOrNull;
+    final symbols = ref.watch(childSymbolProvider(widget.board.id)).value;
 
     if (symbols == null) return SizedBox();
 

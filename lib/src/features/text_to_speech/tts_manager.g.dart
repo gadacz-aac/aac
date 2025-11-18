@@ -6,21 +6,46 @@ part of 'tts_manager.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ttsManagerHash() => r'fefffd97683351475854cf0abf15b0d165e6d602';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [ttsManager].
 @ProviderFor(ttsManager)
-final ttsManagerProvider = AutoDisposeProvider<TtsManager>.internal(
-  ttsManager,
-  name: r'ttsManagerProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$ttsManagerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const ttsManagerProvider = TtsManagerProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef TtsManagerRef = AutoDisposeProviderRef<TtsManager>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class TtsManagerProvider
+    extends $FunctionalProvider<TtsManager, TtsManager, TtsManager>
+    with $Provider<TtsManager> {
+  const TtsManagerProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'ttsManagerProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$ttsManagerHash();
+
+  @$internal
+  @override
+  $ProviderElement<TtsManager> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  TtsManager create(Ref ref) {
+    return ttsManager(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(TtsManager value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<TtsManager>(value),
+    );
+  }
+}
+
+String _$ttsManagerHash() => r'fefffd97683351475854cf0abf15b0d165e6d602';

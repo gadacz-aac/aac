@@ -6,175 +6,122 @@ part of 'arasaac_service.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$arasaacServiceHash() => r'65d25f00794e06c424e5d66adc919042e4af86db';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [arasaacService].
 @ProviderFor(arasaacService)
-final arasaacServiceProvider = AutoDisposeProvider<ArasaacService>.internal(
-  arasaacService,
-  name: r'arasaacServiceProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$arasaacServiceHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const arasaacServiceProvider = ArasaacServiceProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef ArasaacServiceRef = AutoDisposeProviderRef<ArasaacService>;
-String _$arasaacSearchResultsHash() =>
-    r'a73071593ccacb084bda73c4c429902186065e2c';
-
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// See also [arasaacSearchResults].
-@ProviderFor(arasaacSearchResults)
-const arasaacSearchResultsProvider = ArasaacSearchResultsFamily();
-
-/// See also [arasaacSearchResults].
-class ArasaacSearchResultsFamily extends Family<AsyncValue<List<String>>> {
-  /// See also [arasaacSearchResults].
-  const ArasaacSearchResultsFamily();
-
-  /// See also [arasaacSearchResults].
-  ArasaacSearchResultsProvider call(
-    String query,
-  ) {
-    return ArasaacSearchResultsProvider(
-      query,
-    );
-  }
-
-  @override
-  ArasaacSearchResultsProvider getProviderOverride(
-    covariant ArasaacSearchResultsProvider provider,
-  ) {
-    return call(
-      provider.query,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'arasaacSearchResultsProvider';
-}
-
-/// See also [arasaacSearchResults].
-class ArasaacSearchResultsProvider
-    extends AutoDisposeFutureProvider<List<String>> {
-  /// See also [arasaacSearchResults].
-  ArasaacSearchResultsProvider(
-    String query,
-  ) : this._internal(
-          (ref) => arasaacSearchResults(
-            ref as ArasaacSearchResultsRef,
-            query,
-          ),
-          from: arasaacSearchResultsProvider,
-          name: r'arasaacSearchResultsProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$arasaacSearchResultsHash,
-          dependencies: ArasaacSearchResultsFamily._dependencies,
-          allTransitiveDependencies:
-              ArasaacSearchResultsFamily._allTransitiveDependencies,
-          query: query,
+final class ArasaacServiceProvider
+    extends $FunctionalProvider<ArasaacService, ArasaacService, ArasaacService>
+    with $Provider<ArasaacService> {
+  const ArasaacServiceProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'arasaacServiceProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
         );
 
-  ArasaacSearchResultsProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.query,
-  }) : super.internal();
+  @override
+  String debugGetCreateSourceHash() => _$arasaacServiceHash();
 
-  final String query;
+  @$internal
+  @override
+  $ProviderElement<ArasaacService> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
 
   @override
-  Override overrideWith(
-    FutureOr<List<String>> Function(ArasaacSearchResultsRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: ArasaacSearchResultsProvider._internal(
-        (ref) => create(ref as ArasaacSearchResultsRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        query: query,
-      ),
-    );
+  ArasaacService create(Ref ref) {
+    return arasaacService(ref);
   }
 
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ArasaacService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ArasaacService>(value),
+    );
+  }
+}
+
+String _$arasaacServiceHash() => r'65d25f00794e06c424e5d66adc919042e4af86db';
+
+@ProviderFor(arasaacSearchResults)
+const arasaacSearchResultsProvider = ArasaacSearchResultsFamily._();
+
+final class ArasaacSearchResultsProvider extends $FunctionalProvider<
+        AsyncValue<List<String>>, List<String>, FutureOr<List<String>>>
+    with $FutureModifier<List<String>>, $FutureProvider<List<String>> {
+  const ArasaacSearchResultsProvider._(
+      {required ArasaacSearchResultsFamily super.from,
+      required String super.argument})
+      : super(
+          retry: null,
+          name: r'arasaacSearchResultsProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
   @override
-  AutoDisposeFutureProviderElement<List<String>> createElement() {
-    return _ArasaacSearchResultsProviderElement(this);
+  String debugGetCreateSourceHash() => _$arasaacSearchResultsHash();
+
+  @override
+  String toString() {
+    return r'arasaacSearchResultsProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<String>> $createElement(
+          $ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<String>> create(Ref ref) {
+    final argument = this.argument as String;
+    return arasaacSearchResults(
+      ref,
+      argument,
+    );
   }
 
   @override
   bool operator ==(Object other) {
-    return other is ArasaacSearchResultsProvider && other.query == query;
+    return other is ArasaacSearchResultsProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, query.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin ArasaacSearchResultsRef on AutoDisposeFutureProviderRef<List<String>> {
-  /// The parameter `query` of this provider.
-  String get query;
-}
+String _$arasaacSearchResultsHash() =>
+    r'a73071593ccacb084bda73c4c429902186065e2c';
 
-class _ArasaacSearchResultsProviderElement
-    extends AutoDisposeFutureProviderElement<List<String>>
-    with ArasaacSearchResultsRef {
-  _ArasaacSearchResultsProviderElement(super.provider);
+final class ArasaacSearchResultsFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<List<String>>, String> {
+  const ArasaacSearchResultsFamily._()
+      : super(
+          retry: null,
+          name: r'arasaacSearchResultsProvider',
+          dependencies: null,
+          $allTransitiveDependencies: null,
+          isAutoDispose: true,
+        );
+
+  ArasaacSearchResultsProvider call(
+    String query,
+  ) =>
+      ArasaacSearchResultsProvider._(argument: query, from: this);
 
   @override
-  String get query => (origin as ArasaacSearchResultsProvider).query;
+  String toString() => r'arasaacSearchResultsProvider';
 }
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

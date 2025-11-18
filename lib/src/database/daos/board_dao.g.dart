@@ -45,21 +45,46 @@ mixin _$BoardDaoMixin on DatabaseAccessor<AppDatabase> {
 // RiverpodGenerator
 // **************************************************************************
 
-String _$boardDaoHash() => r'de349032985db8f86931dfb407fe7fbc89615a12';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [boardDao].
 @ProviderFor(boardDao)
-final boardDaoProvider = AutoDisposeProvider<BoardDao>.internal(
-  boardDao,
-  name: r'boardDaoProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$boardDaoHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const boardDaoProvider = BoardDaoProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef BoardDaoRef = AutoDisposeProviderRef<BoardDao>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class BoardDaoProvider
+    extends $FunctionalProvider<BoardDao, BoardDao, BoardDao>
+    with $Provider<BoardDao> {
+  const BoardDaoProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'boardDaoProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$boardDaoHash();
+
+  @$internal
+  @override
+  $ProviderElement<BoardDao> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  BoardDao create(Ref ref) {
+    return boardDao(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(BoardDao value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<BoardDao>(value),
+    );
+  }
+}
+
+String _$boardDaoHash() => r'de349032985db8f86931dfb407fe7fbc89615a12';

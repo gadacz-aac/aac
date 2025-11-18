@@ -6,44 +6,103 @@ part of 'image_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$isDefaultImageHash() => r'b175de8918b09e2e52b4563e7a68c91716ef1128';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [isDefaultImage].
-@ProviderFor(isDefaultImage)
-final isDefaultImageProvider = AutoDisposeProvider<bool>.internal(
-  isDefaultImage,
-  name: r'isDefaultImageProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$isDefaultImageHash,
-  dependencies: <ProviderOrFamily>[imageNotifierProvider],
-  allTransitiveDependencies: <ProviderOrFamily>{
-    imageNotifierProvider,
-    ...?imageNotifierProvider.allTransitiveDependencies
-  },
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef IsDefaultImageRef = AutoDisposeProviderRef<bool>;
-String _$imageNotifierHash() => r'5fd459148e07047d0c07e34746edc391c230ccc7';
-
-/// See also [ImageNotifier].
 @ProviderFor(ImageNotifier)
-final imageNotifierProvider =
-    AutoDisposeNotifierProvider<ImageNotifier, String>.internal(
-  ImageNotifier.new,
-  name: r'imageNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$imageNotifierHash,
-  dependencies: <ProviderOrFamily>[initialValuesProvider],
-  allTransitiveDependencies: <ProviderOrFamily>{
-    initialValuesProvider,
-    ...?initialValuesProvider.allTransitiveDependencies
-  },
-);
+const imageProvider = ImageNotifierProvider._();
 
-typedef _$ImageNotifier = AutoDisposeNotifier<String>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class ImageNotifierProvider
+    extends $NotifierProvider<ImageNotifier, String> {
+  const ImageNotifierProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'imageProvider',
+          isAutoDispose: true,
+          dependencies: const <ProviderOrFamily>[initialValuesProvider],
+          $allTransitiveDependencies: const <ProviderOrFamily>[
+            ImageNotifierProvider.$allTransitiveDependencies0,
+          ],
+        );
+
+  static const $allTransitiveDependencies0 = initialValuesProvider;
+
+  @override
+  String debugGetCreateSourceHash() => _$imageNotifierHash();
+
+  @$internal
+  @override
+  ImageNotifier create() => ImageNotifier();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(String value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<String>(value),
+    );
+  }
+}
+
+String _$imageNotifierHash() => r'd53a4b77aec51147bfba4671910522fd1f535b13';
+
+abstract class _$ImageNotifier extends $Notifier<String> {
+  String build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<String, String>;
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<String, String>, String, Object?, Object?>;
+    element.handleValue(ref, created);
+  }
+}
+
+@ProviderFor(isDefaultImage)
+const isDefaultImageProvider = IsDefaultImageProvider._();
+
+final class IsDefaultImageProvider extends $FunctionalProvider<bool, bool, bool>
+    with $Provider<bool> {
+  const IsDefaultImageProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'isDefaultImageProvider',
+          isAutoDispose: true,
+          dependencies: const <ProviderOrFamily>[imageProvider],
+          $allTransitiveDependencies: const <ProviderOrFamily>[
+            IsDefaultImageProvider.$allTransitiveDependencies0,
+            IsDefaultImageProvider.$allTransitiveDependencies1,
+          ],
+        );
+
+  static const $allTransitiveDependencies0 = imageProvider;
+  static const $allTransitiveDependencies1 =
+      ImageNotifierProvider.$allTransitiveDependencies0;
+
+  @override
+  String debugGetCreateSourceHash() => _$isDefaultImageHash();
+
+  @$internal
+  @override
+  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  bool create(Ref ref) {
+    return isDefaultImage(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$isDefaultImageHash() => r'0b387f05b91ca704f945a36255d356c332406735';

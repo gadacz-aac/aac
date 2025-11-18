@@ -2,6 +2,7 @@ import 'package:aac/src/database/daos/child_communication_symbol_dao.dart';
 import 'package:aac/src/features/symbols/model/child_communication_symbol.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

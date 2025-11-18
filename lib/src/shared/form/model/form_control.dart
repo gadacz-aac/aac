@@ -10,7 +10,7 @@ class FormValidator<T> {
   bool Function(T? val) validator;
   String errorMessage;
 
-  String? validate(T? val) => this.validator(val) ? errorMessage : null;
+  String? validate(T? val) => validator(val) ? errorMessage : null;
 
   FormValidator({required this.validator, required this.errorMessage});
 }

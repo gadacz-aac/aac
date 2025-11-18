@@ -6,24 +6,43 @@ part of 'bin_screen.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$deletedSymbolsHash() => r'eeeb4b9d6b48fc8173e97a650b5098f0e2172ad2';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [deletedSymbols].
 @ProviderFor(deletedSymbols)
-final deletedSymbolsProvider =
-    AutoDisposeStreamProvider<List<CommunicationSymbol>>.internal(
-  deletedSymbols,
-  name: r'deletedSymbolsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$deletedSymbolsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const deletedSymbolsProvider = DeletedSymbolsProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef DeletedSymbolsRef
-    = AutoDisposeStreamProviderRef<List<CommunicationSymbol>>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class DeletedSymbolsProvider extends $FunctionalProvider<
+        AsyncValue<List<CommunicationSymbol>>,
+        List<CommunicationSymbol>,
+        Stream<List<CommunicationSymbol>>>
+    with
+        $FutureModifier<List<CommunicationSymbol>>,
+        $StreamProvider<List<CommunicationSymbol>> {
+  const DeletedSymbolsProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'deletedSymbolsProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$deletedSymbolsHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<List<CommunicationSymbol>> $createElement(
+          $ProviderPointer pointer) =>
+      $StreamProviderElement(pointer);
+
+  @override
+  Stream<List<CommunicationSymbol>> create(Ref ref) {
+    return deletedSymbols(ref);
+  }
+}
+
+String _$deletedSymbolsHash() => r'eeeb4b9d6b48fc8173e97a650b5098f0e2172ad2';

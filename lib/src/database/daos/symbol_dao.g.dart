@@ -87,21 +87,46 @@ mixin _$SymbolDaoMixin on DatabaseAccessor<AppDatabase> {
 // RiverpodGenerator
 // **************************************************************************
 
-String _$symbolDaoHash() => r'1e9bae0724467797d5b8e177c63b84f2baeff35f';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [symbolDao].
 @ProviderFor(symbolDao)
-final symbolDaoProvider = AutoDisposeProvider<SymbolDao>.internal(
-  symbolDao,
-  name: r'symbolDaoProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$symbolDaoHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const symbolDaoProvider = SymbolDaoProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef SymbolDaoRef = AutoDisposeProviderRef<SymbolDao>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class SymbolDaoProvider
+    extends $FunctionalProvider<SymbolDao, SymbolDao, SymbolDao>
+    with $Provider<SymbolDao> {
+  const SymbolDaoProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'symbolDaoProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$symbolDaoHash();
+
+  @$internal
+  @override
+  $ProviderElement<SymbolDao> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  SymbolDao create(Ref ref) {
+    return symbolDao(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SymbolDao value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SymbolDao>(value),
+    );
+  }
+}
+
+String _$symbolDaoHash() => r'1e9bae0724467797d5b8e177c63b84f2baeff35f';

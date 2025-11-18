@@ -16,9 +16,9 @@ class PreviewSymbolImage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final color = ref.watch(colorProvider);
     final label = ref.watch(labelProvider);
-    final image = ref.watch(imageNotifierProvider);
+    final image = ref.watch(imageProvider);
 
-    final childBoard = ref.watch(boardNotifierProvider).valueOrNull;
+    final childBoard = ref.watch(boardProvider).value;
 
     final symbol = CommunicationSymbol(
       id: -1, // -1 is a placeholder for preview
@@ -113,7 +113,7 @@ class RemoveImage extends StatelessWidget {
     return ListTile(
       enabled: !ref.watch(isDefaultImageProvider),
       onTap: () {
-        ref.read(imageNotifierProvider.notifier).deleteImage();
+        ref.read(imageProvider.notifier).deleteImage();
         Navigator.pop(context);
       },
       leading: const Icon(Icons.delete_outlined),
@@ -132,7 +132,7 @@ class CropImage extends StatelessWidget {
     return ListTile(
       enabled: !ref.watch(isDefaultImageProvider),
       onTap: () {
-        ref.read(imageNotifierProvider.notifier).cropImage();
+        ref.read(imageProvider.notifier).cropImage();
         Navigator.pop(context);
       },
       leading: const Icon(Icons.crop_outlined),
@@ -150,7 +150,7 @@ class ChangeImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        ref.read(imageNotifierProvider.notifier).cherryPick(context);
+        ref.read(imageProvider.notifier).cherryPick(context);
       },
       leading: const Icon(Icons.edit_outlined),
       title: const Text("Zamień Obraz"),

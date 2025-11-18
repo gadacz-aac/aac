@@ -6,39 +6,85 @@ part of 'symbol_settings.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(defaultImagePath)
+const defaultImagePathProvider = DefaultImagePathProvider._();
+
+final class DefaultImagePathProvider
+    extends $FunctionalProvider<String, String, String> with $Provider<String> {
+  const DefaultImagePathProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'defaultImagePathProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$defaultImagePathHash();
+
+  @$internal
+  @override
+  $ProviderElement<String> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  String create(Ref ref) {
+    return defaultImagePath(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(String value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<String>(value),
+    );
+  }
+}
+
 String _$defaultImagePathHash() => r'97674549362443fd5229958d6420c6a497000cae';
 
-/// See also [defaultImagePath].
-@ProviderFor(defaultImagePath)
-final defaultImagePathProvider = AutoDisposeProvider<String>.internal(
-  defaultImagePath,
-  name: r'defaultImagePathProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$defaultImagePathHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef DefaultImagePathRef = AutoDisposeProviderRef<String>;
-String _$initialValuesHash() => r'b8639f88ce4cb8bfe651db984499cdc3d7409c08';
-
-/// See also [initialValues].
 @ProviderFor(initialValues)
-final initialValuesProvider = AutoDisposeProvider<SymbolEditModel>.internal(
-  initialValues,
-  name: r'initialValuesProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$initialValuesHash,
-  dependencies: const <ProviderOrFamily>[],
-  allTransitiveDependencies: const <ProviderOrFamily>{},
-);
+const initialValuesProvider = InitialValuesProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef InitialValuesRef = AutoDisposeProviderRef<SymbolEditModel>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class InitialValuesProvider extends $FunctionalProvider<SymbolEditModel,
+    SymbolEditModel, SymbolEditModel> with $Provider<SymbolEditModel> {
+  const InitialValuesProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'initialValuesProvider',
+          isAutoDispose: true,
+          dependencies: const <ProviderOrFamily>[],
+          $allTransitiveDependencies: const <ProviderOrFamily>[],
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$initialValuesHash();
+
+  @$internal
+  @override
+  $ProviderElement<SymbolEditModel> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  SymbolEditModel create(Ref ref) {
+    return initialValues(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SymbolEditModel value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SymbolEditModel>(value),
+    );
+  }
+}
+
+String _$initialValuesHash() => r'b8639f88ce4cb8bfe651db984499cdc3d7409c08';

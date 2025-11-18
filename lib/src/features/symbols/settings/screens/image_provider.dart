@@ -1,9 +1,7 @@
 import 'dart:developer';
 
 import 'package:aac/src/features/symbols/settings/widgets/cherry_pick_image.dart';
-import 'package:aac/src/shared/colors.dart' show AacColors;
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:aac/src/features/symbols/settings/screens/symbol_settings.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -62,6 +60,5 @@ class ImageNotifier extends _$ImageNotifier {
 
 @Riverpod(dependencies: [ImageNotifier])
 bool isDefaultImage(Ref ref) {
-  return ref.watch(defaultImagePathProvider) ==
-      ref.watch(imageNotifierProvider);
+  return ref.watch(defaultImagePathProvider) == ref.watch(imageProvider);
 }

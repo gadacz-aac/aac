@@ -5,7 +5,6 @@ import 'package:aac/src/database/daos/symbol_dao.dart';
 import 'package:aac/src/database/database.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:drift/drift.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'symbol_board_association_manager.g.dart';

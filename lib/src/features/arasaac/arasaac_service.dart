@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:aac/src/features/symbols/settings/utils/randomise_symbol.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:http/http.dart' as http;

@@ -5,8 +5,8 @@ import 'package:aac/src/features/symbols/card/symbol_card.dart';
 import 'package:aac/src/features/symbols/search/search_app_bar.dart';
 import 'package:aac/src/features/symbols/search/symbol_search_filters.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import '../../../shared/ui/scaffold.dart';
@@ -65,7 +65,7 @@ class SymbolSearchScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final results = ref.watch(searchedSymbolProvider).valueOrNull;
+    final results = ref.watch(searchedSymbolProvider).value;
     final hasResults = results != null && results.isNotEmpty;
 
     final theme = Theme.of(context);

@@ -13,7 +13,7 @@ class SymbolsGrid extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final symbols = ref.watch(childSymbolProvider(board.id)).valueOrNull;
+    final symbols = ref.watch(childSymbolProvider(board.id)).value;
 
     if (symbols == null) return SizedBox();
 

@@ -1,7 +1,6 @@
 import 'package:aac/src/database/database.dart';
 import 'package:aac/src/features/symbols/model/child_communication_symbol.dart';
 import 'package:drift/drift.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'child_communication_symbol_dao.g.dart';

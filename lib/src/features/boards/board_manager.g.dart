@@ -6,21 +6,46 @@ part of 'board_manager.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$boardManagerHash() => r'5893f72661ce30b9d3c4f68c4d5190009da05263';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [boardManager].
 @ProviderFor(boardManager)
-final boardManagerProvider = AutoDisposeProvider<BoardManager>.internal(
-  boardManager,
-  name: r'boardManagerProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$boardManagerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const boardManagerProvider = BoardManagerProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef BoardManagerRef = AutoDisposeProviderRef<BoardManager>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class BoardManagerProvider
+    extends $FunctionalProvider<BoardManager, BoardManager, BoardManager>
+    with $Provider<BoardManager> {
+  const BoardManagerProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'boardManagerProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$boardManagerHash();
+
+  @$internal
+  @override
+  $ProviderElement<BoardManager> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  BoardManager create(Ref ref) {
+    return boardManager(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(BoardManager value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<BoardManager>(value),
+    );
+  }
+}
+
+String _$boardManagerHash() => r'5893f72661ce30b9d3c4f68c4d5190009da05263';

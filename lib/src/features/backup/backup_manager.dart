@@ -38,7 +38,7 @@ class BackupManager {
     return backupDirectory;
   }
 
-  decompress(Backup backup, WidgetRef ref) async {
+  Future<void> decompress(Backup backup, WidgetRef ref) async {
     await ref.read(dbProvider).close();
 
     final input = InputFileStream(backup.path);
@@ -56,7 +56,7 @@ class BackupManager {
     await ref.read(settingsCacheProvider).initializeStore(db);
   }
 
-  compress() async {
+  Future<void> compress() async {
     final encoder = ZipFileEncoder();
 
     final appDirectory = await getGadaczDirectory();
@@ -77,7 +77,7 @@ class BackupManager {
         .toList();
   }
 
-  get stream {
+  Stream<double> get stream {
     return _progressStreamController.stream;
   }
 }

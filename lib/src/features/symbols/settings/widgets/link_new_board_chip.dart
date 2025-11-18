@@ -19,7 +19,7 @@ class LinkNewBoardChip extends ConsumerWidget {
             builder: (context) =>
                 const CreateBoardScreen(params: BoardEditModel())).then((val) {
           if (val == null) return;
-          ref.read(boardNotifierProvider.notifier).set(val);
+          ref.read(boardProvider.notifier).set(val);
         });
       },
       label: const Text("Dodaj nową"),

@@ -22,7 +22,7 @@ class BoardSearch extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final results = ref.watch(foundBoards).valueOrNull;
+    final results = ref.watch(foundBoards).value;
     final query = ref.watch(queryProvider);
     final textTheme = Theme.of(context).textTheme;
     return SafeArea(

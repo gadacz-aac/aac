@@ -2,7 +2,6 @@ import 'package:aac/src/database/database.dart';
 import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:drift/drift.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'board_dao.g.dart';

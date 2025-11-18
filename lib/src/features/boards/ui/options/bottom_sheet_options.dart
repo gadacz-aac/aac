@@ -7,7 +7,6 @@ import 'package:aac/src/features/symbols/settings/utils/randomise_symbol.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:aac/src/shared/ui/bottom_sheet_options.dart';
 import 'package:aac/src/shared/utils/dev_mode.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -83,7 +82,7 @@ class EditBoardOption extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final boardId = ref.watch(boardIdProvider);
-    final board = ref.watch(boardProvider(boardId)).valueOrNull;
+    final board = ref.watch(boardProvider(boardId)).value;
     final manager = ref.watch(boardManagerProvider);
 
     return Option(

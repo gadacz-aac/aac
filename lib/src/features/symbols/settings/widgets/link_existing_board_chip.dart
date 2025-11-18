@@ -18,7 +18,7 @@ class LinkExistingBoardChip extends ConsumerWidget {
                   context: context,
                   isDismissible: true,
                   builder: (context) => const BoardSearch())
-              .then(ref.read(boardNotifierProvider.notifier).set);
+              .then(ref.read(boardProvider.notifier).set);
         },
         label: const Text("Wyszukaj istniejącą"));
   }

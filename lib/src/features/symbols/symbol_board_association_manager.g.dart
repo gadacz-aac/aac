@@ -6,25 +6,52 @@ part of 'symbol_board_association_manager.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(symbolBoardAssociationManager)
+const symbolBoardAssociationManagerProvider =
+    SymbolBoardAssociationManagerProvider._();
+
+final class SymbolBoardAssociationManagerProvider extends $FunctionalProvider<
+        SymbolBoardAssociationManager,
+        SymbolBoardAssociationManager,
+        SymbolBoardAssociationManager>
+    with $Provider<SymbolBoardAssociationManager> {
+  const SymbolBoardAssociationManagerProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'symbolBoardAssociationManagerProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$symbolBoardAssociationManagerHash();
+
+  @$internal
+  @override
+  $ProviderElement<SymbolBoardAssociationManager> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  SymbolBoardAssociationManager create(Ref ref) {
+    return symbolBoardAssociationManager(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SymbolBoardAssociationManager value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride:
+          $SyncValueProvider<SymbolBoardAssociationManager>(value),
+    );
+  }
+}
+
 String _$symbolBoardAssociationManagerHash() =>
     r'99890a70cc5bf015312b9d4e2d2d688d6314f381';
-
-/// See also [symbolBoardAssociationManager].
-@ProviderFor(symbolBoardAssociationManager)
-final symbolBoardAssociationManagerProvider =
-    AutoDisposeProvider<SymbolBoardAssociationManager>.internal(
-  symbolBoardAssociationManager,
-  name: r'symbolBoardAssociationManagerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$symbolBoardAssociationManagerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef SymbolBoardAssociationManagerRef
-    = AutoDisposeProviderRef<SymbolBoardAssociationManager>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

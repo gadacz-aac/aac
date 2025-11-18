@@ -6,39 +6,86 @@ part of 'settings_manager.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(settingsManager)
+const settingsManagerProvider = SettingsManagerProvider._();
+
+final class SettingsManagerProvider extends $FunctionalProvider<SettingsManager,
+    SettingsManager, SettingsManager> with $Provider<SettingsManager> {
+  const SettingsManagerProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'settingsManagerProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$settingsManagerHash();
+
+  @$internal
+  @override
+  $ProviderElement<SettingsManager> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  SettingsManager create(Ref ref) {
+    return settingsManager(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SettingsManager value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SettingsManager>(value),
+    );
+  }
+}
+
 String _$settingsManagerHash() => r'c70352fc6aa29f85a05d86bc3ba7a7688d86f3bd';
 
-/// See also [settingsManager].
-@ProviderFor(settingsManager)
-final settingsManagerProvider = AutoDisposeProvider<SettingsManager>.internal(
-  settingsManager,
-  name: r'settingsManagerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$settingsManagerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef SettingsManagerRef = AutoDisposeProviderRef<SettingsManager>;
-String _$settingsCacheHash() => r'005b433189ffdd9826d485608da459ab9e4c2502';
-
-/// See also [settingsCache].
 @ProviderFor(settingsCache)
-final settingsCacheProvider = AutoDisposeProvider<SettingsCache>.internal(
-  settingsCache,
-  name: r'settingsCacheProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$settingsCacheHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const settingsCacheProvider = SettingsCacheProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef SettingsCacheRef = AutoDisposeProviderRef<SettingsCache>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class SettingsCacheProvider
+    extends $FunctionalProvider<SettingsCache, SettingsCache, SettingsCache>
+    with $Provider<SettingsCache> {
+  const SettingsCacheProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'settingsCacheProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$settingsCacheHash();
+
+  @$internal
+  @override
+  $ProviderElement<SettingsCache> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  SettingsCache create(Ref ref) {
+    return settingsCache(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SettingsCache value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SettingsCache>(value),
+    );
+  }
+}
+
+String _$settingsCacheHash() => r'005b433189ffdd9826d485608da459ab9e4c2502';
