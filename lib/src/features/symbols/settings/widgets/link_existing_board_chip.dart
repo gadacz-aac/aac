@@ -3,7 +3,9 @@ import 'package:aac/src/features/symbols/settings/widgets/board_picker.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/experimental/scope.dart';
 
+@Dependencies([BoardNotifier])
 class LinkExistingBoardChip extends ConsumerWidget {
   const LinkExistingBoardChip({
     super.key,

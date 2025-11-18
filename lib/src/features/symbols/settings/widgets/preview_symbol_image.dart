@@ -8,7 +8,9 @@ import 'package:aac/src/features/symbols/settings/widgets/color_picker.dart';
 import 'package:aac/src/features/symbols/card/symbol_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/experimental/scope.dart';
 
+@Dependencies([ImageNotifier, BoardNotifier, isDefaultImage])
 class PreviewSymbolImage extends ConsumerWidget {
   const PreviewSymbolImage({super.key});
 
@@ -76,6 +78,7 @@ class ShowImageOptions extends StatelessWidget {
   }
 }
 
+@Dependencies([ImageNotifier, isDefaultImage])
 class ImageOptions extends StatelessWidget {
   const ImageOptions({
     super.key,
@@ -102,6 +105,7 @@ class ImageOptions extends StatelessWidget {
   }
 }
 
+@Dependencies([isDefaultImage, ImageNotifier])
 class RemoveImage extends StatelessWidget {
   const RemoveImage({
     super.key,
@@ -122,6 +126,7 @@ class RemoveImage extends StatelessWidget {
   }
 }
 
+@Dependencies([ImageNotifier, isDefaultImage])
 class CropImage extends StatelessWidget {
   const CropImage({super.key, required this.ref});
 
@@ -141,6 +146,7 @@ class CropImage extends StatelessWidget {
   }
 }
 
+@Dependencies([ImageNotifier])
 class ChangeImage extends StatelessWidget {
   const ChangeImage({super.key, required this.ref});
 

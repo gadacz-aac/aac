@@ -3,6 +3,7 @@ import 'package:aac/src/features/symbols/settings/screens/symbol_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:riverpod_annotation/experimental/scope.dart';
 
 //TODO Move to constants
 
@@ -19,6 +20,7 @@ final colors = [
       label: "Lucy", code: 0xFFFB4C4C, folderBackgroundCode: 0xFFFFB6B6),
 ];
 
+@Dependencies([initialValues])
 final colorProvider = StateProvider.autoDispose(
     (ref) => ref.watch(initialValuesProvider).color,
     dependencies: [initialValuesProvider]);

@@ -6,6 +6,7 @@ import 'package:aac/src/features/symbols/settings/widgets/link_new_board_chip.da
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/experimental/scope.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'board_picker.g.dart';
@@ -35,6 +36,7 @@ class BoardNotifier extends _$BoardNotifier {
   }
 }
 
+@Dependencies([BoardNotifier])
 class BoardPicker extends ConsumerWidget {
   const BoardPicker({
     super.key,
@@ -64,6 +66,7 @@ class BoardPicker extends ConsumerWidget {
   }
 }
 
+@Dependencies([BoardNotifier])
 class LinkedBoardChip extends ConsumerWidget {
   const LinkedBoardChip({
     super.key,

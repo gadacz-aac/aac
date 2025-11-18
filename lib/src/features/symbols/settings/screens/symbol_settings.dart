@@ -14,6 +14,7 @@ import 'package:aac/src/shared/ui/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:riverpod_annotation/experimental/scope.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'symbol_settings.g.dart';
@@ -26,10 +27,12 @@ SymbolEditModel initialValues(Ref ref) {
   return const SymbolEditModel();
 }
 
+@Dependencies([initialValues])
 final labelProvider = StateProvider.autoDispose<String>(
     (ref) => ref.watch(initialValuesProvider).label ?? "",
     dependencies: [initialValuesProvider]);
 
+@Dependencies([initialValues, BoardNotifier, ImageNotifier, isDefaultImage])
 class SymbolSettings extends ConsumerStatefulWidget {
   final void Function(SymbolEditModel, [BoardEditModel?]) updateSymbolSettings;
   final int boardId;
@@ -225,6 +228,7 @@ class NoImageSelectedDialog extends StatelessWidget {
   }
 }
 
+@Dependencies([initialValues])
 class LabelTextField extends ConsumerWidget {
   final String? initialLabel;
   final int boardId;
