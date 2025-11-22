@@ -56,7 +56,7 @@ class BoardScreen extends ConsumerWidget {
 
           if (isParentMode) {
             actions.addAll([
-              PinSymbolsAction(
+              OpenSearchScreenAction(
                 board: data,
               ),
               const ShowMoreOptions()

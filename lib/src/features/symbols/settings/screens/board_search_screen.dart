@@ -1,13 +1,17 @@
 import 'package:aac/src/database/daos/board_dao.dart';
 import 'package:aac/src/features/boards/model/board.dart';
-import 'package:aac/src/features/symbols/settings/widgets/cherry_pick_image.dart';
 import 'package:aac/src/features/symbols/search/search_screen.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
+import 'package:aac/src/shared/ui/search_input.dart';
 import 'package:aac/src/shared/utils/debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final foundBoards = FutureProvider.autoDispose<List<Board>>((ref) async {
+part 'board_search_screen.g.dart';
+
+@riverpod
+Future<List<Board>> foundBoards(Ref ref) async {
   final query = ref.watch(queryProvider);
 
   return ref
@@ -15,14 +19,14 @@ final foundBoards = FutureProvider.autoDispose<List<Board>>((ref) async {
       .searchBoard(query: query)
       .map(Board.fromEntity)
       .get();
-});
+}
 
 class BoardSearch extends ConsumerWidget {
   const BoardSearch({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final results = ref.watch(foundBoards).value;
+    final results = ref.watch(foundBoardsProvider).value;
     final query = ref.watch(queryProvider);
     final textTheme = Theme.of(context).textTheme;
     return SafeArea(

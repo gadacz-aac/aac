@@ -5,7 +5,6 @@ import 'package:aac/src/features/settings/settings_manager.dart';
 import 'package:aac/src/features/settings/ui/settings_screen.dart';
 import 'package:aac/src/features/settings/utils/orientation.dart';
 import 'package:aac/src/shared/colors.dart';
-import 'package:drift/drift.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -32,8 +31,6 @@ void main() async {
   final settingsStore = SettingsCache();
   await settingsStore.initializeStore(db);
 
-  await db.managers.settingTb
-      .create((f) => f(key: "dupa", value: "dupa"), mode: InsertMode.replace);
   await db.close();
   final orientation = settingsStore.get<String>(SettingKey.orientation);
 

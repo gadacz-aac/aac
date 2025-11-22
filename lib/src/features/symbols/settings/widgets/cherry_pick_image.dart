@@ -8,7 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../../../../shared/ui/scaffold.dart';
+import 'package:aac/src/shared/ui/scaffold.dart';
+import 'package:aac/src/shared/ui/search_input.dart';
 
 bool isValidImage(ContentType contentType) {
   final imageTypes = [
@@ -19,58 +20,6 @@ bool isValidImage(ContentType contentType) {
   ];
 
   return imageTypes.contains(contentType.toString().toLowerCase());
-}
-
-class AacSearchField extends StatelessWidget {
-  final String placeholder;
-
-  final Widget? icon;
-  final Widget? suffixIcon;
-  final TextEditingController? controller;
-  final void Function(String)? onChanged;
-  final void Function()? onClick;
-  final String? errorText;
-  final FormFieldValidator<String>? validator;
-  final bool readOnly;
-  final FocusNode? focusNode;
-  const AacSearchField(
-      {super.key,
-      required this.placeholder,
-      this.icon,
-      this.readOnly = false,
-      this.focusNode,
-      this.suffixIcon,
-      this.controller,
-      this.onClick,
-      this.onChanged,
-      this.errorText,
-      this.validator});
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      readOnly: readOnly,
-      focusNode: focusNode,
-      style: const TextStyle(fontSize: 16),
-      onTap: onClick,
-      controller: controller,
-      validator: validator,
-      onChanged: onChanged,
-      decoration: InputDecoration(
-        fillColor: const Color(0xFFF4F2F2),
-        filled: true,
-        hintText: placeholder,
-        prefixIcon: icon ?? const Icon(Icons.search),
-        suffixIcon: suffixIcon,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 12, vertical: 11),
-        errorText: errorText,
-        border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(4)),
-            borderSide: BorderSide.none),
-      ),
-    );
-  }
 }
 
 class ArasaacSearchScreen extends ConsumerStatefulWidget {

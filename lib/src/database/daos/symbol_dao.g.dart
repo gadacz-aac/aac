@@ -102,7 +102,7 @@ final class SymbolDaoProvider
           argument: null,
           retry: null,
           name: r'symbolDaoProvider',
-          isAutoDispose: true,
+          isAutoDispose: false,
           dependencies: null,
           $allTransitiveDependencies: null,
         );
@@ -129,4 +129,4 @@ final class SymbolDaoProvider
   }
 }
 
-String _$symbolDaoHash() => r'1e9bae0724467797d5b8e177c63b84f2baeff35f';
+String _$symbolDaoHash() => r'307c324294cceb6324725f3f51a0b71162111c79';

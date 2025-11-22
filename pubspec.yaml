@@ -28,6 +28,8 @@ dependencies:
   word_generator:
   archive: ^4.0.7
   wakelock_plus: ^1.4.0
+  open_file: ^3.5.10
+  file_picker: ^10.3.6
 
 dev_dependencies:
   flutter_test:

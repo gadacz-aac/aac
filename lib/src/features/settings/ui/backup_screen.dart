@@ -2,6 +2,7 @@ import 'package:aac/src/features/backup/backup_manager.dart';
 import 'package:aac/src/features/settings/ui/widgets/group.dart';
 import 'package:aac/src/shared/padding.dart';
 import 'package:aac/src/shared/ui/button.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -50,6 +51,22 @@ class BackupScreen extends ConsumerWidget {
             onPressed: () => ref.read(backupManagerProvider).compress(),
             child: const Text(
               "Eksportuj",
+            )),
+        AacButton(
+            onPressed: () async {
+              final res = await FilePicker.platform
+                  .pickFiles(type: FileType.custom, allowedExtensions: ["zip"]);
+
+              final filePath = res?.files.singleOrNull?.path;
+
+              if (filePath == null) {
+                return;
+              }
+
+              ref.read(backupManagerProvider).decompress(filePath, ref);
+            },
+            child: const Text(
+              "Importuj",
             )),
       ]),
     );

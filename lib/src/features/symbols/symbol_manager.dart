@@ -115,6 +115,13 @@ class SymbolManager {
   }
 
   Future<void> moveSymbolToBin(List<CommunicationSymbol> symbols) {
+    final hasChild = symbols.any((e) => e.childBoardId != null);
+
+    if (hasChild) {
+      print(
+          "co najmniej jeden symbol jest połączony z tablicą. ona nie zostanie suunięta jeśli chcesz ją usuńąc przejść do ekranu zarządzania tablicami");
+    }
+
     return db.transaction(() async {
       await Future.wait(symbols.map((e) => e.id).map(symbolDao.markAsDeleted));
     });

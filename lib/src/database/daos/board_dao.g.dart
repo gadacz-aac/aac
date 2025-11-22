@@ -60,7 +60,7 @@ final class BoardDaoProvider
           argument: null,
           retry: null,
           name: r'boardDaoProvider',
-          isAutoDispose: true,
+          isAutoDispose: false,
           dependencies: null,
           $allTransitiveDependencies: null,
         );
@@ -87,4 +87,4 @@ final class BoardDaoProvider
   }
 }
 
-String _$boardDaoHash() => r'de349032985db8f86931dfb407fe7fbc89615a12';
+String _$boardDaoHash() => r'23c19c12241fe850d29aad7c9ab3c2c430d10518';

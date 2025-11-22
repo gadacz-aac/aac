@@ -22,6 +22,7 @@ class BinAppBar extends ConsumerWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final areSymbolSelected = ref.watch(areSymbolsSelectedProvider);
+
     final List<Widget> actionsSelected = [
       const DeleteForeverAction(),
       const RestoreSymbolAction()

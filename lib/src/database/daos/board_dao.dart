@@ -6,7 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'board_dao.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 BoardDao boardDao(Ref ref) {
   final db = ref.watch(dbProvider);
   return BoardDao(db);

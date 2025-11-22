@@ -38,4 +38,3 @@ class CreateSymbol extends ConsumerWidget {
         ));
   }
 }
-

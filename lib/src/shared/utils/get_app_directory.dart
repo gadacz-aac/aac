@@ -13,3 +13,6 @@ Future<Directory> getGadaczDirectory() async {
 
   return appDirectory;
 }
+
+// ignore: constant_identifier_names
+const ANDROID_DOWNLOAD_PATH = "/storage/emulated/0/Download/";

@@ -4,8 +4,8 @@ import 'package:aac/src/features/symbols/symbol_board_association_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class PinSymbolsAction extends ConsumerWidget {
-  const PinSymbolsAction({super.key, required this.board});
+class OpenSearchScreenAction extends ConsumerWidget {
+  const OpenSearchScreenAction({super.key, required this.board});
 
   final Board board;
 
@@ -16,7 +16,7 @@ class PinSymbolsAction extends ConsumerWidget {
           final symbols = await Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const SymbolSearchScreen()));
+                  builder: (context) => const AacLocalSearchScreen()));
 
           if (symbols == null) return;
 

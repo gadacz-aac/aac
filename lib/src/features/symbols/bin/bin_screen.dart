@@ -37,9 +37,7 @@ class BinScreen extends ConsumerWidget {
                   return SymbolCard(
                     symbol: e,
                     onTapActions: [
-                      SpeakAction(),
                       SymbolSelectAction(),
-                      MultiSelectAction(),
                     ],
                   );
                 },

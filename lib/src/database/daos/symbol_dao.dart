@@ -2,6 +2,7 @@ import 'package:aac/src/database/database.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:drift/drift.dart';
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'symbol_dao.g.dart';
@@ -75,7 +76,7 @@ class SymbolDao extends DatabaseAccessor<AppDatabase> with _$SymbolDaoMixin {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 SymbolDao symbolDao(Ref ref) {
   final db = ref.watch(dbProvider);
   return SymbolDao(db);
