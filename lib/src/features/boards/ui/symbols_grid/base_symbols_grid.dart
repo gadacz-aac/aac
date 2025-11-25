@@ -9,10 +9,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'base_symbols_grid.g.dart';
 
 final symbolGridScrollControllerProvider =
-    Provider.autoDispose<ScrollController>((ref) {
+    Provider.autoDispose<ScrollController>((Ref ref) {
   late final ScrollController controller;
 
   void handleScroll() {
+    // this throws when going back to boardscreen, doesn't impact anything but might rework this in the future
     if (controller.position.maxScrollExtent == 0) {
       ref.read(symbolGridScrollPossibilityProvider.notifier).state =
           const SymbolGridScrollPossibility.none();
