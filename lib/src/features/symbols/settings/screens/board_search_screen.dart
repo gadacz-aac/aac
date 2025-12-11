@@ -1,6 +1,6 @@
 import 'package:aac/src/database/daos/board_dao.dart';
 import 'package:aac/src/features/boards/model/board.dart';
-import 'package:aac/src/features/symbols/search/search_screen.dart';
+import 'package:aac/src/features/symbols/search/providers.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:aac/src/shared/ui/search_input.dart';
 import 'package:aac/src/shared/utils/debounce.dart';

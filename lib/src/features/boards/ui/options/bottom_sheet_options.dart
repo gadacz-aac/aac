@@ -9,6 +9,7 @@ import 'package:aac/src/shared/ui/bottom_sheet_options.dart';
 import 'package:aac/src/shared/utils/dev_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/experimental/scope.dart';
 
 class BoardBottomSheetOptions extends StatelessWidget {
   const BoardBottomSheetOptions({super.key});
@@ -76,6 +77,7 @@ class CreateRandomSymbol extends ConsumerWidget {
   }
 }
 
+@Dependencies([boardId])
 class EditBoardOption extends ConsumerWidget {
   const EditBoardOption({super.key});
 

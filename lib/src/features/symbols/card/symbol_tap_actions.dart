@@ -1,6 +1,6 @@
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
-import 'package:aac/src/features/symbols/search/search_screen.dart';
+import 'package:aac/src/features/symbols/search/providers.dart';
 import 'package:aac/src/features/text_to_speech/provider.dart';
 import 'package:aac/src/features/text_to_speech/tts_manager.dart';
 import 'package:flutter/material.dart';

@@ -34,7 +34,7 @@ mixin _$SymbolDaoMixin on DatabaseAccessor<AppDatabase> {
   Selectable<CommunicationSymbolEntity> searchSymbol(
       {required String query, required bool onlyPinned, int? color}) {
     return customSelect(
-        'SELECT s.* FROM communication_symbol_tb AS s LEFT JOIN child_symbol_tb AS cs ON cs.symbol_id = s.id WHERE s.label LIKE CONCAT(\'%\', ?1, \'%\') AND(NOT ?2 OR cs.board_id IS NULL)AND(?3 IS NULL OR s.color = ?3)AND is_deleted = FALSE',
+        'SELECT DISTINCT s.* FROM communication_symbol_tb AS s LEFT JOIN child_symbol_tb AS cs ON cs.symbol_id = s.id WHERE s.label LIKE CONCAT(\'%\', ?1, \'%\') AND(NOT ?2 OR cs.board_id IS NULL)AND(?3 IS NULL OR s.color = ?3)AND is_deleted = FALSE',
         variables: [
           Variable<String>(query),
           Variable<bool>(onlyPinned),

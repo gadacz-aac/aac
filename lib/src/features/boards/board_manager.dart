@@ -17,16 +17,21 @@ final boardProvider =
 @riverpod
 BoardManager boardManager(Ref ref) {
   final db = ref.watch(dbProvider);
-  return BoardManager(db);
+  final boardDao = ref.watch(boardDaoProvider);
+  return BoardManager(
+    db,
+    boardDao,
+  );
 }
 
 class BoardManager {
   AppDatabase db;
+  BoardDao boardDao;
 
-  BoardManager(this.db);
+  BoardManager(this.db, this.boardDao);
 
-  Future<void> createOrUpdate(BoardEditModel params) async {
-    db.managers.boardTb.create(
+  Future<void> createOrUpdate(BoardEditModel params) {
+    return db.managers.boardTb.create(
         (f) => f(
             id: Value.absentIfNull(params.id),
             name: params.name,

@@ -4,10 +4,35 @@ selectByBoardId:
 	SELECT * from communication_symbol_tb s
 		JOIN child_symbol_tb cs ON cs.symbol_id = s.id
 		WHERE cs.board_id = ? 
-		AND s.is_deleted = false
+		AND s.is_deleted = ?
 		ORDER BY cs.position;
 
 toggleVisibility(:symbol_id AS INTEGER, :board_id AS INTEGER):
 	UPDATE child_symbol_tb
 	SET hidden = NOT hidden
 	WHERE board_id = :board_id AND symbol_id = :symbol_id;
+
+markDeletedByParentId:
+	UPDATE communication_symbol_tb
+	SET is_deleted = true
+	FROM (SELECT cs.symbol_id FROM child_symbol_tb cs
+		LEFT JOIN child_symbol_tb other ON
+			cs.symbol_id = other.symbol_id AND
+			other.board_id <> cs.board_id
+		WHERE
+			cs.board_id = ? AND
+			other.symbol_id IS NULL) as orphans
+	WHERE communication_symbol_tb.id = orphans.symbol_id;
+
+removeLinksToParent:
+	UPDATE communication_symbol_tb
+	SET child_board_id = NULL
+	WHERE child_board_id = ?;
+
+selectByBoardIdWithIsReused:
+	SELECT s.label, s.id, s.image_path, (COUNT(*) > 1) as is_reused
+	FROM child_symbol_tb cs1
+	JOIN child_symbol_tb cs2 on cs1.symbol_id = cs2.symbol_id 
+	JOIN communication_symbol_tb s on cs1.symbol_id = s.id
+	WHERE cs1.board_id = ?1 OR cs2.board_id = ?1
+	GROUP BY s.id;

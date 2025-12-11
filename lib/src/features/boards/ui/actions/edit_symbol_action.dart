@@ -1,6 +1,6 @@
 import 'package:aac/src/features/boards/board_screen.dart';
+import 'package:aac/src/features/symbols/search/providers.dart';
 import 'package:aac/src/features/symbols/settings/screens/edit_symbol_screen.dart';
-import 'package:aac/src/features/symbols/search/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

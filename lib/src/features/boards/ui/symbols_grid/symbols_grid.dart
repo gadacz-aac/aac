@@ -30,8 +30,6 @@ class SymbolsGrid extends ConsumerWidget {
       },
       itemCount: symbols.length,
       crossAxisCount: board.crossAxisCount,
-      mainAxisSpacing: 12.0,
-      crossAxisSpacing: 12.0,
     );
   }
 }

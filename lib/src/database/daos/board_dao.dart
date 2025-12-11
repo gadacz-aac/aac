@@ -32,4 +32,8 @@ class BoardDao extends DatabaseAccessor<AppDatabase> with _$BoardDaoMixin {
         .watchSingleOrNull()
         .map((e) => e == null ? null : Board.fromEntity(e));
   }
+
+  Stream<List<Board>> watchDeleted() {
+    return selectDeleted().map(Board.fromEntity).watch();
+  }
 }

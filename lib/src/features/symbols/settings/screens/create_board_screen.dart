@@ -41,11 +41,10 @@ class _CreateBoardScreenState extends ConsumerState<CreateBoardScreen> {
   }
 
   Future<bool> boardNameExists(String name) async {
-    return await ref
-            .read(boardDaoProvider)
-            .selectByName(name)
-            .getSingleOrNull() !=
-        null;
+    final board =
+        await ref.read(boardDaoProvider).selectByName(name).getSingleOrNull();
+
+    return board != null && !board.isDeleted;
   }
 
   Future<void> _checkBoardNameExists() async {

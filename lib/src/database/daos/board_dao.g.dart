@@ -31,10 +31,27 @@ mixin _$BoardDaoMixin on DatabaseAccessor<AppDatabase> {
 
   Selectable<BoardEntity> searchBoard({required String query}) {
     return customSelect(
-        'SELECT * FROM board_tb WHERE name LIKE CONCAT(\'%\', ?1, \'%\')',
+        'SELECT * FROM board_tb WHERE name LIKE CONCAT(\'%\', ?1, \'%\') AND is_deleted = FALSE',
         variables: [
           Variable<String>(query)
         ],
+        readsFrom: {
+          boardTb,
+        }).asyncMap(boardTb.mapFromRow);
+  }
+
+  Future<int> toggleIsDeleted(int var1) {
+    return customUpdate(
+      'UPDATE board_tb SET is_deleted = NOT is_deleted WHERE id = ?1',
+      variables: [Variable<int>(var1)],
+      updates: {boardTb},
+      updateKind: UpdateKind.update,
+    );
+  }
+
+  Selectable<BoardEntity> selectDeleted() {
+    return customSelect('SELECT * FROM board_tb WHERE is_deleted = TRUE',
+        variables: [],
         readsFrom: {
           boardTb,
         }).asyncMap(boardTb.mapFromRow);

@@ -1,57 +1,53 @@
-import 'package:aac/src/database/daos/symbol_dao.dart';
-import 'package:aac/src/features/boards/ui/symbols_grid/base_symbols_grid.dart';
 import 'package:aac/src/features/symbols/bin/bin_bar.dart';
-import 'package:aac/src/features/symbols/card/symbol_tap_actions.dart';
-import 'package:aac/src/features/symbols/model/communication_symbol.dart';
-import 'package:aac/src/features/symbols/card/symbol_card.dart';
+import 'package:aac/src/features/symbols/bin/bin_screen_board.dart';
+import 'package:aac/src/features/symbols/bin/bin_screen_symbol.dart';
 import 'package:aac/src/shared/ui/scaffold.dart';
 import 'package:flutter/material.dart' hide SelectAction;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'bin_screen.g.dart';
-
-@riverpod
-Stream<List<CommunicationSymbol>> deletedSymbols(Ref ref) {
-  return ref.watch(symbolDaoProvider).watchDeleted();
-}
-
-class BinScreen extends ConsumerWidget {
+class BinScreen extends ConsumerStatefulWidget {
   const BinScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final deletedSymbols = ref.watch(deletedSymbolsProvider);
+  ConsumerState<BinScreen> createState() => _BinScreenState();
+}
 
-    return AacScaffold(
-      appBar: const BinAppBar(
-        title: 'Kosz',
-      ),
-      body: Column(
-        children: [
-          deletedSymbols.when(
-            data: (data) {
-              return BaseSymbolsGrid(
-                itemBuilder: (context, index) {
-                  final e = data.elementAt(index);
-                  return SymbolCard(
-                    symbol: e,
-                    onTapActions: [
-                      SymbolSelectAction(),
-                    ],
-                  );
-                },
-                itemCount: data.length,
-                crossAxisCount: 4,
-                mainAxisSpacing: 12.0,
-                crossAxisSpacing: 12.0,
-              );
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, stack) => Center(child: Text('Error: $error')),
-          ),
-        ],
-      ),
-    );
+class _BinScreenState extends ConsumerState<BinScreen>
+    with SingleTickerProviderStateMixin {
+  static const List<Tab> tabs = [
+    Tab(
+      text: "Symbole",
+    ),
+    Tab(
+      text: "Tablice",
+    )
+  ];
+
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(vsync: this, length: tabs.length);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+        length: 2,
+        animationDuration: Duration.zero,
+        child: AacScaffold(
+            appBar: BinAppBar(tabs: tabs, tabController: _tabController),
+            body: TabBarView(controller: _tabController, children: [
+              BinScreenSymbol(),
+              BinScreenBoard(),
+            ])));
   }
 }

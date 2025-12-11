@@ -6,7 +6,7 @@ import 'package:aac/src/features/symbols/card/child_symbol_card.dart';
 import 'package:aac/src/features/symbols/card/symbol_card.dart';
 import 'package:aac/src/features/symbols/card/symbol_tap_actions.dart';
 import 'package:aac/src/features/symbols/model/child_communication_symbol.dart';
-import 'package:aac/src/features/symbols/search/search_screen.dart';
+import 'package:aac/src/features/symbols/search/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -44,6 +44,8 @@ class _SymbolsGridWithDragState extends ConsumerState<SymbolsGridWithDrag> {
     return BaseSymbolsGrid(
         crossAxisCount: widget.board.crossAxisCount,
         itemCount: symbols.length,
+        mainAxisSpacing: 0,
+        crossAxisSpacing: 0,
         itemBuilder: (context, index) {
           final e = symbols[index];
 

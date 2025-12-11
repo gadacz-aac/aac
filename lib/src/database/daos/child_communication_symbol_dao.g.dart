@@ -9,11 +9,12 @@ mixin _$ChildSymbolDaoMixin on DatabaseAccessor<AppDatabase> {
       attachedDatabase.communicationSymbolTb;
   ChildSymbolTb get childSymbolTb => attachedDatabase.childSymbolTb;
   SettingTb get settingTb => attachedDatabase.settingTb;
-  Selectable<SelectByBoardIdResult> selectByBoardId(int var1) {
+  Selectable<SelectByBoardIdResult> selectByBoardId(int var1, bool var2) {
     return customSelect(
-        'SELECT * FROM communication_symbol_tb AS s JOIN child_symbol_tb AS cs ON cs.symbol_id = s.id WHERE cs.board_id = ?1 AND s.is_deleted = FALSE ORDER BY cs.position',
+        'SELECT * FROM communication_symbol_tb AS s JOIN child_symbol_tb AS cs ON cs.symbol_id = s.id WHERE cs.board_id = ?1 AND s.is_deleted = ?2 ORDER BY cs.position',
         variables: [
-          Variable<int>(var1)
+          Variable<int>(var1),
+          Variable<bool>(var2)
         ],
         readsFrom: {
           communicationSymbolTb,
@@ -41,6 +42,42 @@ mixin _$ChildSymbolDaoMixin on DatabaseAccessor<AppDatabase> {
       updates: {childSymbolTb},
       updateKind: UpdateKind.update,
     );
+  }
+
+  Future<int> markDeletedByParentId(int var1) {
+    return customUpdate(
+      'UPDATE communication_symbol_tb SET is_deleted = TRUE FROM (SELECT cs.symbol_id FROM child_symbol_tb AS cs LEFT JOIN child_symbol_tb AS other ON cs.symbol_id = other.symbol_id AND other.board_id <> cs.board_id WHERE cs.board_id = ?1 AND other.symbol_id IS NULL) AS orphans WHERE communication_symbol_tb.id = orphans.symbol_id',
+      variables: [Variable<int>(var1)],
+      updates: {communicationSymbolTb},
+      updateKind: UpdateKind.update,
+    );
+  }
+
+  Future<int> removeLinksToParent(int? var1) {
+    return customUpdate(
+      'UPDATE communication_symbol_tb SET child_board_id = NULL WHERE child_board_id = ?1',
+      variables: [Variable<int>(var1)],
+      updates: {communicationSymbolTb},
+      updateKind: UpdateKind.update,
+    );
+  }
+
+  Selectable<SelectByBoardIdWithIsReusedResult> selectByBoardIdWithIsReused(
+      int var1) {
+    return customSelect(
+        'SELECT s.label, s.id, s.image_path,(COUNT(*) > 1)AS is_reused FROM child_symbol_tb AS cs1 JOIN child_symbol_tb AS cs2 ON cs1.symbol_id = cs2.symbol_id JOIN communication_symbol_tb AS s ON cs1.symbol_id = s.id WHERE cs1.board_id = ?1 OR cs2.board_id = ?1 GROUP BY s.id',
+        variables: [
+          Variable<int>(var1)
+        ],
+        readsFrom: {
+          communicationSymbolTb,
+          childSymbolTb,
+        }).map((QueryRow row) => SelectByBoardIdWithIsReusedResult(
+          label: row.read<String>('label'),
+          id: row.read<int>('id'),
+          imagePath: row.read<String>('image_path'),
+          isReused: row.read<bool>('is_reused'),
+        ));
   }
 }
 
@@ -70,6 +107,19 @@ class SelectByBoardIdResult {
     required this.hidden,
     required this.boardId,
     required this.symbolId,
+  });
+}
+
+class SelectByBoardIdWithIsReusedResult {
+  final String label;
+  final int id;
+  final String imagePath;
+  final bool isReused;
+  SelectByBoardIdWithIsReusedResult({
+    required this.label,
+    required this.id,
+    required this.imagePath,
+    required this.isReused,
   });
 }
 

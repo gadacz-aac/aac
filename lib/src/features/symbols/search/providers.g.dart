@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'search_screen.dart';
+part of 'providers.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -25,14 +25,10 @@ final class SearchedSymbolProvider extends $FunctionalProvider<
           argument: null,
           retry: null,
           name: r'searchedSymbolProvider',
-          isAutoDispose: false,
-          dependencies: const <ProviderOrFamily>[localQueryProvider],
-          $allTransitiveDependencies: const <ProviderOrFamily>[
-            SearchedSymbolProvider.$allTransitiveDependencies0,
-          ],
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
         );
-
-  static const $allTransitiveDependencies0 = localQueryProvider;
 
   @override
   String debugGetCreateSourceHash() => _$searchedSymbolHash();
@@ -49,7 +45,7 @@ final class SearchedSymbolProvider extends $FunctionalProvider<
   }
 }
 
-String _$searchedSymbolHash() => r'6440e4966518371770787e2bb497a099d258ae9d';
+String _$searchedSymbolHash() => r'b844d8eb8a2aaccc53f7b60f5a926e9581cec8f4';
 
 @ProviderFor(searchedBoard)
 const searchedBoardProvider = SearchedBoardProvider._();
@@ -63,14 +59,10 @@ final class SearchedBoardProvider extends $FunctionalProvider<
           argument: null,
           retry: null,
           name: r'searchedBoardProvider',
-          isAutoDispose: false,
-          dependencies: const <ProviderOrFamily>[localQueryProvider],
-          $allTransitiveDependencies: const <ProviderOrFamily>[
-            SearchedBoardProvider.$allTransitiveDependencies0,
-          ],
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
         );
-
-  static const $allTransitiveDependencies0 = localQueryProvider;
 
   @override
   String debugGetCreateSourceHash() => _$searchedBoardHash();
@@ -87,7 +79,7 @@ final class SearchedBoardProvider extends $FunctionalProvider<
   }
 }
 
-String _$searchedBoardHash() => r'dfd4319206e46ac4faa4275f96a106d7e32faf72';
+String _$searchedBoardHash() => r'6946eda73773291405f8a400994a60bd5a921116';
 
 @ProviderFor(LocalQuery)
 const localQueryProvider = LocalQueryProvider._();
@@ -99,9 +91,9 @@ final class LocalQueryProvider extends $NotifierProvider<LocalQuery, String> {
           argument: null,
           retry: null,
           name: r'localQueryProvider',
-          isAutoDispose: false,
-          dependencies: const <ProviderOrFamily>[],
-          $allTransitiveDependencies: const <ProviderOrFamily>[],
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
         );
 
   @override
@@ -120,7 +112,7 @@ final class LocalQueryProvider extends $NotifierProvider<LocalQuery, String> {
   }
 }
 
-String _$localQueryHash() => r'8a2ebcf4039004613f40dd3224fb2292c9d83c08';
+String _$localQueryHash() => r'00d36b4e4a94cc3fcf1a3b64f9555126d3581430';
 
 abstract class _$LocalQuery extends $Notifier<String> {
   String build();

@@ -2,7 +2,6 @@ import 'package:aac/src/database/database.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:drift/drift.dart';
-import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'symbol_dao.g.dart';

@@ -23,7 +23,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'board_screen.g.dart';
 
-final boardIdProvider = Provider<int>((_) => throw UnimplementedError());
+@Riverpod(dependencies: [])
+int boardId(Ref ref) => throw UnimplementedError();
 
 class BoardScreen extends ConsumerWidget {
   final int boardId;
@@ -32,6 +33,9 @@ class BoardScreen extends ConsumerWidget {
   BoardScreen({super.key, required this.boardId}) {
     _isMainBoard = boardId != 1;
   }
+
+  static MaterialPageRoute page(int id) =>
+      MaterialPageRoute(builder: (_) => BoardScreen(boardId: id));
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -59,7 +63,7 @@ class BoardScreen extends ConsumerWidget {
               OpenSearchScreenAction(
                 board: data,
               ),
-              const ShowMoreOptions()
+              const BoardShowMoreOptions()
             ]);
           } else {
             actions.add(const LockButton());

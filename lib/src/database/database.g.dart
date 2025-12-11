@@ -29,8 +29,16 @@ class BoardTb extends Table with TableInfo<BoardTb, BoardEntity> {
       type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
+  static const VerificationMeta _isDeletedMeta =
+      const VerificationMeta('isDeleted');
+  late final GeneratedColumn<bool> isDeleted = GeneratedColumn<bool>(
+      'is_deleted', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      $customConstraints: 'NOT NULL DEFAULT FALSE',
+      defaultValue: const CustomExpression('FALSE'));
   @override
-  List<GeneratedColumn> get $columns => [id, crossAxisCount, name];
+  List<GeneratedColumn> get $columns => [id, crossAxisCount, name, isDeleted];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -56,6 +64,10 @@ class BoardTb extends Table with TableInfo<BoardTb, BoardEntity> {
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
+    if (data.containsKey('is_deleted')) {
+      context.handle(_isDeletedMeta,
+          isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
+    }
     return context;
   }
 
@@ -71,6 +83,8 @@ class BoardTb extends Table with TableInfo<BoardTb, BoardEntity> {
           .read(DriftSqlType.int, data['${effectivePrefix}cross_axis_count'])!,
       name: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      isDeleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted'])!,
     );
   }
 
@@ -89,14 +103,19 @@ class BoardEntity extends DataClass implements Insertable<BoardEntity> {
   final int id;
   final int crossAxisCount;
   final String name;
+  final bool isDeleted;
   const BoardEntity(
-      {required this.id, required this.crossAxisCount, required this.name});
+      {required this.id,
+      required this.crossAxisCount,
+      required this.name,
+      required this.isDeleted});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['cross_axis_count'] = Variable<int>(crossAxisCount);
     map['name'] = Variable<String>(name);
+    map['is_deleted'] = Variable<bool>(isDeleted);
     return map;
   }
 
@@ -105,6 +124,7 @@ class BoardEntity extends DataClass implements Insertable<BoardEntity> {
       id: Value(id),
       crossAxisCount: Value(crossAxisCount),
       name: Value(name),
+      isDeleted: Value(isDeleted),
     );
   }
 
@@ -115,6 +135,7 @@ class BoardEntity extends DataClass implements Insertable<BoardEntity> {
       id: serializer.fromJson<int>(json['id']),
       crossAxisCount: serializer.fromJson<int>(json['cross_axis_count']),
       name: serializer.fromJson<String>(json['name']),
+      isDeleted: serializer.fromJson<bool>(json['is_deleted']),
     );
   }
   @override
@@ -124,14 +145,17 @@ class BoardEntity extends DataClass implements Insertable<BoardEntity> {
       'id': serializer.toJson<int>(id),
       'cross_axis_count': serializer.toJson<int>(crossAxisCount),
       'name': serializer.toJson<String>(name),
+      'is_deleted': serializer.toJson<bool>(isDeleted),
     };
   }
 
-  BoardEntity copyWith({int? id, int? crossAxisCount, String? name}) =>
+  BoardEntity copyWith(
+          {int? id, int? crossAxisCount, String? name, bool? isDeleted}) =>
       BoardEntity(
         id: id ?? this.id,
         crossAxisCount: crossAxisCount ?? this.crossAxisCount,
         name: name ?? this.name,
+        isDeleted: isDeleted ?? this.isDeleted,
       );
   BoardEntity copyWithCompanion(BoardTbCompanion data) {
     return BoardEntity(
@@ -140,6 +164,7 @@ class BoardEntity extends DataClass implements Insertable<BoardEntity> {
           ? data.crossAxisCount.value
           : this.crossAxisCount,
       name: data.name.present ? data.name.value : this.name,
+      isDeleted: data.isDeleted.present ? data.isDeleted.value : this.isDeleted,
     );
   }
 
@@ -148,54 +173,65 @@ class BoardEntity extends DataClass implements Insertable<BoardEntity> {
     return (StringBuffer('BoardEntity(')
           ..write('id: $id, ')
           ..write('crossAxisCount: $crossAxisCount, ')
-          ..write('name: $name')
+          ..write('name: $name, ')
+          ..write('isDeleted: $isDeleted')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, crossAxisCount, name);
+  int get hashCode => Object.hash(id, crossAxisCount, name, isDeleted);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is BoardEntity &&
           other.id == this.id &&
           other.crossAxisCount == this.crossAxisCount &&
-          other.name == this.name);
+          other.name == this.name &&
+          other.isDeleted == this.isDeleted);
 }
 
 class BoardTbCompanion extends UpdateCompanion<BoardEntity> {
   final Value<int> id;
   final Value<int> crossAxisCount;
   final Value<String> name;
+  final Value<bool> isDeleted;
   const BoardTbCompanion({
     this.id = const Value.absent(),
     this.crossAxisCount = const Value.absent(),
     this.name = const Value.absent(),
+    this.isDeleted = const Value.absent(),
   });
   BoardTbCompanion.insert({
     this.id = const Value.absent(),
     this.crossAxisCount = const Value.absent(),
     required String name,
+    this.isDeleted = const Value.absent(),
   }) : name = Value(name);
   static Insertable<BoardEntity> custom({
     Expression<int>? id,
     Expression<int>? crossAxisCount,
     Expression<String>? name,
+    Expression<bool>? isDeleted,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (crossAxisCount != null) 'cross_axis_count': crossAxisCount,
       if (name != null) 'name': name,
+      if (isDeleted != null) 'is_deleted': isDeleted,
     });
   }
 
   BoardTbCompanion copyWith(
-      {Value<int>? id, Value<int>? crossAxisCount, Value<String>? name}) {
+      {Value<int>? id,
+      Value<int>? crossAxisCount,
+      Value<String>? name,
+      Value<bool>? isDeleted}) {
     return BoardTbCompanion(
       id: id ?? this.id,
       crossAxisCount: crossAxisCount ?? this.crossAxisCount,
       name: name ?? this.name,
+      isDeleted: isDeleted ?? this.isDeleted,
     );
   }
 
@@ -211,6 +247,9 @@ class BoardTbCompanion extends UpdateCompanion<BoardEntity> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool>(isDeleted.value);
+    }
     return map;
   }
 
@@ -219,7 +258,8 @@ class BoardTbCompanion extends UpdateCompanion<BoardEntity> {
     return (StringBuffer('BoardTbCompanion(')
           ..write('id: $id, ')
           ..write('crossAxisCount: $crossAxisCount, ')
-          ..write('name: $name')
+          ..write('name: $name, ')
+          ..write('isDeleted: $isDeleted')
           ..write(')'))
         .toString();
   }
@@ -694,14 +734,15 @@ class ChildSymbolTb extends Table
       'board_id', aliasedName, false,
       type: DriftSqlType.int,
       requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL REFERENCES board_tb(id)');
+      $customConstraints: 'NOT NULL REFERENCES board_tb(id)ON DELETE CASCADE');
   static const VerificationMeta _symbolIdMeta =
       const VerificationMeta('symbolId');
   late final GeneratedColumn<int> symbolId = GeneratedColumn<int>(
       'symbol_id', aliasedName, false,
       type: DriftSqlType.int,
       requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL REFERENCES communication_symbol_tb(id)');
+      $customConstraints:
+          'NOT NULL REFERENCES communication_symbol_tb(id)ON DELETE CASCADE');
   @override
   List<GeneratedColumn> get $columns => [position, hidden, boardId, symbolId];
   @override
@@ -1158,17 +1199,38 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
       [boardTb, communicationSymbolTb, childSymbolTb, settingTb];
+  @override
+  StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules(
+        [
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('board_tb',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('child_symbol_tb', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('communication_symbol_tb',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('child_symbol_tb', kind: UpdateKind.delete),
+            ],
+          ),
+        ],
+      );
 }
 
 typedef $BoardTbCreateCompanionBuilder = BoardTbCompanion Function({
   Value<int> id,
   Value<int> crossAxisCount,
   required String name,
+  Value<bool> isDeleted,
 });
 typedef $BoardTbUpdateCompanionBuilder = BoardTbCompanion Function({
   Value<int> id,
   Value<int> crossAxisCount,
   Value<String> name,
+  Value<bool> isDeleted,
 });
 
 final class $BoardTbReferences
@@ -1226,6 +1288,9 @@ class $BoardTbFilterComposer extends Composer<_$AppDatabase, BoardTb> {
 
   ColumnFilters<String> get name => $composableBuilder(
       column: $table.name, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isDeleted => $composableBuilder(
+      column: $table.isDeleted, builder: (column) => ColumnFilters(column));
 
   Expression<bool> communicationSymbolTbRefs(
       Expression<bool> Function($CommunicationSymbolTbFilterComposer f) f) {
@@ -1287,6 +1352,9 @@ class $BoardTbOrderingComposer extends Composer<_$AppDatabase, BoardTb> {
 
   ColumnOrderings<String> get name => $composableBuilder(
       column: $table.name, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isDeleted => $composableBuilder(
+      column: $table.isDeleted, builder: (column) => ColumnOrderings(column));
 }
 
 class $BoardTbAnnotationComposer extends Composer<_$AppDatabase, BoardTb> {
@@ -1305,6 +1373,9 @@ class $BoardTbAnnotationComposer extends Composer<_$AppDatabase, BoardTb> {
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<bool> get isDeleted =>
+      $composableBuilder(column: $table.isDeleted, builder: (column) => column);
 
   Expression<T> communicationSymbolTbRefs<T extends Object>(
       Expression<T> Function($CommunicationSymbolTbAnnotationComposer a) f) {
@@ -1376,21 +1447,25 @@ class $BoardTbTableManager extends RootTableManager<
             Value<int> id = const Value.absent(),
             Value<int> crossAxisCount = const Value.absent(),
             Value<String> name = const Value.absent(),
+            Value<bool> isDeleted = const Value.absent(),
           }) =>
               BoardTbCompanion(
             id: id,
             crossAxisCount: crossAxisCount,
             name: name,
+            isDeleted: isDeleted,
           ),
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
             Value<int> crossAxisCount = const Value.absent(),
             required String name,
+            Value<bool> isDeleted = const Value.absent(),
           }) =>
               BoardTbCompanion.insert(
             id: id,
             crossAxisCount: crossAxisCount,
             name: name,
+            isDeleted: isDeleted,
           ),
           withReferenceMapper: (p0) => p0
               .map(

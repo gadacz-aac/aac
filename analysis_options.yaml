@@ -6,3 +6,8 @@ analyzer:
   exclude:
     - "**/*.g.dart"
 
+custom_lint:
+  rules:
+    # I will turn it on when @Dependencies won't be experimental
+    - scoped_providers_should_specify_dependencies: false
+    - provider_dependencies: false

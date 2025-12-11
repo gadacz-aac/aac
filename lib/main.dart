@@ -51,14 +51,14 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
         theme: ThemeData(
             useMaterial3: true,
-            scaffoldBackgroundColor: Colors.white,
+            scaffoldBackgroundColor: AacColors.greyBackground,
             appBarTheme: const AppBarTheme(
-                backgroundColor: AacColors.sentenceBarGrey,
+                backgroundColor: AacColors.greyBackground,
                 elevation: 0,
                 scrolledUnderElevation: 0,
                 iconTheme: IconThemeData(color: AacColors.iconsGrey),
                 systemOverlayStyle: SystemUiOverlayStyle(
-                    systemNavigationBarColor: AacColors.sentenceBarGrey,
+                    systemNavigationBarColor: AacColors.greyBackground,
                     systemNavigationBarIconBrightness: Brightness.dark),
                 titleTextStyle: TextStyle(
                     color: AacColors.iconsGrey,

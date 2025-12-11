@@ -1,5 +1,5 @@
-import 'package:aac/src/features/symbols/search/search_screen.dart';
-import 'package:aac/src/features/symbols/symbol_manager.dart';
+import 'package:aac/src/features/symbols/bin/bin_manager.dart';
+import 'package:aac/src/features/symbols/search/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -29,7 +29,7 @@ class DeleteForeverAction extends ConsumerWidget {
                 ),
                 TextButton(
                   onPressed: () {
-                    final symbolManager = ref.watch(symbolManagerProvider);
+                    final symbolManager = ref.watch(binManagerProvider);
                     // state is mutable
                     final symbols = [...selectedSymbols];
                     ref.read(selectedSymbolsProvider).clear();

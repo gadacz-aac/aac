@@ -53,10 +53,11 @@ final symbolGridScrollPossibilityProvider =
         (ref) => const SymbolGridScrollPossibility.none());
 
 @riverpod
-Stream<List<ChildCommunicationSymbol>> childSymbol(Ref ref, int id) {
+Stream<List<ChildCommunicationSymbol>> childSymbol(Ref ref, int id,
+    [bool isDeleted = false]) {
   final dao = ref.watch(childSymbolDaoProvider);
 
-  return dao.watchByBoardId(id);
+  return dao.watchByBoardId(id, isDeleted);
 }
 
 class BaseSymbolsGrid extends ConsumerWidget {
@@ -72,8 +73,8 @@ class BaseSymbolsGrid extends ConsumerWidget {
       required this.itemBuilder,
       required this.itemCount,
       required this.crossAxisCount,
-      this.crossAxisSpacing = 0,
-      this.mainAxisSpacing = 0});
+      this.crossAxisSpacing = 12,
+      this.mainAxisSpacing = 12});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

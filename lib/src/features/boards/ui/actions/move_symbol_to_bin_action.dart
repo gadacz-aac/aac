@@ -1,5 +1,5 @@
-import 'package:aac/src/features/symbols/search/search_screen.dart';
-import 'package:aac/src/features/symbols/symbol_manager.dart';
+import 'package:aac/src/features/symbols/bin/bin_manager.dart';
+import 'package:aac/src/features/symbols/search/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -19,7 +19,7 @@ class MoveSymbolToBinAction extends ConsumerWidget {
         final symbols = [...selectedSymbols];
         ref.read(selectedSymbolsProvider).clear();
 
-        ref.read(symbolManagerProvider).moveSymbolToBin(symbols);
+        ref.read(binManagerProvider).moveSymbolToBin(symbols);
       },
     );
   }

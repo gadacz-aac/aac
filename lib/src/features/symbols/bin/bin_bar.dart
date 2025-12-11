@@ -1,7 +1,7 @@
 import 'package:aac/src/features/boards/ui/actions/delete_forever_action.dart';
 import 'package:aac/src/features/boards/ui/actions/restore_symbol_action.dart';
 import 'package:aac/src/features/symbols/search/app_bar_actions.dart';
-import 'package:aac/src/features/symbols/search/search_screen.dart';
+import 'package:aac/src/features/symbols/search/providers.dart';
 import 'package:aac/src/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,12 +9,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class BinAppBar extends ConsumerWidget implements PreferredSizeWidget {
   const BinAppBar({
     super.key,
-    required this.title,
-    this.actions = const [],
+    required this.tabController,
+    required this.tabs,
   });
 
-  final String title;
-  final List<Widget> actions;
+  final TabController tabController;
+  final List<Tab> tabs;
 
   @override
   final Size preferredSize = const Size.fromHeight(kToolbarHeight);
@@ -23,20 +23,29 @@ class BinAppBar extends ConsumerWidget implements PreferredSizeWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final areSymbolSelected = ref.watch(areSymbolsSelectedProvider);
 
-    final List<Widget> actionsSelected = [
-      const DeleteForeverAction(),
-      const RestoreSymbolAction()
-    ];
+    List<Widget> actions = [];
+    Widget? flexibleSpace;
+
+    if (areSymbolSelected) {
+      actions = [const DeleteForeverAction(), const RestoreSymbolAction()];
+    } else {
+      flexibleSpace = SafeArea(
+        child: TabBar(
+          controller: tabController,
+          tabs: tabs,
+        ),
+      );
+    }
 
     return AppBar(
-      title: areSymbolSelected ? null : Text(title),
+      automaticallyImplyLeading: false,
       leading: areSymbolSelected ? const CancelAction() : null,
-      actions: areSymbolSelected ? actionsSelected : actions,
+      actions: actions,
       backgroundColor: AacColors.sentenceBarGrey,
+      flexibleSpace: flexibleSpace,
       elevation: 0,
       scrolledUnderElevation: 0,
       iconTheme: const IconThemeData(color: AacColors.iconsGrey),
-      centerTitle: true,
       titleTextStyle: const TextStyle(color: Colors.black),
     );
   }

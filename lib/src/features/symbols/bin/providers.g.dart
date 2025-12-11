@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'bin_screen.dart';
+part of 'providers.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -46,3 +46,37 @@ final class DeletedSymbolsProvider extends $FunctionalProvider<
 }
 
 String _$deletedSymbolsHash() => r'eeeb4b9d6b48fc8173e97a650b5098f0e2172ad2';
+
+@ProviderFor(deletedBoards)
+const deletedBoardsProvider = DeletedBoardsProvider._();
+
+final class DeletedBoardsProvider extends $FunctionalProvider<
+        AsyncValue<List<Board>>, List<Board>, Stream<List<Board>>>
+    with $FutureModifier<List<Board>>, $StreamProvider<List<Board>> {
+  const DeletedBoardsProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'deletedBoardsProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$deletedBoardsHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<List<Board>> $createElement(
+          $ProviderPointer pointer) =>
+      $StreamProviderElement(pointer);
+
+  @override
+  Stream<List<Board>> create(Ref ref) {
+    return deletedBoards(ref);
+  }
+}
+
+String _$deletedBoardsHash() => r'9658c10395eddc141cb775254115874632635506';

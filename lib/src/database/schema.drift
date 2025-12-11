@@ -1,7 +1,8 @@
 CREATE TABLE IF NOT EXISTS "board_tb" (
 	"id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	"cross_axis_count" INTEGER NOT NULL DEFAULT 3,
-	"name" TEXT NOT NULL
+	"name" TEXT NOT NULL,
+	"is_deleted" BOOLEAN NOT NULL DEFAULT false
 ) STRICT AS "BoardEntity";
 
 CREATE TABLE IF NOT EXISTS "communication_symbol_tb" (
@@ -18,8 +19,8 @@ CREATE TABLE IF NOT EXISTS "communication_symbol_tb" (
 CREATE TABLE IF NOT EXISTS "child_symbol_tb" (
 	"position"  INTEGER NOT NULL,
 	"hidden"    BOOLEAN NOT NULL DEFAULT false,
-	"board_id"  INTEGER NOT NULL REFERENCES board_tb (id),
-	"symbol_id" INTEGER NOT NULL REFERENCES communication_symbol_tb (id),
+	"board_id"  INTEGER NOT NULL REFERENCES board_tb (id) ON DELETE CASCADE,
+	"symbol_id" INTEGER NOT NULL REFERENCES communication_symbol_tb (id) ON DELETE CASCADE,
 
 	PRIMARY KEY ("board_id", "symbol_id")
 ) STRICT AS "ChildSymbolEntity";

@@ -1,11 +1,14 @@
 import 'dart:math';
 
+import 'package:aac/src/features/boards/ui/options/bottom_sheet_options.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/settings/screens/image_provider.dart';
 import 'package:aac/src/features/symbols/settings/screens/symbol_settings.dart';
 import 'package:aac/src/features/symbols/settings/widgets/board_picker.dart';
 import 'package:aac/src/features/symbols/settings/widgets/color_picker.dart';
 import 'package:aac/src/features/symbols/card/symbol_card.dart';
+import 'package:aac/src/shared/ui/bottom_sheet_options.dart';
+import 'package:aac/src/shared/ui/show_more_options.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/experimental/scope.dart';
@@ -46,10 +49,8 @@ class PreviewSymbolImage extends ConsumerWidget {
               right: 3,
               child: InkWell(
                 onTap: () {
-                  showModalBottomSheet(
-                      context: context,
-                      builder: (BuildContext context) =>
-                          ImageOptions(ref: ref));
+                  showMoreOptions(context,
+                      (BuildContext context) => ImageOptions(ref: ref));
                 },
                 child: const ShowImageOptions(),
               ));
@@ -89,19 +90,19 @@ class ImageOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewPadding = MediaQuery.paddingOf(context);
-
-    return Padding(
-      padding:
-          EdgeInsets.fromLTRB(26.0, 26.0, 26.0, max(viewPadding.bottom, 26)),
-      child: Wrap(
-        children: [
+    return BottomSheetOptions(children: [
+      OptionGroup(
+        options: [
           ChangeImage(ref: ref),
           CropImage(ref: ref),
-          RemoveImage(ref: ref)
         ],
       ),
-    );
+      OptionGroup(
+        options: [
+          RemoveImage(ref: ref),
+        ],
+      )
+    ]);
   }
 }
 

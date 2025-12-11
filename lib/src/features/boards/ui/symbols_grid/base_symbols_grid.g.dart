@@ -20,7 +20,12 @@ final class ChildSymbolProvider extends $FunctionalProvider<
         $FutureModifier<List<ChildCommunicationSymbol>>,
         $StreamProvider<List<ChildCommunicationSymbol>> {
   const ChildSymbolProvider._(
-      {required ChildSymbolFamily super.from, required int super.argument})
+      {required ChildSymbolFamily super.from,
+      required (
+        int,
+        bool,
+      )
+          super.argument})
       : super(
           retry: null,
           name: r'childSymbolProvider',
@@ -36,7 +41,7 @@ final class ChildSymbolProvider extends $FunctionalProvider<
   String toString() {
     return r'childSymbolProvider'
         ''
-        '($argument)';
+        '$argument';
   }
 
   @$internal
@@ -47,10 +52,14 @@ final class ChildSymbolProvider extends $FunctionalProvider<
 
   @override
   Stream<List<ChildCommunicationSymbol>> create(Ref ref) {
-    final argument = this.argument as int;
+    final argument = this.argument as (
+      int,
+      bool,
+    );
     return childSymbol(
       ref,
-      argument,
+      argument.$1,
+      argument.$2,
     );
   }
 
@@ -65,11 +74,16 @@ final class ChildSymbolProvider extends $FunctionalProvider<
   }
 }
 
-String _$childSymbolHash() => r'58a943e9803d9485f949d4295525ddea8158387a';
+String _$childSymbolHash() => r'6164df1038c542ac9987c49ae24856fb405b9b34';
 
 final class ChildSymbolFamily extends $Family
     with
-        $FunctionalFamilyOverride<Stream<List<ChildCommunicationSymbol>>, int> {
+        $FunctionalFamilyOverride<
+            Stream<List<ChildCommunicationSymbol>>,
+            (
+              int,
+              bool,
+            )> {
   const ChildSymbolFamily._()
       : super(
           retry: null,
@@ -80,9 +94,13 @@ final class ChildSymbolFamily extends $Family
         );
 
   ChildSymbolProvider call(
-    int id,
-  ) =>
-      ChildSymbolProvider._(argument: id, from: this);
+    int id, [
+    bool isDeleted = false,
+  ]) =>
+      ChildSymbolProvider._(argument: (
+        id,
+        isDeleted,
+      ), from: this);
 
   @override
   String toString() => r'childSymbolProvider';

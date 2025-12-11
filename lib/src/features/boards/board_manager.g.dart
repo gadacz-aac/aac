@@ -48,4 +48,4 @@ final class BoardManagerProvider
   }
 }
 
-String _$boardManagerHash() => r'5893f72661ce30b9d3c4f68c4d5190009da05263';
+String _$boardManagerHash() => r'6637d8ed08b8c51446c33df61fae4dd5df51d931';

@@ -24,7 +24,7 @@ pinSymbolToBoard(:board_id AS INTEGER, :symbol_id AS INTEGER):
 		VALUES (:board_id, :symbol_id, (SELECT position FROM helpers));
 
 searchSymbol(:query AS TEXT, :onlyPinned AS BOOLEAN, :color AS INTEGER OR NULL):
-	SELECT s.* FROM communication_symbol_tb s
+	SELECT DISTINCT s.* FROM communication_symbol_tb s
 		LEFT JOIN child_symbol_tb cs ON cs.symbol_id = s.id
 		WHERE s.label LIKE CONCAT('%', :query, '%')		AND
 			(NOT :onlyPinned OR cs.board_id IS NULL)	AND
