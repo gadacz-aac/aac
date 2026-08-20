@@ -57,7 +57,6 @@ class DefaultFirebaseOptions {
     projectId: 'gadacz-2a486',
     storageBucket: 'gadacz-2a486.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyC0EtFU81EibH30lV0zQBnZUTfkI6EjwUg',
     appId: '1:826800469394:ios:27896feb45c59ee84e7d4b',
@@ -66,7 +65,6 @@ class DefaultFirebaseOptions {
     storageBucket: 'gadacz-2a486.firebasestorage.app',
     iosBundleId: 'com.example.aac',
   );
-
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyC0EtFU81EibH30lV0zQBnZUTfkI6EjwUg',
     appId: '1:826800469394:ios:27896feb45c59ee84e7d4b',
@@ -85,5 +83,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'gadacz-2a486.firebasestorage.app',
     measurementId: 'G-KRD4EYP7S8',
   );
-
 }

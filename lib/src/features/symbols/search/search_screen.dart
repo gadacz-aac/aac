@@ -11,6 +11,7 @@ import 'package:aac/src/features/symbols/search/no_search_results.dart';
 import 'package:aac/src/features/symbols/search/providers.dart';
 import 'package:aac/src/features/symbols/search/symbol_search_filters.dart';
 import 'package:aac/src/shared/ui/bottom_sheet_options.dart';
+import 'package:aac/src/shared/ui/list.dart';
 import 'package:aac/src/shared/ui/scaffold.dart';
 import 'package:aac/src/shared/ui/search_input.dart';
 import 'package:aac/src/shared/ui/show_more_options.dart';
@@ -38,25 +39,17 @@ class BoardSearchScreen extends ConsumerWidget {
           ref.read(localQueryProvider.notifier).state = val;
         },
         resultBuilder: (results) => Padding(
-              padding: const EdgeInsets.all(20),
-              child: ListView.separated(
+              padding: const EdgeInsets.all(12),
+              child: AacList.builder(
                   itemCount: results.length,
-                  separatorBuilder: (_, __) =>
-                      Divider(height: 0, color: Color(0xFFEFEFEF)),
                   itemBuilder: (context, index) {
                     final e = results[index];
 
-                    return Material(
-                      child: ListTile(
-                        title: Text(e.name),
-                        shape: RoundedRectangleBorder(
-                            side:
-                                BorderSide(color: Color(0xFFEFEFEF), width: 1)),
-                        tileColor: Colors.white,
-                        trailing: ShowMoreOptions(
-                            builder: (context) =>
-                                optionsBuilder(context, ref, e.id)),
-                      ),
+                    return ListTile(
+                      title: Text(e.name),
+                      trailing: ShowMoreOptions(
+                          builder: (context) =>
+                              optionsBuilder(context, ref, e.id)),
                     );
                   }),
             ));

@@ -7,7 +7,9 @@ import 'package:aac/src/features/symbols/bin/models.dart';
 import 'package:aac/src/features/symbols/bin/providers.dart';
 import 'package:aac/src/features/symbols/card/symbol_image.dart';
 import 'package:aac/src/features/symbols/search/no_search_results.dart';
+import 'package:aac/src/shared/colors.dart';
 import 'package:aac/src/shared/ui/bottom_sheet_options.dart';
+import 'package:aac/src/shared/ui/list.dart';
 import 'package:aac/src/shared/ui/show_more_options.dart';
 import 'package:flutter/material.dart' hide SelectAction;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,8 +30,9 @@ class BinScreenBoard extends ConsumerWidget {
               isLoading: false);
         }
 
-        return Center(
-          child: ListView.builder(
+        return Padding(
+          padding: const EdgeInsets.all(12),
+          child: AacList.builder(
               itemCount: data.length,
               itemBuilder: (context, index) {
                 final e = data[index];
@@ -224,34 +227,27 @@ class _BoardSymbolPickerState extends ConsumerState<BoardSymbolPicker> {
         height: 12,
       ),
       Expanded(
-        child: ClipRRect(
-            borderRadius: BorderRadiusGeometry.circular(12),
-            clipBehavior: Clip.hardEdge,
-            child: ListView.separated(
-                itemCount: symbols.length,
-                separatorBuilder: (_, __) =>
-                    Divider(height: 0, color: Color(0xFFEFEFEF)),
-                itemBuilder: (context, index) {
-                  final e = symbols[index];
+        child: AacList.builder(
+            itemCount: symbols.length,
+            itemBuilder: (context, index) {
+              final e = symbols[index];
 
-                  return Material(
-                      child: CheckboxListTile(
-                    secondary: SymbolImage(
-                      e.imagePath,
-                      width: 48,
-                      height: 48,
-                    ),
-                    title: Text(e.label),
-                    value: selectedMap[e.id] ?? e.isSelected,
-                    tileColor: Colors.white,
-                    onChanged: (val) {
-                      if (val != null) {
-                        selectedMap[e.id] = val;
-                        setState(() {});
-                      }
-                    },
-                  ));
-                })),
+              return CheckboxListTile(
+                secondary: SymbolImage(
+                  e.imagePath,
+                  width: 48,
+                  height: 48,
+                ),
+                title: Text(e.label),
+                value: selectedMap[e.id] ?? e.isSelected,
+                onChanged: (val) {
+                  if (val != null) {
+                    selectedMap[e.id] = val;
+                    setState(() {});
+                  }
+                },
+              );
+            }),
       )
     ]);
   }

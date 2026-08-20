@@ -27,6 +27,9 @@ abstract final class AacColors {
   static const Color mainControlBackground = Color(0xff8D2DF5);
 
   static const Color greyBackground = Color(0xFFF9F9F7);
+
+  static const Color fineBorder = Color(
+      0xFFEFEFEF); // no it's not from the supermarket! how dare you? oh you saw the bottle? well fuck you!
 }
 
 final colors = [
@@ -39,5 +42,7 @@ final colors = [
   CommunicationColor(
       label: "Barbie", code: 0xFFFB88CF, folderBackgroundCode: 0xFFFFC6E9),
   CommunicationColor(
-      label: "Lucy", code: 0xFFFB4C4C, folderBackgroundCode: 0xFFFFB6B6),
+      label: "Lucy",
+      code: 0xFFFB4C4C,
+      folderBackgroundCode: 0xFFFFB6B6), // in the stars with diamonds
 ];
