@@ -10,12 +10,12 @@ part of 'board_manager.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(boardManager)
-const boardManagerProvider = BoardManagerProvider._();
+final boardManagerProvider = BoardManagerProvider._();
 
 final class BoardManagerProvider
     extends $FunctionalProvider<BoardManager, BoardManager, BoardManager>
     with $Provider<BoardManager> {
-  const BoardManagerProvider._()
+  BoardManagerProvider._()
       : super(
           from: null,
           argument: null,

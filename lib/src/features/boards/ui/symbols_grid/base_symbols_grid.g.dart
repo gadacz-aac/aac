@@ -10,7 +10,7 @@ part of 'base_symbols_grid.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(childSymbol)
-const childSymbolProvider = ChildSymbolFamily._();
+final childSymbolProvider = ChildSymbolFamily._();
 
 final class ChildSymbolProvider extends $FunctionalProvider<
         AsyncValue<List<ChildCommunicationSymbol>>,
@@ -19,7 +19,7 @@ final class ChildSymbolProvider extends $FunctionalProvider<
     with
         $FutureModifier<List<ChildCommunicationSymbol>>,
         $StreamProvider<List<ChildCommunicationSymbol>> {
-  const ChildSymbolProvider._(
+  ChildSymbolProvider._(
       {required ChildSymbolFamily super.from,
       required (
         int,
@@ -84,7 +84,7 @@ final class ChildSymbolFamily extends $Family
               int,
               bool,
             )> {
-  const ChildSymbolFamily._()
+  ChildSymbolFamily._()
       : super(
           retry: null,
           name: r'childSymbolProvider',

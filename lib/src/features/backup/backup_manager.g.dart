@@ -10,12 +10,12 @@ part of 'backup_manager.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(backupManager)
-const backupManagerProvider = BackupManagerProvider._();
+final backupManagerProvider = BackupManagerProvider._();
 
 final class BackupManagerProvider
     extends $FunctionalProvider<BackupManager, BackupManager, BackupManager>
     with $Provider<BackupManager> {
-  const BackupManagerProvider._()
+  BackupManagerProvider._()
       : super(
           from: null,
           argument: null,
@@ -51,12 +51,12 @@ final class BackupManagerProvider
 String _$backupManagerHash() => r'25c77e9019df3cf12c54601bae9fd3acfc69fbf3';
 
 @ProviderFor(backupProgress)
-const backupProgressProvider = BackupProgressProvider._();
+final backupProgressProvider = BackupProgressProvider._();
 
 final class BackupProgressProvider
     extends $FunctionalProvider<AsyncValue<double>, double, Stream<double>>
     with $FutureModifier<double>, $StreamProvider<double> {
-  const BackupProgressProvider._()
+  BackupProgressProvider._()
       : super(
           from: null,
           argument: null,

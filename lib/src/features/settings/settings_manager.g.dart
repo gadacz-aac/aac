@@ -10,11 +10,11 @@ part of 'settings_manager.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(settingsManager)
-const settingsManagerProvider = SettingsManagerProvider._();
+final settingsManagerProvider = SettingsManagerProvider._();
 
 final class SettingsManagerProvider extends $FunctionalProvider<SettingsManager,
     SettingsManager, SettingsManager> with $Provider<SettingsManager> {
-  const SettingsManagerProvider._()
+  SettingsManagerProvider._()
       : super(
           from: null,
           argument: null,
@@ -50,12 +50,12 @@ final class SettingsManagerProvider extends $FunctionalProvider<SettingsManager,
 String _$settingsManagerHash() => r'c70352fc6aa29f85a05d86bc3ba7a7688d86f3bd';
 
 @ProviderFor(settingsCache)
-const settingsCacheProvider = SettingsCacheProvider._();
+final settingsCacheProvider = SettingsCacheProvider._();
 
 final class SettingsCacheProvider
     extends $FunctionalProvider<SettingsCache, SettingsCache, SettingsCache>
     with $Provider<SettingsCache> {
-  const SettingsCacheProvider._()
+  SettingsCacheProvider._()
       : super(
           from: null,
           argument: null,

@@ -10,7 +10,7 @@ part of 'providers.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(searchedSymbol)
-const searchedSymbolProvider = SearchedSymbolProvider._();
+final searchedSymbolProvider = SearchedSymbolProvider._();
 
 final class SearchedSymbolProvider extends $FunctionalProvider<
         AsyncValue<List<CommunicationSymbol>>,
@@ -19,7 +19,7 @@ final class SearchedSymbolProvider extends $FunctionalProvider<
     with
         $FutureModifier<List<CommunicationSymbol>>,
         $FutureProvider<List<CommunicationSymbol>> {
-  const SearchedSymbolProvider._()
+  SearchedSymbolProvider._()
       : super(
           from: null,
           argument: null,
@@ -48,12 +48,12 @@ final class SearchedSymbolProvider extends $FunctionalProvider<
 String _$searchedSymbolHash() => r'b844d8eb8a2aaccc53f7b60f5a926e9581cec8f4';
 
 @ProviderFor(searchedBoard)
-const searchedBoardProvider = SearchedBoardProvider._();
+final searchedBoardProvider = SearchedBoardProvider._();
 
 final class SearchedBoardProvider extends $FunctionalProvider<
         AsyncValue<List<Board>>, List<Board>, FutureOr<List<Board>>>
     with $FutureModifier<List<Board>>, $FutureProvider<List<Board>> {
-  const SearchedBoardProvider._()
+  SearchedBoardProvider._()
       : super(
           from: null,
           argument: null,
@@ -82,10 +82,10 @@ final class SearchedBoardProvider extends $FunctionalProvider<
 String _$searchedBoardHash() => r'6946eda73773291405f8a400994a60bd5a921116';
 
 @ProviderFor(LocalQuery)
-const localQueryProvider = LocalQueryProvider._();
+final localQueryProvider = LocalQueryProvider._();
 
 final class LocalQueryProvider extends $NotifierProvider<LocalQuery, String> {
-  const LocalQueryProvider._()
+  LocalQueryProvider._()
       : super(
           from: null,
           argument: null,
@@ -118,20 +118,19 @@ abstract class _$LocalQuery extends $Notifier<String> {
   String build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<String, String>;
     final element = ref.element as $ClassProviderElement<
         AnyNotifier<String, String>, String, Object?, Object?>;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(Query)
-const queryProvider = QueryProvider._();
+final queryProvider = QueryProvider._();
 
 final class QueryProvider extends $NotifierProvider<Query, String> {
-  const QueryProvider._()
+  QueryProvider._()
       : super(
           from: null,
           argument: null,
@@ -164,11 +163,10 @@ abstract class _$Query extends $Notifier<String> {
   String build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<String, String>;
     final element = ref.element as $ClassProviderElement<
         AnyNotifier<String, String>, String, Object?, Object?>;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

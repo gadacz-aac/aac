@@ -10,11 +10,11 @@ part of 'symbol_settings.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(defaultImagePath)
-const defaultImagePathProvider = DefaultImagePathProvider._();
+final defaultImagePathProvider = DefaultImagePathProvider._();
 
 final class DefaultImagePathProvider
     extends $FunctionalProvider<String, String, String> with $Provider<String> {
-  const DefaultImagePathProvider._()
+  DefaultImagePathProvider._()
       : super(
           from: null,
           argument: null,
@@ -50,19 +50,19 @@ final class DefaultImagePathProvider
 String _$defaultImagePathHash() => r'97674549362443fd5229958d6420c6a497000cae';
 
 @ProviderFor(initialValues)
-const initialValuesProvider = InitialValuesProvider._();
+final initialValuesProvider = InitialValuesProvider._();
 
 final class InitialValuesProvider extends $FunctionalProvider<SymbolEditModel,
     SymbolEditModel, SymbolEditModel> with $Provider<SymbolEditModel> {
-  const InitialValuesProvider._()
+  InitialValuesProvider._()
       : super(
           from: null,
           argument: null,
           retry: null,
           name: r'initialValuesProvider',
           isAutoDispose: true,
-          dependencies: const <ProviderOrFamily>[],
-          $allTransitiveDependencies: const <ProviderOrFamily>[],
+          dependencies: <ProviderOrFamily>[],
+          $allTransitiveDependencies: <ProviderOrFamily>[],
         );
 
   @override

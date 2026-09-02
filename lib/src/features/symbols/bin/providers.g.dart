@@ -10,7 +10,7 @@ part of 'providers.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(deletedSymbols)
-const deletedSymbolsProvider = DeletedSymbolsProvider._();
+final deletedSymbolsProvider = DeletedSymbolsProvider._();
 
 final class DeletedSymbolsProvider extends $FunctionalProvider<
         AsyncValue<List<CommunicationSymbol>>,
@@ -19,7 +19,7 @@ final class DeletedSymbolsProvider extends $FunctionalProvider<
     with
         $FutureModifier<List<CommunicationSymbol>>,
         $StreamProvider<List<CommunicationSymbol>> {
-  const DeletedSymbolsProvider._()
+  DeletedSymbolsProvider._()
       : super(
           from: null,
           argument: null,
@@ -48,12 +48,12 @@ final class DeletedSymbolsProvider extends $FunctionalProvider<
 String _$deletedSymbolsHash() => r'eeeb4b9d6b48fc8173e97a650b5098f0e2172ad2';
 
 @ProviderFor(deletedBoards)
-const deletedBoardsProvider = DeletedBoardsProvider._();
+final deletedBoardsProvider = DeletedBoardsProvider._();
 
 final class DeletedBoardsProvider extends $FunctionalProvider<
         AsyncValue<List<Board>>, List<Board>, Stream<List<Board>>>
     with $FutureModifier<List<Board>>, $StreamProvider<List<Board>> {
-  const DeletedBoardsProvider._()
+  DeletedBoardsProvider._()
       : super(
           from: null,
           argument: null,

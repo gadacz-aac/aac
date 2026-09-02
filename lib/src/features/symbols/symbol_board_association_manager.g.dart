@@ -10,7 +10,7 @@ part of 'symbol_board_association_manager.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(symbolBoardAssociationManager)
-const symbolBoardAssociationManagerProvider =
+final symbolBoardAssociationManagerProvider =
     SymbolBoardAssociationManagerProvider._();
 
 final class SymbolBoardAssociationManagerProvider extends $FunctionalProvider<
@@ -18,7 +18,7 @@ final class SymbolBoardAssociationManagerProvider extends $FunctionalProvider<
         SymbolBoardAssociationManager,
         SymbolBoardAssociationManager>
     with $Provider<SymbolBoardAssociationManager> {
-  const SymbolBoardAssociationManagerProvider._()
+  SymbolBoardAssociationManagerProvider._()
       : super(
           from: null,
           argument: null,

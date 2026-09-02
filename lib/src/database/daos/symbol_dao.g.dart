@@ -34,7 +34,7 @@ mixin _$SymbolDaoMixin on DatabaseAccessor<AppDatabase> {
   Selectable<CommunicationSymbolEntity> searchSymbol(
       {required String query, required bool onlyPinned, int? color}) {
     return customSelect(
-        'SELECT DISTINCT s.* FROM communication_symbol_tb AS s LEFT JOIN child_symbol_tb AS cs ON cs.symbol_id = s.id WHERE s.label LIKE CONCAT(\'%\', ?1, \'%\') AND(NOT ?2 OR cs.board_id IS NULL)AND(?3 IS NULL OR s.color = ?3)AND is_deleted = FALSE',
+        'SELECT DISTINCT s.* FROM communication_symbol_tb AS s LEFT JOIN child_symbol_tb AS cs ON cs.symbol_id = s.id WHERE s.label LIKE \'%\' || ?1 || \'%\' AND(NOT ?2 OR cs.board_id IS NULL)AND(?3 IS NULL OR s.color = ?3)AND is_deleted = FALSE',
         variables: [
           Variable<String>(query),
           Variable<bool>(onlyPinned),
@@ -81,6 +81,22 @@ mixin _$SymbolDaoMixin on DatabaseAccessor<AppDatabase> {
           communicationSymbolTb,
         }).asyncMap(communicationSymbolTb.mapFromRow);
   }
+
+  SymbolDaoManager get managers => SymbolDaoManager(this);
+}
+
+class SymbolDaoManager {
+  final _$SymbolDaoMixin _db;
+  SymbolDaoManager(this._db);
+  $BoardTbTableManager get boardTb =>
+      $BoardTbTableManager(_db.attachedDatabase, _db.boardTb);
+  $CommunicationSymbolTbTableManager get communicationSymbolTb =>
+      $CommunicationSymbolTbTableManager(
+          _db.attachedDatabase, _db.communicationSymbolTb);
+  $ChildSymbolTbTableManager get childSymbolTb =>
+      $ChildSymbolTbTableManager(_db.attachedDatabase, _db.childSymbolTb);
+  $SettingTbTableManager get settingTb =>
+      $SettingTbTableManager(_db.attachedDatabase, _db.settingTb);
 }
 
 // **************************************************************************
@@ -91,12 +107,12 @@ mixin _$SymbolDaoMixin on DatabaseAccessor<AppDatabase> {
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(symbolDao)
-const symbolDaoProvider = SymbolDaoProvider._();
+final symbolDaoProvider = SymbolDaoProvider._();
 
 final class SymbolDaoProvider
     extends $FunctionalProvider<SymbolDao, SymbolDao, SymbolDao>
     with $Provider<SymbolDao> {
-  const SymbolDaoProvider._()
+  SymbolDaoProvider._()
       : super(
           from: null,
           argument: null,
