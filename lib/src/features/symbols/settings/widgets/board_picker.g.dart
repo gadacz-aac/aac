@@ -10,24 +10,24 @@ part of 'board_picker.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(BoardNotifier)
-const boardProvider = BoardNotifierProvider._();
+final boardProvider = BoardNotifierProvider._();
 
 final class BoardNotifierProvider
     extends $AsyncNotifierProvider<BoardNotifier, BoardEditModel?> {
-  const BoardNotifierProvider._()
+  BoardNotifierProvider._()
       : super(
           from: null,
           argument: null,
           retry: null,
           name: r'boardProvider',
           isAutoDispose: true,
-          dependencies: const <ProviderOrFamily>[initialValuesProvider],
-          $allTransitiveDependencies: const <ProviderOrFamily>[
+          dependencies: <ProviderOrFamily>[initialValuesProvider],
+          $allTransitiveDependencies: <ProviderOrFamily>[
             BoardNotifierProvider.$allTransitiveDependencies0,
           ],
         );
 
-  static const $allTransitiveDependencies0 = initialValuesProvider;
+  static final $allTransitiveDependencies0 = initialValuesProvider;
 
   @override
   String debugGetCreateSourceHash() => _$boardNotifierHash();
@@ -43,14 +43,13 @@ abstract class _$BoardNotifier extends $AsyncNotifier<BoardEditModel?> {
   FutureOr<BoardEditModel?> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<BoardEditModel?>, BoardEditModel?>;
     final element = ref.element as $ClassProviderElement<
         AnyNotifier<AsyncValue<BoardEditModel?>, BoardEditModel?>,
         AsyncValue<BoardEditModel?>,
         Object?,
         Object?>;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

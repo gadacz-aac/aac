@@ -10,12 +10,12 @@ part of 'bin_manager.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(binManager)
-const binManagerProvider = BinManagerProvider._();
+final binManagerProvider = BinManagerProvider._();
 
 final class BinManagerProvider
     extends $FunctionalProvider<BinManager, BinManager, BinManager>
     with $Provider<BinManager> {
-  const BinManagerProvider._()
+  BinManagerProvider._()
       : super(
           from: null,
           argument: null,

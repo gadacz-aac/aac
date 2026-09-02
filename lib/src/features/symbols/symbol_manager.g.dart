@@ -10,12 +10,12 @@ part of 'symbol_manager.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(symbolManager)
-const symbolManagerProvider = SymbolManagerProvider._();
+final symbolManagerProvider = SymbolManagerProvider._();
 
 final class SymbolManagerProvider
     extends $FunctionalProvider<SymbolManager, SymbolManager, SymbolManager>
     with $Provider<SymbolManager> {
-  const SymbolManagerProvider._()
+  SymbolManagerProvider._()
       : super(
           from: null,
           argument: null,

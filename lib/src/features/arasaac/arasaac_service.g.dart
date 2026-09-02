@@ -10,12 +10,12 @@ part of 'arasaac_service.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(arasaacService)
-const arasaacServiceProvider = ArasaacServiceProvider._();
+final arasaacServiceProvider = ArasaacServiceProvider._();
 
 final class ArasaacServiceProvider
     extends $FunctionalProvider<ArasaacService, ArasaacService, ArasaacService>
     with $Provider<ArasaacService> {
-  const ArasaacServiceProvider._()
+  ArasaacServiceProvider._()
       : super(
           from: null,
           argument: null,
@@ -51,12 +51,12 @@ final class ArasaacServiceProvider
 String _$arasaacServiceHash() => r'65d25f00794e06c424e5d66adc919042e4af86db';
 
 @ProviderFor(arasaacSearchResults)
-const arasaacSearchResultsProvider = ArasaacSearchResultsFamily._();
+final arasaacSearchResultsProvider = ArasaacSearchResultsFamily._();
 
 final class ArasaacSearchResultsProvider extends $FunctionalProvider<
         AsyncValue<List<String>>, List<String>, FutureOr<List<String>>>
     with $FutureModifier<List<String>>, $FutureProvider<List<String>> {
-  const ArasaacSearchResultsProvider._(
+  ArasaacSearchResultsProvider._(
       {required ArasaacSearchResultsFamily super.from,
       required String super.argument})
       : super(
@@ -108,7 +108,7 @@ String _$arasaacSearchResultsHash() =>
 
 final class ArasaacSearchResultsFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<String>>, String> {
-  const ArasaacSearchResultsFamily._()
+  ArasaacSearchResultsFamily._()
       : super(
           retry: null,
           name: r'arasaacSearchResultsProvider',

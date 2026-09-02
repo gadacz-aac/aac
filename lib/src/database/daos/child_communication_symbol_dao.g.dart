@@ -79,6 +79,22 @@ mixin _$ChildSymbolDaoMixin on DatabaseAccessor<AppDatabase> {
           isReused: row.read<bool>('is_reused'),
         ));
   }
+
+  ChildSymbolDaoManager get managers => ChildSymbolDaoManager(this);
+}
+
+class ChildSymbolDaoManager {
+  final _$ChildSymbolDaoMixin _db;
+  ChildSymbolDaoManager(this._db);
+  $BoardTbTableManager get boardTb =>
+      $BoardTbTableManager(_db.attachedDatabase, _db.boardTb);
+  $CommunicationSymbolTbTableManager get communicationSymbolTb =>
+      $CommunicationSymbolTbTableManager(
+          _db.attachedDatabase, _db.communicationSymbolTb);
+  $ChildSymbolTbTableManager get childSymbolTb =>
+      $ChildSymbolTbTableManager(_db.attachedDatabase, _db.childSymbolTb);
+  $SettingTbTableManager get settingTb =>
+      $SettingTbTableManager(_db.attachedDatabase, _db.settingTb);
 }
 
 class SelectByBoardIdResult {
@@ -131,12 +147,12 @@ class SelectByBoardIdWithIsReusedResult {
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(childSymbolDao)
-const childSymbolDaoProvider = ChildSymbolDaoProvider._();
+final childSymbolDaoProvider = ChildSymbolDaoProvider._();
 
 final class ChildSymbolDaoProvider
     extends $FunctionalProvider<ChildSymbolDao, ChildSymbolDao, ChildSymbolDao>
     with $Provider<ChildSymbolDao> {
-  const ChildSymbolDaoProvider._()
+  ChildSymbolDaoProvider._()
       : super(
           from: null,
           argument: null,

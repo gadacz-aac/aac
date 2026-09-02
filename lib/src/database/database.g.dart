@@ -1241,8 +1241,7 @@ final class $BoardTbReferences
       List<CommunicationSymbolEntity>> _communicationSymbolTbRefsTable(
           _$AppDatabase db) =>
       MultiTypedResultKey.fromTable(db.communicationSymbolTb,
-          aliasName: $_aliasNameGenerator(
-              db.boardTb.id, db.communicationSymbolTb.childBoardId));
+          aliasName: 'board_tb__id__communication_symbol_tb__child_board_id');
 
   $CommunicationSymbolTbProcessedTableManager get communicationSymbolTbRefs {
     final manager = $CommunicationSymbolTbTableManager(
@@ -1258,8 +1257,7 @@ final class $BoardTbReferences
   static MultiTypedResultKey<ChildSymbolTb, List<ChildSymbolEntity>>
       _childSymbolTbRefsTable(_$AppDatabase db) =>
           MultiTypedResultKey.fromTable(db.childSymbolTb,
-              aliasName: $_aliasNameGenerator(
-                  db.boardTb.id, db.childSymbolTb.boardId));
+              aliasName: 'board_tb__id__child_symbol_tb__board_id');
 
   $ChildSymbolTbProcessedTableManager get childSymbolTbRefs {
     final manager = $ChildSymbolTbTableManager($_db, $_db.childSymbolTb)
@@ -1555,9 +1553,8 @@ final class $CommunicationSymbolTbReferences extends BaseReferences<
   $CommunicationSymbolTbReferences(
       super.$_db, super.$_table, super.$_typedResult);
 
-  static BoardTb _childBoardIdTable(_$AppDatabase db) =>
-      db.boardTb.createAlias($_aliasNameGenerator(
-          db.communicationSymbolTb.childBoardId, db.boardTb.id));
+  static BoardTb _childBoardIdTable(_$AppDatabase db) => db.boardTb
+      .createAlias('communication_symbol_tb__child_board_id__board_tb__id');
 
   $BoardTbProcessedTableManager? get childBoardId {
     final $_column = $_itemColumn<int>('child_board_id');
@@ -1573,8 +1570,8 @@ final class $CommunicationSymbolTbReferences extends BaseReferences<
   static MultiTypedResultKey<ChildSymbolTb, List<ChildSymbolEntity>>
       _childSymbolTbRefsTable(_$AppDatabase db) =>
           MultiTypedResultKey.fromTable(db.childSymbolTb,
-              aliasName: $_aliasNameGenerator(
-                  db.communicationSymbolTb.id, db.childSymbolTb.symbolId));
+              aliasName:
+                  'communication_symbol_tb__id__child_symbol_tb__symbol_id');
 
   $ChildSymbolTbProcessedTableManager get childSymbolTbRefs {
     final manager = $ChildSymbolTbTableManager($_db, $_db.childSymbolTb)
@@ -1938,8 +1935,8 @@ final class $ChildSymbolTbReferences
     extends BaseReferences<_$AppDatabase, ChildSymbolTb, ChildSymbolEntity> {
   $ChildSymbolTbReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static BoardTb _boardIdTable(_$AppDatabase db) => db.boardTb.createAlias(
-      $_aliasNameGenerator(db.childSymbolTb.boardId, db.boardTb.id));
+  static BoardTb _boardIdTable(_$AppDatabase db) =>
+      db.boardTb.createAlias('child_symbol_tb__board_id__board_tb__id');
 
   $BoardTbProcessedTableManager get boardId {
     final $_column = $_itemColumn<int>('board_id')!;
@@ -1952,9 +1949,9 @@ final class $ChildSymbolTbReferences
         manager.$state.copyWith(prefetchedData: [item]));
   }
 
-  static CommunicationSymbolTb _symbolIdTable(_$AppDatabase db) =>
-      db.communicationSymbolTb.createAlias($_aliasNameGenerator(
-          db.childSymbolTb.symbolId, db.communicationSymbolTb.id));
+  static CommunicationSymbolTb _symbolIdTable(_$AppDatabase db) => db
+      .communicationSymbolTb
+      .createAlias('child_symbol_tb__symbol_id__communication_symbol_tb__id');
 
   $CommunicationSymbolTbProcessedTableManager get symbolId {
     final $_column = $_itemColumn<int>('symbol_id')!;
@@ -2388,12 +2385,12 @@ class $AppDatabaseManager {
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(db)
-const dbProvider = DbProvider._();
+final dbProvider = DbProvider._();
 
 final class DbProvider
     extends $FunctionalProvider<AppDatabase, AppDatabase, AppDatabase>
     with $Provider<AppDatabase> {
-  const DbProvider._()
+  DbProvider._()
       : super(
           from: null,
           argument: null,

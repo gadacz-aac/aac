@@ -10,12 +10,12 @@ part of 'board_search_screen.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(foundBoards)
-const foundBoardsProvider = FoundBoardsProvider._();
+final foundBoardsProvider = FoundBoardsProvider._();
 
 final class FoundBoardsProvider extends $FunctionalProvider<
         AsyncValue<List<Board>>, List<Board>, FutureOr<List<Board>>>
     with $FutureModifier<List<Board>>, $FutureProvider<List<Board>> {
-  const FoundBoardsProvider._()
+  FoundBoardsProvider._()
       : super(
           from: null,
           argument: null,

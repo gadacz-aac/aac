@@ -6,8 +6,8 @@ selectByName: SELECT * from board_tb WHERE board_tb.name = ?;
 
 searchBoard(:query AS TEXT):
 	SELECT * FROM board_tb
-	WHERE 
-		name LIKE CONCAT('%', :query, '%') AND
+	WHERE
+		name LIKE '%' || :query || '%' AND
 		is_deleted = false;
 
 toggleIsDeleted:
@@ -15,4 +15,4 @@ toggleIsDeleted:
 	SET is_deleted = NOT is_deleted
 	WHERE id = ?;
 
-selectDeleted: SELECT * FROM board_tb WHERE is_deleted = TRUE
+selectDeleted: SELECT * FROM board_tb WHERE is_deleted = TRUE;

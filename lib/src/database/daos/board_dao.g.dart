@@ -31,7 +31,7 @@ mixin _$BoardDaoMixin on DatabaseAccessor<AppDatabase> {
 
   Selectable<BoardEntity> searchBoard({required String query}) {
     return customSelect(
-        'SELECT * FROM board_tb WHERE name LIKE CONCAT(\'%\', ?1, \'%\') AND is_deleted = FALSE',
+        'SELECT * FROM board_tb WHERE name LIKE \'%\' || ?1 || \'%\' AND is_deleted = FALSE',
         variables: [
           Variable<String>(query)
         ],
@@ -56,6 +56,22 @@ mixin _$BoardDaoMixin on DatabaseAccessor<AppDatabase> {
           boardTb,
         }).asyncMap(boardTb.mapFromRow);
   }
+
+  BoardDaoManager get managers => BoardDaoManager(this);
+}
+
+class BoardDaoManager {
+  final _$BoardDaoMixin _db;
+  BoardDaoManager(this._db);
+  $BoardTbTableManager get boardTb =>
+      $BoardTbTableManager(_db.attachedDatabase, _db.boardTb);
+  $CommunicationSymbolTbTableManager get communicationSymbolTb =>
+      $CommunicationSymbolTbTableManager(
+          _db.attachedDatabase, _db.communicationSymbolTb);
+  $ChildSymbolTbTableManager get childSymbolTb =>
+      $ChildSymbolTbTableManager(_db.attachedDatabase, _db.childSymbolTb);
+  $SettingTbTableManager get settingTb =>
+      $SettingTbTableManager(_db.attachedDatabase, _db.settingTb);
 }
 
 // **************************************************************************
@@ -66,12 +82,12 @@ mixin _$BoardDaoMixin on DatabaseAccessor<AppDatabase> {
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(boardDao)
-const boardDaoProvider = BoardDaoProvider._();
+final boardDaoProvider = BoardDaoProvider._();
 
 final class BoardDaoProvider
     extends $FunctionalProvider<BoardDao, BoardDao, BoardDao>
     with $Provider<BoardDao> {
-  const BoardDaoProvider._()
+  BoardDaoProvider._()
       : super(
           from: null,
           argument: null,

@@ -10,19 +10,19 @@ part of 'board_screen.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(boardId)
-const boardIdProvider = BoardIdProvider._();
+final boardIdProvider = BoardIdProvider._();
 
 final class BoardIdProvider extends $FunctionalProvider<int, int, int>
     with $Provider<int> {
-  const BoardIdProvider._()
+  BoardIdProvider._()
       : super(
           from: null,
           argument: null,
           retry: null,
           name: r'boardIdProvider',
           isAutoDispose: true,
-          dependencies: const <ProviderOrFamily>[],
-          $allTransitiveDependencies: const <ProviderOrFamily>[],
+          dependencies: <ProviderOrFamily>[],
+          $allTransitiveDependencies: <ProviderOrFamily>[],
         );
 
   @override
@@ -50,10 +50,10 @@ final class BoardIdProvider extends $FunctionalProvider<int, int, int>
 String _$boardIdHash() => r'3e8e0980138057548b10a7e72c77240573dbb08b';
 
 @ProviderFor(IsParentMode)
-const isParentModeProvider = IsParentModeProvider._();
+final isParentModeProvider = IsParentModeProvider._();
 
 final class IsParentModeProvider extends $NotifierProvider<IsParentMode, bool> {
-  const IsParentModeProvider._()
+  IsParentModeProvider._()
       : super(
           from: null,
           argument: null,
@@ -86,11 +86,10 @@ abstract class _$IsParentMode extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element = ref.element as $ClassProviderElement<
         AnyNotifier<bool, bool>, bool, Object?, Object?>;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

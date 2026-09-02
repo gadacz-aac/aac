@@ -10,24 +10,24 @@ part of 'image_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(ImageNotifier)
-const imageProvider = ImageNotifierProvider._();
+final imageProvider = ImageNotifierProvider._();
 
 final class ImageNotifierProvider
     extends $NotifierProvider<ImageNotifier, String> {
-  const ImageNotifierProvider._()
+  ImageNotifierProvider._()
       : super(
           from: null,
           argument: null,
           retry: null,
           name: r'imageProvider',
           isAutoDispose: true,
-          dependencies: const <ProviderOrFamily>[initialValuesProvider],
-          $allTransitiveDependencies: const <ProviderOrFamily>[
+          dependencies: <ProviderOrFamily>[initialValuesProvider],
+          $allTransitiveDependencies: <ProviderOrFamily>[
             ImageNotifierProvider.$allTransitiveDependencies0,
           ],
         );
 
-  static const $allTransitiveDependencies0 = initialValuesProvider;
+  static final $allTransitiveDependencies0 = initialValuesProvider;
 
   @override
   String debugGetCreateSourceHash() => _$imageNotifierHash();
@@ -51,36 +51,35 @@ abstract class _$ImageNotifier extends $Notifier<String> {
   String build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<String, String>;
     final element = ref.element as $ClassProviderElement<
         AnyNotifier<String, String>, String, Object?, Object?>;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(isDefaultImage)
-const isDefaultImageProvider = IsDefaultImageProvider._();
+final isDefaultImageProvider = IsDefaultImageProvider._();
 
 final class IsDefaultImageProvider extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
-  const IsDefaultImageProvider._()
+  IsDefaultImageProvider._()
       : super(
           from: null,
           argument: null,
           retry: null,
           name: r'isDefaultImageProvider',
           isAutoDispose: true,
-          dependencies: const <ProviderOrFamily>[imageProvider],
-          $allTransitiveDependencies: const <ProviderOrFamily>[
+          dependencies: <ProviderOrFamily>[imageProvider],
+          $allTransitiveDependencies: <ProviderOrFamily>[
             IsDefaultImageProvider.$allTransitiveDependencies0,
             IsDefaultImageProvider.$allTransitiveDependencies1,
           ],
         );
 
-  static const $allTransitiveDependencies0 = imageProvider;
-  static const $allTransitiveDependencies1 =
+  static final $allTransitiveDependencies0 = imageProvider;
+  static final $allTransitiveDependencies1 =
       ImageNotifierProvider.$allTransitiveDependencies0;
 
   @override

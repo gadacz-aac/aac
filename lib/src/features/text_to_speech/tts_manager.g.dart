@@ -10,12 +10,12 @@ part of 'tts_manager.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(ttsManager)
-const ttsManagerProvider = TtsManagerProvider._();
+final ttsManagerProvider = TtsManagerProvider._();
 
 final class TtsManagerProvider
     extends $FunctionalProvider<TtsManager, TtsManager, TtsManager>
     with $Provider<TtsManager> {
-  const TtsManagerProvider._()
+  TtsManagerProvider._()
       : super(
           from: null,
           argument: null,

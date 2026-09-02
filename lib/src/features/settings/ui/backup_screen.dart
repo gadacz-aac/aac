@@ -54,10 +54,10 @@ class BackupScreen extends ConsumerWidget {
             )),
         AacButton(
             onPressed: () async {
-              final res = await FilePicker.platform
+              final res = await FilePicker
                   .pickFiles(type: FileType.custom, allowedExtensions: ["zip"]);
 
-              final filePath = res?.files.singleOrNull?.path;
+              final filePath = res.singleOrNull?.path;
 
               if (filePath == null) {
                 return;
