@@ -1,3 +1,4 @@
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/database/daos/board_dao.dart';
 import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/symbols/search/providers.dart';
@@ -26,6 +27,7 @@ class BoardSearch extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final results = ref.watch(foundBoardsProvider).value;
     final query = ref.watch(queryProvider);
     final textTheme = Theme.of(context).textTheme;
@@ -37,7 +39,7 @@ class BoardSearch extends ConsumerWidget {
             //TODO Standarise with Generic Text Field
             AacSearchField(
               icon: const Icon(Icons.search),
-              placeholder: "Szukaj w tablicach",
+              placeholder: l10n.searchBoards,
               onChanged: (value) {
                 final debounce = Debouncer(const Duration(milliseconds: 300));
                 debounce(() =>
@@ -49,7 +51,7 @@ class BoardSearch extends ConsumerWidget {
             ),
             results == null || results.isEmpty
                 ? Text(
-                    "Hmm.. nie znaleźliśmy wyników dla \"$query\"",
+                    l10n.noResultsFor(query),
                     style: textTheme.bodyLarge,
                     textAlign: TextAlign.center,
                   )

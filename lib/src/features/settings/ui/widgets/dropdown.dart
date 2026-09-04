@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/features/settings/settings_manager.dart';
 import 'package:aac/src/features/settings/ui/settings_screen.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +71,7 @@ class _PersistentDropdownState<T>
         builder: (context, snapshot) {
           // the default bit is here because sometimes we don't control the default value like in the case of tts voice
           final subtitle = snapshot.data == null
-              ? Text("Domyślny")
+              ? Text(AppLocalizations.of(context).defaultLabel)
               : widget.items.firstWhere((e) => e.value == snapshot.data).child;
 
           return ListTile(

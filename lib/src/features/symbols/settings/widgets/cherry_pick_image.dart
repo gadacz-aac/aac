@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/features/arasaac/arasaac_service.dart';
+import 'package:aac/src/features/settings/utils/app_language.dart';
 import 'package:aac/src/shared/utils/try_download_image.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +24,14 @@ bool isValidImage(ContentType contentType) {
   return imageTypes.contains(contentType.toString().toLowerCase());
 }
 
+String downloadImageErrorMessage(AppLocalizations l10n, DownloadImageError error) {
+  return switch (error) {
+    DownloadImageError.downloadFailed => l10n.downloadFailed,
+    DownloadImageError.notAnImage => l10n.notAnImage,
+    DownloadImageError.saveFailed => l10n.saveImageFailed,
+  };
+}
+
 class ArasaacSearchScreen extends ConsumerStatefulWidget {
   const ArasaacSearchScreen({super.key});
 
@@ -33,20 +43,53 @@ class ArasaacSearchScreen extends ConsumerStatefulWidget {
 class _ArasaacSearchScreenState extends ConsumerState<ArasaacSearchScreen> {
   String query = "";
 
+  /// null means "follow the app language".
+  String? language;
+
   @override
   Widget build(BuildContext context) {
-    final symbols = ref.watch(arasaacSearchResultsProvider(query));
+    final l10n = AppLocalizations.of(context);
+    final appLanguage = ref.watch(appLanguageCodeProvider);
+    final effectiveLanguage = language ?? appLanguage;
+    final symbols =
+        ref.watch(arasaacSearchResultsProvider(query, effectiveLanguage));
 
     return CustomScrollView(slivers: [
       SliverToBoxAdapter(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 27.0, horizontal: 20.0),
-          child: AacSearchField(
-            onChanged: (value) => setState(() {
-              query = value;
-            }),
-            placeholder: "Szukaj w arrasac",
-            icon: const Icon(Icons.search_outlined),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AacSearchField(
+                onChanged: (value) => setState(() {
+                  query = value;
+                }),
+                placeholder: l10n.searchArasaac,
+                icon: const Icon(Icons.search_outlined),
+              ),
+              const SizedBox(height: 8),
+              Wrap(crossAxisAlignment: WrapCrossAlignment.center, children: [
+                Text(l10n.searchLanguage),
+                DropdownButton<String>(
+                  value: effectiveLanguage,
+                  underline: const SizedBox.shrink(),
+                  items: [
+                    DropdownMenuItem(
+                        value: defaultLanguage,
+                        child: Text(l10n.languagePolish)),
+                    DropdownMenuItem(
+                        value: 'en', child: Text(l10n.languageEnglish)),
+                  ],
+                  onChanged: (value) {
+                    if (value == null) return;
+                    setState(() {
+                      language = value;
+                    });
+                  },
+                ),
+              ]),
+            ],
           ),
         ),
       ),
@@ -70,8 +113,11 @@ class _ArasaacSearchScreenState extends ConsumerState<ArasaacSearchScreen> {
                               await tryDownloadImage(Uri.parse(data[index]));
 
                           if (err != null) {
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(SnackBar(content: Text(err)));
+                            if (!context.mounted) return;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text(downloadImageErrorMessage(
+                                        l10n, err))));
                           }
 
                           Navigator.pop(context, file!.path);
@@ -87,14 +133,14 @@ class _ArasaacSearchScreenState extends ConsumerState<ArasaacSearchScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      "Oj mój... jak tu pusto",
+                      l10n.arasaacEmptyTitle,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const SizedBox(
                       height: 4,
                     ),
                     Text(
-                      "Pora coś wyszukać, bo ta pustka jest ciut niezręczna",
+                      l10n.arasaacEmptySubtitle,
                       style: Theme.of(context).textTheme.bodyLarge,
                       textAlign: TextAlign.center,
                     ),
@@ -119,32 +165,33 @@ class ImageCherryPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return DefaultTabController(
       length: 3,
       animationDuration: Duration.zero,
       child: AacScaffold(
         appBar: AppBar(
             automaticallyImplyLeading: false,
-            flexibleSpace: const SafeArea(
+            flexibleSpace: SafeArea(
               child: TabBar(
                 tabs: [
                   Tab(
-                    text: "Arasaac",
+                    text: l10n.arasaacTab,
                   ),
                   Tab(
-                    text: "Urządzenie",
+                    text: l10n.deviceTab,
                   ),
                   Tab(
-                    text: "Link",
+                    text: l10n.linkTab,
                   ),
                 ],
               ),
             )),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
             ArasaacSearchScreen(),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 27.0, horizontal: 20.0),
+              padding: const EdgeInsets.symmetric(vertical: 27.0, horizontal: 20.0),
               child: UploadFromDeviceScreen(),
             ),
             UploadImageFromLinkScreen()
@@ -170,6 +217,7 @@ class _UploadImageFromLinkScreenState extends State<UploadImageFromLinkScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 27.0, horizontal: 20.0),
@@ -181,12 +229,12 @@ class _UploadImageFromLinkScreenState extends State<UploadImageFromLinkScreen> {
                   icon: const Icon(Icons.link),
                   controller: controller,
                   errorText: errorText,
-                  placeholder: "Wklej link do obrazka",
+                  placeholder: l10n.pasteImageLink,
                   validator: (value) {
                     if (value == null) return null;
 
                     if (!Uri.parse(value).isAbsolute) {
-                      return "Niepoprawny adres url";
+                      return l10n.invalidUrl;
                     }
 
                     return null;
@@ -232,7 +280,8 @@ class _UploadImageFromLinkScreenState extends State<UploadImageFromLinkScreen> {
 
     if (err != null) {
       setState(() {
-        errorText = err;
+        errorText =
+            downloadImageErrorMessage(AppLocalizations.of(context), err);
       });
 
       return;
@@ -285,6 +334,7 @@ class UploadFromDeviceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -298,9 +348,9 @@ class UploadFromDeviceScreen extends StatelessWidget {
                 shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4.0)))),
             icon: const Icon(Icons.add_a_photo_outlined),
-            label: const Text(
-              "Aparat",
-              style: TextStyle(color: Color(0xFFD3CEE3)),
+            label: Text(
+              l10n.camera,
+              style: const TextStyle(color: Color(0xFFD3CEE3)),
             )),
         ElevatedButton.icon(
             onPressed: () => pickImageFromGallery(context),
@@ -312,9 +362,9 @@ class UploadFromDeviceScreen extends StatelessWidget {
                 shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4.0)))),
             icon: const Icon(Icons.add_photo_alternate_outlined),
-            label: const Text(
-              "Galeria",
-              style: TextStyle(color: Color(0xFFD3CEE3)),
+            label: Text(
+              l10n.gallery,
+              style: const TextStyle(color: Color(0xFFD3CEE3)),
             )),
       ],
     );

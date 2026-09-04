@@ -1,3 +1,4 @@
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/features/symbols/search/providers.dart';
 import 'package:aac/src/features/symbols/settings/screens/edit_symbol_screen.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class EditSymbolAction extends ConsumerWidget {
 
     return IconButton(
       icon: const Icon(Icons.edit_outlined),
-      tooltip: "Edytuj",
+      tooltip: AppLocalizations.of(context).edit,
       onPressed: () async {
         final symbol = ref.read(selectedSymbolsProvider).state.first;
         await Navigator.push(

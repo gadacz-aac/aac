@@ -1,3 +1,4 @@
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/features/symbols/bin/bin_manager.dart';
 import 'package:aac/src/features/symbols/search/providers.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ class MoveSymbolToBinAction extends ConsumerWidget {
 
     return IconButton(
       icon: const Icon(Icons.delete_outline),
-      tooltip: "Usuń",
+      tooltip: AppLocalizations.of(context).delete,
       onPressed: () {
         final symbols = [...selectedSymbols];
         ref.read(selectedSymbolsProvider).clear();

@@ -1,21 +1,5 @@
 import '../../schema.drift';
 
-moveSymbol(:old_pos AS INTEGER, :new_pos AS INTEGER, :board_id AS INTEGER):
-	WITH ordered AS (
-		SELECT :new_pos, :old_pos, position as old_position, (
-			CASE 
-				WHEN position = :old_pos THEN :new_pos
-				WHEN :new_pos < :old_pos  AND position >= :new_pos AND position < :old_pos THEN position + 1
-				WHEN :new_pos > :old_pos  AND position > :old_pos AND position <= :new_pos THEN position - 1
-				ELSE position END
-			) AS new_position
-		FROM child_symbol_tb 
-		WHERE board_id = :board_id
-	)
-	UPDATE child_symbol_tb 
-	SET position = (SELECT new_position FROM ordered WHERE old_position = position)
-	WHERE board_id = :board_id;
-
 pinSymbolToBoard(:board_id AS INTEGER, :symbol_id AS INTEGER):
 	WITH helpers as (
 		SELECT (COALESCE((SELECT MAX(position) FROM child_symbol_tb WHERE board_id = :board_id), -1) + 1) as position

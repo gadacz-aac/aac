@@ -1,3 +1,4 @@
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/features/symbols/settings/screens/board_search_screen.dart';
 import 'package:aac/src/features/symbols/settings/widgets/board_picker.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
@@ -22,6 +23,6 @@ class LinkExistingBoardChip extends ConsumerWidget {
                   builder: (context) => const BoardSearch())
               .then(ref.read(boardProvider.notifier).set);
         },
-        label: const Text("Wyszukaj istniejącą"));
+        label: Text(AppLocalizations.of(context).findExistingBoard));
   }
 }

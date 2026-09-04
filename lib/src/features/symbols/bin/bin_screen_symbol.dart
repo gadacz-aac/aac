@@ -1,3 +1,4 @@
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/features/boards/ui/symbols_grid/base_symbols_grid.dart';
 import 'package:aac/src/features/symbols/bin/providers.dart';
 import 'package:aac/src/features/symbols/card/symbol_tap_actions.dart';
@@ -13,6 +14,7 @@ class BinScreenSymbol extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final deletedSymbols = ref.watch(deletedSymbolsProvider);
 
     return ProviderScope(
@@ -21,8 +23,8 @@ class BinScreenSymbol extends ConsumerWidget {
         data: (data) {
           if (data.isEmpty) {
             return NoResultsScreen(
-                title: "Brak usuniętych symboli",
-                subtitle: "Kosz jest pusty",
+                title: l10n.noDeletedSymbols,
+                subtitle: l10n.binEmpty,
                 isLoading: false);
           }
 
@@ -45,7 +47,8 @@ class BinScreenSymbol extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text('Error: $error')),
+        error: (error, stack) =>
+            Center(child: Text(l10n.errorPrefix(error.toString()))),
       ),
     );
   }

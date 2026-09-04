@@ -9,6 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: any
   flutter_tts: ^4.2.5
   image_picker: ^1.0.1
   path_provider: ^2.0.15
@@ -43,6 +46,7 @@ dev_dependencies:
   drift_dev: ^2.29.0
 
 flutter:
+  generate: true
   uses-material-design: true
   assets:
     - assets/default_image_file.png

@@ -52,7 +52,8 @@ ArasaacService arasaacService(Ref ref) {
 }
 
 @riverpod
-Future<List<String>> arasaacSearchResults(Ref ref, String query) async {
+Future<List<String>> arasaacSearchResults(
+    Ref ref, String query, String language) async {
   var didDispose = false;
   ref.onDispose(() => didDispose = true);
 
@@ -65,5 +66,5 @@ Future<List<String>> arasaacSearchResults(Ref ref, String query) async {
   final client = http.Client();
   final arasaacService = ArasaacService(client: client);
 
-  return arasaacService.search("pl", 300, query);
+  return arasaacService.search(language, 300, query);
 }

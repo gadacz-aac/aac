@@ -1,3 +1,4 @@
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/features/symbols/bin/bin_bar.dart';
 import 'package:aac/src/features/symbols/bin/bin_screen_board.dart';
 import 'package:aac/src/features/symbols/bin/bin_screen_symbol.dart';
@@ -14,21 +15,12 @@ class BinScreen extends ConsumerStatefulWidget {
 
 class _BinScreenState extends ConsumerState<BinScreen>
     with SingleTickerProviderStateMixin {
-  static const List<Tab> tabs = [
-    Tab(
-      text: "Symbole",
-    ),
-    Tab(
-      text: "Tablice",
-    )
-  ];
-
   late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(vsync: this, length: tabs.length);
+    _tabController = TabController(vsync: this, length: 2);
   }
 
   @override
@@ -40,6 +32,15 @@ class _BinScreenState extends ConsumerState<BinScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final tabs = [
+      Tab(
+        text: l10n.symbolsTab,
+      ),
+      Tab(
+        text: l10n.boardsTab,
+      )
+    ];
     return DefaultTabController(
         length: 2,
         animationDuration: Duration.zero,

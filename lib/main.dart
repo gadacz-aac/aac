@@ -1,8 +1,10 @@
 import 'package:aac/firebase_options.dart';
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/database/database.dart';
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/settings/settings_manager.dart';
 import 'package:aac/src/features/settings/ui/settings_screen.dart';
+import 'package:aac/src/features/settings/utils/app_language.dart';
 import 'package:aac/src/features/settings/utils/orientation.dart';
 import 'package:aac/src/shared/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -43,12 +45,16 @@ void main() async {
       child: MainApp()));
 }
 
-class MainApp extends StatelessWidget {
+class MainApp extends ConsumerWidget {
   const MainApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final locale = ref.watch(appLocaleProvider).value;
     return MaterialApp(
+        locale: locale,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         theme: ThemeData(
             useMaterial3: true,
             scaffoldBackgroundColor: AacColors.greyBackground,

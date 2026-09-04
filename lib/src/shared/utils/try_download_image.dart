@@ -4,22 +4,25 @@ import 'package:aac/src/features/symbols/settings/widgets/cherry_pick_image.dart
 import 'package:aac/src/shared/utils/get_random_string.dart';
 import 'package:path_provider/path_provider.dart';
 
+/// Errors returned by [tryDownloadImage], meant to be localized by the caller.
+enum DownloadImageError { downloadFailed, notAnImage, saveFailed }
+
 /// Download an image from [uri] and save it to temporary directory, it's your resposibility to move it somewhere safe
-/// Retuns File or an error message if something went wrong, if there was an error file is null and vice versa
-Future<(File?, String?)> tryDownloadImage(Uri uri) async {
+/// Retuns File or an error if something went wrong, if there was an error file is null and vice versa
+Future<(File?, DownloadImageError?)> tryDownloadImage(Uri uri) async {
   HttpClientResponse response;
 
   try {
     final request = await HttpClient().getUrl(uri);
     response = await request.close();
   } catch (e) {
-    return (null, "Nie udało się pobrać obrazka");
+    return (null, DownloadImageError.downloadFailed);
   }
 
   final contentType = response.headers.contentType;
 
   if (contentType == null || !isValidImage(contentType)) {
-    return (null, "Podany url nie jest obrazkiem");
+    return (null, DownloadImageError.notAnImage);
   }
 
   File file;
@@ -32,7 +35,7 @@ Future<(File?, String?)> tryDownloadImage(Uri uri) async {
   try {
     await response.pipe(file.openWrite());
   } catch (e) {
-    return (null, "Nie udało się zapisać obrazka");
+    return (null, DownloadImageError.saveFailed);
   }
 
   return (file, null);

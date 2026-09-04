@@ -1,3 +1,4 @@
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/features/symbols/bin/bin_manager.dart';
 import 'package:aac/src/features/symbols/search/providers.dart';
 import 'package:flutter/material.dart';
@@ -10,22 +11,22 @@ class DeleteForeverAction extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final selectedSymbols = ref.watch(selectedSymbolsProvider).state;
 
     return IconButton(
         icon: const Icon(Icons.delete_outline),
-        tooltip: "Usuń na zawsze",
+        tooltip: l10n.deleteForever,
         onPressed: () {
           showDialog<bool>(
             context: context,
             builder: (BuildContext context) => AlertDialog(
-              title: const Text("Usuń na zawsze"),
-              content:
-                  const Text("Czy jesteś pewien? Operacji nie da się odwrócić"),
+              title: Text(l10n.deleteForever),
+              content: Text(l10n.deleteForeverConfirm),
               actions: <Widget>[
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Anuluj'),
+                  child: Text(l10n.cancel),
                 ),
                 TextButton(
                   onPressed: () {
@@ -36,7 +37,7 @@ class DeleteForeverAction extends ConsumerWidget {
                     symbolManager.deleteSymbols(symbols);
                     Navigator.pop(context);
                   },
-                  child: const Text('Usuń'),
+                  child: Text(l10n.delete),
                 ),
               ],
             ),

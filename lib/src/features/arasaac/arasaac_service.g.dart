@@ -58,7 +58,11 @@ final class ArasaacSearchResultsProvider extends $FunctionalProvider<
     with $FutureModifier<List<String>>, $FutureProvider<List<String>> {
   ArasaacSearchResultsProvider._(
       {required ArasaacSearchResultsFamily super.from,
-      required String super.argument})
+      required (
+        String,
+        String,
+      )
+          super.argument})
       : super(
           retry: null,
           name: r'arasaacSearchResultsProvider',
@@ -74,7 +78,7 @@ final class ArasaacSearchResultsProvider extends $FunctionalProvider<
   String toString() {
     return r'arasaacSearchResultsProvider'
         ''
-        '($argument)';
+        '$argument';
   }
 
   @$internal
@@ -85,10 +89,14 @@ final class ArasaacSearchResultsProvider extends $FunctionalProvider<
 
   @override
   FutureOr<List<String>> create(Ref ref) {
-    final argument = this.argument as String;
+    final argument = this.argument as (
+      String,
+      String,
+    );
     return arasaacSearchResults(
       ref,
-      argument,
+      argument.$1,
+      argument.$2,
     );
   }
 
@@ -104,10 +112,16 @@ final class ArasaacSearchResultsProvider extends $FunctionalProvider<
 }
 
 String _$arasaacSearchResultsHash() =>
-    r'a73071593ccacb084bda73c4c429902186065e2c';
+    r'bc6f8ee157efc611319fe3c306530e174aa39829';
 
 final class ArasaacSearchResultsFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<List<String>>, String> {
+    with
+        $FunctionalFamilyOverride<
+            FutureOr<List<String>>,
+            (
+              String,
+              String,
+            )> {
   ArasaacSearchResultsFamily._()
       : super(
           retry: null,
@@ -119,8 +133,12 @@ final class ArasaacSearchResultsFamily extends $Family
 
   ArasaacSearchResultsProvider call(
     String query,
+    String language,
   ) =>
-      ArasaacSearchResultsProvider._(argument: query, from: this);
+      ArasaacSearchResultsProvider._(argument: (
+        query,
+        language,
+      ), from: this);
 
   @override
   String toString() => r'arasaacSearchResultsProvider';

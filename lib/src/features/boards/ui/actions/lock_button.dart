@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,7 +35,8 @@ class _LockButtonState extends ConsumerState<LockButton> {
           } else {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text("Tap $_tapLeft times to leave protective mode")));
+                content: Text(
+                    AppLocalizations.of(context).lockHint(_tapLeft))));
           }
         },
         icon: Icon(widget.isOpen ? Icons.lock_open : Icons.lock_outline));

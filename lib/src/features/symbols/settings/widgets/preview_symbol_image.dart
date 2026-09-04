@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/features/boards/ui/options/bottom_sheet_options.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/settings/screens/image_provider.dart';
@@ -72,9 +73,9 @@ class ShowImageOptions extends StatelessWidget {
         decoration: const BoxDecoration(
             color: Color(0xFF545454),
             borderRadius: BorderRadius.all(Radius.circular(4))),
-        child: const Text(
-          "Edytuj",
-          style: TextStyle(height: 2, color: Colors.white),
+        child: Text(
+          AppLocalizations.of(context).edit,
+          style: const TextStyle(height: 2, color: Colors.white),
         ));
   }
 }
@@ -122,7 +123,7 @@ class RemoveImage extends StatelessWidget {
         Navigator.pop(context);
       },
       leading: const Icon(Icons.delete_outlined),
-      title: const Text("Usuń Obraz"),
+      title: Text(AppLocalizations.of(context).removeImage),
     );
   }
 }
@@ -137,12 +138,14 @@ class CropImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       enabled: !ref.watch(isDefaultImageProvider),
+      leading: const Icon(Icons.crop_outlined),
       onTap: () {
-        ref.read(imageProvider.notifier).cropImage();
+        ref
+            .read(imageProvider.notifier)
+            .cropImage(title: AppLocalizations.of(context).cropImage);
         Navigator.pop(context);
       },
-      leading: const Icon(Icons.crop_outlined),
-      title: const Text("Przytnij Obraz"),
+      title: Text(AppLocalizations.of(context).cropImageAction),
     );
   }
 }
@@ -160,7 +163,7 @@ class ChangeImage extends StatelessWidget {
         ref.read(imageProvider.notifier).cherryPick(context);
       },
       leading: const Icon(Icons.edit_outlined),
-      title: const Text("Zamień Obraz"),
+      title: Text(AppLocalizations.of(context).replaceImage),
     );
   }
 }

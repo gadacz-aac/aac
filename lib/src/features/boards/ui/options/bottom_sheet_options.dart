@@ -1,3 +1,4 @@
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/features/boards/board_manager.dart';
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/settings/ui/settings_screen.dart';
@@ -16,17 +17,18 @@ class BoardBottomSheetOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return BottomSheetOptions(children: [
-      const OptionGroup(
+      OptionGroup(
         options: [
           LockOption(),
         ],
       ),
       OptionGroup(options: [
-        const OpenSettingsOption(),
+        OpenSettingsOption(),
         Option(
           icon: const Icon(Icons.delete),
-          label: "Kosz",
+          label: l10n.bin,
           onTap: () => Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (_) => const BinScreen())),
         )
@@ -71,7 +73,7 @@ class CreateRandomSymbol extends ConsumerWidget {
         }
         Navigator.pop(context);
       },
-      label: "Dodaj jakieś symbole",
+      label: AppLocalizations.of(context).addSomeSymbols,
       icon: const Icon(Icons.shuffle),
     );
   }
@@ -107,7 +109,7 @@ class EditBoardOption extends ConsumerWidget {
               }
             : null,
         icon: const Icon(Icons.edit),
-        label: "Edytuj tablicę");
+        label: AppLocalizations.of(context).editBoard);
   }
 }
 
@@ -120,7 +122,7 @@ class LockOption extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Option(
         icon: const Icon(Icons.lock),
-        label: "Zablokuj",
+        label: AppLocalizations.of(context).lock,
         onTap: () async {
           ref.read(isParentModeProvider.notifier).disable();
           Navigator.pop(context);
@@ -137,7 +139,7 @@ class OpenSettingsOption extends StatelessWidget {
   Widget build(BuildContext context) {
     return Option(
       icon: const Icon(Icons.settings),
-      label: "Ustawienia",
+      label: AppLocalizations.of(context).settings,
       onTap: () => Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (context) => const MainSettingsScreen())),
     );

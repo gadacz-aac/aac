@@ -1,3 +1,4 @@
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/symbols/search/providers.dart';
 import 'package:aac/src/features/symbols/symbol_board_association_manager.dart';
@@ -13,7 +14,7 @@ class UnpinSymbolAction extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return IconButton(
         icon: const Icon(Icons.push_pin_outlined),
-        tooltip: "Odepnij",
+        tooltip: AppLocalizations.of(context).unpin,
         onPressed: () {
           final boardId = ref.read(boardIdProvider);
           // that's what you get for making the state mutable

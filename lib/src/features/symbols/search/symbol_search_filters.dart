@@ -1,3 +1,4 @@
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/features/symbols/model/communication_color.dart';
 import 'package:aac/src/shared/colors.dart';
 import 'package:flutter/material.dart';
@@ -19,9 +20,9 @@ class SearchFilters extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SingleChildScrollView(
+    return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: Row(children: [
+      child: Row(children: const [
         SymbolSearchColorFilterChip(),
         SizedBox(
           width: 8.0,
@@ -38,7 +39,7 @@ class SymbolSearchPinnedFilterChip extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ChoiceChip(
-      label: const Text("Nieprzypięte"),
+      label: Text(AppLocalizations.of(context).unpinnedChip),
       selected: ref.watch(symbolSearchOnlyPinnedFilterProvider),
       onSelected: (_) => ref
           .read(symbolSearchOnlyPinnedFilterProvider.notifier)
@@ -54,6 +55,7 @@ class SymbolSearchColorFilterChip extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final color = ref.watch(symbolSearchColorFilterProvider);
     return ActionChip(
         avatar: color != null
@@ -61,7 +63,9 @@ class SymbolSearchColorFilterChip extends ConsumerWidget {
             : null,
         label: Row(
           children: [
-            Text(color?.label ?? "Kolor"),
+            Text(color != null
+                ? localizedColorLabel(l10n, color)
+                : l10n.colorChip),
             const SizedBox(
               width: 8.0,
             ),
@@ -107,7 +111,7 @@ class SymbolSearchColorFilterChip extends ConsumerWidget {
                                           const SizedBox(
                                             width: 8.0,
                                           ),
-                                          Text(e.label),
+                                          Text(localizedColorLabel(l10n, e)),
                                         ]),
                                         value: e.code,
                                         toggleable: true,

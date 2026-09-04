@@ -1,3 +1,4 @@
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/features/symbols/settings/screens/create_board_screen.dart';
 import 'package:aac/src/features/symbols/settings/widgets/board_picker.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
@@ -24,7 +25,7 @@ class LinkNewBoardChip extends ConsumerWidget {
           ref.read(boardProvider.notifier).set(val);
         });
       },
-      label: const Text("Dodaj nową"),
+      label: Text(AppLocalizations.of(context).addNewBoard),
     );
   }
 }

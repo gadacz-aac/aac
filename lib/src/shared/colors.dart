@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/features/symbols/model/communication_color.dart';
 
 abstract final class AacColors {
@@ -46,3 +47,16 @@ final colors = [
       code: 0xFFFB4C4C,
       folderBackgroundCode: 0xFFFFB6B6), // in the stars with diamonds
 ];
+
+/// Localized display label for a symbol [CommunicationColor]; falls back to the
+/// model label for unknown codes.
+String localizedColorLabel(AppLocalizations l10n, CommunicationColor color) {
+  return switch (color.code) {
+    0xFFFBAF3C => l10n.colorNoun,
+    0xFF66C4FB => l10n.colorAdjective,
+    0xFF9ADF7D => l10n.colorVerb,
+    0xFFFB88CF => l10n.colorBarbie,
+    0xFFFB4C4C => l10n.colorLucy,
+    _ => color.label,
+  };
+}

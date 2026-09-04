@@ -1,3 +1,4 @@
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/features/boards/board_manager.dart';
 import 'package:aac/src/features/boards/ui/actions/lock_button.dart';
 import 'package:aac/src/features/boards/ui/actions/pin_symbol_action.dart';
@@ -39,6 +40,7 @@ class BoardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final board = ref.watch(boardProvider(boardId));
     final isParentMode = ref.watch(isParentModeProvider);
     return board.when(
@@ -50,7 +52,7 @@ class BoardScreen extends ConsumerWidget {
         data: (data) {
           if (data == null) {
             return ErrorScreen(
-              error: "Board with id $boardId wasn't found",
+              error: l10n.boardNotFound(boardId),
             );
           }
 
@@ -144,7 +146,7 @@ class ErrorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AacScaffold(
-      appBar: AppBar(title: const Text('Oops..')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).oops)),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [

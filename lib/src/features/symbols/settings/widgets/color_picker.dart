@@ -1,3 +1,4 @@
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/features/symbols/model/communication_color.dart';
 import 'package:aac/src/features/symbols/settings/screens/symbol_settings.dart';
 import 'package:aac/src/shared/colors.dart';
@@ -47,7 +48,8 @@ class ColorChip extends ConsumerWidget {
         avatar: CircleAvatar(backgroundColor: Color(color.code)),
         selectedColor: const Color(0xFFF7F2F9),
         showCheckmark: false,
-        label: Text(color.label),
+        label: Text(
+            localizedColorLabel(AppLocalizations.of(context), color)),
         selected: isSelected,
         onSelected: (selected) {
           // tapping a selected chip unselects the color

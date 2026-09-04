@@ -1,3 +1,4 @@
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/database/daos/child_communication_symbol_dao.dart';
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/boards/ui/actions/edit_symbol_action.dart';
@@ -33,9 +34,10 @@ class BoardSearchScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     return SearchScreen(
         asyncValue: ref.watch(searchedBoardProvider),
-        what: "tablic",
+        what: l10n.boardsGenitive,
         onChanged: (val) {
           ref.read(localQueryProvider.notifier).state = val;
         },
@@ -57,6 +59,7 @@ class BoardSearchScreen extends ConsumerWidget {
   }
 
   Widget optionsBuilder(BuildContext context, WidgetRef ref, int id) {
+    final l10n = AppLocalizations.of(context);
     return BottomSheetOptions(
       children: [
         OptionGroup(
@@ -66,7 +69,7 @@ class BoardSearchScreen extends ConsumerWidget {
                   Navigator.push(context, BoardScreen.page(id));
                 },
                 icon: Icon(Icons.open_in_new_outlined),
-                label: "Otwórz"),
+                label: l10n.open),
             ProviderScope(
               overrides: [boardIdProvider.overrideWithValue(id)],
               child: EditBoardOption(),
@@ -90,20 +93,18 @@ class BoardSearchScreen extends ConsumerWidget {
                         context,
                         BoardSymbolPicker(
                             id: id,
-                            title: "Usuń tablice i symbole",
+                            title: l10n.deleteBoardsTitle,
                             symbols: symbols
                                 .map((e) => e..isSelected = !e.isSelected)
                                 .toList(),
-                            subtitle:
-                                "Wybierz symbole, które chcesz \nprzecieść do kosza",
-                            subtitle2:
-                                "Pamiętaj, że możesz je zawsze przywrócić"),
+                            subtitle: l10n.chooseSymbolsToBin,
+                            subtitle2: l10n.rememberRestorable),
                         (selected) => ref
                             .read(binManagerProvider)
                             .boardMoveToTrash(id, selected));
                   },
                   icon: Icon(Icons.delete_outlined),
-                  label: "Usuń"),
+                  label: l10n.delete),
             ],
           ),
       ],
@@ -135,9 +136,10 @@ class SymbolSearchScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     return SearchScreen(
       asyncValue: ref.watch(searchedSymbolProvider),
-      what: "symboli",
+      what: l10n.symbolsGenitive,
       filters: Padding(
         padding: EdgeInsets.fromLTRB(8.0, 0, 8.0, 8.0),
         child: SearchFilters(),
@@ -165,19 +167,19 @@ class SymbolSearchScreen extends ConsumerWidget {
 
 class _AacLocalSearchScreenState extends ConsumerState<AacLocalSearchScreen>
     with SingleTickerProviderStateMixin {
-  static const List<Tab> tabs = [
-    Tab(
-      text: "Symbole",
-    ),
-    Tab(
-      text: "Tablice",
-    )
-  ];
-
   late TabController _tabController;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final tabs = [
+      Tab(
+        text: l10n.symbolsTab,
+      ),
+      Tab(
+        text: l10n.boardsTab,
+      )
+    ];
     final areSymbolsSelected = ref.watch(areSymbolsSelectedProvider);
 
     List<Widget> actions = [];
@@ -232,7 +234,7 @@ class _AacLocalSearchScreenState extends ConsumerState<AacLocalSearchScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(vsync: this, length: tabs.length);
+    _tabController = TabController(vsync: this, length: 2);
   }
 }
 
@@ -241,6 +243,7 @@ class _SearchScreenState<T> extends ConsumerState<SearchScreen<T>> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final List<T>? results = widget.asyncValue.value;
     final hasResults = results != null && results.isNotEmpty;
 
@@ -256,8 +259,8 @@ class _SearchScreenState<T> extends ConsumerState<SearchScreen<T>> {
             if (!hasResults)
               NoResultsScreen(
                 isLoading: widget.asyncValue.isLoading,
-                title: "Brak pasujących ${widget.what}",
-                subtitle: "Część ${widget.what} mogła zostać usunięta",
+                title: l10n.noMatching(widget.what),
+                subtitle: l10n.someDeleted(widget.what),
               )
             else
               Expanded(
@@ -268,7 +271,7 @@ class _SearchScreenState<T> extends ConsumerState<SearchScreen<T>> {
               padding: EdgeInsets.all(8.0),
               child: AacSearchField(
                 controller: controller,
-                placeholder: "Szukaj",
+                placeholder: l10n.search,
               ),
             ),
             widget.filters ?? SizedBox()

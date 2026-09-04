@@ -1,3 +1,4 @@
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/database/daos/board_dao.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:aac/src/shared/form/widgets/number_field.dart';
@@ -63,17 +64,19 @@ class _CreateBoardScreenState extends ConsumerState<CreateBoardScreen> {
   }
 
   String? validateBoardName(String? val) {
+    final l10n = AppLocalizations.of(context);
     if (val == null || val.isEmpty) {
-      return "Nazwa nie może być pusta";
+      return l10n.boardNameRequired;
     }
     if (!_isNameUnique) {
-      return "Tablica o takiej nazwie już istnieje";
+      return l10n.boardNameExists;
     }
     return null;
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return ConstrainedBox(
       constraints:
           BoxConstraints(minHeight: MediaQuery.of(context).size.height * 0.5),
@@ -90,7 +93,7 @@ class _CreateBoardScreenState extends ConsumerState<CreateBoardScreen> {
                     children: [
                       GenericTextField(
                         controller: nameController,
-                        labelText: "Nazwa",
+                        labelText: l10n.name,
                         validator: validateBoardName,
                       ),
                       const SizedBox(
@@ -105,11 +108,11 @@ class _CreateBoardScreenState extends ConsumerState<CreateBoardScreen> {
                             inputFormatters: [positiveDigitsOnly],
                             validator: (val) {
                               if (val != null && val.startsWith("0")) {
-                                return "Liczba kolumn powinna być większa od 0";
+                                return l10n.columnsPositive;
                               }
                               return null;
                             },
-                            labelText: "Liczba Kolumn",
+                            labelText: l10n.columnsCount,
                           )),
                         ],
                       ),
@@ -124,7 +127,7 @@ class _CreateBoardScreenState extends ConsumerState<CreateBoardScreen> {
                       AacButton(
                         onPressed: Navigator.of(context).pop,
                         type: ButtonType.noBackground,
-                        child: const Text("Anuluj"),
+                        child: Text(l10n.cancel),
                       ),
                       AacButton(
                           onPressed: () {
@@ -138,7 +141,7 @@ class _CreateBoardScreenState extends ConsumerState<CreateBoardScreen> {
                                       int.tryParse(columnCountController.text),
                                 ));
                           },
-                          child: const Text("Zapisz"))
+                          child: Text(l10n.save))
                     ],
                   )
                 ]),

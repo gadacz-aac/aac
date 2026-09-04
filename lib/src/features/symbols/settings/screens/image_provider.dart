@@ -17,18 +17,18 @@ class ImageNotifier extends _$ImageNotifier {
     return initialImage ?? defaultImage;
   }
 
-  Future<void> cropImage() async {
+  Future<void> cropImage({required String title}) async {
     final croppedFile = await ImageCropper().cropImage(
         sourcePath: state,
         compressQuality: 60, //? isn't it too low?
         compressFormat: ImageCompressFormat.png,
         uiSettings: [
           AndroidUiSettings(
-            toolbarTitle: "Przycinanie zdjęcia",
+            toolbarTitle: title,
             initAspectRatio: CropAspectRatioPreset.square,
           ),
           IOSUiSettings(
-            title: "Przycinanie zdjęcia",
+            title: title,
           )
         ]);
 

@@ -1,3 +1,4 @@
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/database/daos/child_communication_symbol_dao.dart';
 import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/boards/popup_board_route.dart';
@@ -19,14 +20,15 @@ class BinScreenBoard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final deletedBoards = ref.watch(deletedBoardsProvider);
 
     return deletedBoards.when(
       data: (data) {
         if (data.isEmpty) {
           return NoResultsScreen(
-              title: "Brak usuniętych tablic",
-              subtitle: "Kosz jest pusty",
+              title: l10n.noDeletedBoards,
+              subtitle: l10n.binEmpty,
               isLoading: false);
         }
 
@@ -45,7 +47,8 @@ class BinScreenBoard extends ConsumerWidget {
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(child: Text('Error: $error')),
+      error: (error, stack) =>
+          Center(child: Text(l10n.errorPrefix(error.toString()))),
     );
   }
 }
@@ -67,16 +70,20 @@ class DeletedBoardOptions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     return BottomSheetOptions(
       children: [
         OptionGroup(
           options: [
             Option(
                 onTap: () {
-                  Navigator.pushReplacement(context, PopupBoardRoute(e.id));
+                  Navigator.pushReplacement(
+                      context,
+                      PopupBoardRoute(e.id,
+                          barrierLabelText: l10n.boardPreview));
                 },
                 icon: Icon(Icons.open_in_new_outlined),
-                label: "Zobacz podgląd"),
+                label: l10n.viewPreview),
             Option(
                 onTap: () async {
                   final sym = await getSymbols(ref);
@@ -89,8 +96,8 @@ class DeletedBoardOptions extends ConsumerWidget {
                       context,
                       BoardSymbolPicker(
                         id: e.id,
-                        title: "Przywróć tablicę i symbole",
-                        subtitle: "Wybierz symbole, które chcesz \nprzywrócić",
+                        title: l10n.restoreBoardTitle,
+                        subtitle: l10n.chooseSymbolsToRestore,
                         symbols: sym,
                       ), (selected) {
                     ref
@@ -99,7 +106,7 @@ class DeletedBoardOptions extends ConsumerWidget {
                   });
                 },
                 icon: Icon(Icons.delete_outlined),
-                label: "Przywróć"),
+                label: l10n.restore),
           ],
         ),
         OptionGroup(
@@ -116,8 +123,8 @@ class DeletedBoardOptions extends ConsumerWidget {
                       context,
                       BoardSymbolPicker(
                         id: e.id,
-                        title: "Usuń tablicę i symbole",
-                        subtitle: "Wybierz symbole, które chcesz \nusunąć",
+                        title: l10n.deleteBoardTitle,
+                        subtitle: l10n.chooseSymbolsToDelete,
                         symbols: sym,
                       ), (selected) {
                     ref
@@ -126,7 +133,7 @@ class DeletedBoardOptions extends ConsumerWidget {
                   });
                 },
                 icon: Icon(Icons.delete_outlined),
-                label: "Usuń na zawsze"),
+                label: l10n.deleteForever),
           ],
         )
       ],
@@ -206,7 +213,7 @@ class _BoardSymbolPickerState extends ConsumerState<BoardSymbolPicker> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
-                      "Zatwierdź",
+                      AppLocalizations.of(context).confirm,
                       style: TextTheme.of(context)
                           .bodyLarge
                           ?.copyWith(fontWeight: FontWeight.w500),

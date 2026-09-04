@@ -45,7 +45,7 @@ final class ImageNotifierProvider
   }
 }
 
-String _$imageNotifierHash() => r'd53a4b77aec51147bfba4671910522fd1f535b13';
+String _$imageNotifierHash() => r'9863ba0910b330e291941f1e16d569d3a7be5d00';
 
 abstract class _$ImageNotifier extends $Notifier<String> {
   String build();

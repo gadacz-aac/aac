@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/settings/screens/image_provider.dart';
 import 'package:aac/src/features/symbols/settings/utils/file_helpers.dart';
@@ -69,6 +70,7 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return AacScaffold(
       appBar: SymbolSettingsAppBar(
         submit: submit,
@@ -93,10 +95,10 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Flexible(
+                          Flexible(
                             child: Text(
-                              "Symbol o takiej nazwie już istnieje",
-                              style: TextStyle(color: Colors.white),
+                              l10n.duplicateSymbolExists,
+                              style: const TextStyle(color: Colors.white),
                               softWrap: true,
                             ),
                           ),
@@ -121,9 +123,9 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
                                   borderRadius: BorderRadius.circular(4.0),
                                 ),
                               ),
-                              child: const Text(
-                                'Przypnij',
-                                style: TextStyle(color: Colors.white),
+                              child: Text(
+                                l10n.pin,
+                                style: const TextStyle(color: Colors.white),
                               ),
                             ),
                           ],
@@ -157,8 +159,8 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
             ),
             GenericTextField(
               controller: vocalizationController,
-              labelText: "Wokalizacja (opcjonalnie)",
-              helperText: "Co powiedzieć po naciśnięciu?",
+              labelText: l10n.vocalization,
+              helperText: l10n.vocalizationHelper,
             ),
             const SizedBox(
               height: 14.0,
@@ -167,7 +169,7 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
             const SizedBox(
               height: 28,
             ),
-            Text("Podlinkuj tablice:",
+            Text(l10n.linkBoards,
                 style: Theme.of(context).textTheme.labelLarge),
             const BoardPicker(),
           ],
@@ -224,12 +226,13 @@ class NoImageSelectedDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return AlertDialog(
-      title: const Text("Nie dodałeś obrazka"),
-      content: const Text("Czy chcesz to zrobić teraz?"),
+      title: Text(l10n.noImageTitle),
+      content: Text(l10n.noImageQuestion),
       actions: [
-        TextButton(onPressed: onDeclined, child: const Text('Nie')),
-        TextButton(onPressed: onAccepted, child: const Text('Tak')),
+        TextButton(onPressed: onDeclined, child: Text(l10n.no)),
+        TextButton(onPressed: onAccepted, child: Text(l10n.yes)),
       ],
     );
   }
@@ -254,12 +257,13 @@ class LabelTextField extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final label = ref.watch(initialValuesProvider).label;
     final labelProviderNotifier = ref.read(labelProvider.notifier);
     final symbolManager = ref.read(symbolManagerProvider);
 
     return GenericTextField(
-      labelText: "Podpis",
+      labelText: l10n.label,
       initalValue: label,
       onChanged: (value) async {
         labelProviderNotifier.state = value;
@@ -273,7 +277,7 @@ class LabelTextField extends ConsumerWidget {
       },
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Proszę wprowadzić nazwę symbolu';
+          return l10n.labelRequired;
         }
         return null;
       },
@@ -292,6 +296,7 @@ class SymbolSettingsAppBar extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return AppBar(
         automaticallyImplyLeading: false,
         flexibleSpace: SafeArea(
@@ -302,9 +307,9 @@ class SymbolSettingsAppBar extends StatelessWidget
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 Navigator.of(context).pop();
               },
-              child: const Text(
-                "Anuluj",
-                style: TextStyle(fontWeight: FontWeight.w600),
+              child: Text(
+                l10n.cancel,
+                style: const TextStyle(fontWeight: FontWeight.w600),
               ),
             ),
             AppBarTextAction(
@@ -312,9 +317,9 @@ class SymbolSettingsAppBar extends StatelessWidget
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 submit();
               },
-              child: const Text(
-                "Zapisz",
-                style: TextStyle(fontWeight: FontWeight.w500),
+              child: Text(
+                l10n.save,
+                style: const TextStyle(fontWeight: FontWeight.w500),
               ),
             )
           ]),

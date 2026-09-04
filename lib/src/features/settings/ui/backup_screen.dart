@@ -1,3 +1,4 @@
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/features/backup/backup_manager.dart';
 import 'package:aac/src/features/settings/ui/widgets/group.dart';
 import 'package:aac/src/shared/padding.dart';
@@ -6,12 +7,17 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class BackupGroup extends PersistentGroup {
-  const BackupGroup({
-    super.key,
-    super.title = const Text("Eksport i import"),
-    super.children = const [BackupScreen()],
-  });
+class BackupGroup extends StatelessWidget {
+  const BackupGroup({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return PersistentGroup(
+      title: Text(l10n.exportImport),
+      children: const [BackupScreen()],
+    );
+  }
 }
 
 class SettingGroupLink extends StatelessWidget {
@@ -42,16 +48,15 @@ class BackupScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     return Padding(
       padding: AacPaddings.horizontal16,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Text("Kopia zapasowa"),
-        const Text("Eksportuj lub importuj ustawienia aplikacji"),
+        Text(l10n.backup),
+        Text(l10n.backupSubtitle),
         AacButton(
             onPressed: () => ref.read(backupManagerProvider).compress(),
-            child: const Text(
-              "Eksportuj",
-            )),
+            child: Text(l10n.export)),
         AacButton(
             onPressed: () async {
               final res = await FilePicker
@@ -65,9 +70,7 @@ class BackupScreen extends ConsumerWidget {
 
               ref.read(backupManagerProvider).decompress(filePath, ref);
             },
-            child: const Text(
-              "Importuj",
-            )),
+            child: Text(l10n.import)),
       ]),
     );
   }

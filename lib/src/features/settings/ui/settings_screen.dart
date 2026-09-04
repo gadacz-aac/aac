@@ -1,7 +1,7 @@
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/features/settings/ui/backup_screen.dart';
 import 'package:aac/src/features/settings/ui/preference_group.dart';
 import 'package:aac/src/features/settings/ui/voice_group.dart';
-import 'package:aac/src/features/settings/ui/widgets/group.dart';
 import 'package:aac/src/shared/utils/dev_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,7 +15,8 @@ enum SettingKey {
   speechRate,
   voice,
   speechPitch,
-  labelPosition;
+  labelPosition,
+  language;
 
   static SettingKey fromKey(String key) {
     return SettingKey.values.firstWhere(
@@ -29,7 +30,7 @@ class SettingsScreen extends ConsumerWidget {
   const SettingsScreen(
       {super.key, required this.children, required this.title});
 
-  final List<PersistentGroup> children;
+  final List<Widget> children;
   final String title;
 
   @override
@@ -53,7 +54,7 @@ class MainSettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SettingsScreen(
-      title: "Ustawienia",
+      title: AppLocalizations.of(context).settings,
       children: [PreferenceGroup(), VoiceGroup(), BackupGroup()],
     );
   }

@@ -7,7 +7,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class PopupBoardRoute extends PopupRoute<void> {
   final int id;
 
-  PopupBoardRoute(this.id);
+  /// Accessibility label for the route barrier, localized by the caller.
+  final String? barrierLabelText;
+
+  PopupBoardRoute(this.id, {this.barrierLabelText});
 
   @override
   Color? get barrierColor => Colors.black.withAlpha(0x50);
@@ -16,7 +19,7 @@ class PopupBoardRoute extends PopupRoute<void> {
   bool get barrierDismissible => true;
 
   @override
-  String? get barrierLabel => "Podgląd tablicy";
+  String? get barrierLabel => barrierLabelText;
 
   @override
   Duration get transitionDuration => const Duration(milliseconds: 300);

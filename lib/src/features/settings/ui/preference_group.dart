@@ -1,30 +1,39 @@
-import 'package:aac/src/features/settings/ui/widgets/dropdown.dart';
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/features/settings/ui/settings_screen.dart';
+import 'package:aac/src/features/settings/ui/widgets/dropdown.dart';
 import 'package:aac/src/features/settings/ui/widgets/group.dart';
 import 'package:aac/src/features/settings/ui/widgets/switch.dart';
+import 'package:aac/src/features/settings/utils/app_language.dart';
 import 'package:aac/src/features/settings/utils/label_position.dart';
 import 'package:aac/src/features/settings/utils/orientation.dart';
 import 'package:flutter/material.dart';
 
-class PreferenceGroup extends PersistentGroup {
-  const PreferenceGroup(
-      {super.key,
-      super.title = const Text("Preferencje"),
-      super.isFirst = true,
-      super.children = const [
+class PreferenceGroup extends StatelessWidget {
+  const PreferenceGroup({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return PersistentGroup(
+      isFirst: true,
+      title: Text(l10n.preferences),
+      children: [
         OrientationDropdown(),
         LabelPositionDropdown(),
+        LanguageDropdown(),
         PersistentSwitch(
           SettingKey.kiosk,
-          title: Text("Blokuj wyłączanie aplikacji"),
-          subtitle: Text("Nie pozwala na opuszczenie aplikacji w trybie mowy"),
+          title: Text(l10n.blockAppExit),
+          subtitle: Text(l10n.blockAppExitSubtitle),
         ),
         PersistentSwitch(
           SettingKey.wakelock,
-          title: Text("Nie wygaszaj ekranu"),
-          subtitle: Text("Wyłącza automatyczne wygaszanie ekranu"),
+          title: Text(l10n.keepScreenOn),
+          subtitle: Text(l10n.keepScreenOnSubtitle),
         ),
-      ]});
+      ],
+    );
+  }
 }
 
 class OrientationDropdown extends StatelessWidget {
@@ -32,22 +41,23 @@ class OrientationDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return PersistentDropdownButton(
       SettingKey.orientation,
-      title: Text("Orientacja"),
+      title: Text(l10n.orientation),
       onChanged: changeOrientation,
       items: [
         PersistentDropdownItem(
           value: OrientationOption.portrait.name,
-          child: Text('Pionowa'),
+          child: Text(l10n.portrait),
         ),
         PersistentDropdownItem(
           value: OrientationOption.landscape.name,
-          child: Text('Pozioma'),
+          child: Text(l10n.landscape),
         ),
         PersistentDropdownItem(
           value: OrientationOption.auto.name,
-          child: Text('Autoobracanie ekranu'),
+          child: Text(l10n.autoRotate),
         ),
       ],
     );
@@ -59,17 +69,41 @@ class LabelPositionDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return PersistentDropdownButton(
       SettingKey.labelPosition,
-      title: Text("Pozycja podpisu"),
+      title: Text(l10n.labelPosition),
       items: [
         PersistentDropdownItem(
           value: LabelPosition.under.name,
-          child: Text('Pod obrazkiem'),
+          child: Text(l10n.labelPositionUnder),
         ),
         PersistentDropdownItem(
           value: LabelPosition.over.name,
-          child: Text('Nad obrazkiem'),
+          child: Text(l10n.labelPositionOver),
+        ),
+      ],
+    );
+  }
+}
+
+class LanguageDropdown extends StatelessWidget {
+  const LanguageDropdown({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return PersistentDropdownButton(
+      SettingKey.language,
+      title: Text(l10n.language),
+      items: [
+        PersistentDropdownItem(
+          value: defaultLanguage,
+          child: Text(l10n.languagePolish),
+        ),
+        PersistentDropdownItem(
+          value: 'en',
+          child: Text(l10n.languageEnglish),
         ),
       ],
     );

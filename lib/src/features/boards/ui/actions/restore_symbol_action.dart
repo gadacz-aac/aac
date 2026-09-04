@@ -1,3 +1,4 @@
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/features/symbols/bin/bin_manager.dart';
 import 'package:aac/src/features/symbols/search/providers.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ class RestoreSymbolAction extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return IconButton(
       icon: const Icon(Icons.restore),
-      tooltip: "Przywróć",
+      tooltip: AppLocalizations.of(context).restore,
       onPressed: () {
         final symbolManager = ref.read(binManagerProvider);
         final selectedSymbols = [...ref.read(selectedSymbolsProvider).state];
