@@ -3,6 +3,7 @@ import 'package:aac/src/features/symbols/card/symbol_image.dart';
 import 'package:aac/src/features/symbols/card/symbol_tap_actions.dart';
 import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/search/providers.dart';
+import 'package:aac/src/features/settings/utils/label_position.dart';
 import 'package:aac/src/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -70,8 +71,8 @@ class SymbolCard extends ConsumerWidget {
     return (Color(symbol.color!), Colors.white);
   }
 
-  EdgeInsets _imagePadding() => imageHasBackground
-      ? EdgeInsets.zero
+  EdgeInsets _imagePadding(bool isLabelOverImage) => isLabelOverImage
+      ? const EdgeInsets.only(top: 14.0, left: 6.0, right: 6.0, bottom: 6.0)
       : const EdgeInsets.only(top: 6.0, left: 6.0, right: 6.0, bottom: 14.0);
 
   @override
@@ -79,6 +80,21 @@ class SymbolCard extends ConsumerWidget {
     final isSelected = ref.watch(isSymbolSelectedProvider(symbol.id));
     final bgColor = _backgroundColor();
     final (labelBgColor, textColor) = _labelColors();
+    final labelPosition =
+        ref.watch(labelPositionProvider).value ?? LabelPosition.under;
+    final isLabelOverImage = labelPosition == LabelPosition.over;
+
+    final image = Padding(
+      padding: _imagePadding(isLabelOverImage),
+      child: SymbolImage(
+        symbol.imagePath,
+        height: 80,
+        fit: BoxFit.fitHeight,
+      ),
+    );
+
+    final label = SymbolCardLabel(
+        labelBgColor: labelBgColor, symbol: symbol, textColor: textColor);
 
     return InkWell(
       onTap: () => _onTap(context, ref),
@@ -88,20 +104,8 @@ class SymbolCard extends ConsumerWidget {
           clipBehavior: Clip.hardEdge,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: _imagePadding(),
-                child: SymbolImage(
-                  symbol.imagePath,
-                  height: 80,
-                  fit: BoxFit.fitHeight,
-                ),
-              ),
-              SymbolCardLabel(
-                  labelBgColor: labelBgColor,
-                  symbol: symbol,
-                  textColor: textColor),
-            ],
+            children:
+                isLabelOverImage ? [label, image] : [image, label],
           ),
         ),
       ),

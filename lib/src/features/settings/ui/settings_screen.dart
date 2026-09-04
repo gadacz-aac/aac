@@ -14,7 +14,8 @@ enum SettingKey {
   wakelock,
   speechRate,
   voice,
-  speechPitch;
+  speechPitch,
+  labelPosition;
 
   static SettingKey fromKey(String key) {
     return SettingKey.values.firstWhere(

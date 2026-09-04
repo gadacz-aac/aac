@@ -2,6 +2,7 @@ import 'package:aac/src/features/settings/ui/widgets/dropdown.dart';
 import 'package:aac/src/features/settings/ui/settings_screen.dart';
 import 'package:aac/src/features/settings/ui/widgets/group.dart';
 import 'package:aac/src/features/settings/ui/widgets/switch.dart';
+import 'package:aac/src/features/settings/utils/label_position.dart';
 import 'package:aac/src/features/settings/utils/orientation.dart';
 import 'package:flutter/material.dart';
 
@@ -12,6 +13,7 @@ class PreferenceGroup extends PersistentGroup {
       super.isFirst = true,
       super.children = const [
         OrientationDropdown(),
+        LabelPositionDropdown(),
         PersistentSwitch(
           SettingKey.kiosk,
           title: Text("Blokuj wyłączanie aplikacji"),
@@ -46,6 +48,28 @@ class OrientationDropdown extends StatelessWidget {
         PersistentDropdownItem(
           value: OrientationOption.auto.name,
           child: Text('Autoobracanie ekranu'),
+        ),
+      ],
+    );
+  }
+}
+
+class LabelPositionDropdown extends StatelessWidget {
+  const LabelPositionDropdown({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return PersistentDropdownButton(
+      SettingKey.labelPosition,
+      title: Text("Pozycja podpisu"),
+      items: [
+        PersistentDropdownItem(
+          value: LabelPosition.under.name,
+          child: Text('Pod obrazkiem'),
+        ),
+        PersistentDropdownItem(
+          value: LabelPosition.over.name,
+          child: Text('Nad obrazkiem'),
         ),
       ],
     );

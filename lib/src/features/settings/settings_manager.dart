@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:aac/src/database/database.dart';
 import 'package:aac/src/features/settings/ui/settings_screen.dart';
+import 'package:aac/src/features/settings/utils/label_position.dart';
 import 'package:aac/src/features/settings/utils/orientation.dart';
 import 'package:drift/drift.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -35,6 +36,7 @@ class SettingsCache {
     SettingKey.speechRate: 0.5,
     SettingKey.voice: null,
     SettingKey.speechPitch: 1.0,
+    SettingKey.labelPosition: LabelPosition.under.name,
   };
 
   Future<void> initializeStore(AppDatabase db) async {
