@@ -1466,8 +1466,10 @@ class $BoardTbTableManager extends RootTableManager<
             isDeleted: isDeleted,
           ),
           withReferenceMapper: (p0) => p0
-              .map(
-                  (e) => (e.readTable(table), $BoardTbReferences(db, table, e)))
+              .map((e) => (
+                    e.readTable<BoardTb, BoardEntity>(table),
+                    $BoardTbReferences(db, table, e)
+                  ))
               .toList(),
           prefetchHooksCallback: (
               {communicationSymbolTbRefs = false, childSymbolTbRefs = false}) {
@@ -1844,7 +1846,8 @@ class $CommunicationSymbolTbTableManager extends RootTableManager<
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (
-                    e.readTable(table),
+                    e.readTable<CommunicationSymbolTb,
+                        CommunicationSymbolEntity>(table),
                     $CommunicationSymbolTbReferences(db, table, e)
                   ))
               .toList(),
@@ -2185,8 +2188,10 @@ class $ChildSymbolTbTableManager extends RootTableManager<
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
-              .map((e) =>
-                  (e.readTable(table), $ChildSymbolTbReferences(db, table, e)))
+              .map((e) => (
+                    e.readTable<ChildSymbolTb, ChildSymbolEntity>(table),
+                    $ChildSymbolTbReferences(db, table, e)
+                  ))
               .toList(),
           prefetchHooksCallback: ({boardId = false, symbolId = false}) {
             return PrefetchHooks(
@@ -2346,7 +2351,11 @@ class $SettingTbTableManager extends RootTableManager<
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map((e) => (
+                    e.readTable<SettingTb, SettingEntity>(table),
+                    BaseReferences<_$AppDatabase, SettingTb, SettingEntity>(
+                        db, table, e)
+                  ))
               .toList(),
           prefetchHooksCallback: null,
         ));

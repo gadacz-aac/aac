@@ -12,30 +12,27 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'providers.g.dart';
 
 @riverpod
-Future<List<CommunicationSymbol>> searchedSymbol(Ref ref) async {
+Stream<List<CommunicationSymbol>> searchedSymbol(Ref ref) async* {
   final query = ref.watch(localQueryProvider);
 
   final color = ref.watch(symbolSearchColorFilterProvider)?.code;
   final onlyPinned = ref.watch(symbolSearchOnlyPinnedFilterProvider);
 
-  final res = ref
+  // watched, so results update when symbols are binned/deleted/restored
+  yield* ref
       .read(symbolDaoProvider)
       .searchSymbol(query: query, onlyPinned: onlyPinned, color: color)
-      .map(CommunicationSymbol.fromEntity)
-      .get();
-
-  return res;
+      .watch()
+      .map((entities) =>
+          entities.map(CommunicationSymbol.fromEntity).toList());
 }
 
 @riverpod
-Future<List<Board>> searchedBoard(Ref ref) async {
+Stream<List<Board>> searchedBoard(Ref ref) async* {
   final query = ref.watch(localQueryProvider);
 
-  return ref
-      .read(boardDaoProvider)
-      .searchBoard(query: query)
-      .map(Board.fromEntity)
-      .get();
+  yield* ref.read(boardDaoProvider).searchBoard(query: query).watch().map(
+      (entities) => entities.map(Board.fromEntity).toList());
 }
 
 @riverpod

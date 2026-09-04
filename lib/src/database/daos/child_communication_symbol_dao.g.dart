@@ -17,8 +17,8 @@ mixin _$ChildSymbolDaoMixin on DatabaseAccessor<AppDatabase> {
           Variable<bool>(var2)
         ],
         readsFrom: {
-          communicationSymbolTb,
-          childSymbolTb,
+          this.communicationSymbolTb,
+          this.childSymbolTb,
         }).map((QueryRow row) => SelectByBoardIdResult(
           id: row.read<int>('id'),
           label: row.read<String>('label'),
@@ -39,7 +39,7 @@ mixin _$ChildSymbolDaoMixin on DatabaseAccessor<AppDatabase> {
     return customUpdate(
       'UPDATE child_symbol_tb SET hidden = NOT hidden WHERE board_id = ?1 AND symbol_id = ?2',
       variables: [Variable<int>(boardId), Variable<int>(symbolId)],
-      updates: {childSymbolTb},
+      updates: {this.childSymbolTb},
       updateKind: UpdateKind.update,
     );
   }
@@ -48,7 +48,7 @@ mixin _$ChildSymbolDaoMixin on DatabaseAccessor<AppDatabase> {
     return customUpdate(
       'UPDATE communication_symbol_tb SET is_deleted = TRUE FROM (SELECT cs.symbol_id FROM child_symbol_tb AS cs LEFT JOIN child_symbol_tb AS other ON cs.symbol_id = other.symbol_id AND other.board_id <> cs.board_id WHERE cs.board_id = ?1 AND other.symbol_id IS NULL) AS orphans WHERE communication_symbol_tb.id = orphans.symbol_id',
       variables: [Variable<int>(var1)],
-      updates: {communicationSymbolTb},
+      updates: {this.communicationSymbolTb},
       updateKind: UpdateKind.update,
     );
   }
@@ -57,7 +57,7 @@ mixin _$ChildSymbolDaoMixin on DatabaseAccessor<AppDatabase> {
     return customUpdate(
       'UPDATE communication_symbol_tb SET child_board_id = NULL WHERE child_board_id = ?1',
       variables: [Variable<int>(var1)],
-      updates: {communicationSymbolTb},
+      updates: {this.communicationSymbolTb},
       updateKind: UpdateKind.update,
     );
   }
@@ -70,8 +70,8 @@ mixin _$ChildSymbolDaoMixin on DatabaseAccessor<AppDatabase> {
           Variable<int>(var1)
         ],
         readsFrom: {
-          communicationSymbolTb,
-          childSymbolTb,
+          this.communicationSymbolTb,
+          this.childSymbolTb,
         }).map((QueryRow row) => SelectByBoardIdWithIsReusedResult(
           label: row.read<String>('label'),
           id: row.read<int>('id'),

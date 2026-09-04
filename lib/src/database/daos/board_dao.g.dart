@@ -15,8 +15,8 @@ mixin _$BoardDaoMixin on DatabaseAccessor<AppDatabase> {
           Variable<int>(var1)
         ],
         readsFrom: {
-          boardTb,
-        }).asyncMap(boardTb.mapFromRow);
+          this.boardTb,
+        }).asyncMap(this.boardTb.mapFromRow);
   }
 
   Selectable<BoardEntity> selectByName(String var1) {
@@ -25,8 +25,8 @@ mixin _$BoardDaoMixin on DatabaseAccessor<AppDatabase> {
           Variable<String>(var1)
         ],
         readsFrom: {
-          boardTb,
-        }).asyncMap(boardTb.mapFromRow);
+          this.boardTb,
+        }).asyncMap(this.boardTb.mapFromRow);
   }
 
   Selectable<BoardEntity> searchBoard({required String query}) {
@@ -36,15 +36,15 @@ mixin _$BoardDaoMixin on DatabaseAccessor<AppDatabase> {
           Variable<String>(query)
         ],
         readsFrom: {
-          boardTb,
-        }).asyncMap(boardTb.mapFromRow);
+          this.boardTb,
+        }).asyncMap(this.boardTb.mapFromRow);
   }
 
   Future<int> toggleIsDeleted(int var1) {
     return customUpdate(
       'UPDATE board_tb SET is_deleted = NOT is_deleted WHERE id = ?1',
       variables: [Variable<int>(var1)],
-      updates: {boardTb},
+      updates: {this.boardTb},
       updateKind: UpdateKind.update,
     );
   }
@@ -53,8 +53,8 @@ mixin _$BoardDaoMixin on DatabaseAccessor<AppDatabase> {
     return customSelect('SELECT * FROM board_tb WHERE is_deleted = TRUE',
         variables: [],
         readsFrom: {
-          boardTb,
-        }).asyncMap(boardTb.mapFromRow);
+          this.boardTb,
+        }).asyncMap(this.boardTb.mapFromRow);
   }
 
   BoardDaoManager get managers => BoardDaoManager(this);

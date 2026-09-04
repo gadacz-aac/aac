@@ -15,10 +15,10 @@ final searchedSymbolProvider = SearchedSymbolProvider._();
 final class SearchedSymbolProvider extends $FunctionalProvider<
         AsyncValue<List<CommunicationSymbol>>,
         List<CommunicationSymbol>,
-        FutureOr<List<CommunicationSymbol>>>
+        Stream<List<CommunicationSymbol>>>
     with
         $FutureModifier<List<CommunicationSymbol>>,
-        $FutureProvider<List<CommunicationSymbol>> {
+        $StreamProvider<List<CommunicationSymbol>> {
   SearchedSymbolProvider._()
       : super(
           from: null,
@@ -35,24 +35,24 @@ final class SearchedSymbolProvider extends $FunctionalProvider<
 
   @$internal
   @override
-  $FutureProviderElement<List<CommunicationSymbol>> $createElement(
+  $StreamProviderElement<List<CommunicationSymbol>> $createElement(
           $ProviderPointer pointer) =>
-      $FutureProviderElement(pointer);
+      $StreamProviderElement(pointer);
 
   @override
-  FutureOr<List<CommunicationSymbol>> create(Ref ref) {
+  Stream<List<CommunicationSymbol>> create(Ref ref) {
     return searchedSymbol(ref);
   }
 }
 
-String _$searchedSymbolHash() => r'b844d8eb8a2aaccc53f7b60f5a926e9581cec8f4';
+String _$searchedSymbolHash() => r'67230509401927bd3c12b6939a50c8a77f0d7d2f';
 
 @ProviderFor(searchedBoard)
 final searchedBoardProvider = SearchedBoardProvider._();
 
 final class SearchedBoardProvider extends $FunctionalProvider<
-        AsyncValue<List<Board>>, List<Board>, FutureOr<List<Board>>>
-    with $FutureModifier<List<Board>>, $FutureProvider<List<Board>> {
+        AsyncValue<List<Board>>, List<Board>, Stream<List<Board>>>
+    with $FutureModifier<List<Board>>, $StreamProvider<List<Board>> {
   SearchedBoardProvider._()
       : super(
           from: null,
@@ -69,17 +69,17 @@ final class SearchedBoardProvider extends $FunctionalProvider<
 
   @$internal
   @override
-  $FutureProviderElement<List<Board>> $createElement(
+  $StreamProviderElement<List<Board>> $createElement(
           $ProviderPointer pointer) =>
-      $FutureProviderElement(pointer);
+      $StreamProviderElement(pointer);
 
   @override
-  FutureOr<List<Board>> create(Ref ref) {
+  Stream<List<Board>> create(Ref ref) {
     return searchedBoard(ref);
   }
 }
 
-String _$searchedBoardHash() => r'6946eda73773291405f8a400994a60bd5a921116';
+String _$searchedBoardHash() => r'91d864a3ba326918a9c9b0b2ea6fe98303b6ffb2';
 
 @ProviderFor(LocalQuery)
 final localQueryProvider = LocalQueryProvider._();

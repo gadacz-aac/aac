@@ -18,7 +18,7 @@ mixin _$SymbolDaoMixin on DatabaseAccessor<AppDatabase> {
         Variable<int>(oldPos),
         Variable<int>(boardId)
       ],
-      updates: {childSymbolTb},
+      updates: {this.childSymbolTb},
       updateKind: UpdateKind.update,
     );
   }
@@ -27,7 +27,7 @@ mixin _$SymbolDaoMixin on DatabaseAccessor<AppDatabase> {
     return customInsert(
       'WITH helpers AS (SELECT(COALESCE((SELECT MAX(position) FROM child_symbol_tb WHERE board_id = ?1), -1) + 1)AS position) INSERT OR REPLACE INTO child_symbol_tb (board_id, symbol_id, position) VALUES (?1, ?2, (SELECT position FROM helpers))',
       variables: [Variable<int>(boardId), Variable<int>(symbolId)],
-      updates: {childSymbolTb},
+      updates: {this.childSymbolTb},
     );
   }
 
@@ -41,16 +41,16 @@ mixin _$SymbolDaoMixin on DatabaseAccessor<AppDatabase> {
           Variable<int>(color)
         ],
         readsFrom: {
-          communicationSymbolTb,
-          childSymbolTb,
-        }).asyncMap(communicationSymbolTb.mapFromRow);
+          this.communicationSymbolTb,
+          this.childSymbolTb,
+        }).asyncMap(this.communicationSymbolTb.mapFromRow);
   }
 
   Future<int> markAsDeleted(int var1) {
     return customUpdate(
       'UPDATE communication_symbol_tb SET is_deleted = TRUE WHERE id = ?1',
       variables: [Variable<int>(var1)],
-      updates: {communicationSymbolTb},
+      updates: {this.communicationSymbolTb},
       updateKind: UpdateKind.update,
     );
   }
@@ -59,7 +59,7 @@ mixin _$SymbolDaoMixin on DatabaseAccessor<AppDatabase> {
     return customUpdate(
       'UPDATE communication_symbol_tb SET is_deleted = FALSE WHERE id = ?1',
       variables: [Variable<int>(var1)],
-      updates: {communicationSymbolTb},
+      updates: {this.communicationSymbolTb},
       updateKind: UpdateKind.update,
     );
   }
@@ -68,7 +68,7 @@ mixin _$SymbolDaoMixin on DatabaseAccessor<AppDatabase> {
     return customUpdate(
       'DELETE FROM communication_symbol_tb WHERE id = ?1',
       variables: [Variable<int>(var1)],
-      updates: {communicationSymbolTb},
+      updates: {this.communicationSymbolTb},
       updateKind: UpdateKind.delete,
     );
   }
@@ -78,8 +78,8 @@ mixin _$SymbolDaoMixin on DatabaseAccessor<AppDatabase> {
         'SELECT * FROM communication_symbol_tb WHERE is_deleted = TRUE',
         variables: [],
         readsFrom: {
-          communicationSymbolTb,
-        }).asyncMap(communicationSymbolTb.mapFromRow);
+          this.communicationSymbolTb,
+        }).asyncMap(this.communicationSymbolTb.mapFromRow);
   }
 
   SymbolDaoManager get managers => SymbolDaoManager(this);
