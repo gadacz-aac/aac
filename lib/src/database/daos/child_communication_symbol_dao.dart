@@ -48,6 +48,22 @@ class ChildSymbolDao extends DatabaseAccessor<AppDatabase>
             ))
         .toList();
   }
+
+  /// Persists new positions for symbols of [boardId]. Only the ids present in
+  /// [positionBySymbolId] are updated, every other symbol keeps its current
+  /// position, so free slots (missing positions) are left untouched.
+  Future<void> updatePositions(
+      int boardId, Map<int, int> positionBySymbolId) {
+    return this.db.transaction(() async {
+      for (final entry in positionBySymbolId.entries) {
+        await (this.db.update(this.db.childSymbolTb)
+              ..where((tbl) =>
+                  tbl.boardId.equals(boardId) &
+                  tbl.symbolId.equals(entry.key)))
+            .write(ChildSymbolTbCompanion(position: Value(entry.value)));
+      }
+    });
+  }
 }
 
 @riverpod
