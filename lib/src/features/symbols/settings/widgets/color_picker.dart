@@ -49,8 +49,9 @@ class ColorChip extends ConsumerWidget {
         showCheckmark: false,
         label: Text(color.label),
         selected: isSelected,
-        onSelected: (_) {
-          ref.read(colorProvider.notifier).state = color.code;
+        onSelected: (selected) {
+          // tapping a selected chip unselects the color
+          ref.read(colorProvider.notifier).state = selected ? color.code : null;
         });
   }
 }

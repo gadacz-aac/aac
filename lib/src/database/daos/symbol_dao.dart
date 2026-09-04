@@ -47,7 +47,8 @@ class SymbolDao extends DatabaseAccessor<AppDatabase> with _$SymbolDaoMixin {
     var cs = await findById(params.id!);
 
     cs = cs.copyWithCompanion(CommunicationSymbolTbCompanion(
-        color: Value.absentIfNull(params.color),
+        // color is written even when null, so a color can be unselected
+        color: Value(params.color),
         label: Value.absentIfNull(params.label),
         imagePath: Value.absentIfNull(params.imagePath),
         isDeleted: Value.absentIfNull(params.isDeleted),
