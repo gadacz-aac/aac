@@ -85,6 +85,7 @@ class BoardScreen extends ConsumerWidget {
                   title: data.name,
                   isParentMode: isParentMode,
                   isMainBoard: _isMainBoard,
+                  boardId: boardId,
                   actions: actions),
               floatingActionButton: isParentMode ? const CreateSymbol() : null,
               body: OrientationBuilder(

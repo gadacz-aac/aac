@@ -35,9 +35,13 @@ final labelProvider = StateProvider.autoDispose<String>(
 @Dependencies([initialValues, BoardNotifier, ImageNotifier, isDefaultImage])
 class SymbolSettings extends ConsumerStatefulWidget {
   final void Function(SymbolEditModel, [BoardEditModel?]) updateSymbolSettings;
-  final int boardId;
+
+  /// Null when editing outside of a board (e.g. from the search screen).
+  final int? boardId;
   const SymbolSettings(
-      {super.key, required this.updateSymbolSettings, required this.boardId});
+      {super.key,
+      required this.updateSymbolSettings,
+      required this.boardId});
 
   @override
   ConsumerState<SymbolSettings> createState() => _SymbolSettingsState();
@@ -96,30 +100,33 @@ class _SymbolSettingsState extends ConsumerState<SymbolSettings> {
                               softWrap: true,
                             ),
                           ),
-                          const SizedBox(width: 8),
-                          TextButton(
-                            onPressed: () {
-                              ref
-                                  .read(symbolBoardAssociationManagerProvider)
-                                  .pin(widget.boardId, [duplicatedSymbol]);
-                              if (!mounted) return;
-                              Navigator.pop(context);
-                              ScaffoldMessenger.of(context)
-                                  .hideCurrentSnackBar();
-                            },
-                            style: TextButton.styleFrom(
-                              backgroundColor: AacColors.mainControlBackground,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20.0, vertical: 12.0),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4.0),
+                          // pinning makes sense only when editing from a board
+                          if (widget.boardId != null) ...[
+                            const SizedBox(width: 8),
+                            TextButton(
+                              onPressed: () {
+                                ref
+                                    .read(symbolBoardAssociationManagerProvider)
+                                    .pin(widget.boardId!, [duplicatedSymbol]);
+                                if (!mounted) return;
+                                Navigator.pop(context);
+                                ScaffoldMessenger.of(context)
+                                    .hideCurrentSnackBar();
+                              },
+                              style: TextButton.styleFrom(
+                                backgroundColor: AacColors.mainControlBackground,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 12.0),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4.0),
+                                ),
+                              ),
+                              child: const Text(
+                                'Przypnij',
+                                style: TextStyle(color: Colors.white),
                               ),
                             ),
-                            child: const Text(
-                              'Przypnij',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
+                          ],
                           const SizedBox(width: 8),
                           IconButton(
                             icon: const Icon(Icons.close, color: Colors.white),
@@ -231,7 +238,9 @@ class NoImageSelectedDialog extends StatelessWidget {
 @Dependencies([initialValues])
 class LabelTextField extends ConsumerWidget {
   final String? initialLabel;
-  final int boardId;
+
+  /// Null when editing outside of a board (e.g. from the search screen).
+  final int? boardId;
   final void Function(CommunicationSymbol) onDuplicateFound;
   final void Function() onDuplicateResolved;
 

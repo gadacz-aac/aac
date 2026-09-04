@@ -1,5 +1,6 @@
 import 'package:aac/src/database/daos/child_communication_symbol_dao.dart';
 import 'package:aac/src/features/boards/board_screen.dart';
+import 'package:aac/src/features/boards/ui/actions/edit_symbol_action.dart';
 import 'package:aac/src/features/boards/ui/actions/move_symbol_to_bin_action.dart';
 import 'package:aac/src/features/boards/ui/options/bottom_sheet_options.dart';
 import 'package:aac/src/features/symbols/bin/bin_manager.dart';
@@ -184,6 +185,7 @@ class _AacLocalSearchScreenState extends ConsumerState<AacLocalSearchScreen>
 
     if (areSymbolsSelected) {
       actions = [
+        const EditSymbolAction(),
         const PinSelectedSymbolAction(),
         const MoveSymbolToBinAction()
       ];

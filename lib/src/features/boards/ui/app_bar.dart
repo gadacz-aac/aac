@@ -13,12 +13,14 @@ class BoardAppBar extends ConsumerWidget implements PreferredSizeWidget {
     required this.title,
     required this.isParentMode,
     required this.isMainBoard,
+    required this.boardId,
     required this.actions,
   });
 
   final String title;
   final bool isParentMode;
   final bool isMainBoard;
+  final int boardId;
   final List<Widget> actions;
 
   @override
@@ -28,7 +30,7 @@ class BoardAppBar extends ConsumerWidget implements PreferredSizeWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final areSymbolSelected = ref.watch(areSymbolsSelectedProvider);
     final List<Widget> actionsSelected = [
-      const EditSymbolAction(),
+      EditSymbolAction(boardId: boardId),
       const UnpinSymbolAction(),
       const MoveSymbolToBinAction(),
       const HideSymbolAction()

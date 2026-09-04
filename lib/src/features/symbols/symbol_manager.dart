@@ -97,7 +97,9 @@ class SymbolManager {
     });
   }
 
-  Future<void> updateSymbol(int boardId, SymbolEditModel params,
+  /// [boardId] is unused for updates - it is kept for signature compatibility
+  /// with [saveSymbol] and may be null when editing outside of a board.
+  Future<void> updateSymbol(int? boardId, SymbolEditModel params,
       [BoardEditModel? childBoard]) async {
     await db.transaction(() async {
       int? childBoardId = childBoard?.id;

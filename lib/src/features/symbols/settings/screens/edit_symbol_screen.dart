@@ -12,7 +12,9 @@ class EditSymbolScreen extends ConsumerStatefulWidget {
       {super.key, required this.symbol, required this.boardId});
 
   final CommunicationSymbol symbol;
-  final int boardId;
+
+  /// Null when the edit was started outside of a board (e.g. search screen).
+  final int? boardId;
 
   @override
   ConsumerState<EditSymbolScreen> createState() => _EditSymbolScreenState();
