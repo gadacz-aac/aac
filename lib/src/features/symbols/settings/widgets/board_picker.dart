@@ -53,8 +53,8 @@ class BoardPicker extends ConsumerWidget {
     }
 
     return Wrap(
-      spacing: 28,
-      runSpacing: 16,
+      spacing: 16,
+      runSpacing: 12,
       children: [
         BoardActionTile(
           icon: Icons.add,

@@ -34,29 +34,39 @@ class BoardActionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(16),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            height: 84,
-            width: 84,
+            height: 64,
+            width: 64,
             decoration: BoxDecoration(
               color: _tileColor(context),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Theme.of(context).dividerColor),
             ),
             child: Icon(icon,
-                size: 28, color: Theme.of(context).colorScheme.primary),
+                size: 22, color: Theme.of(context).colorScheme.primary),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 6),
           SizedBox(
-            width: 92,
-            child: Text(
-              label,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium,
+            width: 88,
+            height: 2 * textTheme.bodyMedium!.fontSize! * 1.4,
+            child: Center(
+              child: Text(
+                label,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: textTheme.bodySmall?.copyWith(
+                  height: 1.4,
+                  color: textTheme.bodyMedium?.color,
+                ),
+              ),
             ),
           ),
         ],
