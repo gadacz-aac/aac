@@ -52,10 +52,10 @@ class BoardSearch extends ConsumerWidget {
             const SizedBox(
               height: 24,
             ),
-            BoardActionTile(
-              icon: Icons.add,
-              label: l10n.addNewBoard,
-              onTap: () => _createBoard(context),
+            ActionChip(
+              avatar: const Icon(Icons.add),
+              label: Text(l10n.addNewBoard),
+              onPressed: () => _createBoard(context),
             ),
             const SizedBox(
               height: 20,
