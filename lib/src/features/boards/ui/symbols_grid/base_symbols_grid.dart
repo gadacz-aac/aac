@@ -44,7 +44,13 @@ final symbolGridScrollControllerProvider =
   ref.onDispose(() {
     controller.dispose();
   });
-  ref.onResume(handleScroll);
+  // onResume runs while the framework is still notifying listeners (e.g. when
+  // TickerMode flips during a rebuild, like when the label position changes),
+  // and ref.read is forbidden inside that lifecycle callback - defer the
+  // refresh so it happens outside of the notification cycle
+  ref.onResume(() {
+    Future.microtask(handleScroll);
+  });
   return controller;
 });
 
