@@ -1,9 +1,6 @@
-import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/database/daos/board_dao.dart';
-import 'package:aac/src/features/symbols/settings/screens/board_search_screen.dart';
-import 'package:aac/src/features/symbols/settings/screens/create_board_screen.dart';
 import 'package:aac/src/features/symbols/settings/screens/symbol_settings.dart';
-import 'package:aac/src/features/symbols/settings/widgets/board_album_card.dart';
+import 'package:aac/src/features/symbols/settings/widgets/board_chip.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -45,85 +42,19 @@ class BoardPicker extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context);
+    final List<Widget> chips;
     final childBoard = ref.watch(boardProvider).value;
 
-    if (childBoard != null) {
-      return LinkedBoardTile(board: childBoard);
+    if (childBoard == null) {
+      chips = [const LinkNewBoardChip(), const LinkExistingBoardChip()];
+    } else {
+      chips = [const LinkedBoardChip()];
     }
 
     return Wrap(
-      spacing: 16,
-      runSpacing: 12,
-      children: [
-        BoardActionTile(
-          icon: Icons.add,
-          label: l10n.addNewBoard,
-          onTap: () => _openCreateBoard(context, ref),
-        ),
-        BoardActionTile(
-          icon: Icons.search_outlined,
-          label: l10n.findExistingBoard,
-          onTap: () => _openBoardSearch(context, ref),
-        ),
-      ],
+      spacing: 11,
+      runSpacing: 8,
+      children: chips.toList(),
     );
-  }
-
-  Future<void> _openCreateBoard(BuildContext context, WidgetRef ref) async {
-    final board = await showModalBottomSheet<BoardEditModel?>(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      builder: (context) => const CreateBoardScreen(params: BoardEditModel()),
-    );
-
-    if (board == null || !context.mounted) return;
-    ref.read(boardProvider.notifier).set(board);
-  }
-
-  Future<void> _openBoardSearch(BuildContext context, WidgetRef ref) async {
-    final board = await showModalBottomSheet<BoardEditModel?>(
-      context: context,
-      isScrollControlled: true,
-      isDismissible: true,
-      useSafeArea: true,
-      builder: (context) => const BoardSearch(),
-    );
-
-    if (board == null || !context.mounted) return;
-    ref.read(boardProvider.notifier).set(board);
-  }
-}
-
-@Dependencies([BoardNotifier])
-class LinkedBoardTile extends ConsumerWidget {
-  const LinkedBoardTile({
-    super.key,
-    required this.board,
-  });
-
-  final BoardEditModel board;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return BoardAlbumTile(
-      name: board.name,
-      boardId: board.id,
-      onTap: () => _openEdit(context, ref),
-      onDelete: () => ref.read(boardProvider.notifier).delete(),
-    );
-  }
-
-  Future<void> _openEdit(BuildContext context, WidgetRef ref) async {
-    final edited = await showModalBottomSheet<BoardEditModel?>(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      builder: (context) => CreateBoardScreen(params: board),
-    );
-
-    if (edited == null || !context.mounted) return;
-    ref.read(boardProvider.notifier).set(edited);
   }
 }

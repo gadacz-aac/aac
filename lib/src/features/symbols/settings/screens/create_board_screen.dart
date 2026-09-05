@@ -1,6 +1,10 @@
 import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/database/daos/board_dao.dart';
+import 'package:aac/src/database/daos/child_communication_symbol_dao.dart';
+import 'package:aac/src/features/symbols/card/symbol_card.dart';
+import 'package:aac/src/features/symbols/model/communication_symbol.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
+import 'package:aac/src/shared/colors.dart';
 import 'package:aac/src/shared/form/widgets/number_field.dart';
 import 'package:aac/src/shared/form/widgets/text_field.dart';
 import 'package:aac/src/shared/ui/button.dart';
@@ -23,6 +27,8 @@ class _CreateBoardScreenState extends ConsumerState<CreateBoardScreen> {
   late final TextEditingController columnCountController;
 
   bool _isNameUnique = true;
+  int _columnCount = 3;
+  List<CommunicationSymbol>? _previewSymbols;
 
   @override
   void initState() {
@@ -30,8 +36,36 @@ class _CreateBoardScreenState extends ConsumerState<CreateBoardScreen> {
     nameController = TextEditingController(text: widget.params.name);
     columnCountController =
         TextEditingController(text: "${widget.params.columnCount}");
+    _columnCount = widget.params.columnCount ?? 3;
 
     nameController.addListener(_checkBoardNameExists);
+    columnCountController.addListener(_updateColumnCount);
+
+    _loadPreviewSymbols();
+  }
+
+  void _updateColumnCount() {
+    final count = int.tryParse(columnCountController.text);
+    if (count == null || count < 1 || count == _columnCount) return;
+
+    setState(() {
+      _columnCount = count > 6 ? 6 : count;
+    });
+  }
+
+  Future<void> _loadPreviewSymbols() async {
+    final boardId = widget.params.id;
+    if (boardId == null) return;
+
+    final symbols = await ref
+        .read(childSymbolDaoProvider)
+        .findByBoardId(boardId, false)
+        .then((e) => e.map<CommunicationSymbol>((e) => e).take(9).toList());
+
+    if (!mounted) return;
+    setState(() {
+      _previewSymbols = symbols;
+    });
   }
 
   @override
@@ -118,6 +152,21 @@ class _CreateBoardScreenState extends ConsumerState<CreateBoardScreen> {
                       ),
                     ],
                   ),
+                  if (_previewSymbols != null &&
+                      _previewSymbols!.isNotEmpty) ...[
+                    const SizedBox(
+                      height: 28.0,
+                    ),
+                    Text(l10n.boardPreview,
+                        style: Theme.of(context).textTheme.labelLarge),
+                    const SizedBox(
+                      height: 8.0,
+                    ),
+                    BoardPreviewGrid(
+                      symbols: _previewSymbols!,
+                      columnCount: _columnCount,
+                    ),
+                  ],
                   const SizedBox(
                     height: 28.0,
                   ),
@@ -147,6 +196,42 @@ class _CreateBoardScreenState extends ConsumerState<CreateBoardScreen> {
                 ]),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Live preview of the board's symbol cards laid out with the currently
+/// selected column count.
+class BoardPreviewGrid extends StatelessWidget {
+  const BoardPreviewGrid({
+    super.key,
+    required this.symbols,
+    required this.columnCount,
+  });
+
+  final List<CommunicationSymbol> symbols;
+  final int columnCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(6),
+      decoration: BoxDecoration(
+        color: AacColors.greyBackground,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: GridView.count(
+        crossAxisCount: columnCount,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        mainAxisSpacing: 8,
+        crossAxisSpacing: 8,
+        childAspectRatio: 122 / 150,
+        children: [
+          for (final symbol in symbols)
+            SymbolCard(symbol: symbol, onTapActions: const []),
+        ],
       ),
     );
   }
