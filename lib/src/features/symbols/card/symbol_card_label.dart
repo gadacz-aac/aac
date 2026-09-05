@@ -8,11 +8,17 @@ class SymbolCardLabel extends StatelessWidget {
     required this.labelBgColor,
     required this.symbol,
     required this.textColor,
+    this.showShadow = true,
   });
 
   final Color labelBgColor;
   final CommunicationSymbol symbol;
   final Color textColor;
+
+  /// The label's shadow paints outside of its bounds; when the label is
+  /// displayed over the image it would show up as a dark stripe on the image
+  /// padding below the label, so it is only used when the label is under.
+  final bool showShadow;
 
   @override
   Widget build(BuildContext context) {
@@ -20,14 +26,16 @@ class SymbolCardLabel extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
         decoration: BoxDecoration(
-          boxShadow: const [
-            BoxShadow(
-              color: AacColors.labelShadow,
-              blurRadius: 1,
-              spreadRadius: 4,
-              offset: Offset(0, 4),
-            )
-          ],
+          boxShadow: showShadow
+              ? const [
+                  BoxShadow(
+                    color: AacColors.labelShadow,
+                    blurRadius: 1,
+                    spreadRadius: 4,
+                    offset: Offset(0, 4),
+                  )
+                ]
+              : null,
           color: labelBgColor,
         ),
         child: SymbolCardText(symbol: symbol, textColor: textColor),

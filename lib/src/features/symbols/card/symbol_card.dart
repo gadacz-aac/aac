@@ -94,7 +94,11 @@ class SymbolCard extends ConsumerWidget {
     );
 
     final label = SymbolCardLabel(
-        labelBgColor: labelBgColor, symbol: symbol, textColor: textColor);
+      labelBgColor: labelBgColor,
+      symbol: symbol,
+      textColor: textColor,
+      showShadow: !isLabelOverImage,
+    );
 
     return InkWell(
       onTap: () => _onTap(context, ref),
