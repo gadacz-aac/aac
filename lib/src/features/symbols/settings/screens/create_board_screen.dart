@@ -121,52 +121,56 @@ class _CreateBoardScreenState extends ConsumerState<CreateBoardScreen> {
             padding: const EdgeInsets.all(26.0),
             child: Column(
                 mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    children: [
-                      GenericTextField(
-                        controller: nameController,
-                        labelText: l10n.name,
-                        validator: validateBoardName,
-                      ),
-                      const SizedBox(
-                        height: 14,
-                      ),
-                      Row(
+                  Flexible(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Expanded(
-                              child: GenericNumberField(
-                            name: "columnCount",
-                            controller: columnCountController,
-                            inputFormatters: [positiveDigitsOnly],
-                            validator: (val) {
-                              if (val != null && val.startsWith("0")) {
-                                return l10n.columnsPositive;
-                              }
-                              return null;
-                            },
-                            labelText: l10n.columnsCount,
-                          )),
+                          GenericTextField(
+                            controller: nameController,
+                            labelText: l10n.name,
+                            validator: validateBoardName,
+                          ),
+                          const SizedBox(
+                            height: 14,
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                  child: GenericNumberField(
+                                name: "columnCount",
+                                controller: columnCountController,
+                                inputFormatters: [positiveDigitsOnly],
+                                validator: (val) {
+                                  if (val != null && val.startsWith("0")) {
+                                    return l10n.columnsPositive;
+                                  }
+                                  return null;
+                                },
+                                labelText: l10n.columnsCount,
+                              )),
+                            ],
+                          ),
+                          if (_previewSymbols != null &&
+                              _previewSymbols!.isNotEmpty) ...[
+                            const SizedBox(
+                              height: 28.0,
+                            ),
+                            Text(l10n.boardPreview,
+                                style: Theme.of(context).textTheme.labelLarge),
+                            const SizedBox(
+                              height: 8.0,
+                            ),
+                            BoardPreviewGrid(
+                              symbols: _previewSymbols!,
+                              columnCount: _columnCount,
+                            ),
+                          ],
                         ],
                       ),
-                    ],
+                    ),
                   ),
-                  if (_previewSymbols != null &&
-                      _previewSymbols!.isNotEmpty) ...[
-                    const SizedBox(
-                      height: 28.0,
-                    ),
-                    Text(l10n.boardPreview,
-                        style: Theme.of(context).textTheme.labelLarge),
-                    const SizedBox(
-                      height: 8.0,
-                    ),
-                    BoardPreviewGrid(
-                      symbols: _previewSymbols!,
-                      columnCount: _columnCount,
-                    ),
-                  ],
                   const SizedBox(
                     height: 28.0,
                   ),
