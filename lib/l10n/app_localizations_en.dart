@@ -247,6 +247,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get linkBoards => 'Link boards:';
 
   @override
+  String get myBoards => 'My boards';
+
+  @override
   String get noImageTitle => 'You haven\'t added an image';
 
   @override

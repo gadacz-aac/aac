@@ -548,6 +548,12 @@ abstract class AppLocalizations {
   /// **'Podlinkuj tablice:'**
   String get linkBoards;
 
+  /// No description provided for @myBoards.
+  ///
+  /// In pl, this message translates to:
+  /// **'Moje tablice'**
+  String get myBoards;
+
   /// No description provided for @noImageTitle.
   ///
   /// In pl, this message translates to:

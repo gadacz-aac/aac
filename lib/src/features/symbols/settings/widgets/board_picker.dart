@@ -1,8 +1,9 @@
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/database/daos/board_dao.dart';
+import 'package:aac/src/features/symbols/settings/screens/board_search_screen.dart';
 import 'package:aac/src/features/symbols/settings/screens/create_board_screen.dart';
 import 'package:aac/src/features/symbols/settings/screens/symbol_settings.dart';
-import 'package:aac/src/features/symbols/settings/widgets/link_existing_board_chip.dart';
-import 'package:aac/src/features/symbols/settings/widgets/link_new_board_chip.dart';
+import 'package:aac/src/features/symbols/settings/widgets/board_album_card.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -44,51 +45,85 @@ class BoardPicker extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<Widget> chips;
+    final l10n = AppLocalizations.of(context);
     final childBoard = ref.watch(boardProvider).value;
 
-    if (childBoard == null) {
-      chips = [const LinkNewBoardChip(), const LinkExistingBoardChip()];
-    } else {
-      chips = [const LinkedBoardChip()];
+    if (childBoard != null) {
+      return LinkedBoardTile(board: childBoard);
     }
 
-    return Row(
-      children: chips
-          .expand((element) => [
-                element,
-                const SizedBox(
-                  width: 11,
-                )
-              ])
-          .toList(),
+    return Wrap(
+      spacing: 28,
+      runSpacing: 16,
+      children: [
+        BoardActionTile(
+          icon: Icons.add,
+          label: l10n.addNewBoard,
+          onTap: () => _openCreateBoard(context, ref),
+        ),
+        BoardActionTile(
+          icon: Icons.search_outlined,
+          label: l10n.findExistingBoard,
+          onTap: () => _openBoardSearch(context, ref),
+        ),
+      ],
     );
+  }
+
+  Future<void> _openCreateBoard(BuildContext context, WidgetRef ref) async {
+    final board = await showModalBottomSheet<BoardEditModel?>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (context) => const CreateBoardScreen(params: BoardEditModel()),
+    );
+
+    if (board == null || !context.mounted) return;
+    ref.read(boardProvider.notifier).set(board);
+  }
+
+  Future<void> _openBoardSearch(BuildContext context, WidgetRef ref) async {
+    final board = await showModalBottomSheet<BoardEditModel?>(
+      context: context,
+      isScrollControlled: true,
+      isDismissible: true,
+      useSafeArea: true,
+      builder: (context) => const BoardSearch(),
+    );
+
+    if (board == null || !context.mounted) return;
+    ref.read(boardProvider.notifier).set(board);
   }
 }
 
 @Dependencies([BoardNotifier])
-class LinkedBoardChip extends ConsumerWidget {
-  const LinkedBoardChip({
+class LinkedBoardTile extends ConsumerWidget {
+  const LinkedBoardTile({
     super.key,
+    required this.board,
   });
+
+  final BoardEditModel board;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final childBoard = ref.watch(boardProvider).value;
+    return BoardAlbumTile(
+      name: board.name,
+      boardId: board.id,
+      onTap: () => _openEdit(context, ref),
+      onDelete: () => ref.read(boardProvider.notifier).delete(),
+    );
+  }
 
-    if (childBoard == null) return const SizedBox();
+  Future<void> _openEdit(BuildContext context, WidgetRef ref) async {
+    final edited = await showModalBottomSheet<BoardEditModel?>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (context) => CreateBoardScreen(params: board),
+    );
 
-    return InputChip(
-        label: Text(childBoard.name),
-        onDeleted: ref.read(boardProvider.notifier).delete,
-        onPressed: () => showModalBottomSheet<BoardEditModel?>(
-                    context: context,
-                    isScrollControlled: true,
-                    useSafeArea: true,
-                    builder: (context) => CreateBoardScreen(params: childBoard))
-                .then((val) {
-              if (val == null) return;
-              ref.read(boardProvider.notifier).set(val);
-            }));
+    if (edited == null || !context.mounted) return;
+    ref.read(boardProvider.notifier).set(edited);
   }
 }

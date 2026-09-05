@@ -2,6 +2,8 @@ import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/database/daos/board_dao.dart';
 import 'package:aac/src/features/boards/model/board.dart';
 import 'package:aac/src/features/symbols/search/providers.dart';
+import 'package:aac/src/features/symbols/settings/screens/create_board_screen.dart';
+import 'package:aac/src/features/symbols/settings/widgets/board_album_card.dart';
 import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:aac/src/shared/ui/search_input.dart';
 import 'package:aac/src/shared/utils/debounce.dart';
@@ -33,8 +35,9 @@ class BoardSearch extends ConsumerWidget {
     final textTheme = Theme.of(context).textTheme;
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(29.0, 27.0, 29.0, 0),
+        padding: const EdgeInsets.fromLTRB(16.0, 20.0, 16.0, 0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //TODO Standarise with Generic Text Field
             AacSearchField(
@@ -47,31 +50,67 @@ class BoardSearch extends ConsumerWidget {
               },
             ),
             const SizedBox(
+              height: 24,
+            ),
+            BoardActionTile(
+              icon: Icons.add,
+              label: l10n.addNewBoard,
+              onTap: () => _createBoard(context),
+            ),
+            const SizedBox(
               height: 20,
             ),
-            results == null || results.isEmpty
-                ? Text(
-                    l10n.noResultsFor(query),
-                    style: textTheme.bodyLarge,
-                    textAlign: TextAlign.center,
-                  )
-                : Expanded(
-                    child: ListView.builder(
-                    itemCount: results.length,
-                    itemBuilder: (context, index) {
-                      final board = results[index];
-                      return ListTile(
-                        onTap: () => Navigator.pop(
-                            context, BoardEditModel.fromBoard(board)),
-                        title: Text(
-                          board.name,
+            Text(l10n.myBoards, style: textTheme.labelLarge),
+            const SizedBox(
+              height: 12,
+            ),
+            Expanded(
+              child: results == null
+                  ? const Center(child: CircularProgressIndicator())
+                  : results.isEmpty
+                      ? Center(
+                          child: Text(
+                            l10n.noResultsFor(query),
+                            style: textTheme.bodyLarge,
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                      : GridView.builder(
+                          padding: const EdgeInsets.only(bottom: 20),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 16,
+                            crossAxisSpacing: 16,
+                            childAspectRatio: 0.95,
+                          ),
+                          itemCount: results.length,
+                          itemBuilder: (context, index) {
+                            final board = results[index];
+                            return BoardAlbumCard(
+                              name: board.name,
+                              boardId: board.id,
+                              onTap: () => Navigator.pop(
+                                  context, BoardEditModel.fromBoard(board)),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ))
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _createBoard(BuildContext context) async {
+    final board = await showModalBottomSheet<BoardEditModel?>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (context) => const CreateBoardScreen(params: BoardEditModel()),
+    );
+
+    if (board == null || !context.mounted) return;
+    Navigator.pop(context, board);
   }
 }

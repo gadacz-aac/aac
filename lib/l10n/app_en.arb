@@ -80,6 +80,7 @@
   "duplicateSymbolExists": "A symbol with this name already exists",
   "labelRequired": "Please enter a symbol name",
   "linkBoards": "Link boards:",
+  "myBoards": "My boards",
   "noImageTitle": "You haven't added an image",
   "noImageQuestion": "Would you like to do it now?",
   "boardNameRequired": "Name cannot be empty",

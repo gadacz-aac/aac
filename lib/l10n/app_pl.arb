@@ -80,6 +80,7 @@
   "duplicateSymbolExists": "Symbol o takiej nazwie już istnieje",
   "labelRequired": "Proszę wprowadzić nazwę symbolu",
   "linkBoards": "Podlinkuj tablice:",
+  "myBoards": "Moje tablice",
   "noImageTitle": "Nie dodałeś obrazka",
   "noImageQuestion": "Czy chcesz to zrobić teraz?",
   "boardNameRequired": "Nazwa nie może być pusta",

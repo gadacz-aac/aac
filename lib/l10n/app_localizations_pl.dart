@@ -248,6 +248,9 @@ class AppLocalizationsPl extends AppLocalizations {
   String get linkBoards => 'Podlinkuj tablice:';
 
   @override
+  String get myBoards => 'Moje tablice';
+
+  @override
   String get noImageTitle => 'Nie dodałeś obrazka';
 
   @override
