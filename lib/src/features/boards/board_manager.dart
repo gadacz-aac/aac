@@ -31,11 +31,22 @@ class BoardManager {
   BoardManager(this.db, this.boardDao);
 
   Future<void> createOrUpdate(BoardEditModel params) {
+    // REPLACE would delete the row and cascade-delete its child_symbol_tb
+    // rows (ON DELETE CASCADE), so existing boards are only updated.
+    if (params.id != null) {
+      return (db.update(db.boardTb)
+            ..where((tbl) => tbl.id.equals(params.id!)))
+          .write(BoardTbCompanion(
+              name: Value(params.name),
+              crossAxisCount: Value(params.columnCount ?? 3)))
+          .then((_) {});
+    }
+
     return db.managers.boardTb.create(
         (f) => f(
-            id: Value.absentIfNull(params.id),
             name: params.name,
             crossAxisCount: Value(params.columnCount ?? 3)),
-        mode: InsertMode.replace);
+        mode: InsertMode.insert)
+        .then((_) {});
   }
 }
