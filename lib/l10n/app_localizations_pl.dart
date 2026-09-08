@@ -251,6 +251,20 @@ class AppLocalizationsPl extends AppLocalizations {
   String get myBoards => 'Moje tablice';
 
   @override
+  String symbolCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '# symboli',
+      many: '# symboli',
+      few: '# symbole',
+      one: '1 symbol',
+      zero: 'Brak symboli',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get noImageTitle => 'Nie dodałeś obrazka';
 
   @override

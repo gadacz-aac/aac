@@ -81,6 +81,7 @@
   "labelRequired": "Proszę wprowadzić nazwę symbolu",
   "linkBoards": "Podlinkuj tablice:",
   "myBoards": "Moje tablice",
+  "symbolCount": "{count, plural, =0{Brak symboli} =1{1 symbol} few{# symbole} many{# symboli} other{# symboli}}",
   "noImageTitle": "Nie dodałeś obrazka",
   "noImageQuestion": "Czy chcesz to zrobić teraz?",
   "boardNameRequired": "Nazwa nie może być pusta",

@@ -1,3 +1,4 @@
+import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/database/daos/child_communication_symbol_dao.dart';
 import 'package:aac/src/features/symbols/card/symbol_image.dart';
 import 'package:aac/src/shared/colors.dart';
@@ -198,58 +199,82 @@ class BoardAlbumTile extends ConsumerWidget {
   }
 }
 
-/// Album card for grids: cover collage, board name and symbol count.
+/// Album card for grids: cover collage, board name and symbol count. Styled
+/// like SymbolCard (white card, soft shadow) to match the application UI.
 class BoardAlbumCard extends ConsumerWidget {
   const BoardAlbumCard({
     super.key,
     required this.name,
     this.boardId,
     this.onTap,
+    this.onLongPress,
   });
 
   final String name;
   final int? boardId;
   final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final preview =
         boardId == null ? null : ref.watch(boardPreviewProvider(boardId!)).value;
     final textTheme = Theme.of(context).textTheme;
+    final symbolCount = preview?.$2 ?? 0;
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
+      onLongPress: onLongPress,
+      borderRadius: BorderRadius.circular(4),
       child: Container(
-        padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: _tileColor(context),
-          borderRadius: BorderRadius.circular(16),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(4),
+          boxShadow: const [
+            BoxShadow(
+              color: AacColors.shadowPrimary,
+              blurRadius: 4,
+              offset: Offset(0, 2),
+            ),
+            BoxShadow(
+              color: AacColors.shadowPrimary,
+              spreadRadius: 1,
+            ),
+          ],
         ),
+        clipBehavior: Clip.hardEdge,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
               child: Container(
-                decoration: BoxDecoration(
-                  color: _tileColor(context),
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                color: AacColors.noColorWhite,
                 clipBehavior: Clip.hardEdge,
                 child: BoardCoverCollage(images: preview?.$1 ?? const []),
               ),
             ),
-            const SizedBox(height: 10),
-            Text(
-              name,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
-            ),
-            Text(
-              "${preview?.$2 ?? ""}",
-              style: textTheme.bodySmall
-                  ?.copyWith(color: AacColors.iconsGrey),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(6, 6, 6, 14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: textTheme.bodySmall,
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    AppLocalizations.of(context).symbolCount(symbolCount),
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
+                    style: textTheme.bodySmall
+                        ?.copyWith(color: AacColors.iconsGrey),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

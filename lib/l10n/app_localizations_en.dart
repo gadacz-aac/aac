@@ -250,6 +250,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get myBoards => 'My boards';
 
   @override
+  String symbolCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '# symbols',
+      one: '1 symbol',
+      zero: 'No symbols',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get noImageTitle => 'You haven\'t added an image';
 
   @override

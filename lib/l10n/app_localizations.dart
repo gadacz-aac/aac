@@ -554,6 +554,12 @@ abstract class AppLocalizations {
   /// **'Moje tablice'**
   String get myBoards;
 
+  /// No description provided for @symbolCount.
+  ///
+  /// In pl, this message translates to:
+  /// **'{count, plural, =0{Brak symboli} =1{1 symbol} few{# symbole} many{# symboli} other{# symboli}}'**
+  String symbolCount(num count);
+
   /// No description provided for @noImageTitle.
   ///
   /// In pl, this message translates to:

@@ -12,8 +12,8 @@ import 'package:aac/src/features/symbols/search/app_bar_actions.dart';
 import 'package:aac/src/features/symbols/search/no_search_results.dart';
 import 'package:aac/src/features/symbols/search/providers.dart';
 import 'package:aac/src/features/symbols/search/symbol_search_filters.dart';
+import 'package:aac/src/features/symbols/settings/widgets/board_album_card.dart';
 import 'package:aac/src/shared/ui/bottom_sheet_options.dart';
-import 'package:aac/src/shared/ui/list.dart';
 import 'package:aac/src/shared/ui/scaffold.dart';
 import 'package:aac/src/shared/ui/search_input.dart';
 import 'package:aac/src/shared/ui/show_more_options.dart';
@@ -41,20 +41,23 @@ class BoardSearchScreen extends ConsumerWidget {
         onChanged: (val) {
           ref.read(localQueryProvider.notifier).state = val;
         },
-        resultBuilder: (results) => Padding(
-              padding: const EdgeInsets.all(12),
-              child: AacList.builder(
-                  itemCount: results.length,
-                  itemBuilder: (context, index) {
-                    final e = results[index];
+        resultBuilder: (results) => AlignedGridView.count(
+              crossAxisCount: 3,
+              crossAxisSpacing: 12.0,
+              mainAxisSpacing: 12.0,
+              padding: const EdgeInsets.all(8.0),
+              itemCount: results.length,
+              itemBuilder: (context, index) {
+                final e = results[index];
 
-                    return ListTile(
-                      title: Text(e.name),
-                      trailing: ShowMoreOptions(
-                          builder: (context) =>
-                              optionsBuilder(context, ref, e.id)),
-                    );
-                  }),
+                return BoardAlbumCard(
+                  name: e.name,
+                  boardId: e.id,
+                  onTap: () => Navigator.push(context, BoardScreen.page(e.id)),
+                  onLongPress: () => showMoreOptions(
+                      context, (context) => optionsBuilder(context, ref, e.id)),
+                );
+              },
             ));
   }
 
