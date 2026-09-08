@@ -262,6 +262,12 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get addSymbol => 'Add symbol';
+
+  @override
+  String get addExistingSymbol => 'Add existing symbol';
+
+  @override
   String get noImageTitle => 'You haven\'t added an image';
 
   @override

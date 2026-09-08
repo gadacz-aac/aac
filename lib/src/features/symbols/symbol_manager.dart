@@ -72,6 +72,29 @@ class SymbolManager {
 
   SymbolManager(this.db, this.symbolDao, this.boardDao);
 
+  /// Creates a symbol without pinning it to any board (e.g. from the search
+  /// screen).
+  Future<int> createSymbol(SymbolEditModel params,
+      [BoardEditModel? childBoard]) async {
+    if (params.label == null) {
+      throw ArgumentError.notNull("Label must not be null");
+    }
+
+    if (params.imagePath == null) {
+      throw ArgumentError.notNull("Image path must not be null");
+    }
+
+    return db.transaction(() async {
+      int? childBoardId;
+
+      if (childBoard != null) {
+        childBoardId = await boardDao.createOrUpdateChildBoard(childBoard);
+      }
+
+      return symbolDao.create(params, childBoardId);
+    });
+  }
+
   Future<int> saveSymbol(int boardId, SymbolEditModel params,
       [BoardEditModel? childBoard]) async {
     if (params.label == null) {

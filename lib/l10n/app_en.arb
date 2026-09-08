@@ -82,6 +82,8 @@
   "linkBoards": "Link boards:",
   "myBoards": "My boards",
   "symbolCount": "{count, plural, =0{No symbols} =1{1 symbol} other{# symbols}}",
+  "addSymbol": "Add symbol",
+  "addExistingSymbol": "Add existing symbol",
   "noImageTitle": "You haven't added an image",
   "noImageQuestion": "Would you like to do it now?",
   "boardNameRequired": "Name cannot be empty",

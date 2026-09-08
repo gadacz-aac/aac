@@ -560,6 +560,18 @@ abstract class AppLocalizations {
   /// **'{count, plural, =0{Brak symboli} =1{1 symbol} few{# symbole} many{# symboli} other{# symboli}}'**
   String symbolCount(num count);
 
+  /// No description provided for @addSymbol.
+  ///
+  /// In pl, this message translates to:
+  /// **'Dodaj symbol'**
+  String get addSymbol;
+
+  /// No description provided for @addExistingSymbol.
+  ///
+  /// In pl, this message translates to:
+  /// **'Dodaj istniejący symbol'**
+  String get addExistingSymbol;
+
   /// No description provided for @noImageTitle.
   ///
   /// In pl, this message translates to:

@@ -11,7 +11,10 @@ class AddSymbolMenu extends ConsumerStatefulWidget {
   });
 
   final String? imagePath;
-  final int boardId;
+
+  /// Null when creating outside of a board (e.g. from the search screen) -
+  /// the symbol is then saved without pinning it to any board.
+  final int? boardId;
 
   @override
   ConsumerState<AddSymbolMenu> createState() => _AddSymbolMenuState();
@@ -20,7 +23,12 @@ class AddSymbolMenu extends ConsumerStatefulWidget {
 class _AddSymbolMenuState extends ConsumerState<AddSymbolMenu> {
   void submit(SymbolEditModel params, [BoardEditModel? boardParams]) async {
     final manager = ref.read(symbolManagerProvider);
-    manager.saveSymbol(widget.boardId, params, boardParams);
+
+    if (widget.boardId == null) {
+      manager.createSymbol(params, boardParams);
+    } else {
+      manager.saveSymbol(widget.boardId!, params, boardParams);
+    }
 
     if (context.mounted) {
       Navigator.pop(context);

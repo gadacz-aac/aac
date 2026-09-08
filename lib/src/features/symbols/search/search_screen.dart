@@ -1,5 +1,6 @@
 import 'package:aac/l10n/app_localizations.dart';
 import 'package:aac/src/database/daos/child_communication_symbol_dao.dart';
+import 'package:aac/src/features/boards/board_manager.dart';
 import 'package:aac/src/features/boards/board_screen.dart';
 import 'package:aac/src/features/boards/ui/actions/edit_symbol_action.dart';
 import 'package:aac/src/features/boards/ui/actions/move_symbol_to_bin_action.dart';
@@ -12,7 +13,11 @@ import 'package:aac/src/features/symbols/search/app_bar_actions.dart';
 import 'package:aac/src/features/symbols/search/no_search_results.dart';
 import 'package:aac/src/features/symbols/search/providers.dart';
 import 'package:aac/src/features/symbols/search/symbol_search_filters.dart';
+import 'package:aac/src/features/symbols/settings/screens/create_board_screen.dart';
+import 'package:aac/src/features/symbols/settings/screens/create_symbol_screen.dart';
 import 'package:aac/src/features/symbols/settings/widgets/board_album_card.dart';
+import 'package:aac/src/features/symbols/settings/widgets/cherry_pick_image.dart';
+import 'package:aac/src/features/symbols/symbol_manager.dart';
 import 'package:aac/src/shared/ui/bottom_sheet_options.dart';
 import 'package:aac/src/shared/ui/scaffold.dart';
 import 'package:aac/src/shared/ui/search_input.dart';
@@ -195,6 +200,7 @@ class _AacLocalSearchScreenState extends ConsumerState<AacLocalSearchScreen>
         const MoveSymbolToBinAction()
       ];
     } else {
+      actions = [CreateInSearchAction(tabIndex: _tabController.index)];
       flexibleSpace = SafeArea(
         child: TabBar(
           controller: _tabController,
@@ -238,6 +244,70 @@ class _AacLocalSearchScreenState extends ConsumerState<AacLocalSearchScreen>
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, length: 2);
+    _tabController.addListener(() {
+      if (!_tabController.indexIsChanging) {
+        setState(() {});
+      }
+    });
+  }
+}
+
+/// App bar action creating a symbol (symbols tab) or a board (boards tab),
+/// depending on the currently active tab.
+class CreateInSearchAction extends ConsumerWidget {
+  const CreateInSearchAction({super.key, required this.tabIndex});
+
+  final int tabIndex;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+
+    return IconButton(
+      onPressed: () {
+        if (tabIndex == 0) {
+          _createSymbol(context);
+        } else {
+          _createBoard(context, ref);
+        }
+      },
+      tooltip: tabIndex == 0 ? l10n.addSymbol : l10n.addNewBoard,
+      icon: const Icon(Icons.add),
+    );
+  }
+
+  void _createSymbol(BuildContext context) {
+    Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const ImageCherryPicker()))
+        .then((imagePath) {
+      if (imagePath == null || !context.mounted) return;
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const AddSymbolMenu(boardId: null),
+        ),
+      );
+    });
+  }
+
+  Future<void> _createBoard(BuildContext context, WidgetRef ref) async {
+    final board = await showModalBottomSheet<BoardEditModel?>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (context) => const CreateBoardScreen(params: BoardEditModel()),
+    );
+
+    if (board == null) return;
+
+    await ref.read(boardManagerProvider).createOrUpdate(board);
+
+    if (!context.mounted) return;
+    // refresh the search results, so the new board shows up
+    ref.invalidate(searchedBoardProvider);
   }
 }
 

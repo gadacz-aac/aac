@@ -265,6 +265,12 @@ class AppLocalizationsPl extends AppLocalizations {
   }
 
   @override
+  String get addSymbol => 'Dodaj symbol';
+
+  @override
+  String get addExistingSymbol => 'Dodaj istniejący symbol';
+
+  @override
   String get noImageTitle => 'Nie dodałeś obrazka';
 
   @override
