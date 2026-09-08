@@ -248,7 +248,7 @@ class BoardAlbumCard extends ConsumerWidget {
           children: [
             Expanded(
               child: Container(
-                color: AacColors.noColorWhite,
+                decoration: const BoxDecoration(color: AacColors.noColorWhite),
                 clipBehavior: Clip.hardEdge,
                 child: BoardCoverCollage(images: preview?.$1 ?? const []),
               ),

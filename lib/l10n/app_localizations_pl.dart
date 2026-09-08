@@ -271,6 +271,19 @@ class AppLocalizationsPl extends AppLocalizations {
   String get addExistingSymbol => 'Dodaj istniejący symbol';
 
   @override
+  String symbolsAddedToBoard(Object board, num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '# symboli',
+      many: '# symboli',
+      few: '# symbole',
+      one: '1 symbol',
+    );
+    return 'Dodano $_temp0 do tablicy $board';
+  }
+
+  @override
   String get noImageTitle => 'Nie dodałeś obrazka';
 
   @override

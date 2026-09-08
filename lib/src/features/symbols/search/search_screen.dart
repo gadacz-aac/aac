@@ -9,6 +9,7 @@ import 'package:aac/src/features/symbols/bin/bin_manager.dart';
 import 'package:aac/src/features/symbols/bin/bin_screen_board.dart';
 import 'package:aac/src/features/symbols/card/symbol_card.dart';
 import 'package:aac/src/features/symbols/card/symbol_tap_actions.dart';
+import 'package:aac/src/features/symbols/picker/pick_target_board_action.dart';
 import 'package:aac/src/features/symbols/search/app_bar_actions.dart';
 import 'package:aac/src/features/symbols/search/no_search_results.dart';
 import 'package:aac/src/features/symbols/search/providers.dart';
@@ -43,6 +44,10 @@ class BoardSearchScreen extends ConsumerWidget {
     return SearchScreen(
         asyncValue: ref.watch(searchedBoardProvider),
         what: l10n.boardsGenitive,
+        filters: const Padding(
+          padding: EdgeInsets.fromLTRB(8.0, 0, 8.0, 8.0),
+          child: CreateBoardChip(),
+        ),
         onChanged: (val) {
           ref.read(localQueryProvider.notifier).state = val;
         },
@@ -196,11 +201,15 @@ class _AacLocalSearchScreenState extends ConsumerState<AacLocalSearchScreen>
     if (areSymbolsSelected) {
       actions = [
         const EditSymbolAction(),
-        const PinSelectedSymbolAction(),
+        const PickTargetBoardAction(),
         const MoveSymbolToBinAction()
       ];
     } else {
-      actions = [CreateInSearchAction(tabIndex: _tabController.index)];
+      // boards tab gets its create chip below the search field, like on the
+      // link board screen
+      if (_tabController.index == 0) {
+        actions = [const CreateInSearchAction(tabIndex: 0)];
+      }
       flexibleSpace = SafeArea(
         child: TabBar(
           controller: _tabController,
@@ -252,8 +261,8 @@ class _AacLocalSearchScreenState extends ConsumerState<AacLocalSearchScreen>
   }
 }
 
-/// App bar action creating a symbol (symbols tab) or a board (boards tab),
-/// depending on the currently active tab.
+/// App bar action creating a symbol (symbols tab), depending on the currently
+/// active tab.
 class CreateInSearchAction extends ConsumerWidget {
   const CreateInSearchAction({super.key, required this.tabIndex});
 
@@ -265,13 +274,9 @@ class CreateInSearchAction extends ConsumerWidget {
 
     return IconButton(
       onPressed: () {
-        if (tabIndex == 0) {
-          _createSymbol(context);
-        } else {
-          _createBoard(context, ref);
-        }
+        _createSymbol(context);
       },
-      tooltip: tabIndex == 0 ? l10n.addSymbol : l10n.addNewBoard,
+      tooltip: l10n.addSymbol,
       icon: const Icon(Icons.add),
     );
   }
@@ -291,6 +296,23 @@ class CreateInSearchAction extends ConsumerWidget {
         ),
       );
     });
+  }
+}
+
+/// Chip for creating a board, displayed above the board results like on the
+/// link board screen.
+class CreateBoardChip extends ConsumerWidget {
+  const CreateBoardChip({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+
+    return ActionChip(
+      avatar: const Icon(Icons.add),
+      label: Text(l10n.addNewBoard),
+      onPressed: () => _createBoard(context, ref),
+    );
   }
 
   Future<void> _createBoard(BuildContext context, WidgetRef ref) async {

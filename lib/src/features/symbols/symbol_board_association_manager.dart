@@ -16,8 +16,8 @@ class SymbolBoardAssociationManager {
 
   SymbolBoardAssociationManager(this.db, this.symbolDao, this.childSymbolDao);
 
-  Future<void> pin(int boardId, List<CommunicationSymbol> symbols) async {
-    db.transaction(() async {
+  Future<void> pin(int boardId, List<CommunicationSymbol> symbols) {
+    return db.transaction(() async {
       for (var s in symbols) {
         await symbolDao.pinSymbolToBoard(boardId: boardId, symbolId: s.id);
       }

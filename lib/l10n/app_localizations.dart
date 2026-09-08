@@ -572,6 +572,12 @@ abstract class AppLocalizations {
   /// **'Dodaj istniejący symbol'**
   String get addExistingSymbol;
 
+  /// No description provided for @symbolsAddedToBoard.
+  ///
+  /// In pl, this message translates to:
+  /// **'Dodano {count, plural, =1{1 symbol} few{# symbole} many{# symboli} other{# symboli}} do tablicy {board}'**
+  String symbolsAddedToBoard(Object board, num count);
+
   /// No description provided for @noImageTitle.
   ///
   /// In pl, this message translates to:

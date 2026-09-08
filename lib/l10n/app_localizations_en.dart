@@ -268,6 +268,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addExistingSymbol => 'Add existing symbol';
 
   @override
+  String symbolsAddedToBoard(Object board, num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '# symbols',
+      one: '1 symbol',
+    );
+    return 'Added $_temp0 to board $board';
+  }
+
+  @override
   String get noImageTitle => 'You haven\'t added an image';
 
   @override

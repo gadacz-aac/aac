@@ -84,6 +84,7 @@
   "symbolCount": "{count, plural, =0{No symbols} =1{1 symbol} other{# symbols}}",
   "addSymbol": "Add symbol",
   "addExistingSymbol": "Add existing symbol",
+  "symbolsAddedToBoard": "Added {count, plural, =1{1 symbol} other{# symbols}} to board {board}",
   "noImageTitle": "You haven't added an image",
   "noImageQuestion": "Would you like to do it now?",
   "boardNameRequired": "Name cannot be empty",
