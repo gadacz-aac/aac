@@ -19,12 +19,22 @@ class BoardDao extends DatabaseAccessor<AppDatabase> with _$BoardDaoMixin {
   BoardDao(super.db);
 
   Future<int> createOrUpdateChildBoard(BoardEditModel boardParams) {
+    if (boardParams.id != null) {
+      // REPLACE would delete the row and cascade-delete its child_symbol_tb
+      // rows (ON DELETE CASCADE), so existing boards are only updated.
+      return (this.db.update(this.db.boardTb)
+            ..where((tbl) => tbl.id.equals(boardParams.id!)))
+          .write(BoardTbCompanion(
+              name: Value(boardParams.name),
+              crossAxisCount: Value(boardParams.columnCount ?? 3)))
+          .then((_) => boardParams.id!);
+    }
+
     return this.db.managers.boardTb.create(
         (o) => o(
-            id: Value.absentIfNull(boardParams.id),
             name: boardParams.name,
             crossAxisCount: Value(boardParams.columnCount ?? 3)),
-        mode: InsertMode.replace);
+        mode: InsertMode.insert);
   }
 
   Stream<Board?> watchById(int id) {
