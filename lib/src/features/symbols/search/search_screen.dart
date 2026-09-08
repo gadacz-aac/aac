@@ -304,10 +304,7 @@ class CreateInSearchAction extends ConsumerWidget {
     if (board == null) return;
 
     await ref.read(boardManagerProvider).createOrUpdate(board);
-
-    if (!context.mounted) return;
-    // refresh the search results, so the new board shows up
-    ref.invalidate(searchedBoardProvider);
+    // the search stream watches board_tb, so the new board shows up on its own
   }
 }
 
