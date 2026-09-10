@@ -244,9 +244,13 @@ class BoardAlbumCard extends ConsumerWidget {
         ),
         clipBehavior: Clip.hardEdge,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Expanded(
+            // AspectRatio instead of Expanded: the card is also laid out in
+            // grids with unbounded tile height (staggered AlignedGridView).
+            AspectRatio(
+              aspectRatio: 1.0,
               child: Container(
                 decoration: const BoxDecoration(color: AacColors.noColorWhite),
                 clipBehavior: Clip.hardEdge,

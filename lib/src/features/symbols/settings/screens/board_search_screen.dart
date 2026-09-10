@@ -9,6 +9,7 @@ import 'package:aac/src/shared/ui/search_input.dart';
 import 'package:aac/src/shared/utils/debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'board_search_screen.g.dart';
@@ -75,15 +76,11 @@ class BoardSearch extends ConsumerWidget {
                             textAlign: TextAlign.center,
                           ),
                         )
-                      : GridView.builder(
+                      : AlignedGridView.count(
                           padding: const EdgeInsets.only(bottom: 20),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 16,
-                            crossAxisSpacing: 16,
-                            childAspectRatio: 0.95,
-                          ),
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 16,
+                          crossAxisSpacing: 16,
                           itemCount: results.length,
                           itemBuilder: (context, index) {
                             final board = results[index];
